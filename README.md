@@ -1,2 +1,4 @@
-# Simple Hotel-Management-System (in the development phase)
+# Simple Hotel-Management-System
 Coder HMS for hotels managing system
+
+#INFO : in the development phase!
