@@ -1,4 +1,4 @@
 # Simple Hotel-Management-System
-Coder HMS for hotels managing system
+Coder HMS for hotels managing system (cross platform)
 
-#INFO : in the development phase!
+# INFO : in the development phase!
