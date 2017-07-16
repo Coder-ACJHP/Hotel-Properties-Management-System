@@ -28,6 +28,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.daoImpl.UserDaoImpl;
+import com.coder.hms.entities.User;
 import com.coder.hms.userinterface.MainFrame;
 import com.coder.hms.utils.ApplicationLogo;
 
@@ -40,10 +42,11 @@ public class LoginFrame extends JDialog {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private JLabel infoLabel;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
-	private JLabel infoLabel;
+	private static final long serialVersionUID = 1L;
+	private final UserDaoImpl userDaoImpl = new UserDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
 	
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -237,7 +240,10 @@ public class LoginFrame extends JDialog {
 				if (e.getActionCommand().equalsIgnoreCase("LOGIN")) {
 					
 					if(userName.length() > 0 || userPswrd.length() > 0) {
-						if(userName.equalsIgnoreCase("Onur") && userPswrd.equals("123")) {
+						
+						User user = userDaoImpl.getUserByName(userName);
+						
+						if(userName.equalsIgnoreCase(user.getNickName()) && userPswrd.equals(user.getPassword())) {
 							dispose();
 							new MainFrame();
 						}else {

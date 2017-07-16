@@ -16,6 +16,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.coder.hms.connection.DataSourceFactory;
+import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.utils.ApplicationLogo;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 
@@ -27,6 +29,7 @@ public class MainFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private CustomMenuBar customMenuBar;
+	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
 	
@@ -58,6 +61,7 @@ public class MainFrame extends JFrame {
 						"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				
 				if(decision == JOptionPane.YES_OPTION) {
+					new DataSourceFactory().close();
 					System.exit(0);
 				}
 				else {
@@ -82,7 +86,7 @@ public class MainFrame extends JFrame {
 		customBottomToolbar.setEuroLabelText(currency.getEURToTRYLiveCurrency());
 		customBottomToolbar.setPoundLabelText(currency.getGBPToTRYLiveCurrency());
 		customBottomToolbar.setDateLabelText("");
-		customBottomToolbar.sethotelNameLabelText("Nova Plaza Hotel");
+		customBottomToolbar.sethotelNameLabelText(hotelDaoImpl.getHotel().getName());
 		/*add it to our frame*/
 		getContentPane().add(customToolbar.getJPanel(), BorderLayout.NORTH);
 		

@@ -22,10 +22,10 @@ import javax.swing.border.SoftBevelBorder;
 public class CustomUpperToolbar {
 
 	private JPanel panel;
-	private Rooms theRooms;
+	private AllRoomsFrame theRooms;
 	private BlockadeFrame blockadeFrame;
 	private CustomersFrame customersFrame;
-	private RezervationsFrame rezervFrame;
+	private MainReservationsFrame rezervFrame;
 	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, cashBtn;
 
 	public JPanel getJPanel() {
@@ -107,10 +107,10 @@ public class CustomUpperToolbar {
 			@Override
 			public void run() {
 				
-				theRooms = new Rooms(48);
+				theRooms = new AllRoomsFrame(48);
 				customersFrame = new CustomersFrame();
 				blockadeFrame = new BlockadeFrame();
-				rezervFrame = new RezervationsFrame();
+				rezervFrame = new MainReservationsFrame();
 			}
 		});
 		

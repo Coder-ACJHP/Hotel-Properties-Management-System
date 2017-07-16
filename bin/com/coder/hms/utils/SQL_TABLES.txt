@@ -1,0 +1,60 @@
+CREATE TABLE `hotel_managment_system`.`Customer` (
+  `CustomerId` INT NOT NULL AUTO_INCREMENT,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `Country` VARCHAR(45) NULL,
+  `Document` VARCHAR(45) NOT NULL,
+  `DocumentNo` MEDIUMTEXT NOT NULL,
+  `DateOfBirth` VARCHAR(45) NULL,
+  `Gender` VARCHAR(45) NOT NULL,
+  `MaritalStatus` VARCHAR(45) NULL DEFAULT 'SINGLE',
+  `FatherName` VARCHAR(45) NULL,
+  `MotherName` VARCHAR(45) NULL,
+  `Email` VARCHAR(45) NULL,
+  PRIMARY KEY (`CustomerId`),
+  UNIQUE INDEX `CustomerId_UNIQUE` (`CustomerId` ASC));
+  
+  ---------------------------------------------------------
+  
+  CREATE TABLE `hotel_managment_system`.`Hotel` (
+  `Name` VARCHAR(50) NOT NULL,
+  `Owner` VARCHAR(45) NULL,
+  `Address` VARCHAR(45) NOT NULL,
+  `PhoneNumber` VARCHAR(45) NOT NULL,
+  `RoomCapacity` INT NOT NULL,
+  `RoomTypes` ENUM('SINGLE', 'DOUBLE', 'TRIPLE') NOT NULL,
+  PRIMARY KEY (`Name`));
+  
+  ---------------------------------------------------------
+  
+  CREATE TABLE `hotel_managment_system`.`Reservation` (
+  `Id` BIGINT(100) GENERATED ALWAYS AS (),
+  `theRoomId` BIGINT(100) NOT NULL,
+  `checkinDate` VARCHAR(45) NOT NULL,
+  `checkoutDate` VARCHAR(45) NOT NULL,
+  `paymentStatus` TINYINT NOT NULL,
+  `hostType` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`Id`));
+  
+  ---------------------------------------------------------
+  
+  CREATE TABLE `hotel_managment_system`.`Room` (
+  `number` BIGINT(50) NOT NULL,
+  `type` ENUM('SINGLE', 'DOUBLE', 'TRIPLE') NOT NULL,
+  `customerId` BIGINT(100) NOT NULL,
+  `price` DOUBLE NULL,
+  `status` ENUM('CLEAN', 'DIRTY', 'DND') NULL,
+  PRIMARY KEY (`number`));
+  
+  ---------------------------------------------------------
+  
+  CREATE TABLE `hotel_managment_system`.`User` (
+  `Id` BIGINT(100) NOT NULL AUTO_INCREMENT,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `NickName` BIGINT(50) NOT NULL,
+  `Password` VARCHAR(50) NOT NULL,
+  `Email` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`Id`));
+  
+  ---------------------------------------------------------
