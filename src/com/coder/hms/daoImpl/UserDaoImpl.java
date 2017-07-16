@@ -51,4 +51,18 @@ public class UserDaoImpl implements UserDAO {
 		return null;
 	}
 
+	public boolean authentication(String userName, String userPswrd) {
+		boolean isUser = false;
+		Query<User> query = session.createQuery("from User where NickName=:userName and Password=:userPswrd", User.class);
+		query.setParameter("userName", userName);
+		query.setParameter("userPswrd", userPswrd);
+		User user = query.getSingleResult();
+		
+		if(user != null) {
+			isUser = true;
+		}
+		
+		return isUser;
+	}
+
 }

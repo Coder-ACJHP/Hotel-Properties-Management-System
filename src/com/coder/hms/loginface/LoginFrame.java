@@ -29,8 +29,6 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import com.coder.hms.daoImpl.UserDaoImpl;
-import com.coder.hms.entities.User;
-import com.coder.hms.userinterface.MainFrame;
 import com.coder.hms.utils.ApplicationLogo;
 
 /**
@@ -42,6 +40,8 @@ public class LoginFrame extends JDialog {
 	/**
 	 * 
 	 */
+	private String userNickName;
+	private String userPassword;
 	private JLabel infoLabel;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
@@ -68,7 +68,7 @@ public class LoginFrame extends JDialog {
 		this.setTitle("Welcome to Coder for HMS - Login");
 
 		/* Set default size of frame */
-		this.setSize(410, 250);
+		this.setSize(428, 262);
 		this.setLocationRelativeTo(null);
 		this.getContentPane().setBackground(Color.decode("#066d95"));
 		getContentPane().setLayout(null);
@@ -172,7 +172,7 @@ public class LoginFrame extends JDialog {
 		infoLabel.setAutoscrolls(true);
 		infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		infoLabel.setFont(new Font("Consolas", infoLabel.getFont().getStyle(), 15));
-		infoLabel.setBounds(7, 234, 430, 28);
+		infoLabel.setBounds(1, 218, 428, 18);
 		getContentPane().add(infoLabel);
 
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -182,7 +182,7 @@ public class LoginFrame extends JDialog {
 
 	public void mouseListenerForButtons(final JButton jButton) {
 		
-		//change opaque property for making button color changable
+		//change opaque property for making button color changeable
 		jButton.setOpaque(true);
 		//add listener for buttons when mouse hover, active.
 		final MouseAdapter ma = new MouseAdapter() {
@@ -241,13 +241,14 @@ public class LoginFrame extends JDialog {
 					
 					if(userName.length() > 0 || userPswrd.length() > 0) {
 						
-						User user = userDaoImpl.getUserByName(userName);
+						final boolean check = userDaoImpl.authentication(userName, userPswrd);
 						
-						if(userName.equalsIgnoreCase(user.getNickName()) && userPswrd.equals(user.getPassword())) {
+						if(check) {
+							setUserNickName(userName);
+							setUserPassword(userPswrd);
 							dispose();
-							new MainFrame();
 						}else {
-							infoLabel.setText("INFO : Sorry username and password does not match !");
+							infoLabel.setText("INFO :BAD CREDENTIALS! Sorry username and password does'nt match !");
 						}
 						
 					}else {
@@ -270,5 +271,22 @@ public class LoginFrame extends JDialog {
 		};
 
 		jButton.addActionListener(myListner);
+	}
+
+	//these getters and setter for main frame
+	public String getUserNickName() {
+		return userNickName;
+	}
+
+	public void setUserNickName(String userNickName) {
+		this.userNickName = userNickName;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 }

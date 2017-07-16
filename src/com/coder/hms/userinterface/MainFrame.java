@@ -2,6 +2,7 @@
  * 
  */
 /**
+
  * @author MacbookPro
  *
  */
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.loginface.LoginFrame;
 import com.coder.hms.utils.ApplicationLogo;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 
@@ -29,6 +31,7 @@ public class MainFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private CustomMenuBar customMenuBar;
+	private final LoginFrame loginFrame;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
@@ -42,6 +45,7 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
+		loginFrame = new LoginFrame();
 		// get operation system name to add icon (if windows to taskbar else for dock)
 		logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
 		
@@ -81,7 +85,10 @@ public class MainFrame extends JFrame {
 		
 		customToolbar = new CustomUpperToolbar(this);
 		customBottomToolbar = new BottomToolbar();
-		customBottomToolbar.setUserLabelText("Onur");
+		
+		//get user name from login frame and add it to main frame
+		customBottomToolbar.setUserLabelText(loginFrame.getUserNickName().toUpperCase());
+		
 		customBottomToolbar.setUsdLabelText(currency.getUSDToTRYLiveCurrency());
 		customBottomToolbar.setEuroLabelText(currency.getEURToTRYLiveCurrency());
 		customBottomToolbar.setPoundLabelText(currency.getGBPToTRYLiveCurrency());
