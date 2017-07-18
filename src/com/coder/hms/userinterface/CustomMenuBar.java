@@ -17,9 +17,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.loginface.ChangePassword;
 import com.coder.hms.loginface.LoginFrame;
 import com.coder.hms.utils.ChangeApplicaitonTheme;
@@ -51,11 +54,26 @@ public class CustomMenuBar {
 		menuBar.setBorder(new LineBorder(new Color(128, 128, 128)));
 		menuBar.setAutoscrolls(true);
 		
-		JMenu menuItemFrontDesk = new JMenu("Front Desk");
+		final JMenu menuItemFrontDesk = new JMenu("Front Desk");
 		menuBar.add(menuItemFrontDesk);
 		
+		final JMenuItem restart = new JMenuItem("Restart");
+		restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
+		restart.addActionListener(ActionListener ->{
+			mainFrame.dispose();
+
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					new MainFrame();
+					
+				}
+			});
+		});
+		menuItemFrontDesk.add(restart);
 		
-		JMenuItem menuInnerItemExit = new JMenuItem("Exit");
+		final JMenuItem menuInnerItemExit = new JMenuItem("Exit");
 		menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
 		//add shortcut keys
 		menuInnerItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,(InputEvent.SHIFT_MASK |
@@ -63,16 +81,26 @@ public class CustomMenuBar {
 		menuInnerItemExit.setMnemonic(KeyEvent.VK_Q + KeyEvent.VK_CONTROL);
 		//add listener for exiting when CTRL+SHIFT+Q pressed
 		menuInnerItemExit.addActionListener(ActionEvent -> {
-			System.exit(0);
+
+			final int decision = JOptionPane.showConfirmDialog(null, "Are you sure to exit?", "Confirm",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+			if (decision == JOptionPane.YES_OPTION) {
+				new DataSourceFactory().shutDown();
+				System.exit(0);
+			} else {
+				mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			}
+
 		});
 		menuItemFrontDesk.add(menuInnerItemExit);
 		
 		
-		JMenu mnTools = new JMenu("Tools");
+		final JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
 		
 		//add calculator application section to menubar
-		JMenuItem calculator = new JMenuItem("Calculator");
+		final JMenuItem calculator = new JMenuItem("Calculator");
 		calculator.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_calc.png")));
 		calculator.addActionListener(ActionListener ->{
 
@@ -168,11 +196,46 @@ public class CustomMenuBar {
 		themes.add(mnitmMint);
 		themes.add(mnitmMcwin);
 		
-		JMenu mnAbout = new JMenu("Extras");
+		JMenu usersMenu = new JMenu("Users");
+		menuBar.add(usersMenu);
+		
+		JMenuItem changeUser = new JMenuItem("Change user");
+		changeUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_user.png")));
+		changeUser.addActionListener(ActionListener ->{
+		
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					
+					mainFrame.dispose();
+					new LoginFrame();					
+				}
+			});
+		});
+		usersMenu.add(changeUser);
+		
+		final JMenuItem chngPassword = new JMenuItem("Change password");
+		chngPassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
+		chngPassword.addActionListener(ActionListener ->{
+		
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					new ChangePassword();
+					
+				}
+			});
+		});
+		
+		usersMenu.add(chngPassword);
+		
+		JMenu mnAbout = new JMenu("Others");
 		menuBar.add(mnAbout);
 		
 		//add about developer section to menubar
-		JMenuItem aboutDeveloper = new JMenuItem("Developers");
+		final JMenuItem aboutDeveloper = new JMenuItem("Developers");
 		aboutDeveloper.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_developer.png")));
 		aboutDeveloper.addActionListener(ActionListener ->{
 			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -189,14 +252,14 @@ public class CustomMenuBar {
 		mnAbout.add(aboutDeveloper);
 		
 		//add source code section to menubar
-		JMenuItem sourceCode = new JMenuItem("Source code");
+		final JMenuItem sourceCode = new JMenuItem("Source code");
 		sourceCode.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_source_code.png")));
 		sourceCode.addActionListener(ActionListener ->{
 			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
 
 				try {
 					
-					URI uri = new URI("https://github.com/Coder-ACJHP");
+					URI uri = new URI("https://github.com/Coder-ACJHP/Hotel-Management-System");
 					desktop.browse(uri);
 					
 				} catch (URISyntaxException | IOException e) {e.printStackTrace();} 
@@ -206,7 +269,7 @@ public class CustomMenuBar {
 		mnAbout.add(sourceCode);
 		
 		//add feedback section to menubar
-		JMenuItem shareYourOpinion = new JMenuItem("Feedback");
+		final JMenuItem shareYourOpinion = new JMenuItem("Feedback");
 		shareYourOpinion.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_feedback.png")));
 		shareYourOpinion.addActionListener(ActionListener ->{
 			
@@ -222,43 +285,6 @@ public class CustomMenuBar {
 		});
 		
 		mnAbout.add(shareYourOpinion);
-		
-		JMenu usersMenu = new JMenu("Users");
-		menuBar.add(usersMenu);
-		
-		JMenuItem changeUser = new JMenuItem("Change user");
-		changeUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_user.png")));
-		changeUser.addActionListener(ActionListener ->{
-		
-			Thread openNewLoginFrame = new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					
-					mainFrame.dispose();
-					new LoginFrame();					
-				}
-			});
-			openNewLoginFrame.start();
-		});
-		usersMenu.add(changeUser);
-		
-		JMenuItem changePassword = new JMenuItem("Change password");
-		changePassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
-		changePassword.addActionListener(ActionListener ->{
-		
-			Thread openChangeUser = new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					new ChangePassword();
-					
-				}
-			});
-			openChangeUser.start();
-		});
-		
-		usersMenu.add(changePassword);
 		
 	}
 	

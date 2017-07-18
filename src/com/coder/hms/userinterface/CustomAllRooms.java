@@ -15,7 +15,7 @@ import javax.swing.border.SoftBevelBorder;
 import com.coder.hms.actionlisteners.RoomsActionListener;
 import com.coder.hms.utils.SpringUtilitiesLayout;
 
-public class AllRoomsFrame {
+public class CustomAllRooms {
 
 
 	private JPanel contentPanel = new JPanel();
@@ -25,20 +25,23 @@ public class AllRoomsFrame {
 	/**
 	 * Create the dialog.
 	 */
-	public AllRoomsFrame(int roomCount) {
+	public CustomAllRooms(int roomCount) {
 
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setBackground(Color.decode("#066d95"));
 		contentPanel.setLayout(new SpringLayout());
 		
+		
 		for (int i = 1; i <= roomCount; i++) {
 			++lastNum;
-			JButton roomBtn = new JButton();
+			final JButton roomBtn = new JButton();
+
 			roomBtn.setFont(new Font("Arial", Font.BOLD, 12));
 			roomBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 			roomBtn.setText(counter +""+ lastNum);
 			
 			if(i % 6 == 0) {
+
 				counter+=100; 
 				lastNum = 0;
 			}

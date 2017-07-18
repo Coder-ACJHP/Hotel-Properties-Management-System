@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 
 import com.coder.hms.utils.ApplicationLogo;
 
-public class RoomFrame extends JDialog {
+public class RoomEx extends JDialog {
 
 	/**
 	 * 
@@ -25,7 +25,7 @@ public class RoomFrame extends JDialog {
 	 * Create the dialog.
 	 * @param roomText 
 	 */
-	public RoomFrame(String roomText) {
+	public RoomEx(String roomText) {
 		// set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
 
@@ -37,7 +37,7 @@ public class RoomFrame extends JDialog {
 		setModal(true);
 		setResizable(true);
 
-		this.setTitle("Coder for HMS - RoomFrame : " + roomText);
+		this.setTitle("Coder for HMS - [RoomEx] : " + roomText);
 
 		/* Set default size of frame */
 		final Dimension computerScreenSize = Toolkit.getDefaultToolkit().getScreenSize();

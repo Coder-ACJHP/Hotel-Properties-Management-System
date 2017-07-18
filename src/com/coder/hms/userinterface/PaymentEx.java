@@ -30,7 +30,7 @@ import com.coder.hms.utils.ApplicationLogo;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class PaymentFrame extends JDialog {
+public class PaymentEx extends JDialog {
 
 	/**
 	 * 
@@ -45,12 +45,12 @@ public class PaymentFrame extends JDialog {
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] PAYMENT_TYPE = {"CASH PAYMENT", "CREDIT CARD", "CITY LEDGER"};
-	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "$ DOLLAR", "€ EURO", "£ POUND"};
+	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "$ DOLLAR", "ï¿½ EURO", "ï¿½ POUND"};
 
 	/**
 	 * Create the dialog.
 	 */
-	public PaymentFrame() {
+	public PaymentEx() {
 		
 		// set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
@@ -63,7 +63,7 @@ public class PaymentFrame extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - Payment");
+		this.setTitle("Coder for HMS - [Payment]");
 
 		/* Set default size of frame */
 		this.setSize(400, 350);
@@ -159,7 +159,7 @@ public class PaymentFrame extends JDialog {
 		});
 		btnSave.setToolTipText("Press ALT + ENTER keys for shortcut");
 		btnSave.setSelectedIcon(null);
-		btnSave.setIcon(new ImageIcon(PaymentFrame.class.getResource("/com/coder/hms/icons/payment_cash.png")));
+		btnSave.setIcon(new ImageIcon(PaymentEx.class.getResource("/com/coder/hms/icons/payment_cash.png")));
 		btnSave.setForeground(new Color(0, 191, 255));
 		btnSave.setOpaque(true);
 		btnSave.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));

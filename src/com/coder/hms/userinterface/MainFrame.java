@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
-import com.coder.hms.loginface.LoginFrame;
+import com.coder.hms.entities.SessionBean;
 import com.coder.hms.utils.ApplicationLogo;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 
@@ -31,13 +31,15 @@ public class MainFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private CustomMenuBar customMenuBar;
-	private final LoginFrame loginFrame;
+//	private final LoginFrame loginFrame;
+	@SuppressWarnings("unused")
+	private static SessionBean sessionBean;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
 	
 	/*get the external toolbar and initialize it*/
-	private final CustomUpperToolbar customToolbar;
+	private final UpperToolbar customToolbar;
 	private final BottomToolbar customBottomToolbar;
 	
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -45,11 +47,13 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
-		loginFrame = new LoginFrame();
+		sessionBean = SessionBean.getInstance();
 		// get operation system name to add icon (if windows to taskbar else for dock)
 		logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
+		customToolbar = new UpperToolbar(this);
+		customBottomToolbar = new BottomToolbar();
 		
-		this.setTitle("Coder for HMS (BETA 1)");
+		this.setTitle("Coder for HMS - [Main]");
 		this.getContentPane().setBackground(Color.decode("#066d95"));
 		
 
@@ -65,7 +69,7 @@ public class MainFrame extends JFrame {
 						"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				
 				if(decision == JOptionPane.YES_OPTION) {
-					new DataSourceFactory().close();
+					new DataSourceFactory().shutDown();
 					System.exit(0);
 				}
 				else {
@@ -83,17 +87,15 @@ public class MainFrame extends JFrame {
 		/*add it to our frame*/
 		this.setJMenuBar(customMenuBar.getMenuBar());
 		
-		customToolbar = new CustomUpperToolbar(this);
-		customBottomToolbar = new BottomToolbar();
-		
 		//get user name from login frame and add it to main frame
-		customBottomToolbar.setUserLabelText(loginFrame.getUserNickName().toUpperCase());
+		customBottomToolbar.setUserLabelText(SessionBean.getNickName().toUpperCase());
 		
 		customBottomToolbar.setUsdLabelText(currency.getUSDToTRYLiveCurrency());
 		customBottomToolbar.setEuroLabelText(currency.getEURToTRYLiveCurrency());
 		customBottomToolbar.setPoundLabelText(currency.getGBPToTRYLiveCurrency());
 		customBottomToolbar.setDateLabelText("");
 		customBottomToolbar.sethotelNameLabelText(hotelDaoImpl.getHotel().getName());
+		
 		/*add it to our frame*/
 		getContentPane().add(customToolbar.getJPanel(), BorderLayout.NORTH);
 		

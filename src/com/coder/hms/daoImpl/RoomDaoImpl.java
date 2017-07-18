@@ -1,7 +1,10 @@
 package com.coder.hms.daoImpl;
 
+
+import java.util.logging.Logger;
+
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.RoomDAO;
@@ -9,16 +12,16 @@ import com.coder.hms.entities.Room;
 
 public class RoomDaoImpl implements RoomDAO {
 
-	private DataSourceFactory dataSourceFactory;
-	private SessionFactory sessionFactory;
 	private Session session;
+	private Transaction transaction;
+	private DataSourceFactory dataSourceFactory;
+	private final Logger LOGGER = Logger.getLogger(HotelDaoImpl.class.getName());
 	
 	public RoomDaoImpl() {
 		
 		dataSourceFactory = new DataSourceFactory();
-		sessionFactory = dataSourceFactory.getSessionFactory();
-		session = sessionFactory.getCurrentSession();
-		session.beginTransaction();
+		session = dataSourceFactory.getSession();
+		transaction = session.beginTransaction();
 	}
 	
 	@Override
@@ -29,8 +32,12 @@ public class RoomDaoImpl implements RoomDAO {
 
 	@Override
 	public void saveRoom(Room room) {
-		// TODO Auto-generated method stub
-
+		
+		session.saveOrUpdate(room);
+		transaction.commit();
+		session.close();
+		
+		LOGGER.info("Room : " + room + " saved successfully.");
 	}
 
 }

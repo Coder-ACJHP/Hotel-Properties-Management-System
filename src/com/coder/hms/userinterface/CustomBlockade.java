@@ -17,7 +17,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class BlockadeFrame extends JPanel {
+public class CustomBlockade extends JPanel {
 
 	/**
 	 * 
@@ -43,7 +43,7 @@ public class BlockadeFrame extends JPanel {
 	/**
 	 * Create the frame.
 	 */
-	public BlockadeFrame() {
+	public CustomBlockade() {
 		
 		setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 

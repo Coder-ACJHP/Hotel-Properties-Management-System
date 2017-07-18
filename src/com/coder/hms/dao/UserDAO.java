@@ -10,7 +10,7 @@ public interface UserDAO {
 	
 	public void saveUser(User user);
 	
-	public void changePasswordOfUser(long password);
+	public void changePasswordOfUser(String nickName, String password);
 	
 	public List<User> getAllusers();
 	

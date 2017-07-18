@@ -57,7 +57,7 @@ public class CustomExchange extends JDialog {
 		this.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		this.setModal(true);
 		
-		this.setTitle("Coder for HMS - Exchange");
+		this.setTitle("Coder for HMS - [Exchange]");
 		
 		this.setSize(410, 340);
 		this.setLocationRelativeTo(null);

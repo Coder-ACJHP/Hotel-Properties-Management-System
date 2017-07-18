@@ -23,8 +23,8 @@ public class Reservation implements Serializable{
 	@Column(name="Id")
 	private long Id;
 	
-	@Column(name="theRoomId")
-	private long theRoomId;
+	@Column(name="groupName")
+	private String groupName;
 	
 	@Column(name="checkinDate")
 	private String checkinDate;
@@ -32,11 +32,30 @@ public class Reservation implements Serializable{
 	@Column(name="checkoutDate")
 	private String checkoutDate;
 	
-	@Column(name="paymentStatus")
-	private boolean paymentStatus;
+	@Column(name="totalDays")
+	private int totalDays;
+	
+	@Column(name="agency")
+	private String agency;
 	
 	@Column(name="hostType")
 	private String hostType;
+	
+	@Column(name="creditType")
+	private String creditType;
+	
+	@Column(name="bookStatus")
+	private String bookStatus;
+	
+	@Column(name="note")
+	private String note;
+	
+	@Column(name="paymentStatus")
+	private boolean paymentStatus;
+	
+	//room id for hiring new room
+	@Column(name="theRoomId")
+	private long theRoomId;
 	
 	public Reservation() {
 		// TODO Auto-generated constructor stub
@@ -50,12 +69,12 @@ public class Reservation implements Serializable{
 		Id = id;
 	}
 
-	public long getTheRoom() {
-		return theRoomId;
+	public String getGroupName() {
+		return groupName;
 	}
 
-	public void setTheRoom(long theRoom) {
-		this.theRoomId = theRoom;
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public String getCheckinDate() {
@@ -74,12 +93,20 @@ public class Reservation implements Serializable{
 		this.checkoutDate = checkoutDate;
 	}
 
-	public boolean isPaymentStatus() {
-		return paymentStatus;
+	public int getTotalDays() {
+		return totalDays;
 	}
 
-	public void setPaymentStatus(boolean paymentStatus) {
-		this.paymentStatus = paymentStatus;
+	public void setTotalDays(int totalDays) {
+		this.totalDays = totalDays;
+	}
+
+	public String getAgency() {
+		return agency;
+	}
+
+	public void setAgency(String agency) {
+		this.agency = agency;
 	}
 
 	public String getHostType() {
@@ -90,11 +117,69 @@ public class Reservation implements Serializable{
 		this.hostType = hostType;
 	}
 
+	public String getCreditType() {
+		return creditType;
+	}
+
+	public void setCreditType(String creditType) {
+		this.creditType = creditType;
+	}
+
+	public String getBookStatus() {
+		return bookStatus;
+	}
+
+	public void setBookStatus(String bookStatus) {
+		this.bookStatus = bookStatus;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public boolean isPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(boolean paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public long getTheRoomId() {
+		return theRoomId;
+	}
+
+	public void setTheRoomId(long theRoomId) {
+		this.theRoomId = theRoomId;
+	}
+
 	@Override
 	public String toString() {
-		return "Reservation [Id=" + Id + ", theRoom=" + theRoomId + ", checkinDate=" + checkinDate + ", checkoutDate="
-				+ checkoutDate + ", paymentStatus=" + paymentStatus + ", hostType=" + hostType + "]";
+		return "Reservation [Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate="
+				+ checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType
+				+ ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus="
+				+ paymentStatus + ", theRoomId=" + theRoomId + "]";
 	}
-	
+
+	public Reservation(long id, String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
+			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus, long theRoomId) {
+		super();
+		Id = id;
+		this.groupName = groupName;
+		this.checkinDate = checkinDate;
+		this.checkoutDate = checkoutDate;
+		this.totalDays = totalDays;
+		this.agency = agency;
+		this.hostType = hostType;
+		this.creditType = creditType;
+		this.bookStatus = bookStatus;
+		this.note = note;
+		this.paymentStatus = paymentStatus;
+		this.theRoomId = theRoomId;
+	}
 	
 }

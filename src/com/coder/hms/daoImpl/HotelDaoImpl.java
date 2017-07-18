@@ -1,9 +1,10 @@
 package com.coder.hms.daoImpl;
 
-import org.hibernate.query.Query;
+import java.util.logging.Logger;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.HotelDAO;
@@ -11,21 +12,24 @@ import com.coder.hms.entities.Hotel;
 
 public class HotelDaoImpl implements HotelDAO {
 
-	private DataSourceFactory dataSourceFactory;
-	private SessionFactory sessionFactory;
 	private Session session;
+	private Transaction transaction;
+	private DataSourceFactory dataSourceFactory;
+	private final Logger LOGGER = Logger.getLogger(HotelDaoImpl.class.getName());
 	
 	public HotelDaoImpl() {
 		dataSourceFactory = new DataSourceFactory();
-		sessionFactory = dataSourceFactory.getSessionFactory();
-		session = sessionFactory.getCurrentSession();
-		session.beginTransaction();
+		session = dataSourceFactory.getSession();
+		transaction = session.beginTransaction();
 	}
 	
 	@Override
 	public void saveHotel(Hotel hotel) {
-		// TODO Auto-generated method stub
-
+		
+		session.saveOrUpdate(hotel);
+		transaction.commit();
+		
+		LOGGER.info("Hotel " + hotel.toString()+"\nSaved successfully.");
 	}
 
 	@Override
@@ -33,6 +37,8 @@ public class HotelDaoImpl implements HotelDAO {
 		
 		Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
 		Hotel hotel = query.getSingleResult();
+		
+		LOGGER.info("Getting "+ hotel.getName() + "details..");
 		return hotel;
 	}
 

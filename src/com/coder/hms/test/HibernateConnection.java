@@ -10,10 +10,12 @@ public class HibernateConnection {
 
 			final DataSourceFactory cf = new DataSourceFactory();
 			
-			Session session = cf.getSessionFactory().getCurrentSession();
+			Session session = cf.getSession();
+			
 			
 			session.beginTransaction();
 			System.out.println(session.isConnected());
+			session.close();
 
 		
 	}

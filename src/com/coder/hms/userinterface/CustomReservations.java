@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -27,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
-public class MainReservationsFrame extends JPanel {
+public class CustomReservations extends JPanel {
 
 	/**
 	 * 
@@ -44,7 +45,7 @@ public class MainReservationsFrame extends JPanel {
 	private final String[] rezColsName = {"DATE", "CAPASITE ", "FULL ", "EMPTY", "GARANTED", "WAITING"};
 	private DefaultTableModel model = new DefaultTableModel(rezColsName, 0);
 	
-	public MainReservationsFrame() {
+	public CustomReservations() {
 		
 		setLayout(new BorderLayout(0, 0));
 		
@@ -56,21 +57,20 @@ public class MainReservationsFrame extends JPanel {
 		
 		newRezBtn = new JButton("New Reservation");
 		newRezBtn.setBounds(6, 12, 155, 45);
-		newRezBtn.setIcon(new ImageIcon(BlockadeFrame.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
+		newRezBtn.setIcon(new ImageIcon(CustomBlockade.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
 		newRezBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		newRezBtn.setPreferredSize(new Dimension(150, 33));
 		newRezBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		newRezBtn.setFont(new Font("Arial", Font.BOLD, 12));
 		newRezBtn.addActionListener(ActionListener ->{
-			Thread reservThread = new Thread(new Runnable() {
+			SwingUtilities.invokeLater(new Runnable() {
 				
 				@Override
 				public void run() {
 					
-					new NewReservationFrame();
+					new NewReservationEx();
 				}
 			});
-			reservThread.start();
 		});
 		buttonPanel.setLayout(null);
 		buttonPanel.add(newRezBtn);
@@ -104,7 +104,7 @@ public class MainReservationsFrame extends JPanel {
 		buttonPanel.add(agencyRefLbl);
 		
 		findBtn = new JButton("Find");
-		findBtn.setIcon(new ImageIcon(MainReservationsFrame.class.getResource("/com/coder/hms/icons/main_find.png")));
+		findBtn.setIcon(new ImageIcon(CustomReservations.class.getResource("/com/coder/hms/icons/main_find.png")));
 		findBtn.setPreferredSize(new Dimension(150, 33));
 		findBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		findBtn.setFont(new Font("Arial", Font.BOLD, 12));

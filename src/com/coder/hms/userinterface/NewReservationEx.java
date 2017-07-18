@@ -33,38 +33,61 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.coder.hms.loginface.LoginFrame;
+import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.Reservation;
 import com.coder.hms.utils.ApplicationLogo;
+import com.coder.hms.utils.SetRoomNumbers;
 import com.toedter.calendar.JDateChooser;
 
-public class NewReservationFrame extends JDialog {
+public class NewReservationEx extends JDialog {
 
 	/**
 	 * 
 	 */
 	private int value = 0;
+	private Date startDate;
+	private Date endDate;
+	private JButton btnAddRoom;
+	private String[] ROOM_NUMS;
+	private String[] ROOM_TYPES;
+	private int infoTableRow = 0;
+	private JTable table, table_1;
+	private boolean payment = false;
 	private double priceValue = 0.0;
+	private NumberFormat formatter;
+	private JSpinner personCountSpinner; 
 	private JFormattedTextField priceField;
 	private JButton chancelBtn, SaveBtn, reportBtn;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
+	private final SetRoomNumbers srn = new SetRoomNumbers();
 	private ApplicationLogo logoSetter = new ApplicationLogo();
 	private JLabel agencyLbl, creditTypeLbl, customerCountryLbl;
 	private JTextField rezIdField, nameSurnameField, totalDaysField;
-	private JSpinner roomCountSpinner, personCountSpinner; 
+
+	private final JTable roomCountTable;
+	private final String[] ROOMCOUNT_TABLE_HEADERS = {"ROOM NUM.", "TYPE", "PERSON COUNT", "PRICE", "CURRENCY"};
+	private final DefaultTableModel roomCountModel = new DefaultTableModel(ROOMCOUNT_TABLE_HEADERS, 0);
+	
 	private final String[] INFO_TAB_TABLE_HEADERS = {"ROOM", "TYPE", "CHECK/IN", "CHECK/OUT", "CUSTOMER TYPE"};
+	private final DefaultTableModel model = new DefaultTableModel(INFO_TAB_TABLE_HEADERS, 0);
+	
 	private final String[] HOST_TYPES = {"B.B", "F.B", "H.B", "O.B"};
 	private final String[] RESERV_STS = {"GUARANTEE", "WAITLIST", "CANCEL"};
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
-	private final String[] cmbList = { "TURKISH LIRA", "$ DOLLAR", "� EURO", "� POUND"};
+	private final String[] cmbList = { "TURKISH LIRA", "$ DOLLAR", "€ EURO", "£ POUND"};
 	private final String[] CREDIT_TYPES = {"BLACK LIST", "INFINITY CREDIT", "STANDART CUSTOMER CREDIT"};
 	private final String[] EARLY_PAYMENT_LIST = {"TITLE", "NAME", "AMOUNT", "CURRENCY", "EXCHANGE", "NOTE"};
-	private JComboBox<String> agencyCmbBox, hostCmbBox, creaditTypeCmbBox, rezervStatusCmbBox, customerCountryCmbBox, currencyCmbBox, roomTypeCmbBox;
+	private JComboBox<String> agencyCmbBox, hostCmbBox, creaditTypeCmbBox, rezervStatusCmbBox, customerCountryCmbBox, 
+	currencyCmbBox, roomTypeCmbBox, roomNumCmbBox;
 	private final String[] COUNTRY_LIST = {"Afghanistan", "Albania","Algeria", "American Samoa", "Andorra",
 		"Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria",
 		 "Brazil", "Egypt", "Finland", "France", "Germany", "Hong Kong", "India", "Iran", "Iraq", "Ireland", "Israel", "Islands",
@@ -72,12 +95,11 @@ public class NewReservationFrame extends JDialog {
 		 "Portugal", "Puerto Rico,PR", "Qatar", "Romania", "Russian Federation", "Saudi Arabia", "Singapore", "Spain", "Sweden",
 		 "Switzerland", "Syrian Arab Republic", "Thailand", "Tunisia", "Turkey", "Turkmenistan", "Ukraine", "United Arab Emirates",
 		 "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Virgin Islands U.S.", "Yemen", "Zambia", "Zimbabwe"};
-	private JTable table;
-	private JTable table_1;
+
 	/**
 	 * Create the dialog.
 	 */
-	public NewReservationFrame() {
+	public NewReservationEx() {
 		// set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
 
@@ -89,7 +111,7 @@ public class NewReservationFrame extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - New Reservation");
+		this.setTitle("Coder for HMS - [New Reservation]");
 
 		/* Set default size of frame */
 		this.setSize(780, 550);
@@ -240,7 +262,7 @@ public class NewReservationFrame extends JDialog {
 				dispose();
 			}
 		});
-		chancelBtn.setIcon(new ImageIcon(LoginFrame.class.getResource("/com/coder/hms/icons/login_clear.png")));
+		chancelBtn.setIcon(new ImageIcon(NewReservationEx.class.getResource("/com/coder/hms/icons/login_clear.png")));
 		chancelBtn.setForeground(new Color(220, 20, 60));
 		chancelBtn.setOpaque(true);
 		chancelBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -255,7 +277,7 @@ public class NewReservationFrame extends JDialog {
 				
 			}
 		});
-		reportBtn.setIcon(new ImageIcon(NewReservationFrame.class.getResource("/com/coder/hms/icons/rezaerv_report.png")));
+		reportBtn.setIcon(new ImageIcon(NewReservationEx.class.getResource("/com/coder/hms/icons/rezaerv_report.png")));
 		reportBtn.setForeground(new Color(0, 128, 128));
 		reportBtn.setOpaque(true);
 		reportBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -264,22 +286,18 @@ public class NewReservationFrame extends JDialog {
 		buttonsPanel.add(reportBtn);
 		
 		SaveBtn = new JButton("SAVE");
-		SaveBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
 		SaveBtn.setMaximumSize(new Dimension(120, 23));
 		SaveBtn.setMinimumSize(new Dimension(120, 23));
 		SaveBtn.setToolTipText("Press ALT + ENTER keys for shortcut");
 		SaveBtn.setSelectedIcon(null);
-		SaveBtn.setIcon(new ImageIcon(NewReservationFrame.class.getResource("/com/coder/hms/icons/reserv_save.png")));
+		SaveBtn.setIcon(new ImageIcon(NewReservationEx.class.getResource("/com/coder/hms/icons/reserv_save.png")));
 		SaveBtn.setForeground(new Color(0, 191, 255));
 		SaveBtn.setOpaque(true);
 		SaveBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		SaveBtn.setMnemonic(KeyEvent.VK_ENTER);
 		SaveBtn.setPreferredSize(new Dimension(130, 40));
 		SaveBtn.setFont(new Font("Verdana", Font.BOLD, 15));
+		SaveBtn.addActionListener(newReservAction());
 		buttonsPanel.add(SaveBtn);
 		
 		final JPanel panel = new JPanel();
@@ -294,7 +312,7 @@ public class NewReservationFrame extends JDialog {
 		final JPanel earlyPanel = new JPanel();
 		
 		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("RoomFrame Type", roomPanel);
+		tabbedPane.addTab("RoomEx Type", roomPanel);
 		
 		final JPanel roomTypePanel = new JPanel();
 		roomTypePanel.setAutoscrolls(true);
@@ -304,53 +322,77 @@ public class NewReservationFrame extends JDialog {
 		roomPanel.add(roomTypePanel);
 		roomTypePanel.setLayout(null);
 		
-		final JLabel lblNewLabel = new JLabel("RoomFrame Type");
+		final JScrollPane roomCountPanelContainer = new JScrollPane();
+		roomCountPanelContainer.setPreferredSize(new Dimension(720, 75));
+		roomCountTable = new JTable(roomCountModel);
+		roomCountPanelContainer.setViewportView(roomCountTable);
+		roomPanel.add(roomCountPanelContainer);
+		
+		final JLabel lblNewLabel = new JLabel("Room Type");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(56, 12, 86, 14);
+		lblNewLabel.setBounds(172, 12, 89, 14);
 		roomTypePanel.add(lblNewLabel);
 		
-		final JLabel lblRoomCount = new JLabel("RoomFrame Count");
-		lblRoomCount.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRoomCount.setBounds(221, 12, 76, 14);
-		roomTypePanel.add(lblRoomCount);
 		
-		final JLabel lblPersonCount = new JLabel("Person Count");
+		final JLabel lblPersonCount = new JLabel("Person");
 		lblPersonCount.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPersonCount.setBounds(345, 12, 76, 14);
+		lblPersonCount.setBounds(318, 12, 61, 14);
 		roomTypePanel.add(lblPersonCount);
 		
 		final JLabel lblCurrency = new JLabel("Currency");
 		lblCurrency.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrency.setBounds(594, 12, 86, 14);
+		lblCurrency.setBounds(498, 12, 86, 14);
 		roomTypePanel.add(lblCurrency);
 		
-		roomTypeCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>());
-		roomTypeCmbBox.setBounds(31, 36, 140, 20);
+		HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
+		Hotel hotel = hotelDaoImpl.getHotel();
+		ROOM_TYPES = hotel.getRoomType().split(" ");
+		
+		roomTypeCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(ROOM_TYPES));
+		roomTypeCmbBox.setBounds(154, 35, 140, 20);
+		roomTypeCmbBox.addActionListener(roomTypeActionListener());
 		roomTypePanel.add(roomTypeCmbBox);
 		
-		roomCountSpinner = new JSpinner();
-		roomCountSpinner.setBounds(244, 36, 40, 20);
-		roomTypePanel.add(roomCountSpinner);
 		
 		personCountSpinner = new JSpinner();
-		personCountSpinner.setBounds(363, 36, 40, 20);
+		personCountSpinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		personCountSpinner.setBounds(327, 35, 40, 20);
 		roomTypePanel.add(personCountSpinner);
 		
 		currencyCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(cmbList));
-		currencyCmbBox.setBounds(571, 36, 140, 20);
+		currencyCmbBox.setBounds(490, 35, 140, 20);
+		currencyCmbBox.addActionListener(currencyActionListener());
 		roomTypePanel.add(currencyCmbBox);
 		
 		final JLabel lblPrice = new JLabel("Price");
 		lblPrice.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPrice.setBounds(465, 12, 46, 14);
+		lblPrice.setBounds(408, 12, 46, 14);
 		roomTypePanel.add(lblPrice);
 		
-		final NumberFormat formatter = NumberFormat.getCurrencyInstance();
-		formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
+		formatter = NumberFormat.getCurrencyInstance();
+		formatter.setMinimumFractionDigits(2);
+		
 		priceField = new JFormattedTextField(formatter);
 		priceField.setValue(new Double(priceValue));
-		priceField.setBounds(460, 36, 57, 20);
+		priceField.setColumns(10);
+		priceField.setBounds(401, 35, 65, 20);
 		roomTypePanel.add(priceField);
+		
+		JLabel roomLbl = new JLabel("Room");
+		roomLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		roomLbl.setBounds(41, 11, 61, 16);
+		roomTypePanel.add(roomLbl);
+		
+		ROOM_NUMS = new String[]{};
+		ROOM_NUMS = srn.getRoomNumbers();
+		roomNumCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(ROOM_NUMS));
+		roomNumCmbBox.setBounds(34, 35, 86, 20);
+		roomTypePanel.add(roomNumCmbBox);
+		
+		btnAddRoom = new JButton("Add Room");
+		btnAddRoom.setBounds(632, 17, 100, 29);
+		btnAddRoom.addActionListener(addRoomActionListener());
+		roomTypePanel.add(btnAddRoom);
 		
 		tabbedPane.addTab("Informations", infoPanel);
 		infoPanel.setLayout(new BorderLayout(0, 0));
@@ -358,7 +400,8 @@ public class NewReservationFrame extends JDialog {
 		JScrollPane scrollPane = new JScrollPane();
 		infoPanel.add(scrollPane, BorderLayout.CENTER);
 		
-		table = new JTable(new DefaultTableModel(INFO_TAB_TABLE_HEADERS, 0));
+		
+		table = new JTable(model);
 		scrollPane.setViewportView(table);
 		
 		tabbedPane.addTab("Early Payment", earlyPanel);
@@ -367,19 +410,18 @@ public class NewReservationFrame extends JDialog {
 		JButton btnNewButton = new JButton("Add new Payment");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Thread paymentFrame = new Thread(new Runnable() {
+				SwingUtilities.invokeLater(new Runnable() {
 					
 					@Override
 					public void run() {
-						new PaymentFrame();
-						
+						new PaymentEx();
+						payment = true;
 					}
 				}); 
-				paymentFrame.start();
 			}
 		});
-		btnNewButton.setIcon(new ImageIcon(NewReservationFrame.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
-		btnNewButton.setSelectedIcon(new ImageIcon(NewReservationFrame.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
+		btnNewButton.setIcon(new ImageIcon(NewReservationEx.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
+		btnNewButton.setSelectedIcon(new ImageIcon(NewReservationEx.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
 		btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
 		btnNewButton.setBounds(10, 11, 150, 35);
 		earlyPanel.add(btnNewButton);
@@ -403,56 +445,150 @@ public class NewReservationFrame extends JDialog {
 	
 	private PropertyChangeListener chechkDates() {
 		final PropertyChangeListener listener = new PropertyChangeListener() {
-			
+
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				
-				//here leave ancestors empty because we need dates not ancestor
-				if(evt.getPropertyName().equals("ancestor")) {
+
+				// here leave ancestors empty because we need dates not ancestor
+				if (evt.getPropertyName().equals("ancestor")) {
 					return;
 				}
-				//main reason
+				// main reason
 				else {
 					Thread thread = new Thread(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							boolean showed = false;
-							final Date startDate = checkinDate.getDate();
-							final Date endDate = checkoutDate.getDate();
-							
-						if(startDate != null && endDate != null) {	
-							//add to calendar to be able get day of date and compare
-							Calendar cs = Calendar.getInstance();
-							cs.setTime(startDate);
-							Calendar ce = Calendar.getInstance();
-							ce.setTime(endDate);
-							
-								//compare if start date greater than end date
-								if(cs.after(ce) && !showed) {
-									JOptionPane.showMessageDialog(null, "Start date is after end date!", 
-													JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-									showed = true;
-								}
-								//or both is same date
-								else if(cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
-									JOptionPane.showMessageDialog(null, "Start date equals end date!\nPlease be sure you're choose right date.", 
+							 startDate = checkinDate.getDate();
+							 endDate = checkoutDate.getDate();
+
+							if (startDate != null && endDate != null) {
+								// add to calendar to be able get day of date
+								// and compare
+								Calendar cs = Calendar.getInstance();
+								cs.setTime(startDate);
+								Calendar ce = Calendar.getInstance();
+								ce.setTime(endDate);
+
+								// compare if start date greater than end date
+								if (cs.after(ce) && !showed) {
+									JOptionPane.showMessageDialog(null, "Start date is after end date!",
 											JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 									showed = true;
 								}
-								//other odds
+								// or both is same date
+								else if (cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
+									JOptionPane.showMessageDialog(null,
+											"Start date equals end date!\nPlease be sure you're choose right date.",
+											JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+									showed = true;
+								}
+								// other odds
 								else {
-									value = (int)( (startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24) );
+									value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
 									totalDaysField.setText(Math.abs(value) + "");
 								}
+							}
+
 						}
-							
-						}
-					});	
+					});
 					thread.start();
 				}
 			}
 		};
 		return listener;
+	}
+	
+	private ActionListener newReservAction() {
+		final ActionListener theListener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Reservation reservation = new Reservation();
+				reservation.setCheckinDate(startDate.toString());
+				reservation.setCheckoutDate(endDate.toString());
+				reservation.setHostType(hostCmbBox.getSelectedItem().toString());
+				reservation.setPaymentStatus(payment);
+//				reservation.setTheRoom();
+			}
+		};
+		return theListener;
+	}
+	
+	public ActionListener currencyActionListener() {
+		ActionListener ac = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				final String choosed = currencyCmbBox.getSelectedItem().toString();
+					switch (choosed) {
+					case "TURKISH LIRA":
+						formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
+						break;
+					case "$ DOLLAR":
+						formatter.setCurrency(Currency.getInstance(Locale.US));
+						break;
+					case "€ EURO":
+						formatter.setCurrency(Currency.getInstance(Locale.FRANCE));
+						break;
+					case "£ POUND":
+						formatter.setCurrency(Currency.getInstance(Locale.UK));
+						break;
+					default:
+						break;
+					}
+			}
+		};
+		return ac;
+	}
+	
+	public ActionListener roomTypeActionListener() {
+		ActionListener rta = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String TYPE = roomTypeCmbBox.getSelectedItem().toString();
+				
+				switch (TYPE) {
+				case "SINGLE":
+					personCountSpinner.setValue(1);
+					break;
+				case "DOUBLE":
+					personCountSpinner.setValue(2);
+					break;
+				case "TRIPLE":
+					personCountSpinner.setValue(3);
+					break;
+				default:
+					break;
+				}
+				
+			}
+		};
+		return rta;
+	}
+	
+	public ActionListener addRoomActionListener(){
+		ActionListener acl = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
+				final String roomType = roomTypeCmbBox.getSelectedItem().toString();
+				final String currency = currencyCmbBox.getSelectedItem().toString();
+				final int personCount = (int)personCountSpinner.getValue();
+				final String val = priceField.getValue().toString();
+				priceValue = Double.valueOf(val);
+				
+				Object[] row = new Object[]{roomNumber, roomType, personCount, val, currency};
+				roomCountModel.addRow(row);
+				
+				infoTableRow += personCount; 
+				model.setRowCount(infoTableRow);
+			}
+		};
+		return acl;
 	}
 }

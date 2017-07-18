@@ -21,6 +21,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.daoImpl.UserDaoImpl;
+import com.coder.hms.entities.SessionBean;
+
 public class ChangePassword extends JDialog {
 
 	/**
@@ -29,7 +32,10 @@ public class ChangePassword extends JDialog {
 	private int clicked = 0;
 	private JLabel infoLabel, markerLbl;
 	private JPasswordField passwordField;
+	@SuppressWarnings("unused")
+	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
+	private final UserDaoImpl userDaoImpl;
 	private JPasswordField oldPasswordField, newPasswordField;
 	private final JButton btnClear, btnUpdate, setPasswordVisible;
 
@@ -38,6 +44,9 @@ public class ChangePassword extends JDialog {
 	 */
 	public ChangePassword() {
 
+		sessionBean = SessionBean.getInstance();
+		userDaoImpl = new UserDaoImpl();
+		
 		this.getContentPane().setForeground(new Color(255, 99, 71));
 		this.getContentPane().setFocusCycleRoot(true);
 		this.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -46,7 +55,7 @@ public class ChangePassword extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 
-		this.setTitle("Coder for HMS - Change Password");
+		this.setTitle("Coder for HMS - [Change Password]");
 
 		this.setSize(410, 250);
 		this.setLocationRelativeTo(null);
@@ -195,12 +204,16 @@ public class ChangePassword extends JDialog {
 				if (oldPwd.length > 0 && newPwd.length > 0 && confirmPwd.length > 0) {
 
 					final String oldPassword = new String(oldPwd);
-					boolean check = checkPassword(oldPassword);
-					if (check) {
-						if (newPwd.equals(confirmPwd)) {
-							// check the old password from database is correct?
-							final String newPassword = new String(newPwd);
-							changePasswordWithNew(newPassword);
+					
+					if (checkPassword(oldPassword)) {
+						
+						final String newPassword = new String(newPwd);
+						final String confirmPassword = new String(confirmPwd);
+						
+						if (newPassword.equals(confirmPassword)) {
+							
+							changePasswordWithNew(SessionBean.getNickName(), newPassword);
+							infoLabel.setText("Your password changed successfully.");
 						}
 
 						else {
@@ -237,15 +250,16 @@ public class ChangePassword extends JDialog {
 		passwordField.addKeyListener(myAdapter);
 	}
 
-	private void changePasswordWithNew(String newPassword) {
-		// User.setPassword(newPassword);
+	private void changePasswordWithNew(String nickName, String newPassword) {
+		userDaoImpl.changePasswordOfUser(nickName, newPassword);
 		infoLabel.setForeground(Color.decode("#059046"));
 		infoLabel.setText("Your password changed successfully.");
 	}
 
 	private boolean checkPassword(String oldPassword) {
-		boolean correct = false;
 		// ask from database is correct?
+		boolean correct = userDaoImpl.authentication(SessionBean.getNickName(), oldPassword);
+		System.out.println("checkPassword(String oldPassword) : "+ correct);
 		return correct;
 	}
 }

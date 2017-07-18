@@ -3,15 +3,22 @@ package com.coder.hms.actionlisteners;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import com.coder.hms.userinterface.RoomFrame;
+import javax.swing.SwingUtilities;
+
+import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.entities.Hotel;
+import com.coder.hms.userinterface.RoomEx;
 
 public class RoomsActionListener {
 
-	private ActionListener customActionListener;
 	private String roomText = "";
+	private ActionListener customActionListener;
 
 	public RoomsActionListener() {
 	
+		HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
+		Hotel hotel = hotelDaoImpl.getHotel();
+		
 		customActionListener = new ActionListener() {
 
 			@Override
@@ -21,7 +28,7 @@ public class RoomsActionListener {
 				int lastNum = 0;
 				String command = e.getActionCommand();
 
-				for (int i = 1; i <= 48; i++) {
+				for (int i = 1; i <= hotel.getRoomCapacity(); i++) {
 					++lastNum;
 					
 					roomText = counter + "" + lastNum;
@@ -33,15 +40,14 @@ public class RoomsActionListener {
 
 					if (command.equals(roomText)) {
 						
-						Thread roomThread = new Thread(new Runnable() {
+						SwingUtilities.invokeLater(new Runnable() {
 							
 							@Override
 							public void run() {
-								new RoomFrame(roomText);
+								new RoomEx(roomText);
 								
 							}
 						});
-						roomThread.start();
 						break;
 					}
 				}

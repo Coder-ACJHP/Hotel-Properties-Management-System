@@ -107,7 +107,8 @@ public class BottomToolbar {
 		if(yourText.length() <= 0 || yourText.equals("")) {
 			final Date today = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY EEEE");
-			String newDate = sdf.format(today);
+			final String newDate = sdf.format(today);
+
 			dateLabel.setText(" " + newDate);
 		}
 		else {
@@ -130,4 +131,5 @@ public class BottomToolbar {
 	protected void setPoundLabelText(String rate) {
 		this.currencyPoundLabel.setText(rate);
 	}
+	
 }

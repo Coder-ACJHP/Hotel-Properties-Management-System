@@ -15,6 +15,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,6 +31,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import com.coder.hms.daoImpl.UserDaoImpl;
+import com.coder.hms.entities.SessionBean;
+import com.coder.hms.userinterface.MainFrame;
 import com.coder.hms.utils.ApplicationLogo;
 
 /**
@@ -40,11 +44,12 @@ public class LoginFrame extends JDialog {
 	/**
 	 * 
 	 */
-	private String userNickName;
-	private String userPassword;
 	private JLabel infoLabel;
+	private String newDate;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
+	@SuppressWarnings("unused")
+	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
 	private final UserDaoImpl userDaoImpl = new UserDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
@@ -53,8 +58,14 @@ public class LoginFrame extends JDialog {
 
 	// Set some basic properties
 	public LoginFrame() {
+		
+		sessionBean = SessionBean.getInstance();
 		//set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		
+		final Date today = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY EEEE");
+		newDate = sdf.format(today);
 		
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);
@@ -65,8 +76,9 @@ public class LoginFrame extends JDialog {
 		setResizable(false);
 
 
-		this.setTitle("Welcome to Coder for HMS - Login");
-
+		this.setTitle("Coder for HMS - [Login] - (" + newDate +")");
+		SessionBean.setDate(newDate);
+		
 		/* Set default size of frame */
 		this.setSize(428, 262);
 		this.setLocationRelativeTo(null);
@@ -244,9 +256,15 @@ public class LoginFrame extends JDialog {
 						final boolean check = userDaoImpl.authentication(userName, userPswrd);
 						
 						if(check) {
-							setUserNickName(userName);
-							setUserPassword(userPswrd);
+							//store informations in bean to use it in another frames.
+							SessionBean.setNickName(userName);
+							SessionBean.setPassword(userPswrd);
+							
+							//close this frame
 							dispose();
+							//open main application frame
+							new MainFrame();
+							
 						}else {
 							infoLabel.setText("INFO :BAD CREDENTIALS! Sorry username and password does'nt match !");
 						}
@@ -273,20 +291,4 @@ public class LoginFrame extends JDialog {
 		jButton.addActionListener(myListner);
 	}
 
-	//these getters and setter for main frame
-	public String getUserNickName() {
-		return userNickName;
-	}
-
-	public void setUserNickName(String userNickName) {
-		this.userNickName = userNickName;
-	}
-
-	public String getUserPassword() {
-		return userPassword;
-	}
-
-	public void setUserPassword(String userPassword) {
-		this.userPassword = userPassword;
-	}
 }

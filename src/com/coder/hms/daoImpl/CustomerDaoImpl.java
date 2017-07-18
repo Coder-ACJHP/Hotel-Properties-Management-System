@@ -3,7 +3,8 @@ package com.coder.hms.daoImpl;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.CustomerDAO;
@@ -11,16 +12,15 @@ import com.coder.hms.entities.Customer;
 
 public class CustomerDaoImpl implements CustomerDAO {
 
-	private DataSourceFactory dataSourceFactory;
-	private SessionFactory sessionFactory;
 	private Session session;
+	private Transaction transaction;
+	private DataSourceFactory dataSourceFactory;
 	
 	public CustomerDaoImpl() {
 		
 		dataSourceFactory = new DataSourceFactory();
-		sessionFactory = dataSourceFactory.getSessionFactory();
-		session = sessionFactory.getCurrentSession();
-		session.beginTransaction();
+		session = dataSourceFactory.getSession();
+		transaction = session.beginTransaction();
 	}
 	
 	@Override
@@ -37,8 +37,11 @@ public class CustomerDaoImpl implements CustomerDAO {
 
 	@Override
 	public List<Customer> getAllCustomers() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Query<Customer> query = session.createQuery("from Customer", Customer.class);
+		List<Customer> customerList = query.getResultList();
+		session.close();
+		return customerList;
 	}
 
 }

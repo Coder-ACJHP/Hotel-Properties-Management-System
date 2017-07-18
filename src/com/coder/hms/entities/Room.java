@@ -20,30 +20,41 @@ public class Room implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="RoomNumber")
-	private long number;
+	@Column(name="theRoomId")
+	private long theRoomId;
 	
-	@Column(name="roomType")
+	@Column(name="number")
+	private String number;
+	
+	@Column(name="type")
 	private RoomType type;
 	
-	@Column(name="customerId")
-	private long customerId;
-	
-	@Column(name="RoomPrice")
+	@Column(name="price")
 	private double price;
 	
 	@Column(name="status")
 	private RoomStatus status;
 	
+	@Column(name="customerId")
+	private long customerId;
+	
 	public Room() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public long getNumber() {
+	public long getTheRoomId() {
+		return theRoomId;
+	}
+
+	public void setTheRoomId(long theRoomId) {
+		this.theRoomId = theRoomId;
+	}
+
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(long number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
@@ -53,14 +64,6 @@ public class Room implements Serializable{
 
 	public void setType(RoomType type) {
 		this.type = type;
-	}
-
-	public long getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(long customerId) {
-		this.customerId = customerId;
 	}
 
 	public double getPrice() {
@@ -79,23 +82,30 @@ public class Room implements Serializable{
 		this.status = status;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
 	}
 
 	@Override
 	public String toString() {
-		return "Room [number=" + number + ", type=" + type + ", customerId=" + customerId + ", price=" + price
-				+ ", status=" + status + "]";
+		return "Room [theRoomId=" + theRoomId + ", number=" + number + ", type=" + type + ", price=" + price
+				+ ", status=" + status + ", customerId=" + customerId + "]";
 	}
 
-	public Room(long number, RoomType type, long customerId, double price, RoomStatus status) {
+	public Room(long theRoomId, String number, RoomType type, double price, RoomStatus status, long customerId) {
 		super();
+		this.theRoomId = theRoomId;
 		this.number = number;
 		this.type = type;
-		this.customerId = customerId;
 		this.price = price;
 		this.status = status;
+		this.customerId = customerId;
 	}
+
+	
 	
 }

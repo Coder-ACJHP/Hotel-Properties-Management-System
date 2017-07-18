@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.coder.hms.userinterface.MainFrame;
+import com.coder.hms.loginface.LoginFrame;
 
 public class StartApplication {
 
@@ -24,7 +24,7 @@ public class StartApplication {
 			@Override
 			public void run() {
 				// start the application.
-				new MainFrame();
+				new LoginFrame();
 
 			}
 		});

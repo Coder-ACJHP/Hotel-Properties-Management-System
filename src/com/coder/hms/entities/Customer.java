@@ -51,6 +51,9 @@ public class Customer implements Serializable{
 	@Column(name="Email")
 	private String Email;
 	
+	@Column(name="ReservationId")
+	private long ReservationId;
+	
 	private static final long serialVersionUID = 1L;
 	
 	public Customer() {}
@@ -151,28 +154,25 @@ public class Customer implements Serializable{
 		Email = email;
 	}
 
-	//Without ID
-	public Customer(String firstName, String lastName, String country, String document, long documentNo,
-			String dateOfBirth, String gender, String maritalStatus, String fatherName, String motherName,
-			String email) {
-		super();
-		FirstName = firstName;
-		LastName = lastName;
-		Country = country;
-		Document = document;
-		DocumentNo = documentNo;
-		DateOfBirth = dateOfBirth;
-		Gender = gender;
-		MaritalStatus = maritalStatus;
-		FatherName = fatherName;
-		MotherName = motherName;
-		Email = email;
+	public long getReservationId() {
+		return ReservationId;
 	}
 
-	//With ID
+	public void setReservationId(long reservationId) {
+		ReservationId = reservationId;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [CustomerId=" + CustomerId + ", FirstName=" + FirstName + ", LastName=" + LastName
+				+ ", Country=" + Country + ", Document=" + Document + ", DocumentNo=" + DocumentNo + ", DateOfBirth="
+				+ DateOfBirth + ", Gender=" + Gender + ", MaritalStatus=" + MaritalStatus + ", FatherName=" + FatherName
+				+ ", MotherName=" + MotherName + ", Email=" + Email + ", ReservationId=" + ReservationId + "]";
+	}
+
 	public Customer(long customerId, String firstName, String lastName, String country, String document,
 			long documentNo, String dateOfBirth, String gender, String maritalStatus, String fatherName,
-			String motherName, String email) {
+			String motherName, String email, long reservationId) {
 		super();
 		CustomerId = customerId;
 		FirstName = firstName;
@@ -186,14 +186,7 @@ public class Customer implements Serializable{
 		FatherName = fatherName;
 		MotherName = motherName;
 		Email = email;
-	}
-
-	@Override
-	public String toString() {
-		return "Customer [CustomerId=" + CustomerId + ", FirstName=" + FirstName + ", LastName=" + LastName
-				+ ", Country=" + Country + ", Document=" + Document + ", DocumentNo=" + DocumentNo + ", DateOfBirth="
-				+ DateOfBirth + ", Gender=" + Gender + ", MaritalStatus=" + MaritalStatus + ", FatherName=" + FatherName
-				+ ", MotherName=" + MotherName + ", Email=" + Email + "]";
+		ReservationId = reservationId;
 	}
 
 	

@@ -18,22 +18,31 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.entities.SessionBean;
 
-public class CustomUpperToolbar {
+
+public class UpperToolbar {
 
 	private JPanel panel;
-	private AllRoomsFrame theRooms;
-	private BlockadeFrame blockadeFrame;
+	private CustomAllRooms theRooms;
+	private CustomBlockade blockadeFrame;
 	private CustomersFrame customersFrame;
-	private MainReservationsFrame rezervFrame;
+	private CustomCashDesk cashdesk; 
+	@SuppressWarnings("unused")
+	private static SessionBean sessionBean;
+	private CustomReservations rezervFrame;
+	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, cashBtn;
 
 	public JPanel getJPanel() {
 		return this.panel;
 	}
 
-	public CustomUpperToolbar(final JFrame mainFrame) {
+	public UpperToolbar(final JFrame mainFrame) {
 
+		initializeAllFrames();
+		
 		panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setBackground(SystemColor.activeCaption);
@@ -97,24 +106,26 @@ public class CustomUpperToolbar {
 		cashBtn.addActionListener(UpperToolbarActionListener(mainFrame));
 		panel.add(cashBtn);
 		
-		initializeAllFrames();
+		sessionBean = SessionBean.getInstance();
+		
+		
 
 	}
 
 	private synchronized void initializeAllFrames() {
-		Thread multiFramesThread = new Thread(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
 			public void run() {
-				
-				theRooms = new AllRoomsFrame(48);
+				final int roomCount =  hotelDaoImpl.getHotel().getRoomCapacity();
+				theRooms = new CustomAllRooms(roomCount);
 				customersFrame = new CustomersFrame();
-				blockadeFrame = new BlockadeFrame();
-				rezervFrame = new MainReservationsFrame();
+				blockadeFrame = new CustomBlockade();
+				rezervFrame = new CustomReservations();
+				cashdesk = new CustomCashDesk();
 			}
 		});
-		
-		multiFramesThread.start();
+
 	}
 	
 	public ActionListener UpperToolbarActionListener(final JFrame mainFrame){
@@ -128,6 +139,7 @@ public class CustomUpperToolbar {
 
 				if (command.equalsIgnoreCase("Rooms Plain")) {
 					
+					mainFrame.remove(cashdesk);
 					mainFrame.remove(rezervFrame);
 					mainFrame.remove(customersFrame);
 					mainFrame.remove(blockadeFrame);
@@ -138,6 +150,7 @@ public class CustomUpperToolbar {
 
 				else if (command.equalsIgnoreCase("Guests")) {
 					
+					mainFrame.remove(cashdesk);
 					mainFrame.remove(rezervFrame);
 					mainFrame.remove(blockadeFrame);
 					mainFrame.remove(theRooms.getWindow());
@@ -147,6 +160,7 @@ public class CustomUpperToolbar {
 
 				else if (command.equalsIgnoreCase("Reservations")) {
 
+					mainFrame.remove(cashdesk);
 					mainFrame.remove(customersFrame);
 					mainFrame.remove(blockadeFrame);
 					mainFrame.remove(theRooms.getWindow());
@@ -159,6 +173,7 @@ public class CustomUpperToolbar {
 					mainFrame.remove(rezervFrame);
 					mainFrame.remove(customersFrame);
 					mainFrame.remove(theRooms.getWindow());
+					mainFrame.remove(cashdesk);
 					mainFrame.add(blockadeFrame, BorderLayout.CENTER);
 					SwingUtilities.updateComponentTreeUI(mainFrame.getContentPane());
 					
@@ -170,6 +185,8 @@ public class CustomUpperToolbar {
 					mainFrame.remove(blockadeFrame);
 					mainFrame.remove(customersFrame);
 					mainFrame.remove(theRooms.getWindow());
+					mainFrame.add(cashdesk, BorderLayout.CENTER);
+					SwingUtilities.updateComponentTreeUI(mainFrame.getContentPane());
 				}
 				
 			}
