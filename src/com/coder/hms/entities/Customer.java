@@ -31,7 +31,7 @@ public class Customer implements Serializable{
 	private String Document;
 	
 	@Column(name="DocumentNo")
-	private long DocumentNo;
+	private String DocumentNo;
 	
 	@Column(name="DateOfBirth")
 	private String DateOfBirth;
@@ -98,11 +98,11 @@ public class Customer implements Serializable{
 		Document = document;
 	}
 
-	public long getDocumentNo() {
+	public String getDocumentNo() {
 		return DocumentNo;
 	}
 
-	public void setDocumentNo(long documentNo) {
+	public void setDocumentNo(String documentNo) {
 		DocumentNo = documentNo;
 	}
 
@@ -171,7 +171,7 @@ public class Customer implements Serializable{
 	}
 
 	public Customer(long customerId, String firstName, String lastName, String country, String document,
-			long documentNo, String dateOfBirth, String gender, String maritalStatus, String fatherName,
+			String documentNo, String dateOfBirth, String gender, String maritalStatus, String fatherName,
 			String motherName, String email, long reservationId) {
 		super();
 		CustomerId = customerId;

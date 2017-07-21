@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
@@ -14,15 +13,15 @@ import com.coder.hms.entities.User;
 public class UserDaoImpl implements UserDAO {
 
 	private Session session;
-	private Transaction transaction;
 	private DataSourceFactory dataSourceFactory;
 	private final Logger LOGGER = Logger.getLogger(HotelDaoImpl.class.getName());
 	
 	public UserDaoImpl() {
 		
 		dataSourceFactory = new DataSourceFactory();
+		DataSourceFactory.createConnection();
 		session = dataSourceFactory.getSession();
-		transaction = session.beginTransaction();
+		
 	}
 	
 	@Override
@@ -39,7 +38,7 @@ public class UserDaoImpl implements UserDAO {
 	@Override
 	public void saveUser(User user) {
 		session.saveOrUpdate(user);
-		transaction.commit();
+		session.getTransaction().commit();
 
 		LOGGER.info("User : " + user + " saved successfully.");
 	}
@@ -52,7 +51,7 @@ public class UserDaoImpl implements UserDAO {
 		
 		theUser.setPassword(newPassword);
 		session.saveOrUpdate(theUser);
-		transaction.commit();
+		session.getTransaction().commit();
 		
 		LOGGER.info("User password updated successfully.");
 	}

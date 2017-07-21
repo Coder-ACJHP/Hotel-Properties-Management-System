@@ -27,16 +27,22 @@ public class Room implements Serializable{
 	private String number;
 	
 	@Column(name="type")
-	private RoomType type;
+	private String type;
 	
 	@Column(name="price")
-	private double price;
+	private String price;
 	
 	@Column(name="status")
-	private RoomStatus status;
+	private String status;
 	
-	@Column(name="customerId")
-	private long customerId;
+	@Column(name="personCount")
+	private int personCount;
+	
+	@Column(name="customerGrupName")
+	private String customerGrupName;
+	
+	@Column(name="ReservationId")
+	private long ReservationId;
 	
 	public Room() {
 		// TODO Auto-generated constructor stub
@@ -58,52 +64,72 @@ public class Room implements Serializable{
 		this.number = number;
 	}
 
-	public RoomType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(RoomType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	public double getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 
-	public RoomStatus getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(RoomStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
-	public long getCustomerId() {
-		return customerId;
+	public int getPersonCount() {
+		return personCount;
 	}
 
-	public void setCustomerId(long customerId) {
-		this.customerId = customerId;
+	public void setPersonCount(int personCount) {
+		this.personCount = personCount;
 	}
 
-	@Override
-	public String toString() {
-		return "Room [theRoomId=" + theRoomId + ", number=" + number + ", type=" + type + ", price=" + price
-				+ ", status=" + status + ", customerId=" + customerId + "]";
+	public String getCustomerGrupName() {
+		return customerGrupName;
 	}
 
-	public Room(long theRoomId, String number, RoomType type, double price, RoomStatus status, long customerId) {
+	public void setCustomerGrupName(String customerGrupName) {
+		this.customerGrupName = customerGrupName;
+	}
+
+	public long getReservationId() {
+		return ReservationId;
+	}
+
+	public void setReservationId(long reservationId) {
+		ReservationId = reservationId;
+	}
+
+	public Room(long theRoomId, String number, String type, String price, String status, int personCount,
+			String customerGrupName, long reservationId) {
 		super();
 		this.theRoomId = theRoomId;
 		this.number = number;
 		this.type = type;
 		this.price = price;
 		this.status = status;
-		this.customerId = customerId;
+		this.personCount = personCount;
+		this.customerGrupName = customerGrupName;
+		ReservationId = reservationId;
+	}
+
+	@Override
+	public String toString() {
+		return "Room [theRoomId=" + theRoomId + ", number=" + number + ", type=" + type + ", price=" + price
+				+ ", status=" + status + ", personCount=" + personCount + ", customerGrupName=" + customerGrupName
+				+ ", ReservationId=" + ReservationId + "]";
 	}
 
 	

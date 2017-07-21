@@ -7,7 +7,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import com.apple.eawt.Application;
-import com.coder.hms.loginface.LoginFrame;
+import com.coder.hms.usrinterface.LoginFrame;
+
 
 public class ApplicationLogo {
 	

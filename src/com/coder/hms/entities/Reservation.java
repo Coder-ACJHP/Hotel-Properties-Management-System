@@ -54,8 +54,8 @@ public class Reservation implements Serializable{
 	private boolean paymentStatus;
 	
 	//room id for hiring new room
-	@Column(name="theRoomId")
-	private long theRoomId;
+	@Column(name="theNumber")
+	private String theNumber;
 	
 	public Reservation() {
 		// TODO Auto-generated constructor stub
@@ -141,7 +141,7 @@ public class Reservation implements Serializable{
 		this.note = note;
 	}
 
-	public boolean isPaymentStatus() {
+	public boolean getPaymentStatus() {
 		return paymentStatus;
 	}
 
@@ -149,12 +149,12 @@ public class Reservation implements Serializable{
 		this.paymentStatus = paymentStatus;
 	}
 
-	public long getTheRoomId() {
-		return theRoomId;
+	public String getTheNumber() {
+		return theNumber;
 	}
 
-	public void setTheRoomId(long theRoomId) {
-		this.theRoomId = theRoomId;
+	public void setTheNumber(String theRoomId) {
+		this.theNumber = theRoomId;
 	}
 
 	@Override
@@ -162,11 +162,11 @@ public class Reservation implements Serializable{
 		return "Reservation [Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate="
 				+ checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType
 				+ ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus="
-				+ paymentStatus + ", theRoomId=" + theRoomId + "]";
+				+ paymentStatus + ", theRoomId=" + theNumber + "]";
 	}
 
 	public Reservation(long id, String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
-			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus, long theRoomId) {
+			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus, String theRoomId) {
 		super();
 		Id = id;
 		this.groupName = groupName;
@@ -179,7 +179,7 @@ public class Reservation implements Serializable{
 		this.bookStatus = bookStatus;
 		this.note = note;
 		this.paymentStatus = paymentStatus;
-		this.theRoomId = theRoomId;
+		this.theNumber = theRoomId;
 	}
 	
 }

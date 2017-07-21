@@ -9,7 +9,7 @@
 		<property name="hibernate.connection.password">CoderDb958</property>
 		<property name="hibernate.connection.characterEncoding">utf8</property>
 		<property name="hibernate.connection.useUnicode">true</property>
-		<property name="hibernate.connection.pool_size">25</property>
+		<property name="hibernate.connection.pool_size">20</property>
 		<property name="current_session_context_class">thread</property>
 		<property name="hbmdl.auto">update</property>
 		<property name="show_sql">true</property>

@@ -1,10 +1,11 @@
 package com.coder.hms.daoImpl;
 
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.RoomDAO;
@@ -13,15 +14,15 @@ import com.coder.hms.entities.Room;
 public class RoomDaoImpl implements RoomDAO {
 
 	private Session session;
-	private Transaction transaction;
 	private DataSourceFactory dataSourceFactory;
 	private final Logger LOGGER = Logger.getLogger(HotelDaoImpl.class.getName());
 	
 	public RoomDaoImpl() {
 		
 		dataSourceFactory = new DataSourceFactory();
+		DataSourceFactory.createConnection();
 		session = dataSourceFactory.getSession();
-		transaction = session.beginTransaction();
+
 	}
 	
 	@Override
@@ -34,10 +35,15 @@ public class RoomDaoImpl implements RoomDAO {
 	public void saveRoom(Room room) {
 		
 		session.saveOrUpdate(room);
-		transaction.commit();
-		session.close();
+		session.getTransaction().commit();
 		
 		LOGGER.info("Room : " + room + " saved successfully.");
+	}
+
+	public List<Room> getAllRooms() {
+		Query<Room> query = session.createQuery("from Room", Room.class);
+		List<Room> roomList = query.getResultList();
+		return roomList;
 	}
 
 }
