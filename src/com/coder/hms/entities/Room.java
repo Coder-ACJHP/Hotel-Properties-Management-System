@@ -32,6 +32,9 @@ public class Room implements Serializable{
 	@Column(name="price")
 	private String price;
 	
+	@Column(name="currency")
+	private String currency;
+	
 	@Column(name="status")
 	private String status;
 	
@@ -80,6 +83,14 @@ public class Room implements Serializable{
 		this.price = price;
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -112,13 +123,14 @@ public class Room implements Serializable{
 		ReservationId = reservationId;
 	}
 
-	public Room(long theRoomId, String number, String type, String price, String status, int personCount,
-			String customerGrupName, long reservationId) {
+	public Room(long theRoomId, String number, String type, String price, String currency, String status,
+			int personCount, String customerGrupName, long reservationId) {
 		super();
 		this.theRoomId = theRoomId;
 		this.number = number;
 		this.type = type;
 		this.price = price;
+		this.currency = currency;
 		this.status = status;
 		this.personCount = personCount;
 		this.customerGrupName = customerGrupName;
@@ -128,10 +140,9 @@ public class Room implements Serializable{
 	@Override
 	public String toString() {
 		return "Room [theRoomId=" + theRoomId + ", number=" + number + ", type=" + type + ", price=" + price
-				+ ", status=" + status + ", personCount=" + personCount + ", customerGrupName=" + customerGrupName
-				+ ", ReservationId=" + ReservationId + "]";
+				+ ", currency=" + currency + ", status=" + status + ", personCount=" + personCount
+				+ ", customerGrupName=" + customerGrupName + ", ReservationId=" + ReservationId + "]";
 	}
 
-	
 	
 }

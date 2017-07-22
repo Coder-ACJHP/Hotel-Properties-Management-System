@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
@@ -48,6 +49,7 @@ import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
+import com.coder.hms.entities.RoomCountRow;
 import com.coder.hms.utils.ApplicationLogo;
 import com.coder.hms.utils.SetRoomNumbers;
 import com.toedter.calendar.JDateChooser;
@@ -74,6 +76,9 @@ public class NewReservationEx extends JDialog {
 	private JButton chancelBtn, SaveBtn, reportBtn;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+	
 	private final SetRoomNumbers srn = new SetRoomNumbers();
 	private ApplicationLogo logoSetter = new ApplicationLogo();
 	private JLabel agencyLbl, creditTypeLbl, customerCountryLbl;
@@ -451,8 +456,7 @@ public class NewReservationEx extends JDialog {
 		table_1 = new JTable(new DefaultTableModel(EARLY_PAYMENT_LIST, 0));
 		scrollPane_1.setViewportView(table_1);
 		panel.add(tabbedPane, BorderLayout.CENTER);
-		
-		this.setVisible(true);
+
 		
 	}
 	
@@ -635,4 +639,194 @@ public class NewReservationEx extends JDialog {
 		};
 		return acl;
 	}
+	
+	public long getRezIdText() {
+		return Long.parseLong(this.rezIdField.getText());
+	}
+	
+	public void setRezIdField(long reservationId) {
+		this.rezIdField.setText(String.valueOf(reservationId));
+	}
+	
+	public String getNameSurnameField() {
+		return this.nameSurnameField.getText();
+	}
+	
+	public void setNameSurnameField(String NameSurname) {
+		this.nameSurnameField.setText(NameSurname);
+	}
+	
+	public int getTotalDaysField() {
+		return Integer.parseInt(totalDaysField.getText());
+	}
+	
+	public void setTotalDaysField(int totalDays) {
+		this.totalDaysField.setText(String.valueOf(totalDays));
+	}
+	
+	public String getCheckinDate() {
+		return sdf.format(checkinDate.getDate());
+	}
+	
+	public void setCheckinDate(String theCheckinDate) {
+		this.checkinDate.setDateFormatString(theCheckinDate);
+	}
+	
+	public String getCheckoutDate() {
+		return sdf.format(checkoutDate.getDate());
+	}
+	
+	public void setCheckoutDate(String theCheckoutDate) {
+		this.checkoutDate.setDateFormatString(theCheckoutDate);
+	}
+	
+	public String getAgency() {
+		return this.agencyCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setAgency(String theAgency) {
+		for(int index=0; index < agencyCmbBox.getItemCount(); index++) {
+			if(agencyCmbBox.getItemAt(index).equalsIgnoreCase(theAgency)) {
+				this.agencyCmbBox.setSelectedItem(theAgency);
+				break;
+			}
+		}
+				
+	}
+	
+	public String getHostType() {
+		return this.hostCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setHostType(String theHostType) {
+		for(int index=0; index < hostCmbBox.getItemCount(); index++) {
+			if(hostCmbBox.getItemAt(index).equalsIgnoreCase(theHostType)) {
+				this.hostCmbBox.setSelectedItem(theHostType);
+				break;
+			}
+		}
+	}
+	
+	public String getCreditType() {
+		return this.creaditTypeCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setCreditType(String theCreditType) {
+		for(int index=0; index < creaditTypeCmbBox.getItemCount(); index++) {
+			if(creaditTypeCmbBox.getItemAt(index).equalsIgnoreCase(theCreditType)) {
+				this.creaditTypeCmbBox.setSelectedItem(theCreditType);
+				break;
+			}
+		}
+	}
+	
+	
+	public String getReservStatus() {
+		return this.rezervStatusCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setReservStatus(String theReservStatus) {
+		for(int index=0; index < rezervStatusCmbBox.getItemCount(); index++) {
+			if(rezervStatusCmbBox.getItemAt(index).equalsIgnoreCase(theReservStatus)) {
+				this.rezervStatusCmbBox.setSelectedItem(theReservStatus);
+				break;
+			}
+		}
+	}
+	
+	public String getCustomerCountry() {
+		return this.customerCountryCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setCustomerCountry(String theCustomerCountry) {
+		for(int index=0; index < customerCountryCmbBox.getItemCount(); index++) {
+			if(customerCountryCmbBox.getItemAt(index).equalsIgnoreCase(theCustomerCountry)) {
+				this.customerCountryCmbBox.setSelectedItem(theCustomerCountry);
+				break;
+			}
+		}
+	}
+	
+	public String getReservNote() {
+		return this.noteTextArea.getText();
+	}
+	
+	public void setReservNote(String theNote) {
+		this.noteTextArea.setText(theNote);
+	}
+	
+	
+	public String getRoomNumber() {
+		return this.roomNumCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setRoomNumber(String theRoomNumber) {
+		this.roomNumCmbBox.setSelectedItem(theRoomNumber);
+
+	}
+	
+	
+	public String getRoomType() {
+		return this.roomTypeCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setRoomType(String theRoomType) {
+		for(int index=0; index < roomTypeCmbBox.getItemCount(); index++) {
+			if(roomTypeCmbBox.getItemAt(index).equalsIgnoreCase(theRoomType)) {
+				this.roomTypeCmbBox.setSelectedItem(theRoomType);
+				break;
+			}
+		}
+	}
+	
+	public String getCurrency() {
+		return this.currencyCmbBox.getSelectedItem().toString();
+	}
+	
+	public void setCurrency(String theCurrency) {
+		for(int index=0; index < currencyCmbBox.getItemCount(); index++) {
+			if(currencyCmbBox.getItemAt(index).contains(theCurrency)) {
+				this.currencyCmbBox.setSelectedIndex(index);
+				break;
+			}
+		}
+	}
+	
+	public int getPersonCountSpinner() {
+		return (int) this.personCountSpinner.getValue();
+	}
+	
+	public void setPersonCountSpinner(int thePersonCount) {
+		this.personCountSpinner.setValue(thePersonCount);
+	}
+	
+	public double getPriceOfRoom() {
+		return Double.parseDouble(this.priceField.getValue().toString());
+	}
+	
+	public void setPriceOfRoom(double thePrice) {
+		this.priceField.setValue(thePrice);
+	}
+	
+	public Object[] getRoomCountTableRows() {
+		RoomCountRow rc = null;
+		for(int index=0; index < roomCountModel.getRowCount(); index++) {
+			rc = new RoomCountRow();
+			for(int i=0; i < 5; i++) {
+				rc.setRoomNumber(roomCountModel.getValueAt(index, i));
+				rc.setRoomType(roomCountModel.getValueAt(index, i));
+				rc.setPersonCount(roomCountModel.getValueAt(index, i));
+				rc.setPrice(roomCountModel.getValueAt(index, i));
+				rc.setCurrency(roomCountModel.getValueAt(index, i));
+			}
+		}
+		return new Object[]{rc.getRoomNumber(), rc.getRoomType(), rc.getPersonCount(), rc.getPrice(), rc.getCurrency()};
+	}
+	
+	public void setRoomCountTableRows(Object[] tableRows) {
+		this.roomCountModel.addRow(tableRows);
+	}
 }
+
+
+

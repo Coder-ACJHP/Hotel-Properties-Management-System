@@ -1,6 +1,7 @@
 package com.coder.hms.daoImpl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -13,6 +14,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
+	private final Logger LOGGER = Logger.getLogger(CustomerDaoImpl.class.getName());
 	
 	public CustomerDaoImpl() {
 		
@@ -36,9 +38,11 @@ public class CustomerDaoImpl implements CustomerDAO {
 
 	@Override
 	public List<Customer> getAllCustomers() {
-
 		Query<Customer> query = session.createQuery("from Customer", Customer.class);
 		List<Customer> customerList = query.getResultList();
+		
+		LOGGER.info(customerList.toString());
+		
 		return customerList;
 	}
 
@@ -46,6 +50,16 @@ public class CustomerDaoImpl implements CustomerDAO {
 		session.saveOrUpdate(theCustomer);
 		session.getTransaction().commit();
 		
+	}
+
+	public List<Customer> getCustomerByReservId(long id) {
+		Query<Customer> query = session.createQuery("from Customer where ReservationId=:id", Customer.class);
+		query.setParameter("id", id);
+		List<Customer> customerList = query.getResultList();
+		
+		LOGGER.info(customerList.toString());
+		
+		return customerList;
 	}
 
 }

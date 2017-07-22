@@ -46,4 +46,13 @@ public class RoomDaoImpl implements RoomDAO {
 		return roomList;
 	}
 
+	public Room getRoomByReservId(long id) {
+		Query<Room> query = session.createQuery("from Room where ReservationId=:id", Room.class);
+		query.setParameter("id", id);
+		Room room = query.getSingleResult();
+		
+		LOGGER.info(room.toString());
+		return room;
+	}
+
 }

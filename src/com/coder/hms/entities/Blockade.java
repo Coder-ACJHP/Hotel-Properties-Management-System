@@ -11,6 +11,7 @@ public class Blockade implements Serializable {
 
 	private String Type;
 	private String Number;
+	private String Status;
 	private String GroupName;
 
 	public Blockade() {
@@ -33,6 +34,14 @@ public class Blockade implements Serializable {
 		Number = number;
 	}
 
+	public void setStatus(String status) {
+		this.Status = status;
+	}
+	
+	public String getStatus() {
+		return this.Status;
+	}
+	
 	public String getGroupName() {
 		return GroupName;
 	}
@@ -41,16 +50,17 @@ public class Blockade implements Serializable {
 		GroupName = groupName;
 	}
 
-	public Blockade(String type, String number, String groupName) {
+	public Blockade(String type, String number, String status, String groupName) {
 		super();
 		Type = type;
 		Number = number;
+		Status = status;
 		GroupName = groupName;
 	}
 
 	@Override
 	public String toString() {
-		return "Blockade [Type=" + Type + ", Number=" + Number + ", GroupName=" + GroupName + "]";
+		return "Blockade [Type=" + Type + ", Number=" + Number + ", Status=" + Status + ", GroupName=" + GroupName + "]";
 	}
 	
 	

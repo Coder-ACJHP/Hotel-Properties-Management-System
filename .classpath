@@ -24,6 +24,5 @@
 	<classpathentry kind="lib" path="src/External_Librarys/jboss-logging-3.3.0.Final.jar"/>
 	<classpathentry kind="lib" path="src/External_Librarys/jsr250-api-1.0.jar"/>
 	<classpathentry kind="lib" path="src/External_Librarys/mchange-commons-java-0.2.11.jar"/>
-	<classpathentry kind="lib" path="src/External_Librarys/h2-1.4.196.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

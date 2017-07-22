@@ -1,6 +1,7 @@
 package com.coder.hms.daoImpl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -13,7 +14,7 @@ public class ReservationDaoImpl implements ReservationDAO{
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
-//	private final Logger LOGGER = Logger.getLogger(HotelDaoImpl.class.getName());
+	private final Logger LOGGER = Logger.getLogger(ReservationDaoImpl.class.getName());
 	
 	public ReservationDaoImpl() {
 		dataSourceFactory = new DataSourceFactory();
@@ -30,8 +31,10 @@ public class ReservationDaoImpl implements ReservationDAO{
 
 	@Override
 	public Reservation findReservationByDate(String Date) {
-		// TODO Auto-generated method stub
-		return null;
+		Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:Date", Reservation.class);
+		query.setParameter("Date", Date);
+		Reservation reservation = query.getSingleResult();
+		return reservation;
 	}
 
 	@Override
@@ -50,6 +53,9 @@ public class ReservationDaoImpl implements ReservationDAO{
 	public List<Reservation> getAllReservations() {
 		Query<Reservation> query = session.createQuery("from Reservation", Reservation.class);
 		List<Reservation> reservList = query.getResultList();
+		
+		LOGGER.info(reservList.toString());
+		
 		return reservList;
 	}
 

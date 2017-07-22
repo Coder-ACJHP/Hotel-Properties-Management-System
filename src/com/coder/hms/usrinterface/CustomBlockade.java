@@ -3,6 +3,7 @@ package com.coder.hms.usrinterface;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -159,11 +161,13 @@ public class CustomBlockade extends JPanel {
 		populateTableHeaders(vecColsName, new Date());
 		
 		model = new DefaultTableModel(vecColsName, 0);
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 		table = new JTable(model);
-		table.setDefaultRenderer(String.class, cellRenderer);
+		table.setDefaultRenderer(Object.class, cellRenderer);
 		table.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
+		table.setFont(new Font("Arial", Font.BOLD, 12));
 		table.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		generalScrollPane = new JScrollPane();
@@ -198,8 +202,8 @@ public class CustomBlockade extends JPanel {
 		final Calendar c = Calendar.getInstance();
 		c.setTime(date);
 			
-		cols.add("TYPE");
 		cols.add("ROOM");
+		cols.add("TYPE");
 		cols.add("STATUS OF ROOM");
 		
 		for(int i = 0; i < 7; i++) {
@@ -221,7 +225,8 @@ public class CustomBlockade extends JPanel {
 			blockade = new Blockade();
 			blockade.setNumber(roomList.get(i).getNumber());
 			blockade.setType(roomList.get(i).getType());
-			model.addRow(new Object[]{blockade.getNumber(), blockade.getType()});
+			blockade.setStatus(roomList.get(i).getStatus());
+			model.addRow(new Object[]{blockade.getNumber(), blockade.getType(), blockade.getStatus()});
 			for (int j = 0; j < resList.size(); j++) {
 				if(blockade.getNumber().equals(resList.get(j).getTheNumber()))
 					for(int x=0; x < weekDates.length; x++) {
