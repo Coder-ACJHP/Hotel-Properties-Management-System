@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
@@ -158,6 +163,10 @@ public class UpperToolbar {
 					mainFrame.remove(customersFrame);
 					mainFrame.remove(blockadeFrame);
 					mainFrame.remove(theRooms.getWindow());
+					
+					//populate the reservation table when we opening it
+					rezervFrame.populateMainTable();
+					
 					mainFrame.add(rezervFrame, BorderLayout.CENTER);
 					SwingUtilities.updateComponentTreeUI(mainFrame);
 				}

@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 CREATE TABLE `hotel_managment_system`.`Customer` (
   `CustomerId` INT NOT NULL AUTO_INCREMENT,
   `FirstName` VARCHAR(45) NOT NULL,

@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.test;
 
 import com.coder.hms.utils.SetRoomNumbers;

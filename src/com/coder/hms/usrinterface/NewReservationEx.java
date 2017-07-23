@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
@@ -98,7 +103,7 @@ public class NewReservationEx extends JDialog {
 	private final String[] HOST_TYPES = {"B.B", "F.B", "H.B", "O.B"};
 	private final String[] RESERV_STS = {"GUARANTEE", "WAITLIST", "CANCEL"};
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
-	private final String[] cmbList = { "TURKISH LIRA", "$ DOLLAR", "â‚¬ EURO", "Â£ POUND"};
+	private final String[] cmbList = { "TURKISH LIRA", "$ DOLLAR", "€ EURO", "£ POUND"};
 	private final String[] CREDIT_TYPES = {"BLACK LIST", "INFINITY CREDIT", "STANDART CUSTOMER CREDIT"};
 	private final String[] EARLY_PAYMENT_LIST = {"TITLE", "NAME", "AMOUNT", "CURRENCY", "EXCHANGE", "NOTE"};
 	private final String[] AGENCY_LIST = {"WALKIN", "WEB", "OTHER"};

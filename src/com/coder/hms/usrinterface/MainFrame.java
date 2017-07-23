@@ -1,10 +1,7 @@
 /**
- * 
- */
-/**
-
- * @author MacbookPro
- *
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
  */
 package com.coder.hms.usrinterface;
 
@@ -31,6 +28,7 @@ public class MainFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private CustomMenuBar customMenuBar;
+	@SuppressWarnings("unused")
 	private static SessionBean sessionBean;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();

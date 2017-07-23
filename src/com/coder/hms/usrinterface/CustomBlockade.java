@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
@@ -11,11 +16,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -29,6 +34,8 @@ import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.CustomTableCellRenderer;
+import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.utils.CustomTableHeaderRendererBlockaje;
 
 public class CustomBlockade extends JPanel {
 
@@ -68,6 +75,8 @@ public class CustomBlockade extends JPanel {
 	private DefaultTableModel blokajCustomerModel = new DefaultTableModel(blokajCustomerColsName, 0);
 	
 	private final CustomTableCellRenderer cellRenderer = new CustomTableCellRenderer();
+	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
+	private final CustomTableHeaderRendererBlockaje THRC = new CustomTableHeaderRendererBlockaje();
 	/**
 	 * Create the frame.
 	 */
@@ -109,7 +118,7 @@ public class CustomBlockade extends JPanel {
 		leftCenterSplitter.setAlignmentX(Component.CENTER_ALIGNMENT);
 		leftCenterSplitter.setContinuousLayout(true);
 		leftCenterSplitter.setAutoscrolls(true);
-		leftCenterSplitter.setDividerLocation(630);
+		leftCenterSplitter.setDividerLocation(430);
 		leftCenterSplitter.resetToPreferredSizes();
 		leftSidePanel.add(leftCenterSplitter);
 		
@@ -118,6 +127,7 @@ public class CustomBlockade extends JPanel {
 		blokajTable.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
 		blokajTable.setColumnSelectionAllowed(true);
 		blokajTable.setCellSelectionEnabled(true);
+		blokajTable.getTableHeader().setDefaultRenderer(THRC);
 		blokajTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		blokajScrollPane = new JScrollPane();
@@ -132,7 +142,7 @@ public class CustomBlockade extends JPanel {
 		centerRightSplitter.setAutoscrolls(true);
 		centerRightSplitter.setAlignmentX(Component.CENTER_ALIGNMENT);
 		centerRightSplitter.resetToPreferredSizes();
-		centerRightSplitter.setDividerLocation(630);
+		centerRightSplitter.setDividerLocation(430);
 		leftCenterSplitter.setRightComponent(centerRightSplitter);
 		
 		blokajRoomsTable = new JTable(blokajRoomsModel);
@@ -140,6 +150,7 @@ public class CustomBlockade extends JPanel {
 		blokajRoomsTable.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
 		blokajRoomsTable.setColumnSelectionAllowed(true);
 		blokajRoomsTable.setCellSelectionEnabled(true);
+		blokajRoomsTable.getTableHeader().setDefaultRenderer(THRC);
 		blokajRoomsTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		roomScrollPane = new JScrollPane();
@@ -151,6 +162,7 @@ public class CustomBlockade extends JPanel {
 		blokajCustomerTable.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
 		blokajCustomerTable.setColumnSelectionAllowed(true);
 		blokajCustomerTable.setCellSelectionEnabled(true);
+		blokajCustomerTable.getTableHeader().setDefaultRenderer(THRC);
 		blokajCustomerTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		customerScrollPane = new JScrollPane();
@@ -161,13 +173,17 @@ public class CustomBlockade extends JPanel {
 		populateTableHeaders(vecColsName, new Date());
 		
 		model = new DefaultTableModel(vecColsName, 0);
-		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		
+		cellRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+		THR.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		table = new JTable(model);
+		table.getTableHeader().setDefaultRenderer(THR);
 		table.setDefaultRenderer(Object.class, cellRenderer);
 		table.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
-		table.setFont(new Font("Arial", Font.BOLD, 12));
+		table.setFont(new Font("Dialog", Font.PLAIN, 14));
 		table.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		generalScrollPane = new JScrollPane();
@@ -204,7 +220,7 @@ public class CustomBlockade extends JPanel {
 			
 		cols.add("ROOM");
 		cols.add("TYPE");
-		cols.add("STATUS OF ROOM");
+		cols.add("STATUS");
 		
 		for(int i = 0; i < 7; i++) {
 			c.add(Calendar.DATE, 1);

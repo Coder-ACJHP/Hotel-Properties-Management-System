@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.utils;
 
 import java.awt.Color;
@@ -18,18 +23,39 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 			int row, int column) {
 		
 		final Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				
-		if(isSelected) {
-			cellComponent.setBackground(Color.decode("#a0769a"));
-		}else if(hasFocus) {
-			cellComponent.setForeground(Color.WHITE);
-			cellComponent.setBackground(Color.decode("#7f4657"));
-		}else if(value != null) {
-			cellComponent.setForeground(Color.WHITE);
-			cellComponent.setBackground(Color.decode("#00a0cc"));
+			
+		String colrowVal = String.valueOf(value);
+		
+		if(colrowVal.equals(null) || colrowVal.length() <= 0) {
+			
+			cellComponent.setForeground(Color.BLACK);
+			cellComponent.setBackground(Color.decode("#e3f6fb"));
+			
+		}else {
+			
+			
+			if(colrowVal.equalsIgnoreCase("BUSY")) {
+				cellComponent.setBackground(Color.decode("#f9d692"));
+			}
+			
+			else if(colrowVal.equalsIgnoreCase("DOUBLE") || colrowVal.equalsIgnoreCase("TWIN") || colrowVal.equalsIgnoreCase("TRIPLE")) {
+				cellComponent.setBackground(Color.decode("#f4a0c4"));
+			}
+			
+			else if(colrowVal.contains("00")) {
+				cellComponent.setBackground(Color.decode("#effbad"));
+			}
+			
+			else {
+				cellComponent.setBackground(table.getBackground());
+			}
+
 		}
 		
-		
+		if(hasFocus) {
+			cellComponent.setBackground(Color.decode("#10d6d1"));
+		}
+
 		return cellComponent;
 	}
 

@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.entities;
 
 public class SessionBean {
@@ -11,6 +16,7 @@ public class SessionBean {
 	private static String password;
 	private static String Date;
 	private static int roomCount;
+	private static Object[] tableRowCol;
 
 	public static SessionBean getSESSION_BEAN() {
 		if(SESSION_BEAN == null) {
@@ -51,16 +57,10 @@ public class SessionBean {
 		SessionBean.password = password;
 	}
 
-	/**
-	 * @return the date
-	 */
 	public String getDate() {
 		return Date;
 	}
 
-	/**
-	 * @param date the date to set
-	 */
 	public static void setDate(String date) {
 		Date = date;
 	}
@@ -72,6 +72,14 @@ public class SessionBean {
 	public static void setRoomCount(int roomCount) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public static Object[] getTableRowCol() {
+		return tableRowCol;
+	}
+
+	public static void setTableRowCol(Object[] tableRowCol) {
+		SessionBean.tableRowCol = tableRowCol;
 	}
 	
 }

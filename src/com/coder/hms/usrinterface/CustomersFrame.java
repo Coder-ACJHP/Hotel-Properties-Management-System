@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
@@ -24,6 +29,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import com.coder.hms.utils.CustomReservationrenderer;
+import com.coder.hms.utils.CustomTableHeaderRenderer;
+
 
 public class CustomersFrame extends JPanel {
 	
@@ -31,13 +39,16 @@ public class CustomersFrame extends JPanel {
 	 * 
 	 */
 	private JTable customerTable;
-	private JScrollPane scrollPane;
-	private JPanel searchPanel = new JPanel();
-	private final String[] colsName = {"ROOM", "REZERVATION ", "NAME ", "LASTNAME", "AGENCY", "GROUP", "CHECK/IN DATE", "CHECK/OUT DATE", "COUNTRY"};
-	private DefaultTableModel model = new DefaultTableModel(colsName, 100);
-	private static final long serialVersionUID = 1L;
 	private JLabel lblTableFilter;
+	private JScrollPane scrollPane;
 	private JTextField searchFilterField;
+	private JPanel searchPanel = new JPanel();
+	private static final long serialVersionUID = 1L;
+	private final String[] colsName = {"ROOM", "REZERVATION ", "NAME ", "LASTNAME", 
+					"AGENCY", "GROUP", "CHECK/IN DATE", "CHECK/OUT DATE", "COUNTRY"};
+	private DefaultTableModel model = new DefaultTableModel(colsName, 100);
+	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
+	private final CustomReservationrenderer renderer = new CustomReservationrenderer();
 
 	public CustomersFrame() {
 		
@@ -103,10 +114,15 @@ public class CustomersFrame extends JPanel {
 		
 		customerTable = new JTable(model);
 		customerTable.setFillsViewportHeight(true);
-		customerTable.setFont(new Font("Dialog", Font.PLAIN, 13));
+		customerTable.setCellSelectionEnabled(true);
+		
+		THR.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		customerTable.setDefaultRenderer(String.class, renderer);
+		customerTable.getTableHeader().setDefaultRenderer(THR);
+		customerTable.setFont(new Font("Dialog", Font.PLAIN, 14));
 		customerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		customerTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		customerTable.setCellSelectionEnabled(true);
 		customerTable.setBackground(new Color(245, 245, 245));
 		scrollPane.setViewportView(customerTable);
 		

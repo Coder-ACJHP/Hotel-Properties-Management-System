@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
@@ -29,11 +34,15 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.coder.hms.daoImpl.CustomerDaoImpl;
+import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
+import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
+import com.coder.hms.utils.CustomReservationrenderer;
+import com.coder.hms.utils.CustomTableHeaderRenderer;
 import com.toedter.calendar.JDateChooser;
 
 public class CustomReservations extends JPanel {
@@ -42,31 +51,31 @@ public class CustomReservations extends JPanel {
 	 * 
 	 */
 	private JTable table;
+	private Date reservDate;
+	private String today = "";
 	private JPanel buttonPanel;
 	private JTextField refNoField;
 	private JScrollPane scrollPane;
+	private DefaultTableModel model;
 	private JTextField agencyRefField;
 	private JButton newRezBtn, findBtn;
 
 	private RoomDaoImpl roomDaoImpl;
 	
-	private CustomerDaoImpl customerDaoImpl;
+	private HotelDaoImpl hotelDoaImpl;
 	
+	private CustomerDaoImpl customerDaoImpl;
+
 	private ReservationDaoImpl reservationDaoImpl;
 	
 	private static final long serialVersionUID = 1L;
 	private JDateChooser startDatePicker, endDatePicker;
 	private JLabel startdateLbl, endDateLbl, referansNoLbl, agencyRefLbl;
 	private final String[] rezColsName = {"DATE", "CAPASITE ", "FULL ", "EMPTY", "GARANTED", "WAITING"};
-	private DefaultTableModel model = new DefaultTableModel(rezColsName, 0);
+	private final CustomReservationrenderer customTCR = new CustomReservationrenderer();
+	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
 	
 	public CustomReservations() {
-		
-//		reservList = reservationDaoImpl.getAllReservations();
-//		for(Reservation res: reservList) {
-//			model.addRow(new Object[]{res.getCheckinDate(), res.getC});
-//		}
-//		
 		
 		setLayout(new BorderLayout(0, 0));
 		
@@ -89,7 +98,7 @@ public class CustomReservations extends JPanel {
 				@Override
 				public void run() {
 					
-					new NewReservationEx();
+					new NewReservationEx().setVisible(true);
 				}
 			});
 		});
@@ -153,11 +162,17 @@ public class CustomReservations extends JPanel {
 		agencyRefField.setColumns(10);
 		buttonPanel.add(agencyRefField);
 		
+		model = new DefaultTableModel(rezColsName, 0);
+		
+		customTCR.setHorizontalAlignment(SwingConstants.CENTER);
+		THR.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		table = new JTable(model);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
-		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(true);
+		table.getTableHeader().setDefaultRenderer(THR);
+		table.setDefaultRenderer(Object.class, customTCR);
+		table.setFont(new Font("Dialog", Font.PLAIN, 14));
 		table.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		scrollPane = new JScrollPane();
@@ -167,11 +182,46 @@ public class CustomReservations extends JPanel {
 		getReadyForDataFlow();
 	}
 	
+	private float calcFullnessPersentage(int count, int capasite) {
+		float persentage = (100 * count) / capasite;
+		return persentage;
+	}
+	
 	public synchronized void getReadyForDataFlow() {
 		
 		roomDaoImpl = new RoomDaoImpl();
+		hotelDoaImpl = new HotelDaoImpl();
 		customerDaoImpl = new CustomerDaoImpl();
 		reservationDaoImpl = new ReservationDaoImpl();
+	}
+	
+	public void populateMainTable() {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+		final Calendar c = Calendar.getInstance();
+		reservDate = new Date();
+		c.setTime(reservDate);
+		
+		//get hotel capasite.
+		Hotel hotel = hotelDoaImpl.getHotel();
+		
+		for(int i = 0; i < 31; i++) {
+			
+			c.add(Calendar.DATE, 1);
+			reservDate = c.getTime();
+			today = sdf.format(reservDate);
+
+			List<Reservation> reservList = reservationDaoImpl.getReservsByDate(today); 
+			List<Reservation> garanteedReservList = reservationDaoImpl.getGaranteedReservs(today);
+		 	List<Reservation> reservsAsWaitList = reservationDaoImpl.getReservsAsWaitlist(today);
+		 	
+			final float fullnesPersentage = calcFullnessPersentage(reservList.size(), hotel.getRoomCapacity());
+			final float emptyPersentage = 100f - fullnesPersentage;
+			
+			final Object[] colRowVect = new Object[] {today, hotel.getRoomCapacity(), fullnesPersentage + "%",
+									emptyPersentage + "%", garanteedReservList.size(), reservsAsWaitList.size()};
+			model.addRow(colRowVect);
+		}
+		
 	}
 	
 	public ActionListener findRezervation() {

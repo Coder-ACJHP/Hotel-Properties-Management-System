@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.daoImpl;
 
 import java.util.List;
@@ -57,6 +62,29 @@ public class ReservationDaoImpl implements ReservationDAO{
 		LOGGER.info(reservList.toString());
 		
 		return reservList;
+	}
+
+	public List<Reservation> getReservsByDate(String today) {
+		Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:today", Reservation.class);
+		query.setParameter("today", today);
+		List<Reservation> reservList = query.getResultList();
+		return reservList;
+	}
+
+	public List<Reservation> getGaranteedReservs(String today) {
+		Query<Reservation> query = session.createQuery("from Reservation "
+							+ "where bookStatus = 'GUARANTEE' and checkinDate=:today", Reservation.class);
+		query.setParameter("today", today);
+		List<Reservation> guaranteedList = query.getResultList();
+		return guaranteedList;
+	}
+
+	public List<Reservation> getReservsAsWaitlist(String today) {
+		Query<Reservation> query = session.createQuery("from Reservation "
+							+ "where bookStatus = 'WAITLIST' and checkinDate=:today", Reservation.class);
+		query.setParameter("today", today);
+		List<Reservation> waitedList = query.getResultList();
+		return waitedList;
 	}
 
 }

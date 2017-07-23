@@ -1,10 +1,14 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.start;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.coder.hms.usrinterface.LoginFrame;
 import com.coder.hms.usrinterface.MainFrame;
 
 

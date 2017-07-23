@@ -1,3 +1,8 @@
+/**
+ * @author Coder ACJHP
+ * @Email hexa.octabin@gmail.com
+ * @Date 15/07/2017
+ */
 package com.coder.hms.usrinterface;
 
 import java.awt.Color;
@@ -25,6 +30,7 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.entities.SessionBean;
 import com.coder.hms.utils.ApplicationLogo;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -38,13 +44,15 @@ public class PaymentEx extends JDialog {
 	private JTextArea textPane;
 	private JTextField titleField;
 	private JButton btnClear, btnSave;
+	@SuppressWarnings("unused")
+	private SessionBean sessionBean;
 	private JFormattedTextField priceField;
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> comboBox, currencyCmbBox;
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] PAYMENT_TYPE = {"CASH PAYMENT", "CREDIT CARD", "CITY LEDGER"};
-	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "$ DOLLAR", "ï¿½ EURO", "ï¿½ POUND"};
+	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "$ DOLLAR", "€ EURO", "£ POUND"};
 
 	/**
 	 * Create the dialog.
@@ -150,12 +158,7 @@ public class PaymentEx extends JDialog {
 		buttonsPanel.add(btnClear);
 
 		btnSave = new JButton("PAY");
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				//payment processes
-			}
-		});
+		btnSave.addActionListener(payActionListener());
 		btnSave.setToolTipText("Press ALT + ENTER keys for shortcut");
 		btnSave.setSelectedIcon(null);
 		btnSave.setIcon(new ImageIcon(PaymentEx.class.getResource("/com/coder/hms/icons/payment_cash.png")));
@@ -176,5 +179,24 @@ public class PaymentEx extends JDialog {
 		priceField.setText("");
 		currencyCmbBox.setSelectedItem(0);
 		textPane.setText("");
+	}
+	
+	private ActionListener payActionListener() {
+		ActionListener listener = new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				
+				final String title = titleField.getText();
+				final String paymentType = comboBox.getSelectedItem().toString(); 
+				final double price = (double) priceField.getValue();
+				final String currency = currencyCmbBox.getSelectedItem().toString();
+				final String explanation = textPane.getText();
+				
+				final Object[] rowCol = new Object[] {title, paymentType, price, currency, explanation};
+				
+				sessionBean = SessionBean.getSESSION_BEAN();
+				SessionBean.setTableRowCol(rowCol);
+			}
+		};
+		return listener;
 	}
 }
