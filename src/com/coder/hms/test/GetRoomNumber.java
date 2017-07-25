@@ -5,13 +5,13 @@
  */
 package com.coder.hms.test;
 
-import com.coder.hms.utils.SetRoomNumbers;
+import com.coder.hms.utils.RoomNumberMaker;
 
 public class GetRoomNumber {
 
 	public static void main(String[] args) {
 		
-		SetRoomNumbers gt = new SetRoomNumbers();
+		RoomNumberMaker gt = new RoomNumberMaker();
 		
 		String[] rn = gt.getRoomNumbers();
 		

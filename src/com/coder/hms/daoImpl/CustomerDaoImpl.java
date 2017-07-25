@@ -25,7 +25,6 @@ public class CustomerDaoImpl implements CustomerDAO {
 		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
-		session = dataSourceFactory.getSession();
 
 	}
 	
@@ -43,25 +42,32 @@ public class CustomerDaoImpl implements CustomerDAO {
 
 	@Override
 	public List<Customer> getAllCustomers() {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<Customer> query = session.createQuery("from Customer", Customer.class);
 		List<Customer> customerList = query.getResultList();
-		
+		session.close();
 		LOGGER.info(customerList.toString());
 		
 		return customerList;
 	}
 
 	public void save(Customer theCustomer) {
-		session.saveOrUpdate(theCustomer);
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		session.save(theCustomer);
 		session.getTransaction().commit();
+		session.close();
 		
 	}
 
 	public List<Customer> getCustomerByReservId(long id) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<Customer> query = session.createQuery("from Customer where ReservationId=:id", Customer.class);
 		query.setParameter("id", id);
 		List<Customer> customerList = query.getResultList();
-		
+		session.close();
 		LOGGER.info(customerList.toString());
 		
 		return customerList;

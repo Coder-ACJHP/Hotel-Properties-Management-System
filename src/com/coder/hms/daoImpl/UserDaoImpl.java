@@ -25,31 +25,36 @@ public class UserDaoImpl implements UserDAO {
 		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
-		session = dataSourceFactory.getSession();
 		
 	}
 	
 	@Override
 	public User getUserByName(String theName) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
 		query.setParameter("theName", theName);
 		User user = query.getSingleResult();
 		
 		LOGGER.info("Returning user : " + user);
 		
+		session.close();
 		return user;
 	}
 
 	@Override
 	public void saveUser(User user) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		session.saveOrUpdate(user);
 		session.getTransaction().commit();
-
-		LOGGER.info("User : " + user + " saved successfully.");
+		session.close();
 	}
 
 	@Override
 	public void changePasswordOfUser(String nickName, String newPassword) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<User> query = session.createQuery("from User where NickName=:nickName", User.class);
 		query.setParameter("nickName", nickName);
 		User theUser = query.getSingleResult();
@@ -57,6 +62,7 @@ public class UserDaoImpl implements UserDAO {
 		theUser.setPassword(newPassword);
 		session.saveOrUpdate(theUser);
 		session.getTransaction().commit();
+		session.close();
 		
 		LOGGER.info("User password updated successfully.");
 	}
@@ -69,11 +75,14 @@ public class UserDaoImpl implements UserDAO {
 
 	public boolean authentication(String userName, String userPswrd) {
 		boolean isUser = false;
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<User> query = session.createQuery("from User where NickName=:userName and Password=:userPswrd", User.class);
 		query.setParameter("userName", userName);
 		query.setParameter("userPswrd", userPswrd);
 		User user = query.getSingleResult();
 		
+		session.close();
 		
 		if(user != null) {
 			isUser = true;

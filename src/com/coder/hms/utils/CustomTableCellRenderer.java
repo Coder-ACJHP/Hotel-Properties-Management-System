@@ -38,7 +38,11 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 				cellComponent.setBackground(Color.decode("#f9d692"));
 			}
 			
-			else if(colrowVal.equalsIgnoreCase("DOUBLE") || colrowVal.equalsIgnoreCase("TWIN") || colrowVal.equalsIgnoreCase("TRIPLE")) {
+			else if(colrowVal.equalsIgnoreCase("CLEAN")) {
+				cellComponent.setBackground(Color.decode("#0083fb"));
+			}
+			
+			else if(colrowVal.equalsIgnoreCase("SINGLE") ||colrowVal.equalsIgnoreCase("DOUBLE") || colrowVal.equalsIgnoreCase("TWIN") || colrowVal.equalsIgnoreCase("TRIPLE")) {
 				cellComponent.setBackground(Color.decode("#f4a0c4"));
 			}
 			

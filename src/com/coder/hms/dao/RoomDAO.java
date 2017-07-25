@@ -9,7 +9,7 @@ import com.coder.hms.entities.Room;
 
 public interface RoomDAO {
 
-	public Room getRoomByRoomNumber(int roomNumber);
+	public Room getRoomByRoomNumber(String roomNumber);
 	
 	public void saveRoom(Room room);
 }

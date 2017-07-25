@@ -7,22 +7,26 @@ package com.coder.hms.usrinterface;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import com.coder.hms.actionlisteners.RoomsAction;
-import com.coder.hms.utils.SpringUtilitiesLayout;
+import com.coder.hms.daoImpl.RoomDaoImpl;
+import com.coder.hms.entities.Room;
 
 public class CustomAllRooms {
 
 
+	private final List<Room> roomList;
+	private final RoomDaoImpl roomDaoImpl;
 	private JPanel contentPanel = new JPanel();
 	private final RoomsAction theAction = new RoomsAction();
 	int counter = 100;
@@ -34,8 +38,11 @@ public class CustomAllRooms {
 
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setBackground(Color.decode("#066d95"));
-		contentPanel.setLayout(new SpringLayout());
+		contentPanel.setPreferredSize(new Dimension(700, 1000));
+		contentPanel.setLayout(new FlowLayout());
 		
+		roomDaoImpl = new RoomDaoImpl();
+		roomList = roomDaoImpl.getAllRooms();
 		
 		for (int i = 1; i <= roomCount; i++) {
 			++lastNum;
@@ -44,6 +51,11 @@ public class CustomAllRooms {
 			roomBtn.setFont(new Font("Arial", Font.BOLD, 12));
 			roomBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 			roomBtn.setText(counter +""+ lastNum);
+			
+			for(Room room: roomList) {
+				if(room.getNumber().equals(counter +""+ lastNum))
+					roomBtn.setToolTipText(room.getType());
+			}
 			
 			if(i % 6 == 0) {
 
@@ -59,7 +71,6 @@ public class CustomAllRooms {
 			contentPanel.add(roomBtn);
 		}
 
-		SpringUtilitiesLayout.makeGrid(contentPanel, 8, 6, 20, 20, 7, 7);
 		contentPanel.setVisible(true);
 	}
 	

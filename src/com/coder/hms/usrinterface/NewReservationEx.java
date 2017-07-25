@@ -56,7 +56,7 @@ import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.entities.RoomCountRow;
 import com.coder.hms.utils.ApplicationLogo;
-import com.coder.hms.utils.SetRoomNumbers;
+import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;
 
 public class NewReservationEx extends JDialog {
@@ -68,7 +68,7 @@ public class NewReservationEx extends JDialog {
 	private Date startDate;
 	private Date endDate;
 	private JButton btnAddRoom;
-	private String[] ROOM_NUMS;
+	private Object[] ROOM_NUMS;
 	private String[] ROOM_TYPES;
 	private int infoTableRow = 0;
 	private JTable table, table_1;
@@ -84,7 +84,7 @@ public class NewReservationEx extends JDialog {
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 	
-	private final SetRoomNumbers srn = new SetRoomNumbers();
+	private final RoomNumberMaker srn = new RoomNumberMaker();
 	private ApplicationLogo logoSetter = new ApplicationLogo();
 	private JLabel agencyLbl, creditTypeLbl, customerCountryLbl;
 	private JTextField rezIdField, nameSurnameField, totalDaysField;
@@ -103,12 +103,13 @@ public class NewReservationEx extends JDialog {
 	private final String[] HOST_TYPES = {"B.B", "F.B", "H.B", "O.B"};
 	private final String[] RESERV_STS = {"GUARANTEE", "WAITLIST", "CANCEL"};
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
-	private final String[] cmbList = { "TURKISH LIRA", "$ DOLLAR", "€ EURO", "£ POUND"};
+	private final String[] cmbList = { "TURKISH LIRA", "DOLLAR", "EURO", "POUND"};
 	private final String[] CREDIT_TYPES = {"BLACK LIST", "INFINITY CREDIT", "STANDART CUSTOMER CREDIT"};
 	private final String[] EARLY_PAYMENT_LIST = {"TITLE", "NAME", "AMOUNT", "CURRENCY", "EXCHANGE", "NOTE"};
 	private final String[] AGENCY_LIST = {"WALKIN", "WEB", "OTHER"};
 	private JComboBox<String> agencyCmbBox, hostCmbBox, creaditTypeCmbBox, rezervStatusCmbBox, customerCountryCmbBox, 
-	currencyCmbBox, roomTypeCmbBox, roomNumCmbBox;
+	currencyCmbBox, roomTypeCmbBox;
+	private JComboBox<Object> roomNumCmbBox;
 	private final String[] COUNTRY_LIST = {"Afghanistan", "Albania","Algeria", "American Samoa", "Andorra",
 		"Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria",
 		 "Brazil", "Egypt", "Finland", "France", "Germany", "Hong Kong", "India", "Iran", "Iraq", "Ireland", "Israel", "Islands",
@@ -407,9 +408,10 @@ public class NewReservationEx extends JDialog {
 		roomTypePanel.add(roomLbl);
 		
 		ROOM_NUMS = new String[]{};
-		ROOM_NUMS = srn.getRoomNumbers();
-		roomNumCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(ROOM_NUMS));
+		ROOM_NUMS = srn.getNotReservedRooms(new Date());
+		roomNumCmbBox = new JComboBox<Object>(new DefaultComboBoxModel<>(ROOM_NUMS));
 		roomNumCmbBox.setBounds(34, 35, 86, 20);
+		roomNumCmbBox.addActionListener(privateItemListener());
 		roomTypePanel.add(roomNumCmbBox);
 		
 		btnAddRoom = new JButton("Add Room");
@@ -510,6 +512,7 @@ public class NewReservationEx extends JDialog {
 								else {
 									value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
 									totalDaysField.setText(Math.abs(value) + "");
+									repaint();
 								}
 							}
 
@@ -528,9 +531,14 @@ public class NewReservationEx extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Reservation reservation = new Reservation();
+								
+				final String strCheckinD = sdf.format(startDate);
+				final String strCheckoutD = sdf.format(endDate);
+				
+				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
 				reservation.setGroupName(nameSurnameField.getText().trim());
-				reservation.setCheckinDate(startDate.toString());
-				reservation.setCheckoutDate(endDate.toString());
+				reservation.setCheckinDate(strCheckinD);
+				reservation.setCheckoutDate(strCheckoutD);
 				reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
 				reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
 				reservation.setHostType(hostCmbBox.getSelectedItem().toString());
@@ -541,26 +549,98 @@ public class NewReservationEx extends JDialog {
 				
 				
 				rImpl.saveReservation(reservation);
+				final Reservation lastReserv = rImpl.getLastReservation();
 				
-				Room theRoom = new Room();
+				
+				final Room theRoom = new Room();
 				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
+				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+				theRoom.setPersonCount((int)personCountSpinner.getValue());
 				theRoom.setPrice(String.valueOf(priceValue));
-				theRoom.setStatus("CLEAN");
+				theRoom.setStatus("BUSY");
 				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
-				
+				theRoom.setReservationId(lastReserv.getId());
 				theRoom.setCustomerGrupName(nameSurnameField.getText());
 				
 				
 				roomDaoImpl.saveRoom(theRoom);
 				
-				Customer theCustomer = new Customer();
-				theCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-				theCustomer.setReservationId(reservation.getId());
 				
-				
-				cImpl.save(theCustomer);
-				
-				System.out.println("RESERVATION SAVED SUCCESSFULLY.");
+				final int rowCount = model.getRowCount();
+								
+				switch (rowCount) {
+				case 1:
+					
+					Object[] firstrow = new Object[5];
+					firstrow = model.getDataVector().get(0).toString().split(",");
+		
+					final Customer singleCustomer = new Customer();
+					singleCustomer.setFirstName(firstrow[2].toString());
+					singleCustomer.setLastName(firstrow[3].toString());
+					singleCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
+					singleCustomer.setReservationId(lastReserv.getId());
+					cImpl.save(singleCustomer);
+					
+					break;
+				case 2:
+					Object[] rowOne = new Object[5];
+					Object[] rowTwo = new Object[5];
+					rowOne = model.getDataVector().get(0).toString().split(",");
+					rowTwo = model.getDataVector().get(1).toString().split(",");
+					
+					final Customer theCustomer = new Customer();
+					theCustomer.setFirstName(rowOne[2].toString());
+					theCustomer.setLastName(rowOne[3].toString());
+					theCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
+					theCustomer.setReservationId(lastReserv.getId());
+					
+					final Customer doubleCustomer = new Customer();
+					doubleCustomer.setFirstName(rowTwo[2].toString());
+					doubleCustomer.setLastName(rowTwo[3].toString());
+					doubleCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
+					doubleCustomer.setReservationId(lastReserv.getId());
+					
+					cImpl.save(theCustomer);
+					cImpl.save(doubleCustomer);
+					
+					break;
+				case 3:
+					
+					Object[] singleRow = new Object[5];
+					Object[] doubleRow = new Object[5];
+					Object[] tripleRow = new Object[5];
+					singleRow = model.getDataVector().get(0).toString().split(",");
+					doubleRow = model.getDataVector().get(1).toString().split(",");
+					tripleRow = model.getDataVector().get(2).toString().split(",");
+					
+					final Customer firstCustomer = new Customer();
+					firstCustomer.setFirstName(singleRow[2].toString());
+					firstCustomer.setLastName(singleRow[3].toString());
+					firstCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
+					firstCustomer.setReservationId(lastReserv.getId());
+					
+					final Customer secondCustomer = new Customer();
+					secondCustomer.setFirstName(doubleRow[2].toString());
+					secondCustomer.setLastName(doubleRow[3].toString());
+					secondCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
+					secondCustomer.setReservationId(lastReserv.getId());
+					
+					final Customer thirdCustomer = new Customer();
+					thirdCustomer.setFirstName(tripleRow[2].toString());
+					thirdCustomer.setLastName(tripleRow[3].toString());
+					thirdCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
+					thirdCustomer.setReservationId(lastReserv.getId());
+					
+					cImpl.save(firstCustomer);
+					cImpl.save(secondCustomer);
+					cImpl.save(thirdCustomer);
+					
+					break;	
+				default:
+					break;
+				}
+
+				dispose();
 
 			}
 		};
@@ -577,18 +657,19 @@ public class NewReservationEx extends JDialog {
 					case "TURKISH LIRA":
 						formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
 						break;
-					case "$ DOLLAR":
+					case "DOLLAR":
 						formatter.setCurrency(Currency.getInstance(Locale.US));
 						break;
-					case "â‚¬ EURO":
+					case "EURO":
 						formatter.setCurrency(Currency.getInstance(Locale.FRANCE));
 						break;
-					case "Â£ POUND":
+					case "POUND":
 						formatter.setCurrency(Currency.getInstance(Locale.UK));
 						break;
 					default:
 						break;
 					}
+					repaint();
 			}
 		};
 		return ac;
@@ -608,13 +689,16 @@ public class NewReservationEx extends JDialog {
 				case "DOUBLE":
 					personCountSpinner.setValue(2);
 					break;
+				case "TWIN":
+					personCountSpinner.setValue(2);
+					break;
 				case "TRIPLE":
 					personCountSpinner.setValue(3);
 					break;
 				default:
 					break;
 				}
-				
+				repaint();
 			}
 		};
 		return rta;
@@ -643,6 +727,21 @@ public class NewReservationEx extends JDialog {
 			}
 		};
 		return acl;
+	}
+	
+	private ActionListener privateItemListener() {
+		ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
+				Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
+				roomTypeCmbBox.setSelectedItem(theRoom.getType());
+				repaint();
+				
+			}
+		};
+		return listener;
 	}
 	
 	public long getRezIdText() {

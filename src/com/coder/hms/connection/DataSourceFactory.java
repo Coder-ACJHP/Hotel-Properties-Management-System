@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -20,7 +19,6 @@ import com.coder.hms.entities.Reservation;
 public class DataSourceFactory {
 
 	final static JDialog dialog = new JDialog();
-	private static Session session = null;
 	private static SessionFactory sessionFactory = null;
 	private static final Logger LOGGER = Logger.getLogger(DataSourceFactory.class.getName());
 
@@ -35,8 +33,6 @@ public class DataSourceFactory {
 			if (sessionFactory == null) {
 				sessionFactory = new Configuration().configure("com/coder/hms/connection/hibernate.cfg.xml")
 						.addAnnotatedClass(Reservation.class).buildSessionFactory();
-				session = sessionFactory.openSession();
-				session.beginTransaction();
 				LOGGER.info("Session created successfully.");
 			}
 
@@ -45,18 +41,17 @@ public class DataSourceFactory {
 			JOptionPane.showMessageDialog(dialog, "\tFatal error!\nCannot connect to the database,"
 					+ "\nplease check your internet or datasource connection.\n(Close the *LOGIN* window at first.)",
 					JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+			System.exit(1);
 		}
 	}
 
-	public Session getSession() {
+	public SessionFactory getSessionFactory() {
 		LOGGER.info("Returning Session.");
-		return DataSourceFactory.session;
+		return sessionFactory;
 	}
 
 	public void shutDown() {
 		LOGGER.info("Closing SessionFactory...");
-		if(session.isConnected())
-			getSession().close();
 		if(sessionFactory.isOpen())
 			DataSourceFactory.sessionFactory.close();
 	}

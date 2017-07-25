@@ -20,23 +20,25 @@ public class HotelDaoImpl implements HotelDAO {
 	public HotelDaoImpl() {
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
-		session = dataSourceFactory.getSession();
 
 	}
 	
 	@Override
 	public void saveHotel(Hotel hotel) {
-		
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		session.saveOrUpdate(hotel);
 		session.getTransaction().commit();
-		
+		session.close();
 	}
 
 	@Override
 	public Hotel getHotel() {
-		
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
 		Hotel hotel = query.getSingleResult();
+		session.close();
 		
 		return hotel;
 	}

@@ -28,7 +28,6 @@ public class MainFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private CustomMenuBar customMenuBar;
-	@SuppressWarnings("unused")
 	private static SessionBean sessionBean;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
@@ -84,7 +83,7 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(customMenuBar.getMenuBar());
 		
 		//get user name from login frame and add it to main frame
-//		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
+		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
 		customBottomToolbar.setUserLabelText("Coder ACJHP");
 		
 		customBottomToolbar.setUsdLabelText(currency.getUSDToTRYLiveCurrency());

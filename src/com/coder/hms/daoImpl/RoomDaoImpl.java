@@ -26,37 +26,54 @@ public class RoomDaoImpl implements RoomDAO {
 		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
-		session = dataSourceFactory.getSession();
 
 	}
 	
 	@Override
-	public Room getRoomByRoomNumber(int roomNumber) {
-		// TODO Auto-generated method stub
-		return null;
+	public Room getRoomByRoomNumber(String roomNumber) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query<Room> query = session.createQuery("from Room where number=:roomNumber", Room.class);
+		query.setParameter("roomNumber", roomNumber);
+		Room room = query.getSingleResult();
+		
+		LOGGER.info(room.toString());
+		
+		session.close();
+		return room;
 	}
 
 	@Override
 	public void saveRoom(Room room) {
-		
-		session.saveOrUpdate(room);
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		session.update(room);
 		session.getTransaction().commit();
-		
-		LOGGER.info("Room : " + room + " saved successfully.");
+		session.close();
 	}
 
 	public List<Room> getAllRooms() {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<Room> query = session.createQuery("from Room", Room.class);
 		List<Room> roomList = query.getResultList();
+		
+		LOGGER.info(roomList.toString());
+		
+		session.close();
 		return roomList;
 	}
 
 	public Room getRoomByReservId(long id) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
 		Query<Room> query = session.createQuery("from Room where ReservationId=:id", Room.class);
 		query.setParameter("id", id);
 		Room room = query.getSingleResult();
 		
 		LOGGER.info(room.toString());
+		
+		session.close();
 		return room;
 	}
 

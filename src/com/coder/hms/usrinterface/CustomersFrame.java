@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -29,6 +30,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import com.coder.hms.daoImpl.CustomerDaoImpl;
+import com.coder.hms.daoImpl.ReservationDaoImpl;
+import com.coder.hms.entities.Customer;
+import com.coder.hms.entities.Reservation;
 import com.coder.hms.utils.CustomReservationrenderer;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
 
@@ -46,7 +51,7 @@ public class CustomersFrame extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final String[] colsName = {"ROOM", "REZERVATION ", "NAME ", "LASTNAME", 
 					"AGENCY", "GROUP", "CHECK/IN DATE", "CHECK/OUT DATE", "COUNTRY"};
-	private DefaultTableModel model = new DefaultTableModel(colsName, 100);
+	private DefaultTableModel model = new DefaultTableModel(colsName, 0);
 	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
 	private final CustomReservationrenderer renderer = new CustomReservationrenderer();
 
@@ -112,6 +117,9 @@ public class CustomersFrame extends JPanel {
 		scrollPane = new JScrollPane();
 		add(scrollPane);
 		
+		//populate main table model with custom method
+		populateMainTable(model);
+		
 		customerTable = new JTable(model);
 		customerTable.setFillsViewportHeight(true);
 		customerTable.setCellSelectionEnabled(true);
@@ -135,4 +143,23 @@ public class CustomersFrame extends JPanel {
 		tr.setRowFilter(RowFilter.regexFilter(query));
 	}
 	
+	private void populateMainTable(DefaultTableModel model) {
+
+		final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+		final List<Customer> customerList = customerDaoImpl.getAllCustomers();
+	
+		final ReservationDaoImpl reservationDaoImpl =  new ReservationDaoImpl();
+		
+		for(Customer cust: customerList) {
+			
+			final Reservation reservation = reservationDaoImpl.findReservationById(cust.getReservationId());
+			
+			final Object[] customerObject = new Object[] {reservation.getTheNumber(), reservation.getId(), 
+					cust.getFirstName(), cust.getLastName(), reservation.getAgency(), reservation.getGroupName(),
+					reservation.getCheckinDate(), reservation.getCheckoutDate(), cust.getCountry()};
+			model.addRow(customerObject);
+		}
+		
+		
+	}
 }

@@ -15,7 +15,7 @@ public class HibernateConnection {
 
 			final DataSourceFactory cf = new DataSourceFactory();
 			
-			Session session = cf.getSession();
+			Session session = cf.getSessionFactory().getCurrentSession();
 			
 			
 			session.beginTransaction();
