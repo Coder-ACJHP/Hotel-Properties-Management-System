@@ -77,4 +77,37 @@ public class RoomDaoImpl implements RoomDAO {
 		return room;
 	}
 
+	@SuppressWarnings("rawtypes")
+	public void setAllRoomsAtClean(String clean) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query query = session.createQuery("UPDATE Room SET cleaningStatus=:clean");
+		query.setParameter("clean", clean);
+		query.executeUpdate();
+		session.close();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setSingleRoomAsCleanByRoomNumber(String rowData) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query query = session.createQuery("UPDATE Room SET cleaningStatus = 'CLEAN' where number=:rowData");
+		query.setParameter("rowData", rowData);
+		query.executeUpdate();		
+		session.close();
+		
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setRoomCheckedOut(String num) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		final String HQL = "UPDATE Room SET cleaningStatus = 'CLEAN', usageStatus = 'EMPTY', personCount = 0, price = 0 where number=:num";
+		Query query = session.createQuery(HQL);
+		query.setParameter("num", num);
+		query.executeUpdate();		
+		session.close();
+		
+	}
+
 }

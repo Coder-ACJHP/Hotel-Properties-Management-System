@@ -140,7 +140,7 @@ public class CustomersFrame extends JPanel {
 	private void filter(String query) {
 		TableRowSorter<TableModel> tr = new TableRowSorter<TableModel>(model);
 		customerTable.setRowSorter(tr);
-		tr.setRowFilter(RowFilter.regexFilter(query));
+		tr.setRowFilter(RowFilter.regexFilter(query.toLowerCase()));
 	}
 	
 	private void populateMainTable(DefaultTableModel model) {

@@ -557,7 +557,6 @@ public class NewReservationEx extends JDialog {
 				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
 				theRoom.setPersonCount((int)personCountSpinner.getValue());
 				theRoom.setPrice(String.valueOf(priceValue));
-				theRoom.setStatus("BUSY");
 				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
 				theRoom.setReservationId(lastReserv.getId());
 				theRoom.setCustomerGrupName(nameSurnameField.getText());

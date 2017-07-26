@@ -37,11 +37,17 @@ public class Room implements Serializable{
 	@Column(name="price")
 	private String price;
 	
+	@Column(name="balance")
+	private double balance;
+	
 	@Column(name="currency")
 	private String currency;
 	
-	@Column(name="status")
-	private String status;
+	@Column(name="cleaningStatus")
+	private String cleaningStatus;
+	
+	@Column(name="usageStatus")
+	private String usageStatus;
 	
 	@Column(name="personCount")
 	private int personCount;
@@ -88,6 +94,14 @@ public class Room implements Serializable{
 		this.price = price;
 	}
 
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
 	public String getCurrency() {
 		return currency;
 	}
@@ -96,12 +110,20 @@ public class Room implements Serializable{
 		this.currency = currency;
 	}
 
-	public String getStatus() {
-		return status;
+	public String getCleaningStatus() {
+		return cleaningStatus;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setCleaningStatus(String cleaningStatus) {
+		this.cleaningStatus = cleaningStatus;
+	}
+
+	public String getUsageStatus() {
+		return usageStatus;
+	}
+
+	public void setUsageStatus(String usageStatus) {
+		this.usageStatus = usageStatus;
 	}
 
 	public int getPersonCount() {
@@ -128,15 +150,17 @@ public class Room implements Serializable{
 		ReservationId = reservationId;
 	}
 
-	public Room(long theRoomId, String number, String type, String price, String currency, String status,
-			int personCount, String customerGrupName, long reservationId) {
+	public Room(long theRoomId, String number, String type, String price, double balance, String currency,
+			String cleaningStatus, String usageStatus, int personCount, String customerGrupName, long reservationId) {
 		super();
 		this.theRoomId = theRoomId;
 		this.number = number;
 		this.type = type;
 		this.price = price;
+		this.balance = balance;
 		this.currency = currency;
-		this.status = status;
+		this.cleaningStatus = cleaningStatus;
+		this.usageStatus = usageStatus;
 		this.personCount = personCount;
 		this.customerGrupName = customerGrupName;
 		ReservationId = reservationId;
@@ -145,8 +169,9 @@ public class Room implements Serializable{
 	@Override
 	public String toString() {
 		return "Room [theRoomId=" + theRoomId + ", number=" + number + ", type=" + type + ", price=" + price
-				+ ", currency=" + currency + ", status=" + status + ", personCount=" + personCount
-				+ ", customerGrupName=" + customerGrupName + ", ReservationId=" + ReservationId + "]";
+				+ ", balance=" + balance + ", currency=" + currency + ", cleaningStatus=" + cleaningStatus
+				+ ", usageStatus=" + usageStatus + ", personCount=" + personCount + ", customerGrupName="
+				+ customerGrupName + ", ReservationId=" + ReservationId + "]";
 	}
 
 	

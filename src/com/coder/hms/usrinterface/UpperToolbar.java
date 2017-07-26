@@ -6,6 +6,7 @@
 package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -18,11 +19,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 
 
@@ -34,8 +37,10 @@ public class UpperToolbar {
 	private CustomersFrame customersFrame;
 	private CustomCashDesk cashdesk; 
 	private CustomReservations rezervFrame;
+	private CustomRoomCleaning cleaningFrame;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
-	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, cashBtn;
+	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn;
+	private JButton refreshBtn;
 
 	public JPanel getJPanel() {
 		return this.panel;
@@ -50,7 +55,7 @@ public class UpperToolbar {
 		panel.setBackground(SystemColor.activeCaption);
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAutoscrolls(true);
-		panel.setPreferredSize(new Dimension(10, 55));
+		panel.setPreferredSize(new Dimension(1096, 55));
 		panel.setLayout(null);
 
 		roomsBtn = new JButton("Rooms Plain");
@@ -97,16 +102,47 @@ public class UpperToolbar {
 		blockadeBtn.addActionListener(UpperToolbarActionListener(mainFrame));
 		panel.add(blockadeBtn);
 
+		roomCleaningBtn = new JButton("Room Cleaning");
+		roomCleaningBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		roomCleaningBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		roomCleaningBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/login_clear.png")));
+		roomCleaningBtn.setBounds(599, 7, 137, 40);
+		roomCleaningBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+		roomCleaningBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		roomCleaningBtn.setPreferredSize(new Dimension(200, 40));
+		roomCleaningBtn.addActionListener(UpperToolbarActionListener(mainFrame));
+		panel.add(roomCleaningBtn);
+		
 		cashBtn = new JButton("Cash Desk");
 		cashBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		cashBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cashBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_cash.png")));
-		cashBtn.setBounds(599, 7, 137, 40);
+		cashBtn.setBounds(746, 7, 137, 40);
 		cashBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		cashBtn.setFont(new Font("Arial", Font.BOLD, 12));
 		cashBtn.setPreferredSize(new Dimension(200, 40));
 		cashBtn.addActionListener(UpperToolbarActionListener(mainFrame));
 		panel.add(cashBtn);	
+		
+		final JSeparator separator = new JSeparator();
+		separator.setBackground(Color.DARK_GRAY);
+		separator.setBounds(888, 6, 10, 43);
+		separator.setOrientation(SwingConstants.VERTICAL);
+		separator.setFocusable(true);
+		separator.setForeground(Color.DARK_GRAY);
+		separator.setAutoscrolls(true);
+		separator.setPreferredSize(new Dimension(10, 20));
+		panel.add(separator);
+		
+		refreshBtn = new JButton("Refresh");
+		refreshBtn.setIcon(new ImageIcon(UpperToolbar.class.getResource("/com/coder/hms/icons/cleaning-refresh.png")));
+		refreshBtn.setPreferredSize(new Dimension(200, 40));
+		refreshBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+		refreshBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		refreshBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		refreshBtn.setBounds(905, 7, 137, 40);
+		refreshBtn.addActionListener(UpperToolbarActionListener(mainFrame));
+		panel.add(refreshBtn);
 		
 
 	}
@@ -122,6 +158,7 @@ public class UpperToolbar {
 				blockadeFrame = new CustomBlockade();
 				rezervFrame = new CustomReservations();
 				cashdesk = new CustomCashDesk();
+				cleaningFrame = new CustomRoomCleaning();
 			}
 		});
 
@@ -140,8 +177,9 @@ public class UpperToolbar {
 					
 					mainFrame.remove(cashdesk);
 					mainFrame.remove(rezervFrame);
-					mainFrame.remove(customersFrame);
+					mainFrame.remove(cleaningFrame);
 					mainFrame.remove(blockadeFrame);
+					mainFrame.remove(customersFrame);
 					mainFrame.getContentPane().add(theRooms.getWindow(), BorderLayout.WEST);
 					SwingUtilities.updateComponentTreeUI(mainFrame.getContentPane());
 
@@ -152,8 +190,9 @@ public class UpperToolbar {
 					mainFrame.remove(cashdesk);
 					mainFrame.remove(rezervFrame);
 					mainFrame.remove(blockadeFrame);
+					mainFrame.remove(cleaningFrame);
 					mainFrame.remove(theRooms.getWindow());
-					mainFrame.add(customersFrame, BorderLayout.CENTER);
+					mainFrame.getContentPane().add(customersFrame, BorderLayout.CENTER);
 					SwingUtilities.updateComponentTreeUI(mainFrame);
 				}
 
@@ -162,24 +201,37 @@ public class UpperToolbar {
 					mainFrame.remove(cashdesk);
 					mainFrame.remove(customersFrame);
 					mainFrame.remove(blockadeFrame);
+					mainFrame.remove(cleaningFrame);
 					mainFrame.remove(theRooms.getWindow());
 					
 					//populate the reservation table when we opening it
 					rezervFrame.populateMainTable();
 					
-					mainFrame.add(rezervFrame, BorderLayout.CENTER);
+					mainFrame.getContentPane().add(rezervFrame, BorderLayout.CENTER);
 					SwingUtilities.updateComponentTreeUI(mainFrame);
 				}
 
 				else if (command.equalsIgnoreCase("Blockade")) {
 					
+					mainFrame.remove(cashdesk);
 					mainFrame.remove(rezervFrame);
 					mainFrame.remove(customersFrame);
+					mainFrame.remove(cleaningFrame);
 					mainFrame.remove(theRooms.getWindow());
-					mainFrame.remove(cashdesk);
-					mainFrame.add(blockadeFrame, BorderLayout.CENTER);
+					mainFrame.getContentPane().add(blockadeFrame, BorderLayout.CENTER);
 					SwingUtilities.updateComponentTreeUI(mainFrame.getContentPane());
 					
+				}
+				
+				else if (command.equalsIgnoreCase("Room Cleaning")) {
+					
+					mainFrame.remove(cashdesk);
+					mainFrame.remove(rezervFrame);
+					mainFrame.remove(blockadeFrame);
+					mainFrame.remove(customersFrame);
+					mainFrame.remove(theRooms.getWindow());
+					mainFrame.getContentPane().add(cleaningFrame, BorderLayout.CENTER);
+					SwingUtilities.updateComponentTreeUI(mainFrame.getContentPane());
 				}
 				
 				else if (command.equalsIgnoreCase("Cash Desk")) {
@@ -187,9 +239,15 @@ public class UpperToolbar {
 					mainFrame.remove(rezervFrame);
 					mainFrame.remove(blockadeFrame);
 					mainFrame.remove(customersFrame);
+					mainFrame.remove(cleaningFrame);
 					mainFrame.remove(theRooms.getWindow());
-					mainFrame.add(cashdesk, BorderLayout.CENTER);
+					mainFrame.getContentPane().add(cashdesk, BorderLayout.CENTER);
 					SwingUtilities.updateComponentTreeUI(mainFrame.getContentPane());
+				}
+				
+				else if (command.equalsIgnoreCase("Refresh")) {
+					DataSourceFactory dFactory = new DataSourceFactory();
+					dFactory.getSessionFactory().openSession();
 				}
 				
 			}

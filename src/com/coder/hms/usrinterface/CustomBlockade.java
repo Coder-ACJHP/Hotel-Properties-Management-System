@@ -241,7 +241,7 @@ public class CustomBlockade extends JPanel {
 			blockade = new Blockade();
 			blockade.setNumber(roomList.get(i).getNumber());
 			blockade.setType(roomList.get(i).getType());
-			blockade.setStatus(roomList.get(i).getStatus());
+			blockade.setStatus(roomList.get(i).getUsageStatus());
 			model.addRow(new Object[]{blockade.getNumber(), blockade.getType(), blockade.getStatus()});
 			for (int j = 0; j < resList.size(); j++) {
 				if(blockade.getNumber().equals(resList.get(j).getTheNumber()))
