@@ -19,6 +19,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,15 +33,17 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.text.DefaultEditorKit;
 
 import com.coder.hms.actionlisteners.RoomsAction;
+import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Room;
 
 public class CustomAllRooms {
 
-	private final List<Room> roomList;
-	private final RoomDaoImpl roomDaoImpl;
+	private List<Room> roomList;
+	private RoomDaoImpl roomDaoImpl;
 	private JPanel contentPanel = new JPanel();
 	private final RoomsAction theAction = new RoomsAction();
+	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	int counter = 100;
 	int lastNum = 0;
 	private String num;
@@ -48,7 +51,7 @@ public class CustomAllRooms {
 	/**
 	 * Create the dialog.
 	 */
-	public CustomAllRooms(int roomCount) {
+	public CustomAllRooms() {
 
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setBackground(Color.decode("#066d95"));
@@ -61,6 +64,8 @@ public class CustomAllRooms {
 		MatteBorder dirtyBorder = BorderFactory.createMatteBorder(8, 0, 0, 0, Color.decode("#ce1d1d"));
 		MatteBorder cleanBorder = BorderFactory.createMatteBorder(8, 0, 0, 0, Color.WHITE);
 
+		final int roomCount =  hotelDaoImpl.getHotel().getRoomCapacity();
+		
 		for (int i = 1; i <= roomCount; i++) {
 			++lastNum;
 			final JButton roomBtn = new JButton();
@@ -73,7 +78,7 @@ public class CustomAllRooms {
 			for (Room room : roomList) {
 
 				if (room.getNumber().equals(counter + "" + lastNum)) {
-					roomBtn.setToolTipText(room.getType());
+					roomBtn.setToolTipText(room.getType() +"\n"+ room.getUsageStatus());
 					roomBtn.addMouseListener(rightClickListener());
 
 					switch (room.getCleaningStatus()) {
@@ -93,6 +98,8 @@ public class CustomAllRooms {
 					case "FULL":
 						roomBtn.setBackground(Color.decode("#fffcbe"));
 						break;
+					case "BLOCKED":
+						roomBtn.setBackground(Color.decode("#e13580"));
 					default:
 						break;
 					}
@@ -129,12 +136,14 @@ public class CustomAllRooms {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				String trimmingText = "";
+				
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					final String trimmingText = e.getSource().toString();
+					trimmingText = e.getSource().toString();
 					num = trimmingText.substring(trimmingText.length() - 25, trimmingText.length() - 21);
 
 				}
-				super.mouseClicked(e);
 			}
 
 			public void mousePressed(MouseEvent e) {
@@ -179,10 +188,15 @@ public class CustomAllRooms {
 		paste.setIcon(new ImageIcon(CustomAllRooms.class.getResource("/com/coder/hms/icons/room_paste.png")));
 		popupMenu.add(paste);
 
-		JMenuItem clean = new JMenuItem(new DefaultEditorKit.PasteAction());
+		JMenu changeCleaning = new JMenu();
+		changeCleaning.setText("Change status");
+		changeCleaning.setIcon(new ImageIcon(CustomAllRooms.class.getResource("/com/coder/hms/icons/room_changeStatus.png")));
+		popupMenu.add(changeCleaning);
+		
+		JMenuItem clean = new JMenuItem();
 		clean.setText("Set as clean");
 		clean.setAccelerator(
-				KeyStroke.getKeyStroke(KeyEvent.VK_N, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+				KeyStroke.getKeyStroke(KeyEvent.VK_W, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		clean.setIcon(new ImageIcon(CustomAllRooms.class.getResource("/com/coder/hms/icons/cleaning_single.png")));
 		clean.addActionListener(ActionListener -> {
 			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(num);
@@ -195,11 +209,33 @@ public class CustomAllRooms {
 			
 			else {
 				roomDaoImpl.setSingleRoomAsCleanByRoomNumber(num);
-				SwingUtilities.updateComponentTreeUI(contentPanel);
+				contentPanel.revalidate();
 				contentPanel.repaint();
 			}
 		});
-		popupMenu.add(clean);
+		changeCleaning.add(clean);
+		
+		JMenuItem dirty = new JMenuItem();
+		dirty.setText("Set as dirty");
+		dirty.setAccelerator(
+				KeyStroke.getKeyStroke(KeyEvent.VK_D, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		dirty.setIcon(new ImageIcon(CustomAllRooms.class.getResource("/com/coder/hms/icons/room_dirty.png")));
+		dirty.addActionListener(ActionListener -> {
+			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(num);
+			
+			if(theRoom.getCleaningStatus().equals("DIRTY")) {
+				JOptionPane.showMessageDialog(null, "Room is already dirty!", JOptionPane.MESSAGE_PROPERTY,
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			else {
+				roomDaoImpl.setSingleRoomAsDirtyByRoomNumber(num);
+				contentPanel.revalidate();
+				contentPanel.repaint();
+			}
+		});
+		changeCleaning.add(dirty);
 
 		JMenuItem checkout = new JMenuItem(new DefaultEditorKit.PasteAction());
 		checkout.setText("Do checkout");
@@ -211,9 +247,9 @@ public class CustomAllRooms {
 
 			if(checkingRoom.getUsageStatus().equals("FULL")) {
 				if (checkingRoom.getBalance() == 0) {
-
+					
 					roomDaoImpl.setRoomCheckedOut(num);
-					SwingUtilities.updateComponentTreeUI(contentPanel);
+					contentPanel.revalidate();
 					contentPanel.repaint();
 				}
 

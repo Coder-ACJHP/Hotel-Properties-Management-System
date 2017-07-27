@@ -59,12 +59,13 @@ public class CustomReservations extends JPanel {
 	private DefaultTableModel model;
 	private JTextField agencyRefField;
 	private JButton newRezBtn, findBtn;
-
 	private RoomDaoImpl roomDaoImpl;
 	
 	private HotelDaoImpl hotelDoaImpl;
 	
 	private CustomerDaoImpl customerDaoImpl;
+
+	private NewReservationEx newReservationEx;
 
 	private ReservationDaoImpl reservationDaoImpl;
 	
@@ -98,7 +99,8 @@ public class CustomReservations extends JPanel {
 				@Override
 				public void run() {
 					
-					new NewReservationEx().setVisible(true);
+					newReservationEx = new NewReservationEx();
+					newReservationEx.setVisible(true);
 				}
 			});
 		});
@@ -180,6 +182,7 @@ public class CustomReservations extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		getReadyForDataFlow();
+
 	}
 	
 	private float calcFullnessPersentage(int count, int capasite) {
@@ -196,6 +199,9 @@ public class CustomReservations extends JPanel {
 	}
 	
 	public void populateMainTable() {
+		
+		model.setRowCount(0);
+		
 		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 		final Calendar c = Calendar.getInstance();
 		reservDate = new Date();

@@ -19,6 +19,7 @@ import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.entities.SessionBean;
 import com.coder.hms.utils.ApplicationLogo;
 import com.coder.hms.utils.GetLiveCurrencyRates;
+import javax.swing.JPanel;
 
 
 public class MainFrame extends JFrame {
@@ -26,9 +27,10 @@ public class MainFrame extends JFrame {
 	/**
 	 * 
 	 */
+	private JPanel mainPanel;
 	private static final long serialVersionUID = 1L;
 	private CustomMenuBar customMenuBar;
-	private static SessionBean sessionBean;
+//	private static SessionBean sessionBean;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogo logoSetter = new ApplicationLogo();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
@@ -42,14 +44,19 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
-		sessionBean = SessionBean.getSESSION_BEAN();
+//		sessionBean = SessionBean.getSESSION_BEAN();
 		// get operation system name to add icon (if windows to taskbar else for dock)
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBackground(Color.decode("#066d95"));
+		
+		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
+		
 		logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
-		customToolbar = new UpperToolbar(this);
+		customToolbar = new UpperToolbar(mainPanel);
 		customBottomToolbar = new BottomToolbar();
 		
 		this.setTitle("Coder for HMS - [Main]");
-		this.getContentPane().setBackground(Color.decode("#066d95"));
 		
 
 		this.setMinimumSize(new Dimension(800, 600));
@@ -83,7 +90,7 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(customMenuBar.getMenuBar());
 		
 		//get user name from login frame and add it to main frame
-		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
+//		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
 		customBottomToolbar.setUserLabelText("Coder ACJHP");
 		
 		customBottomToolbar.setUsdLabelText(currency.getUSDToTRYLiveCurrency());

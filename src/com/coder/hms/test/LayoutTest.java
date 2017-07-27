@@ -18,7 +18,7 @@ public class LayoutTest extends JFrame {
 
 	public LayoutTest() {
 		
-		allRooms = new CustomAllRooms(48);
+		allRooms = new CustomAllRooms();
 		
 		this.setTitle("Coder HMS [LayoutTest]");
 		setPreferredSize(new Dimension(1000, 800));

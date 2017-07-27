@@ -9,6 +9,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,7 +45,7 @@ public class CustomBlockade extends JPanel {
 	/**
 	 * 
 	 */
-	private List<Long> rezervationId;
+	private List<Long> rezervationIdList;
 	
 	private RoomDaoImpl rImpl;
 	private List<Room> roomList;
@@ -125,9 +128,9 @@ public class CustomBlockade extends JPanel {
 		blokajTable = new JTable(blokajModel);
 		blokajTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		blokajTable.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
-		blokajTable.setColumnSelectionAllowed(true);
-		blokajTable.setCellSelectionEnabled(true);
+		blokajTable.setRowSelectionAllowed(true);
 		blokajTable.getTableHeader().setDefaultRenderer(THRC);
+		blokajTable.addMouseListener(blokajMouseListener());
 		blokajTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		blokajScrollPane = new JScrollPane();
@@ -148,8 +151,9 @@ public class CustomBlockade extends JPanel {
 		blokajRoomsTable = new JTable(blokajRoomsModel);
 		blokajRoomsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		blokajRoomsTable.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
-		blokajRoomsTable.setColumnSelectionAllowed(true);
-		blokajRoomsTable.setCellSelectionEnabled(true);
+		blokajRoomsTable.setColumnSelectionAllowed(false);
+		blokajRoomsTable.setCellSelectionEnabled(false);
+		blokajRoomsTable.setRowSelectionAllowed(true);
 		blokajRoomsTable.getTableHeader().setDefaultRenderer(THRC);
 		blokajRoomsTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
@@ -160,8 +164,8 @@ public class CustomBlockade extends JPanel {
 		blokajCustomerTable = new JTable(blokajCustomerModel);
 		blokajCustomerTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		blokajCustomerTable.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
-		blokajCustomerTable.setColumnSelectionAllowed(true);
-		blokajCustomerTable.setCellSelectionEnabled(true);
+		blokajCustomerTable.setCellSelectionEnabled(false);
+		blokajCustomerTable.setColumnSelectionAllowed(false);
 		blokajCustomerTable.getTableHeader().setDefaultRenderer(THRC);
 		blokajCustomerTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
@@ -196,11 +200,9 @@ public class CustomBlockade extends JPanel {
 		//invoke this method at last
 		getReadyForTables();
 		populateBlokajTable(blokajModel);
-		populateBlokajCustomerModel(blokajCustomerModel);
-		populateBlokajRoomsModel(blokajRoomsModel);
-		pupulateBlockadeTable(model);
+		populateMainTable(model);
 	}
-	
+
 	public synchronized void getReadyForTables() {
 		rImpl = new RoomDaoImpl();		
 		roomList = rImpl.getAllRooms();
@@ -232,8 +234,8 @@ public class CustomBlockade extends JPanel {
 		}
 		
 	}
-	
-	public void pupulateBlockadeTable(DefaultTableModel model) {
+
+	public void populateMainTable(DefaultTableModel model) {
 		
 		Blockade blockade = null;
 		for(int i=0; i < roomList.size(); i++) {
@@ -267,7 +269,7 @@ public class CustomBlockade extends JPanel {
 		
 		final Reservation reservation = new Reservation();
 		
-		rezervationId = new ArrayList<>();
+		rezervationIdList = new ArrayList<>();
 		
 		for(int i=0; i < resList.size(); i++) {
 			if(resList.get(i).getCheckinDate().equals(today)) {
@@ -281,30 +283,45 @@ public class CustomBlockade extends JPanel {
 				blokajModel.addRow(new Object[]{reservation.getId(), reservation.getGroupName(),
 						reservation.getAgency(), reservation.getCheckinDate(), reservation.getCheckoutDate(), 
 						reservation.getPaymentStatus()});
-				rezervationId.add(resList.get(i).getId());
+				rezervationIdList.add(resList.get(i).getId());
 			}
 			
 		}
 	}
-	
-	public void populateBlokajRoomsModel(DefaultTableModel blokajRoomsModel) {
-		for(int index=0; index < roomList.size(); index++) {
-			for(long id: rezervationId) {
-				if(roomList.get(index).getReservationId() == id) {
-					blokajRoomsModel.addRow(new Object[]{roomList.get(index).getNumber(),
-							roomList.get(index).getType(), roomList.get(index).getPersonCount()});
-				}
+
+	public void populateBlokajRoomsModel(DefaultTableModel blokajRoomsModel, String reservId) {
+		for (int index = 0; index < roomList.size(); index++) {
+			if (roomList.get(index).getReservationId() == Long.parseLong(reservId)) {
+				blokajRoomsModel.addRow(new Object[] { roomList.get(index).getNumber(), roomList.get(index).getType(),
+						roomList.get(index).getPersonCount() });
+				break;
 			}
 		}
 	}
-	
-	public void populateBlokajCustomerModel(DefaultTableModel blokajCustomerModel) {
-		for(int k=0; k < customerList.size(); k++) {
-			for(long id : rezervationId) {
-				if(customerList.get(k).getReservationId() == id) {
-					blokajCustomerModel.addRow(new Object[]{customerList.get(k).getFirstName(), customerList.get(k).getLastName()});
-				}
+
+	public void populateBlokajCustomerModel(DefaultTableModel blokajCustomerModel, String reservId) {
+		for (int k = 0; k < customerList.size(); k++) {
+			if (customerList.get(k).getReservationId() == Long.parseLong(reservId)) {
+				blokajCustomerModel.addRow(new Object[] { 
+						customerList.get(k).getFirstName(), customerList.get(k).getLastName()});
 			}
 		}
+	}
+
+	private MouseListener blokajMouseListener() {
+		final MouseAdapter adapter = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				final int index = blokajTable.getSelectedRow();
+
+				final String reservIdFromRow = blokajTable.getValueAt(index, 0).toString();
+				blokajRoomsModel.setRowCount(0);
+				populateBlokajRoomsModel(blokajRoomsModel, reservIdFromRow);
+				blokajCustomerModel.setRowCount(0);
+				populateBlokajCustomerModel(blokajCustomerModel, reservIdFromRow);
+				super.mousePressed(e);
+			}
+		};
+		return adapter;
 	}
 }

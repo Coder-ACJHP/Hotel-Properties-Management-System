@@ -108,13 +108,9 @@ public class CustomRoomCleaning extends JPanel {
 			model.addRow(rowData);
 		}
 	}
-	
+//--------------------------------------NEW METHOD 26/07/2017	
 	private void refreshTable() {
-
-		for (int i = 0; i < model.getRowCount(); i++) {
-			model.removeRow(i);
-		}
-
+		model.setRowCount(0);
 		populateTableModel(model);
 
 	}
@@ -124,6 +120,7 @@ public class CustomRoomCleaning extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				final int rowIndex = table.getSelectedRow();
 				final String rowData = table.getValueAt(rowIndex, 0).toString();
 				roomDaoImpl.setSingleRoomAsCleanByRoomNumber(rowData);

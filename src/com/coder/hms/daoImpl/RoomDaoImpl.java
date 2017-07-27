@@ -110,4 +110,15 @@ public class RoomDaoImpl implements RoomDAO {
 		
 	}
 
+	@SuppressWarnings("rawtypes")
+	public void setSingleRoomAsDirtyByRoomNumber(String rowData) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query query = session.createQuery("UPDATE Room SET cleaningStatus = 'DIRTY' where number=:rowData");
+		query.setParameter("rowData", rowData);
+		query.executeUpdate();		
+		session.close();
+		
+	}
+
 }

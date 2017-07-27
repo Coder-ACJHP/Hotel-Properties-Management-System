@@ -46,7 +46,6 @@ public class DataSourceFactory {
 	}
 
 	public SessionFactory getSessionFactory() {
-		LOGGER.info("Returning Session.");
 		return sessionFactory;
 	}
 

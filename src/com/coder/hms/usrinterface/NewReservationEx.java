@@ -78,6 +78,7 @@ public class NewReservationEx extends JDialog {
 	private JSpinner personCountSpinner; 
 	private final JTextArea noteTextArea;
 	private JFormattedTextField priceField;
+	private boolean completionStatus = false;
 	private JButton chancelBtn, SaveBtn, reportBtn;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
@@ -282,6 +283,7 @@ public class NewReservationEx extends JDialog {
 		chancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
+				setCompletionStatus(false);
 			}
 		});
 		chancelBtn.setIcon(new ImageIcon(NewReservationEx.class.getResource("/com/coder/hms/icons/login_clear.png")));
@@ -479,7 +481,7 @@ public class NewReservationEx extends JDialog {
 				}
 				// main reason
 				else {
-					Thread thread = new Thread(new Runnable() {
+					SwingUtilities.invokeLater(new Runnable() {
 
 						@Override
 						public void run() {
@@ -518,7 +520,6 @@ public class NewReservationEx extends JDialog {
 
 						}
 					});
-					thread.start();
 				}
 			}
 		};
@@ -579,7 +580,7 @@ public class NewReservationEx extends JDialog {
 					singleCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
 					singleCustomer.setReservationId(lastReserv.getId());
 					cImpl.save(singleCustomer);
-					
+					completionStatus = true;
 					break;
 				case 2:
 					Object[] rowOne = new Object[5];
@@ -601,7 +602,7 @@ public class NewReservationEx extends JDialog {
 					
 					cImpl.save(theCustomer);
 					cImpl.save(doubleCustomer);
-					
+					completionStatus = true;
 					break;
 				case 3:
 					
@@ -633,14 +634,12 @@ public class NewReservationEx extends JDialog {
 					cImpl.save(firstCustomer);
 					cImpl.save(secondCustomer);
 					cImpl.save(thirdCustomer);
-					
+					completionStatus = true;
 					break;	
 				default:
 					break;
 				}
-
 				dispose();
-
 			}
 		};
 		return theListener;
@@ -928,6 +927,14 @@ public class NewReservationEx extends JDialog {
 	
 	public void setRoomCountTableRows(Object[] tableRows) {
 		this.roomCountModel.addRow(tableRows);
+	}
+
+	public boolean getCompletionStatus() {
+		return completionStatus;
+	}
+
+	public void setCompletionStatus(boolean completionStatus) {
+		this.completionStatus = completionStatus;
 	}
 }
 
