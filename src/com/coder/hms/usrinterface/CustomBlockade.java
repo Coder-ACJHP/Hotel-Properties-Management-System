@@ -223,7 +223,7 @@ public class CustomBlockade extends JPanel {
 		cols.add("ROOM");
 		cols.add("TYPE");
 		cols.add("STATUS");
-		
+		c.add(Calendar.DATE, -1);
 		for(int i = 0; i < 7; i++) {
 			c.add(Calendar.DATE, 1);
 			date = c.getTime();
@@ -237,14 +237,18 @@ public class CustomBlockade extends JPanel {
 
 	public void populateMainTable(DefaultTableModel model) {
 		
+		/*Simple object POJO class (entity)*/
 		Blockade blockade = null;
+		
 		for(int i=0; i < roomList.size(); i++) {
 			
 			blockade = new Blockade();
 			blockade.setNumber(roomList.get(i).getNumber());
 			blockade.setType(roomList.get(i).getType());
 			blockade.setStatus(roomList.get(i).getUsageStatus());
+			
 			model.addRow(new Object[]{blockade.getNumber(), blockade.getType(), blockade.getStatus()});
+			
 			for (int j = 0; j < resList.size(); j++) {
 				if(blockade.getNumber().equals(resList.get(j).getTheNumber()))
 					for(int x=0; x < weekDates.length; x++) {

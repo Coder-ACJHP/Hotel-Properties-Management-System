@@ -13,13 +13,12 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
-import com.coder.hms.entities.SessionBean;
 import com.coder.hms.utils.ApplicationLogo;
 import com.coder.hms.utils.GetLiveCurrencyRates;
-import javax.swing.JPanel;
 
 
 public class MainFrame extends JFrame {

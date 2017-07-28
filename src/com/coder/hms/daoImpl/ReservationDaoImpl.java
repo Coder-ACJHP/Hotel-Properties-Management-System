@@ -129,4 +129,15 @@ public class ReservationDaoImpl implements ReservationDAO{
 		return lastRecord;
 	}
 
+	public Reservation getReservationById(long reservationId) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query<Reservation> query = session.createQuery("from Reservation where Id=:reservationId", Reservation.class);
+		query.setParameter("reservationId", reservationId);
+		query.setMaxResults(1);
+		Reservation reservationById = query.getSingleResult();
+		session.close();
+		return reservationById;
+	}
+
 }

@@ -34,23 +34,35 @@ import javax.swing.text.DefaultEditorKit;
 
 import com.coder.hms.actionlisteners.RoomsAction;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
+import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 
 public class CustomAllRooms {
 
+
+	private String num;
+	protected JButton roomBtn;
 	private List<Room> roomList;
-	private RoomDaoImpl roomDaoImpl;
 	private JPanel contentPanel = new JPanel();
 	private final RoomsAction theAction = new RoomsAction();
+	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
+//	private final CustomerDaoImpl cImpl = new CustomerDaoImpl();
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
-	int counter = 100;
-	int lastNum = 0;
-	private String num;
+	private final ReservationDaoImpl rImpl = new ReservationDaoImpl();
 
 	/**
 	 * Create the dialog.
 	 */
+	public JPanel getWindow() {
+		return this.contentPanel;
+	}
+
+	public void setWindow(JPanel thePanel) {
+		this.contentPanel = thePanel;
+	}
+	
 	public CustomAllRooms() {
 
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,7 +70,26 @@ public class CustomAllRooms {
 		contentPanel.setPreferredSize(new Dimension(700, 1000));
 		contentPanel.setLayout(new FlowLayout());
 
-		roomDaoImpl = new RoomDaoImpl();
+		cookRooms(contentPanel);
+		
+		contentPanel.setVisible(true);
+	}
+
+	private void cookRooms(final JPanel panel) {
+		
+		/////////////////////////////////////////////////////////////////////////////////////
+		// In this method we will create room buttons and will set all the room properties,//
+		// but we need to call this method in any action about the rooms because we need   //
+		// to repaint these buttons when data changed in database. thats why in first step //
+		// make all variables new initialized and make the panel empty.When we call it     //
+		// over and over every components will work as desire. (Will create from scratch)  //
+		/////////////////////////////////////////////////////////////////////////////////////
+		
+		int lastNum = 0;
+		int counter = 100;
+		
+		panel.removeAll();
+		
 		roomList = roomDaoImpl.getAllRooms();
 
 		MatteBorder dirtyBorder = BorderFactory.createMatteBorder(8, 0, 0, 0, Color.decode("#ce1d1d"));
@@ -68,7 +99,7 @@ public class CustomAllRooms {
 		
 		for (int i = 1; i <= roomCount; i++) {
 			++lastNum;
-			final JButton roomBtn = new JButton();
+			roomBtn = new JButton();
 
 			roomBtn.setFont(new Font("Arial", Font.BOLD, 12));
 			roomBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -118,19 +149,11 @@ public class CustomAllRooms {
 			roomBtn.setMaximumSize(new Dimension(100, 60));
 			roomBtn.addActionListener(theAction.getActionListener());
 			contentPanel.add(roomBtn);
+
 		}
-
-		contentPanel.setVisible(true);
+		
 	}
-
-	public JPanel getWindow() {
-		return this.contentPanel;
-	}
-
-	public void setWindow(JPanel thePanel) {
-		this.contentPanel = thePanel;
-	}
-
+	
 	private MouseListener rightClickListener() {
 		MouseAdapter adapter = new MouseAdapter() {
 
@@ -209,8 +232,9 @@ public class CustomAllRooms {
 			
 			else {
 				roomDaoImpl.setSingleRoomAsCleanByRoomNumber(num);
-				contentPanel.revalidate();
-				contentPanel.repaint();
+				cookRooms(contentPanel);
+				roomBtn.revalidate();
+				roomBtn.repaint();
 			}
 		});
 		changeCleaning.add(clean);
@@ -231,8 +255,9 @@ public class CustomAllRooms {
 			
 			else {
 				roomDaoImpl.setSingleRoomAsDirtyByRoomNumber(num);
-				contentPanel.revalidate();
-				contentPanel.repaint();
+				cookRooms(contentPanel);
+				roomBtn.revalidate();
+				roomBtn.repaint();
 			}
 		});
 		changeCleaning.add(dirty);
@@ -249,8 +274,9 @@ public class CustomAllRooms {
 				if (checkingRoom.getBalance() == 0) {
 					
 					roomDaoImpl.setRoomCheckedOut(num);
-					contentPanel.revalidate();
-					contentPanel.repaint();
+					cookRooms(contentPanel);
+					roomBtn.revalidate();
+					roomBtn.repaint();
 				}
 
 				else {
@@ -269,8 +295,47 @@ public class CustomAllRooms {
 
 		});
 		popupMenu.add(checkout);
+		
+		JMenuItem getReservation = new JMenuItem();
+		getReservation.setText("Open reservation");
+		getReservation.setAccelerator(
+				KeyStroke.getKeyStroke(KeyEvent.VK_R, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		getReservation.setIcon(new ImageIcon(CustomAllRooms.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
+		getReservation.addActionListener(ActionListener -> {
+			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(num);
+			Reservation rr = rImpl.getReservationById(checkingRoom.getReservationId());
+
+			
+			if(rr != null) {
+				
+				NewReservationEx nex = new NewReservationEx();
+				nex.setRezIdField(rr.getId());
+				nex.setAgency(rr.getAgency());
+				nex.setRoomNumber(rr.getTheNumber());
+				nex.setNameSurnameField(rr.getGroupName());
+				nex.setTotalDaysField(rr.getTotalDays());
+				nex.setCheckinDate(rr.getCheckinDate());
+				nex.setCheckoutDate(rr.getCheckoutDate());
+				nex.setHostType(rr.getHostType());
+				nex.setCreditType(rr.getCreditType());
+				nex.setReservStatus(rr.getBookStatus());
+				nex.setReservNote(rr.getNote());
+				nex.setCurrency(checkingRoom.getCurrency());
+				nex.setPriceOfRoom(Double.parseDouble(checkingRoom.getPrice()));
+				nex.setPersonCountSpinner(checkingRoom.getPersonCount());
+				nex.setVisible(true);
+			}
+			
+			else {
+				JOptionPane.showMessageDialog(null, "Choosed room is not reserved!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+
+		});
+		popupMenu.add(getReservation);
 
 		return popupMenu;
 	}
-
 }

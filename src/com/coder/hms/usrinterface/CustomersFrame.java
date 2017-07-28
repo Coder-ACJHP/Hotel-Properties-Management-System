@@ -69,6 +69,7 @@ public class CustomersFrame extends JPanel {
 		searchPanel.setPreferredSize(new Dimension(10, 30));
 		
 		lblTableFilter = new JLabel("Type to search : ");
+		lblTableFilter.setForeground(new Color(178, 34, 34));
 		lblTableFilter.setSize(new Dimension(130, 25));
 		lblTableFilter.setPreferredSize(new Dimension(130, 22));
 		lblTableFilter.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -108,9 +109,10 @@ public class CustomersFrame extends JPanel {
 		searchFilterField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				String searchedWord = searchFilterField.getText();
+				
+				final String searchedWord = searchFilterField.getText();
 				filter(searchedWord);
-				super.keyTyped(e);
+
 			}
 		});
 		
@@ -138,9 +140,10 @@ public class CustomersFrame extends JPanel {
 	}
 
 	private void filter(String query) {
+		String modifiedQuery = "(?i)" + query;
 		TableRowSorter<TableModel> tr = new TableRowSorter<TableModel>(model);
 		customerTable.setRowSorter(tr);
-		tr.setRowFilter(RowFilter.regexFilter(query.toLowerCase()));
+		tr.setRowFilter(RowFilter.regexFilter(modifiedQuery));
 	}
 	
 	private void populateMainTable(DefaultTableModel model) {

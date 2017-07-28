@@ -117,7 +117,7 @@ public class UpperToolbar {
 		
 		final JSeparator separator = new JSeparator();
 		separator.setBackground(Color.DARK_GRAY);
-		separator.setBounds(889, 6, 10, 43);
+		separator.setBounds(895, 6, 13, 43);
 		separator.setOrientation(SwingConstants.VERTICAL);
 		separator.setFocusable(true);
 		separator.setForeground(Color.DARK_GRAY);
@@ -209,7 +209,7 @@ public class UpperToolbar {
 				}
 				
 				else if (command.equalsIgnoreCase("Refresh")) {
-			
+					mainPanel.removeAll();
 					mainPanel.revalidate();
 					mainPanel.repaint();
 

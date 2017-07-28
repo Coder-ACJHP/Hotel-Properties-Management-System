@@ -7,7 +7,6 @@ package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -17,13 +16,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -107,6 +106,16 @@ public class CustomReservations extends JPanel {
 		buttonPanel.setLayout(null);
 		buttonPanel.add(newRezBtn);
 		
+		final JSeparator separator = new JSeparator();
+		separator.setBackground(Color.DARK_GRAY);
+		separator.setBounds(175, 12, 13, 45);
+		separator.setOrientation(SwingConstants.VERTICAL);
+		separator.setFocusable(true);
+		separator.setForeground(Color.DARK_GRAY);
+		separator.setAutoscrolls(true);
+		separator.setPreferredSize(new Dimension(10, 20));
+		buttonPanel.add(separator);
+		
 		startdateLbl = new JLabel("Start date : ");
 		startdateLbl.setBounds(192, 8, 79, 26);
 		buttonPanel.add(startdateLbl);
@@ -144,13 +153,6 @@ public class CustomReservations extends JPanel {
 		findBtn.setBounds(690, 8, 114, 48);
 		findBtn.addActionListener(findRezervation());
 		buttonPanel.add(findBtn);
-		
-		Component verticalStrut = Box.createVerticalStrut(20);
-		verticalStrut.setMinimumSize(new Dimension(3, 20));
-		verticalStrut.setBackground(Color.GRAY);
-		verticalStrut.setPreferredSize(new Dimension(3, 20));
-		verticalStrut.setBounds(168, 6, 12, 55);
-		buttonPanel.add(verticalStrut);
 		
 		refNoField = new JTextField();
 		refNoField.setBounds(535, 6, 143, 26);

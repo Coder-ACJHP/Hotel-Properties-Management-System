@@ -34,11 +34,11 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 		}else {
 			
 			
-			if(colrowVal.equalsIgnoreCase("BUSY")) {
+			if(colrowVal.equalsIgnoreCase("BUSY") || colrowVal.equalsIgnoreCase("BLOCKED")) {
 				cellComponent.setBackground(Color.decode("#f9d692"));
 			}
 			
-			else if(colrowVal.equalsIgnoreCase("CLEAN")) {
+			else if(colrowVal.equalsIgnoreCase("EMPTY")) {
 				cellComponent.setBackground(Color.decode("#0083fb"));
 			}
 			
