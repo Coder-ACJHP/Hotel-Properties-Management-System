@@ -18,5 +18,9 @@ public class GetRoomNumber {
 		for(String str : rn) {
 			System.out.println(str);
 		}
+		
+		String geg = "100.0%";
+		String trimmed = geg.substring(0, 4);
+		System.out.println(Float.parseFloat(trimmed));
 	}
 }

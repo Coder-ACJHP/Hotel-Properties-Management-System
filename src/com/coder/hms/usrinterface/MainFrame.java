@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
-import com.coder.hms.utils.ApplicationLogo;
+import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 
 
@@ -28,15 +28,15 @@ public class MainFrame extends JFrame {
 	 */
 	private JPanel mainPanel;
 	private static final long serialVersionUID = 1L;
-	private CustomMenuBar customMenuBar;
+	private Main_MenuBar customMenuBar;
 //	private static SessionBean sessionBean;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
-	private final ApplicationLogo logoSetter = new ApplicationLogo();
+	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
 	
 	/*get the external toolbar and initialize it*/
-	private final UpperToolbar customToolbar;
-	private final BottomToolbar customBottomToolbar;
+	private final Main_UpperToolbar customToolbar;
+	private final Main_BottomToolbar customBottomToolbar;
 	
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	
@@ -52,8 +52,8 @@ public class MainFrame extends JFrame {
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
 		logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
-		customToolbar = new UpperToolbar(mainPanel);
-		customBottomToolbar = new BottomToolbar();
+		customToolbar = new Main_UpperToolbar(mainPanel);
+		customBottomToolbar = new Main_BottomToolbar();
 		
 		this.setTitle("Coder for HMS - [Main]");
 		
@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
 		});
 		
 		/*get the external menubar and initialize it*/
-		customMenuBar = new CustomMenuBar();
+		customMenuBar = new Main_MenuBar();
 		customMenuBar.setJFrame(this);
 		customMenuBar.themeChanger.setFrame(this);
 		/*add it to our frame*/

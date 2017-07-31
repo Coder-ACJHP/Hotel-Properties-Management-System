@@ -5,11 +5,9 @@
  */
 package com.coder.hms.utils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import com.coder.hms.daoImpl.HotelDaoImpl;
@@ -23,7 +21,6 @@ public class RoomNumberMaker {
 	int lastNum = 0;
 	private String roomText;
 	private String[] roomNumbers;
-	private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 	
 	public RoomNumberMaker() {
 		
@@ -50,12 +47,10 @@ public class RoomNumberMaker {
 		return roomNumbers;
 	}
 	
-	public Object[] getNotReservedRooms(final Date date) {
-		
-		final String today = sdf.format(date);
+	public Object[] getNotReservedRooms(final String date) {
 		
 		final ReservationDaoImpl rImpl = new ReservationDaoImpl();
-		List<Reservation> reservList = rImpl.getReservsByDate(today);
+		List<Reservation> reservList = rImpl.getReservsByDate(date);
 		
 		final String[] roomNumbers = new String[reservList.size()];
 		

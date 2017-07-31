@@ -6,6 +6,7 @@
 package com.coder.hms.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +40,7 @@ public class Customer implements Serializable{
 	private String DocumentNo;
 	
 	@Column(name="DateOfBirth")
-	private String DateOfBirth;
+	private Date DateOfBirth;
 	
 	@Column(name="Gender")
 	private String Gender;
@@ -111,11 +112,11 @@ public class Customer implements Serializable{
 		DocumentNo = documentNo;
 	}
 
-	public String getDateOfBirth() {
+	public Date getDateOfBirth() {
 		return DateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(Date dateOfBirth) {
 		DateOfBirth = dateOfBirth;
 	}
 
@@ -176,7 +177,7 @@ public class Customer implements Serializable{
 	}
 
 	public Customer(long customerId, String firstName, String lastName, String country, String document,
-			String documentNo, String dateOfBirth, String gender, String maritalStatus, String fatherName,
+			String documentNo, Date dateOfBirth, String gender, String maritalStatus, String fatherName,
 			String motherName, String email, long reservationId) {
 		super();
 		CustomerId = customerId;

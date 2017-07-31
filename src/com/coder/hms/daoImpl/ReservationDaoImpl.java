@@ -97,23 +97,23 @@ public class ReservationDaoImpl implements ReservationDAO{
 		return reservList;
 	}
 
-	public List<Reservation> getGaranteedReservs(String today) {
+	public List<Reservation> getGaranteedReservs(String reservDate) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		Query<Reservation> query = session.createQuery("from Reservation "
 							+ "where bookStatus = 'GUARANTEE' and checkinDate=:today", Reservation.class);
-		query.setParameter("today", today);
+		query.setParameter("today", reservDate);
 		List<Reservation> guaranteedList = query.getResultList();
 		session.close();
 		return guaranteedList;
 	}
 
-	public List<Reservation> getReservsAsWaitlist(String today) {
+	public List<Reservation> getReservsAsWaitlist(String reservDate) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		Query<Reservation> query = session.createQuery("from Reservation "
 							+ "where bookStatus = 'WAITLIST' and checkinDate=:today", Reservation.class);
-		query.setParameter("today", today);
+		query.setParameter("today", reservDate);
 		List<Reservation> waitedList = query.getResultList();
 		session.close();
 		return waitedList;

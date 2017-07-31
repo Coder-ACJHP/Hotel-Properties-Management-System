@@ -47,7 +47,7 @@ public class RoomDaoImpl implements RoomDAO {
 	public void saveRoom(Room room) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
-		session.update(room);
+		session.saveOrUpdate(room);
 		session.getTransaction().commit();
 		session.close();
 	}
@@ -111,6 +111,16 @@ public class RoomDaoImpl implements RoomDAO {
 	}
 
 	@SuppressWarnings("rawtypes")
+	public void setAllRoomsAtDirty(String dirty) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query query = session.createQuery("UPDATE Room SET cleaningStatus=:dirty");
+		query.setParameter("dirty", dirty);
+		query.executeUpdate();
+		session.close();
+	}
+	
+	@SuppressWarnings("rawtypes")
 	public void setSingleRoomAsDirtyByRoomNumber(String rowData) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
@@ -120,5 +130,6 @@ public class RoomDaoImpl implements RoomDAO {
 		session.close();
 		
 	}
+
 
 }

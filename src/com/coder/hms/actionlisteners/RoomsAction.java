@@ -7,15 +7,20 @@ package com.coder.hms.actionlisteners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.usrinterface.RoomEx;
+import com.coder.hms.usrinterface.ReservedRoomCheckinWindow;
+import com.coder.hms.usrinterface.RoomExternalWindow;
+import com.coder.hms.usrinterface.WalkinRoomCheckinWindow;
 
 public class RoomsAction {
 
@@ -31,7 +36,7 @@ public class RoomsAction {
 	public RoomsAction() {
 
 		hotelDaoImpl = new HotelDaoImpl();
-		Hotel hotel = hotelDaoImpl.getHotel();
+		final Hotel hotel = hotelDaoImpl.getHotel();
 
 		roomDaoImpl = new RoomDaoImpl();
 
@@ -44,6 +49,8 @@ public class RoomsAction {
 				int lastNum = 0;
 				String command = e.getActionCommand();
 
+				final String innerDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+				
 				for (int i = 1; i <= hotel.getRoomCapacity(); i++) {
 					++lastNum;
 
@@ -56,23 +63,48 @@ public class RoomsAction {
 
 					if (command.equals(roomText)) {
 
-						Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
-
+						final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
+						final ReservationDaoImpl rImpl = new ReservationDaoImpl();
+						final Reservation foundedReserv = rImpl.getReservationById(theRoom.getReservationId());
+						
 						if (theRoom.getUsageStatus().equals("FULL")) {
 							SwingUtilities.invokeLater(new Runnable() {
 
 								@Override
 								public void run() {
-									new RoomEx(roomText);
+									new RoomExternalWindow(roomText);
 
 								}
 							});
 							break;
-						} else {
-							JOptionPane.showMessageDialog(null,
-									"NEW CHECK/IN PAGE UNDER DEVELOPMENT PHASE\n" + "PLEASE BE PATIENT.",
-									JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
-							break;
+						} 
+						
+						else if (theRoom.getUsageStatus().equals("BLOCKED") && innerDate.equals(foundedReserv.getCheckinDate())) {
+
+							SwingUtilities.invokeLater(new Runnable() {
+								
+								@Override
+								public void run() {
+									
+									new ReservedRoomCheckinWindow(theRoom.getNumber())
+									.setVisible(true);
+								
+								}
+							});
+						}
+						
+						else if (theRoom.getUsageStatus().equals("EMPTY")) {
+							
+							SwingUtilities.invokeLater(new Runnable() {
+								
+								@Override
+								public void run() {
+									
+									new WalkinRoomCheckinWindow(theRoom.getNumber())
+									.setVisible(true);
+									
+								}
+							});
 						}
 					}
 				}

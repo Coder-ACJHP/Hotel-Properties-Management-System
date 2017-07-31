@@ -158,22 +158,14 @@ public class Reservation implements Serializable{
 		return theNumber;
 	}
 
-	public void setTheNumber(String theRoomId) {
-		this.theNumber = theRoomId;
+	public void setTheNumber(String theNumber) {
+		this.theNumber = theNumber;
 	}
 
-	@Override
-	public String toString() {
-		return "Reservation [Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate="
-				+ checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType
-				+ ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus="
-				+ paymentStatus + ", theRoomId=" + theNumber + "]";
-	}
-
-	public Reservation(long id, String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
-			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus, String theRoomId) {
+	public Reservation(String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
+			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus,
+			String theNumber) {
 		super();
-		Id = id;
 		this.groupName = groupName;
 		this.checkinDate = checkinDate;
 		this.checkoutDate = checkoutDate;
@@ -184,7 +176,16 @@ public class Reservation implements Serializable{
 		this.bookStatus = bookStatus;
 		this.note = note;
 		this.paymentStatus = paymentStatus;
-		this.theNumber = theRoomId;
+		this.theNumber = theNumber;
 	}
+
+	@Override
+	public String toString() {
+		return "Reservation [Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate="
+				+ checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType
+				+ ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus="
+				+ paymentStatus + ", theNumber=" + theNumber + "]";
+	}
+
 	
 }

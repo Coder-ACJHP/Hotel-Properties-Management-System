@@ -6,19 +6,19 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import com.coder.hms.usrinterface.CustomAllRooms;
+import com.coder.hms.usrinterface.Main_AllRooms;
 
 public class LayoutTest extends JFrame {
 
 	/**
 	 * 
 	 */
-	private CustomAllRooms allRooms;
+	private Main_AllRooms allRooms;
 	private static final long serialVersionUID = 1L;
 
 	public LayoutTest() {
 		
-		allRooms = new CustomAllRooms();
+		allRooms = new Main_AllRooms();
 		
 		this.setTitle("Coder HMS [LayoutTest]");
 		setPreferredSize(new Dimension(1000, 800));
