@@ -37,8 +37,11 @@ public class Room implements Serializable{
 	@Column(name="price")
 	private String price;
 	
+	@Column(name="totalPrice")
+	private String totalPrice;
+	
 	@Column(name="balance")
-	private double balance;
+	private String balance;
 	
 	@Column(name="currency")
 	private String currency;
@@ -94,11 +97,19 @@ public class Room implements Serializable{
 		this.price = price;
 	}
 
-	public double getBalance() {
+	public String getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(String totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public String getBalance() {
 		return balance;
 	}
 
-	public void setBalance(double balance) {
+	public void setBalance(String balance) {
 		this.balance = balance;
 	}
 
@@ -150,28 +161,29 @@ public class Room implements Serializable{
 		ReservationId = reservationId;
 	}
 
-	public Room(long theRoomId, String number, String type, String price, double balance, String currency,
+	public Room(long theRoomId, String number, String type, String price, String totalprice, String balance, String currency,
 			String cleaningStatus, String usageStatus, int personCount, String customerGrupName, long reservationId) {
 		super();
 		this.theRoomId = theRoomId;
 		this.number = number;
 		this.type = type;
 		this.price = price;
+		this.totalPrice = totalprice;
 		this.balance = balance;
 		this.currency = currency;
 		this.cleaningStatus = cleaningStatus;
 		this.usageStatus = usageStatus;
 		this.personCount = personCount;
 		this.customerGrupName = customerGrupName;
-		ReservationId = reservationId;
+		this.ReservationId = reservationId;
 	}
 
 	@Override
 	public String toString() {
 		return "Room [theRoomId=" + theRoomId + ", number=" + number + ", type=" + type + ", price=" + price
-				+ ", balance=" + balance + ", currency=" + currency + ", cleaningStatus=" + cleaningStatus
-				+ ", usageStatus=" + usageStatus + ", personCount=" + personCount + ", customerGrupName="
-				+ customerGrupName + ", ReservationId=" + ReservationId + "]";
+				+ ", totalPrice=" + totalPrice + ", balance=" + balance + ", currency=" + currency + 
+				", cleaningStatus=" + cleaningStatus + ", usageStatus=" + usageStatus + ", personCount=" + personCount 
+				+ ", customerGrupName=" + customerGrupName + ", ReservationId=" + ReservationId + "]";
 	}
 
 	

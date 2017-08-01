@@ -371,6 +371,9 @@ public class WalkinRoomCheckinWindow extends JDialog implements ActionListener {
 		checkingRoom.setReservationId(lastReservation.getId());
 		checkingRoom.setUsageStatus("FULL");
 		
+		final double lastPrice = Integer.parseInt(checkingRoom.getPrice()) * newReservation.getTotalDays();
+		checkingRoom.setTotalPrice(lastPrice + "");
+		
 			if((int)personCountSpinner.getValue() == 0 || (int)personCountSpinner.getValue() == 1) {
 				
 				//Set room person count here

@@ -55,7 +55,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 	public void save(Customer theCustomer) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
-		session.save(theCustomer);
+		session.saveOrUpdate(theCustomer);
 		session.getTransaction().commit();
 		session.close();
 		

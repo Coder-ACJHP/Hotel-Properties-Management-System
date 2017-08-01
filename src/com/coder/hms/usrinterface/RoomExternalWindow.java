@@ -18,12 +18,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.Currency;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -37,36 +43,45 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-
 import com.coder.hms.daoImpl.CustomerDaoImpl;
+import com.coder.hms.daoImpl.PaymentDaoImpl;
+import com.coder.hms.daoImpl.PostingDaoImpl;
+import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
+import com.coder.hms.entities.Payment;
+import com.coder.hms.entities.Posting;
+import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.PayPostTableCellRenderer;
 import com.coder.hms.utils.RoomExternalTableHeaderRenderer;
+import com.toedter.calendar.JDateChooser;
 
 public class RoomExternalWindow extends JDialog {
 
 	/**
 	 * 
 	 */
+	private static String roomNumber;
 	private JTextPane roomNote;
-	private JTable postingTable;
-	private JTable customerTable;
-	private JTextField balanceField;
-	private JTextField totalPriceField;
+	private NumberFormat formatter;
+	private JTable payPostTable, customerTable;
+	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
 	private JButton postingBtn, paymentBtn, saveChangesBtn, checkoutBtn;
+	private JFormattedTextField priceField,totalPriceField, balanceField;
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
+	private final PayPostTableCellRenderer payPostRenderer = new PayPostTableCellRenderer();
 	private final RoomExternalTableHeaderRenderer THR = new RoomExternalTableHeaderRenderer();
 	
 	private final String[] customerColnames = new String[]{"INDEX", "FIRSTNAME", "LASTNAME"};
 	private final DefaultTableModel customerModel = new DefaultTableModel(customerColnames, 0);
 	
-	private final String[] postingColnames = new String[]{"TITLE", "PAYMENT TYPE", "PRICE", "CURRENCY", "EXPLANATION"};
-	private final DefaultTableModel postingModel = new DefaultTableModel(postingColnames, 0);
+	private final String[] postPayColnames = new String[]{"DOC. NO", "TYPE", "TITLE", "PRICE", "CURRENCY", "EXPLANATION", "DATE TIME"};
+	private final DefaultTableModel postPayModel = new DefaultTableModel(postPayColnames, 0);
+	private JTextField IdField, groupNameField, agencyField, currencyField, creditField, hostTypeField, totalDaysField;
 
 
 	/**
@@ -74,6 +89,8 @@ public class RoomExternalWindow extends JDialog {
 	 * @param roomText 
 	 */
 	public RoomExternalWindow(String roomText) {
+		
+		RoomExternalWindow.roomNumber = roomText;
 		
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -110,6 +127,9 @@ public class RoomExternalWindow extends JDialog {
 		this.getContentPane().setBackground(Color.decode("#066d95"));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
+		formatter = NumberFormat.getCurrencyInstance();
+		formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
+		
 		JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel.setAutoscrolls(true);
@@ -118,6 +138,18 @@ public class RoomExternalWindow extends JDialog {
 		panel.setLayout(null);
 		
 		postingBtn = new JButton("Posting");
+		postingBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						new PostingExternalWindow(roomText);
+						populatePostPayTable(postPayModel);
+					}
+				});
+			}
+		});
 		postingBtn.setAutoscrolls(true);
 		postingBtn.setFont(new Font("Arial", Font.PLAIN, 15));
 		postingBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -132,8 +164,8 @@ public class RoomExternalWindow extends JDialog {
 					
 					@Override
 					public void run() {
-						new PaymentExternalWindow();
-						
+						new PaymentExternalWindow(roomText);
+						populatePostPayTable(postPayModel);
 					}
 				});
 			}
@@ -160,7 +192,7 @@ public class RoomExternalWindow extends JDialog {
 		verticalStrut.setBounds(406, 5, 10, 43);
 		panel.add(verticalStrut);
 		
-		totalPriceField = new JTextField();
+		totalPriceField = new JFormattedTextField(formatter);
 		totalPriceField.setAlignmentY(Component.TOP_ALIGNMENT);
 		totalPriceField.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		totalPriceField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -181,7 +213,7 @@ public class RoomExternalWindow extends JDialog {
 		balanceLbl.setBounds(907, 5, 114, 20);
 		panel.add(balanceLbl);
 		
-		balanceField = new JTextField();
+		balanceField = new JFormattedTextField(formatter);
 		balanceField.setAlignmentY(Component.TOP_ALIGNMENT);
 		balanceField.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		balanceField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -201,23 +233,6 @@ public class RoomExternalWindow extends JDialog {
 		totalLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalLbl.setBounds(907, 30, 114, 20);
 		panel.add(totalLbl);
-		
-		JPanel postTableHolder = new JPanel();
-		postTableHolder.setPreferredSize(new Dimension(10, 300));
-		getContentPane().add(postTableHolder, BorderLayout.SOUTH);
-		postTableHolder.setLayout(new BorderLayout(0, 0));
-		
-		JScrollPane postableScrollPane = new JScrollPane();
-		postableScrollPane.setBackground(Color.decode("#e1fcff"));
-		postableScrollPane.setBackground(new Color(230, 230, 250));
-		postableScrollPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		postTableHolder.add(postableScrollPane, BorderLayout.CENTER);
-		
-		postingTable = new JTable(postingModel);
-		postingTable.getTableHeader().setDefaultRenderer(THR);
-		postingTable.setBackground(new Color(255, 182, 193));
-		postableScrollPane.setViewportView(postingTable);
-		postTableHolder.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{postingTable, postableScrollPane}));
 		
 		JPanel reservInfoHolder = new JPanel();
 		reservInfoHolder.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -241,13 +256,113 @@ public class RoomExternalWindow extends JDialog {
 		saveChangesBtn.setAutoscrolls(true);
 		saveChangesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//SAVE CHANGES
+				int response = JOptionPane.showConfirmDialog(null, "Are you sure to continue?", JOptionPane.OPTION_TYPE_PROPERTY, JOptionPane.YES_NO_OPTION);
+				
+				if(response == JOptionPane.YES_OPTION) {
+					//Save everything
+				}
+				
+				else {
+					return;
+				}
 			}
 		});
 		saveChangesBtn.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		saveChangesBtn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		saveChangesBtn.setBounds(2, 291, 216, 29);
+		saveChangesBtn.setBounds(2, 285, 218, 29);
 		reservInfoHolder.add(saveChangesBtn);
+		
+		JLabel IdLbl = new JLabel("Id : ");
+		IdLbl.setBounds(12, 42, 46, 14);
+		reservInfoHolder.add(IdLbl);
+		
+		IdField = new JTextField();
+		IdField.setEditable(false);
+		IdField.setBounds(91, 36, 86, 20);
+		reservInfoHolder.add(IdField);
+		IdField.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Checkin : ");
+		lblNewLabel.setBounds(12, 205, 70, 14);
+		reservInfoHolder.add(lblNewLabel);
+		
+		checkinDate = new JDateChooser();
+		checkinDate.setEnabled(false);
+		checkinDate.setDateFormatString("yyyy-MM-dd");
+		checkinDate.setBounds(91, 202, 127, 20);
+		reservInfoHolder.add(checkinDate);
+		
+		JLabel lblCheckoutDate = new JLabel("Checkout : ");
+		lblCheckoutDate.setBounds(12, 233, 70, 14);
+		reservInfoHolder.add(lblCheckoutDate);
+		
+		checkoutDate = new JDateChooser();
+		checkoutDate.setDateFormatString("yyyy-MM-dd");
+		checkoutDate.setBounds(91, 230, 127, 20);
+		reservInfoHolder.add(checkoutDate);
+		
+		JLabel lblGroup = new JLabel("Group : ");
+		lblGroup.setBounds(12, 65, 70, 14);
+		reservInfoHolder.add(lblGroup);
+		
+		groupNameField = new JTextField();
+		groupNameField.setEditable(false);
+		groupNameField.setBounds(91, 62, 125, 20);
+		reservInfoHolder.add(groupNameField);
+		groupNameField.setColumns(10);
+		
+		JLabel lblAgency = new JLabel("Agency : ");
+		lblAgency.setBounds(12, 93, 70, 14);
+		reservInfoHolder.add(lblAgency);
+		
+		agencyField = new JTextField();
+		agencyField.setEditable(false);
+		agencyField.setBounds(91, 90, 125, 20);
+		reservInfoHolder.add(agencyField);
+		agencyField.setColumns(10);
+		
+		JLabel lblPrice = new JLabel("Price : ");
+		lblPrice.setBounds(12, 121, 70, 14);
+		reservInfoHolder.add(lblPrice);
+		
+		priceField = new JFormattedTextField();
+		priceField.setEditable(false);
+		priceField.setBounds(91, 118, 64, 20);
+		reservInfoHolder.add(priceField);
+		
+		currencyField = new JTextField();
+		currencyField.setEditable(false);
+		currencyField.setBounds(156, 118, 61, 20);
+		reservInfoHolder.add(currencyField);
+		currencyField.setColumns(10);
+		
+		JLabel lblCreditType = new JLabel("Credit type : ");
+		lblCreditType.setBounds(12, 150, 70, 14);
+		reservInfoHolder.add(lblCreditType);
+		
+		creditField = new JTextField();
+		creditField.setBounds(91, 146, 125, 20);
+		reservInfoHolder.add(creditField);
+		creditField.setColumns(10);
+		
+		JLabel lblHostType = new JLabel("Host type : ");
+		lblHostType.setBounds(12, 177, 70, 14);
+		reservInfoHolder.add(lblHostType);
+		
+		hostTypeField = new JTextField();
+		hostTypeField.setBounds(91, 174, 127, 20);
+		reservInfoHolder.add(hostTypeField);
+		hostTypeField.setColumns(10);
+		
+		JLabel lblTotalDays = new JLabel("Total days : ");
+		lblTotalDays.setBounds(12, 260, 70, 14);
+		reservInfoHolder.add(lblTotalDays);
+		
+		totalDaysField = new JTextField();
+		totalDaysField.setEditable(false);
+		totalDaysField.setBounds(91, 257, 86, 20);
+		reservInfoHolder.add(totalDaysField);
+		totalDaysField.setColumns(10);
 		
 		JPanel cusomerTableHolder = new JPanel();
 		cusomerTableHolder.setBackground(Color.decode("#066d95"));
@@ -256,6 +371,7 @@ public class RoomExternalWindow extends JDialog {
 		cusomerTableHolder.setLayout(new BorderLayout(0, 0));
 		
 		roomNote = new JTextPane();
+		roomNote.setLocale(new Locale("tr", "TR"));
 		roomNote.setToolTipText("Write some note.");
 		roomNote.setMargin(new Insets(5, 5, 5, 5));
 		roomNote.setPreferredSize(new Dimension(0, 45));
@@ -282,10 +398,75 @@ public class RoomExternalWindow extends JDialog {
 		customerTable.addMouseListener(openCustomerListener());
 		scrollPane.setViewportView(customerTable);
 		
-		this.setAlwaysOnTop(false);
+		JPanel postTableHolder = new JPanel();
+		postTableHolder.setPreferredSize(new Dimension(10, 300));
+		getContentPane().add(postTableHolder, BorderLayout.SOUTH);
+		postTableHolder.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane postableScrollPane = new JScrollPane();
+		postableScrollPane.setBackground(Color.decode("#e1fcff"));
+		postableScrollPane.setBackground(new Color(230, 230, 250));
+		postableScrollPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		postTableHolder.add(postableScrollPane, BorderLayout.CENTER);
+		
+		populatePostPayTable(postPayModel);
+		
+		payPostTable = new JTable(postPayModel);
+		payPostTable.setDefaultRenderer(Object.class, payPostRenderer);
+		payPostTable.setCellSelectionEnabled(false);
+		payPostTable.getTableHeader().setDefaultRenderer(THR);
+		postableScrollPane.setViewportView(payPostTable);
+		
+		
+		populateReservationDetail();
+		
 		this.setVisible(true);
 	}
 
+	private void populateReservationDetail() {
+		
+		final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
+		final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
+		final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
+		Reservation reservation = reservationDaoImpl.getReservationById(theRoom.getReservationId());
+		
+		IdField.setText(reservation.getId() + "");
+		
+		groupNameField.setText(reservation.getGroupName());
+		
+		agencyField.setText(reservation.getAgency());
+		
+		
+		priceField.setValue(Float.parseFloat(theRoom.getPrice()));
+		
+		if(theRoom.getCurrency().equalsIgnoreCase("TURKISH LIRA")) {
+			currencyField.setText("TL");
+		}
+		
+		else {
+			currencyField.setText(theRoom.getCurrency());
+		}
+		
+		creditField.setText(reservation.getCreditType());
+		
+		hostTypeField.setText(reservation.getHostType());
+		
+		LocalDate localDate = LocalDate.parse(reservation.getCheckinDate());
+		Date date = java.sql.Date.valueOf(localDate);
+		checkinDate.setDate(date);
+		
+		localDate = LocalDate.parse(reservation.getCheckoutDate());
+		date = java.sql.Date.valueOf(localDate);
+		checkoutDate.setDate(date);
+		
+		totalDaysField.setText(reservation.getTotalDays() + "");
+		
+		final double totalPrice = Double.parseDouble(theRoom.getTotalPrice());
+		totalPriceField.setValue(totalPrice);
+		final double roombalance = Double.parseDouble(theRoom.getBalance());
+		balanceField.setValue(roombalance);
+	}
+	
 	public void populateCustomerTable(String roomText, DefaultTableModel model) {
 	
 		//clean table model
@@ -330,6 +511,33 @@ public class RoomExternalWindow extends JDialog {
 			}
 		};
 		return adapter;
+	}
+	
+	private void populatePostPayTable(DefaultTableModel model) {
+		
+		//import all customers from database
+		final PostingDaoImpl postingDaoImpl = new PostingDaoImpl();
+		List<Posting> postingList = postingDaoImpl.getAllPostingsByRoomNumber(roomNumber);
+		
+		final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
+		List<Payment> paymentlist = paymentDaoImpl.getAllPaymentsByRoomNumber(roomNumber);
+		
+		//clean table model
+		model.setRowCount(0);
+		
+		for(Posting pos: postingList) {
+			
+			model.addRow(new Object[]{pos.getId(), pos.getPostType(), pos.getTitle(), pos.getPrice(),
+					pos.getCurrency(), pos.getExplanation(), pos.getDateTime()});
+		}
+		
+		for(Payment pay: paymentlist) {
+			
+			model.addRow(new Object[]{pay.getId(), pay.getPaymentType() ,pay.getTitle(), pay.getPrice(),
+					pay.getCurrency(), pay.getExplanation(), pay.getDateTime()});
+		}
+		
+		model.fireTableDataChanged();
 	}
 }
 

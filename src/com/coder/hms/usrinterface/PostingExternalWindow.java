@@ -12,8 +12,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -35,46 +33,52 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import com.coder.hms.daoImpl.PaymentDaoImpl;
+import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
-import com.coder.hms.entities.Payment;
+import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import javax.swing.JTextField;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
-public class PaymentExternalWindow extends JDialog {
+public class PostingExternalWindow extends JDialog {
 
 	/**
 	 * 
 	 */
-	private JTable table;
 	private double value = 0.0;
 	private JTextArea textPane;
-	private JScrollPane scrollPane;
+	private JTable postingTable;
+	private JTextField docNoField;
 	private String roomNumber = "";
 	private JButton btnClear, btnSave;
 	private final NumberFormat formatter;
 	private JFormattedTextField priceField;
 	private static final long serialVersionUID = 1L;
-	private JComboBox<String> comboBox, currencyCmbBox, titleCmbBox;
+	private JComboBox<String> currencyCmbBox, titleCmbBox, typeCmbBox;
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
-	private final String[] PAYMENT_TYPE = {"CASH PAYMENT", "CREDIT CARD", "CITY LEDGER"};
+	private final String[] POST_COLMNS = {"DOCUMENT NO", "TYPE", "TITLE", "PRICE", "CURRENCY", "EXPLANATION, DATE TIME"};
+	private final DefaultTableModel model = new DefaultTableModel(POST_COLMNS, 0);
 	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "DOLLAR", "EURO", "POUND"};
-	private final String[] TITLE_LIST = { "BALANCE, ROOM RATES", "RESTAURANT", "MINIBAR", "TELEPHONE", "MISCELLANEOUS"};
-	private final String[] columnNames = {"DOCUMENT NO", "TYPE", "TITLE", "PRICE", "CURRENCY", "EXPLANATION, DATE TIME"};
-	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+	private final String[] TYPE_LIST = { "SYSTEM"};
+	private final String[] TITLE_LIST = { "ROOM RATES", "RESTAURANT", "MINIBAR", "TELEPHONE", "MISCELLANEOUS"};
 
 	/**
 	 * Create the dialog.
 	 */
-	public PaymentExternalWindow(String roomText) {
+	public PostingExternalWindow(String roomText) {
 		
 		this.roomNumber = roomText;
+		
+		setPreferredSize(new Dimension(400, 500));
 		
 		// set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
@@ -88,7 +92,7 @@ public class PaymentExternalWindow extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [Payment]");
+		this.setTitle("Coder for HMS - [Posting]");
 
 		/* Set default size of frame */
 		this.setSize(400, 500);
@@ -99,62 +103,64 @@ public class PaymentExternalWindow extends JDialog {
 		final JLabel lblTitle = new JLabel("Title : ");
 		lblTitle.setForeground(Color.WHITE);
 		lblTitle.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblTitle.setBounds(56, 31, 100, 20);
+		lblTitle.setBounds(56, 55, 100, 20);
 		getContentPane().add(lblTitle);
 		
-		final JLabel lblPaymentName = new JLabel("Type of payment : ");
+		final JLabel lblPaymentName = new JLabel("Document no : ");
 		lblPaymentName.setForeground(Color.WHITE);
 		lblPaymentName.setFont(new Font("Verdana", Font.BOLD, 13));
-		lblPaymentName.setBounds(56, 68, 135, 20);
+		lblPaymentName.setBounds(54, 20, 135, 20);
 		getContentPane().add(lblPaymentName);
 		
-		comboBox = new JComboBox<String>(new DefaultComboBoxModel<>(PAYMENT_TYPE));
-		comboBox.setBounds(203, 68, 155, 20);
-		getContentPane().add(comboBox);
+		docNoField = new JTextField();
+		docNoField.setBounds(203, 22, 86, 20);
+		getContentPane().add(docNoField);
+		docNoField.setColumns(10);
 		
 		final JLabel lblPrice = new JLabel("Price : ");
 		lblPrice.setForeground(Color.WHITE);
 		lblPrice.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblPrice.setBounds(56, 104, 100, 20);
+		lblPrice.setBounds(56, 116, 100, 20);
 		getContentPane().add(lblPrice);
 		
 		formatter = NumberFormat.getCurrencyInstance();
 		formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
 		priceField = new JFormattedTextField(formatter);
 		priceField.setValue(new Double(value));
-		priceField.setBounds(203, 102, 155, 20);
+		priceField.setBounds(203, 114, 155, 20);
 		getContentPane().add(priceField);
 		
 		final JLabel lblCurrency = new JLabel("Currency : ");
 		lblCurrency.setForeground(Color.WHITE);
 		lblCurrency.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblCurrency.setBounds(56, 142, 100, 20);
+		lblCurrency.setBounds(56, 146, 100, 20);
 		getContentPane().add(lblCurrency);
 		
 		currencyCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(CURRENCY_LIST));
-		currencyCmbBox.setBounds(203, 142, 155, 20);
-		currencyCmbBox.setSelectedIndex(0);
 		currencyCmbBox.addItemListener(currencyActionListener());
+		currencyCmbBox.setBounds(203, 146, 155, 20);
+		currencyCmbBox.setSelectedIndex(0);
 		getContentPane().add(currencyCmbBox);
 		
 		JLabel lblExplain = new JLabel("Explanation");
 		lblExplain.setForeground(Color.WHITE);
 		lblExplain.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblExplain.setHorizontalAlignment(SwingConstants.CENTER);
-		lblExplain.setBounds(136, 175, 107, 20);
+		lblExplain.setBounds(136, 171, 107, 20);
 		getContentPane().add(lblExplain);
 		
 		textPane = new JTextArea();
+		textPane.setLineWrap(true);
 		textPane.setLocale(new Locale("tr", "TR"));
 		textPane.setBackground(UIManager.getColor("info"));
 		textPane.setFont(new Font("Segoe UI Symbol", Font.BOLD, 14));
 		textPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textPane.setBounds(42, 200, 316, 50);
+		textPane.setBounds(42, 196, 316, 50);
 		getContentPane().add(textPane);
 		
 		
 		final JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setBounds(107, 411, 277, 49);
+		buttonsPanel.setBounds(107, 409, 277, 49);
 		buttonsPanel.setForeground(new Color(95, 158, 160));
 		buttonsPanel.setBackground(Color.decode("#066d95"));
 		getContentPane().add(buttonsPanel);
@@ -172,11 +178,11 @@ public class PaymentExternalWindow extends JDialog {
 		});
 		buttonsPanel.add(btnClear);
 
-		btnSave = new JButton("PAY");
+		btnSave = new JButton("POST");
 		btnSave.addActionListener(payActionListener());
 		btnSave.setToolTipText("Press ALT + ENTER keys for shortcut");
 		btnSave.setSelectedIcon(null);
-		btnSave.setIcon(new ImageIcon(PaymentExternalWindow.class.getResource("/com/coder/hms/icons/payment_cash.png")));
+		btnSave.setIcon(new ImageIcon(PostingExternalWindow.class.getResource("/com/coder/hms/icons/room_post.png")));
 		btnSave.setForeground(new Color(0, 191, 255));
 		btnSave.setOpaque(true);
 		btnSave.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -186,18 +192,33 @@ public class PaymentExternalWindow extends JDialog {
 		buttonsPanel.add(btnSave);
 		
 		titleCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(TITLE_LIST));
-		titleCmbBox.setBounds(203, 30, 155, 20);
+		titleCmbBox.setBounds(203, 54, 155, 20);
 		getContentPane().add(titleCmbBox);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 260, 374, 140);
-		getContentPane().add(scrollPane);
+		JPanel tableHolderPanel = new JPanel();
+		tableHolderPanel.setBounds(10, 258, 374, 140);
+		getContentPane().add(tableHolderPanel);
+		tableHolderPanel.setLayout(new BorderLayout(0, 0));
 		
-		table = new JTable();
-		table.setModel(model);
-		table.getColumnModel().getColumn(2).setPreferredWidth(89);
-		table.getColumnModel().getColumn(3).setPreferredWidth(105);
-		scrollPane.setViewportView(table);
+		JScrollPane tableScrollPane = new JScrollPane();
+		tableHolderPanel.add(tableScrollPane, BorderLayout.CENTER);
+		
+		postingTable = new JTable();
+		postingTable.setModel(model);
+		postingTable.getColumnModel().getColumn(0).setPreferredWidth(95);
+		postingTable.setColumnSelectionAllowed(true);
+		tableScrollPane.setViewportView(postingTable);
+		
+		JLabel lblType = new JLabel("Type : ");
+		lblType.setHorizontalAlignment(SwingConstants.LEFT);
+		lblType.setForeground(Color.WHITE);
+		lblType.setFont(new Font("Verdana", Font.BOLD, 14));
+		lblType.setBounds(55, 85, 100, 16);
+		getContentPane().add(lblType);
+		
+		typeCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(TYPE_LIST));
+		typeCmbBox.setBounds(202, 81, 156, 27);
+		getContentPane().add(typeCmbBox);
 
 		this.setVisible(true);
 	}
@@ -259,7 +280,6 @@ public class PaymentExternalWindow extends JDialog {
 	
 	private void clear() {
 
-		comboBox.setSelectedItem(0);
 		priceField.setText("");
 		currencyCmbBox.setSelectedItem(0);
 		textPane.setText("");
@@ -269,31 +289,32 @@ public class PaymentExternalWindow extends JDialog {
 		ActionListener listener = new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				
-				final Payment payment = new Payment();
+				final Posting posting = new Posting();
 				
-				payment.setTitle(titleCmbBox.getSelectedItem().toString());
-				payment.setPaymentType(comboBox.getSelectedItem().toString());
-				payment.setPrice(priceField.getValue() + "");
-				payment.setCurrency(currencyCmbBox.getSelectedItem().toString());
-				payment.setExplanation(textPane.getText());
-				payment.setRoomNumber(roomNumber);
+
+				posting.setTitle(titleCmbBox.getSelectedItem().toString());
+				posting.setPostType(typeCmbBox.getSelectedItem().toString());
+				posting.setPrice(priceField.getValue() + "");
+				posting.setCurrency(currencyCmbBox.getSelectedItem().toString());
+				posting.setExplanation(textPane.getText());
+				posting.setRoomNumber(roomNumber);
 				
 				String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 				
-				payment.setDateTime(date);
+				posting.setDateTime(date);
 				
-				final Object[] rowCol = {payment.getTitle(), payment.getPaymentType(),
-								payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()};
+				final Object[] rowCol = new Object[] {posting.getId(), posting.getTitle(), posting.getPostType(),
+								posting.getPrice(), posting.getCurrency(), posting.getExplanation(), posting.getDateTime()};
 				model.addRow(rowCol);
 				
-				//after adding the payment in the table save it in database
-				final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
-				paymentDaoImpl.savePayment(payment);
+				//after adding the post in the table save it in database
+				final PostingDaoImpl postingDaoImpl = new PostingDaoImpl();
+				postingDaoImpl.savePosting(posting);
 				
 				final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-				final float balance = Float.parseFloat(theRoom.getBalance()) + Float.parseFloat(payment.getPrice().toString());
-				theRoom.setBalance(balance + "");
+				final double balance = Double.parseDouble(theRoom.getTotalPrice()) + Double.parseDouble(posting.getPrice().toString());
+				theRoom.setTotalPrice(balance + "");
 				roomDaoImpl.saveRoom(theRoom);
 			}
 		};

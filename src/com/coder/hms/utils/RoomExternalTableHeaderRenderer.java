@@ -18,10 +18,10 @@ public class RoomExternalTableHeaderRenderer extends JLabel implements TableCell
 
 	public RoomExternalTableHeaderRenderer() {
 		
-		setFont(new Font("Verdana", Font.PLAIN, 15));
+		setFont(new Font("Verdana", Font.BOLD, 15));
         setForeground(Color.WHITE);
         setOpaque(true);
-        setBackground(Color.decode("#1cbdec"));
+        setBackground(Color.decode("#00a9db"));
         setBorder(BorderFactory.createEtchedBorder());
 	}
 

@@ -20,5 +20,7 @@
 		<mapping class="com.coder.hms.entities.Reservation" />
 		<mapping class="com.coder.hms.entities.Room" />
 		<mapping class="com.coder.hms.entities.User" />
+		<mapping class="com.coder.hms.entities.Payment" />
+		<mapping class="com.coder.hms.entities.Posting" />
 	</session-factory>
 </hibernate-configuration>

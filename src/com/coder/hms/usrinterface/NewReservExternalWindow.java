@@ -451,7 +451,7 @@ public class NewReservExternalWindow extends JDialog {
 					
 					@Override
 					public void run() {
-						new PaymentExternalWindow();
+						new PaymentExternalWindow(roomNumCmbBox.getSelectedItem().toString());
 						payment = true;
 					}
 				}); 
@@ -569,6 +569,9 @@ public class NewReservExternalWindow extends JDialog {
 				theRoom.setReservationId(lastReserv.getId());
 				theRoom.setCustomerGrupName(nameSurnameField.getText());
 				theRoom.setUsageStatus("BLOCKED");
+				
+				final double lastPrice = Integer.parseInt(theRoom.getPrice()) * reservation.getTotalDays();
+				theRoom.setTotalPrice(lastPrice + "");
 				
 				roomDaoImpl.saveRoom(theRoom);
 				
