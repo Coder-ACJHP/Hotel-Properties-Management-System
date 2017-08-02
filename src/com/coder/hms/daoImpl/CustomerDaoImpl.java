@@ -30,8 +30,15 @@ public class CustomerDaoImpl implements CustomerDAO {
 	
 	@Override
 	public Customer findCustomerByName(String name, String lastName) {
-		// TODO Auto-generated method stub
-		return null;
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query<Customer> query = session.createQuery("from Customer where FirstName=:name and LastName=:lastName", Customer.class);
+		query.setParameter("name", name);
+		query.setParameter("lastName", lastName);
+		
+		final Customer customer = query.getSingleResult();
+		session.close();
+		return customer;
 	}
 
 	@Override

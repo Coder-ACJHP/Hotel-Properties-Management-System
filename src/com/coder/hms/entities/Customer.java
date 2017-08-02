@@ -57,6 +57,9 @@ public class Customer implements Serializable{
 	@Column(name="Email")
 	private String Email;
 	
+	@Column(name="Phone")
+	private String Phone;
+	
 	@Column(name="ReservationId")
 	private long ReservationId;
 	
@@ -160,6 +163,14 @@ public class Customer implements Serializable{
 		Email = email;
 	}
 
+	public String getPhone() {
+		return Phone;
+	}
+
+	public void setPhone(String phone) {
+		Phone = phone;
+	}
+
 	public long getReservationId() {
 		return ReservationId;
 	}
@@ -173,12 +184,12 @@ public class Customer implements Serializable{
 		return "Customer [CustomerId=" + CustomerId + ", FirstName=" + FirstName + ", LastName=" + LastName
 				+ ", Country=" + Country + ", Document=" + Document + ", DocumentNo=" + DocumentNo + ", DateOfBirth="
 				+ DateOfBirth + ", Gender=" + Gender + ", MaritalStatus=" + MaritalStatus + ", FatherName=" + FatherName
-				+ ", MotherName=" + MotherName + ", Email=" + Email + ", ReservationId=" + ReservationId + "]";
+				+ ", MotherName=" + MotherName + ", Email=" + Email + ", Phone=" + Phone +  ", ReservationId=" + ReservationId + "]";
 	}
 
 	public Customer(long customerId, String firstName, String lastName, String country, String document,
 			String documentNo, Date dateOfBirth, String gender, String maritalStatus, String fatherName,
-			String motherName, String email, long reservationId) {
+			String motherName, String email, String thePhone, long reservationId) {
 		super();
 		CustomerId = customerId;
 		FirstName = firstName;
@@ -192,6 +203,7 @@ public class Customer implements Serializable{
 		FatherName = fatherName;
 		MotherName = motherName;
 		Email = email;
+		this.Phone = thePhone;
 		ReservationId = reservationId;
 	}
 

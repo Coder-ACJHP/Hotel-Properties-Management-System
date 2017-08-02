@@ -19,28 +19,27 @@ public class PayPostTableCellRenderer extends DefaultTableCellRenderer {
 		
 		final Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		
-		
-		Object type = table.getModel().getValueAt(row, 1);
+		String rowVal = (String) table.getValueAt(row, 1);
 		
 		if(isSelected || hasFocus) {
-			cellComponent.setBackground(table.getBackground());
+			
+			cellComponent.setBackground(table.getSelectionBackground());
 		}
 		
 		else {
-			if(type.toString().equalsIgnoreCase("CASH PAYMENT") || type.toString().equalsIgnoreCase("CREDIT CARD")) {
-				
+		
+			if(rowVal.equals("CASH PAYMENT")) {
+					
 				cellComponent.setBackground(Color.decode("#1ba999"));
-				
+					
 			}
-			
-			else if(type.toString().equalsIgnoreCase("CITY LEDGER")) {
+			else if(rowVal.equals("SYSTEM")) {
 				
-				cellComponent.setBackground(Color.decode("#fd7a16"));
+				cellComponent.setBackground(Color.decode("#d60027"));
 			}
-			
 			else {
 				
-				cellComponent.setBackground(Color.decode("#ff2d2d"));
+				cellComponent.setBackground(table.getBackground());
 			}
 		}
 		return cellComponent;
