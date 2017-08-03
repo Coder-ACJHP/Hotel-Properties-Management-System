@@ -90,6 +90,14 @@ public class Main_RoomCleaning extends JPanel {
 		btnPolluteAll.setBounds(468, 6, 147, 37);
 		btnPolluteAll.addActionListener(polluteAllListener());
 		panel.add(btnPolluteAll);
+		
+		JButton btnPutAtDnd = new JButton("Put at DND");
+		btnPutAtDnd.addActionListener(putAtDndListener());
+		btnPutAtDnd.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/room_dnd.png")));
+		btnPutAtDnd.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnPutAtDnd.setFont(new Font("Arial", Font.BOLD, 14));
+		btnPutAtDnd.setBounds(621, 6, 147, 37);
+		panel.add(btnPutAtDnd);
 
 
 		final JScrollPane scrollPane = new JScrollPane();
@@ -182,6 +190,21 @@ public class Main_RoomCleaning extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				roomDaoImpl.setAllRoomsAtDirty("DIRTY");
+				refreshTable();
+
+			}
+		};
+		return listener;
+	}
+	
+	private ActionListener putAtDndListener() {
+		final ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final int rowIndex = table.getSelectedRow();
+				final String rowData = table.getValueAt(rowIndex, 0).toString();
+				roomDaoImpl.setRoomAtDND(rowData);
 				refreshTable();
 
 			}

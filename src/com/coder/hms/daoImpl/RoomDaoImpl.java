@@ -110,22 +110,40 @@ public class RoomDaoImpl implements RoomDAO {
 		
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void setAllRoomsAtDirty(String dirty) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
-		Query query = session.createQuery("UPDATE Room SET cleaningStatus=:dirty");
+		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus=:dirty");
 		query.setParameter("dirty", dirty);
 		query.executeUpdate();
 		session.close();
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public void setSingleRoomAsDirtyByRoomNumber(String rowData) {
+	public void setSingleRoomAsDirtyByRoomNumber(String roomNumber) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
-		Query query = session.createQuery("UPDATE Room SET cleaningStatus = 'DIRTY' where number=:rowData");
-		query.setParameter("rowData", rowData);
+		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'DIRTY' where number=:roomNumber");
+		query.setParameter("roomNumber", roomNumber);
+		query.executeUpdate();		
+		session.close();
+		
+	}
+
+	public void setSingleRoomAsDNDByRoomNumber(String roomNumber) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'DND' where number=:roomNumber");
+		query.setParameter("roomNumber", roomNumber);
+		query.executeUpdate();		
+		session.close();
+		
+	}
+
+	public void setRoomAtDND(String roomNumber) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'DND' where number=:roomNumber");
+		query.setParameter("roomNumber", roomNumber);
 		query.executeUpdate();		
 		session.close();
 		

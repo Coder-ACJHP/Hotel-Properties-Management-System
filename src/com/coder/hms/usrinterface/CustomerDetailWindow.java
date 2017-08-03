@@ -215,7 +215,6 @@ public class CustomerDetailWindow extends JDialog {
 		emailField.setColumns(10);
 		
 		infoLabel = new JLabel();
-		infoLabel.setForeground(new Color(102, 255, 0));
 		infoLabel.setFont(new Font("Verdana", Font.BOLD, 28));
 		infoLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -404,6 +403,11 @@ public class CustomerDetailWindow extends JDialog {
 	
 	public void setInfoMessage(String INFO_MESSAGE) {
 		this.infoLabel.setText(INFO_MESSAGE);
+	}
+	
+	//for info label just add settr method
+	public void setInfoLabelColor(Color color) {
+		infoLabel.setForeground(color);
 	}
 }
 

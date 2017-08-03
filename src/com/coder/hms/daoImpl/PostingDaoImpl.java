@@ -2,6 +2,7 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -29,16 +30,24 @@ public class PostingDaoImpl implements PostingDAO {
 
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void deletePosting(long theId) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		Query query = session.createQuery("delete Posting where id = :theId");
-		query.setParameter("theId", theId);
-		query.executeUpdate();
-		session.close();
-
+	public boolean deletePosting(long theId) {
+		boolean result = false;
+		
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			@SuppressWarnings("rawtypes")
+			Query query = session.createQuery("delete Posting where id = :theId");
+			query.setParameter("theId", theId);
+			query.executeUpdate();
+			session.close();
+			result = true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			result = false;
+		}
+		return result;
 	}
 
 	@Override

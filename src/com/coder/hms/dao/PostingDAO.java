@@ -8,7 +8,7 @@ public interface PostingDAO {
 
 	public void savePosting(Posting posting);
 	
-	public void deletePosting(long theId);
+	public boolean deletePosting(long theId);
 	
 	public Posting getPostingById(long Id);
 	

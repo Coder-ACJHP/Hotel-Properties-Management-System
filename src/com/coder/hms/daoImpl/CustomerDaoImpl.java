@@ -8,6 +8,7 @@ package com.coder.hms.daoImpl;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -59,13 +60,20 @@ public class CustomerDaoImpl implements CustomerDAO {
 		return customerList;
 	}
 
-	public void save(Customer theCustomer) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		session.saveOrUpdate(theCustomer);
-		session.getTransaction().commit();
-		session.close();
-		
+	public boolean save(Customer theCustomer) {
+		 boolean success = false;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			session.saveOrUpdate(theCustomer);
+			session.getTransaction().commit();
+			session.close();
+			success = true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			success = false;
+		}
+		return success;
 	}
 
 	public List<Customer> getCustomerByReservId(long id) {

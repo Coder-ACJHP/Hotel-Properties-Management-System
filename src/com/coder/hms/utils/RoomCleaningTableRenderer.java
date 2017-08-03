@@ -36,6 +36,10 @@ public class RoomCleaningTableRenderer extends DefaultTableCellRenderer {
 				cellComponent.setBackground(Color.decode("#d24760"));
 			}
 
+			else if(colrowVal.equalsIgnoreCase("DND")) {
+				cellComponent.setBackground(Color.decode("#ffc300"));
+			}
+			
 			else if (colrowVal.contains("00")) {
 				cellComponent.setBackground(Color.decode("#bfaec9"));
 			}

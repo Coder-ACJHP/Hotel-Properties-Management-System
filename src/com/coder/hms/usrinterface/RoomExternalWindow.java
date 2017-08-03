@@ -19,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Currency;
 import java.util.Date;
@@ -31,8 +32,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -64,13 +66,16 @@ public class RoomExternalWindow extends JDialog {
 	 * 
 	 */
 	private JTextPane roomNote;
+	private Customer theCustomer;
 	private NumberFormat formatter;
 	private static String roomNumber;
-	private Customer theCustomer;
+	private Reservation reservation;
 	private JTable payPostTable, customerTable;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
-	final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
+	private final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+	final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
 	private JButton postingBtn, paymentBtn, saveChangesBtn, checkoutBtn;
 	private JFormattedTextField priceField, totalPriceField, balanceField;
 	final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
@@ -265,16 +270,8 @@ public class RoomExternalWindow extends JDialog {
 		saveChangesBtn.setAutoscrolls(true);
 		saveChangesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int response = JOptionPane.showConfirmDialog(null, "Are you sure to continue?",
-						JOptionPane.OPTION_TYPE_PROPERTY, JOptionPane.YES_NO_OPTION);
-
-				if (response == JOptionPane.YES_OPTION) {
-
-				}
-
-				else {
-					return;
-				}
+				
+				changeReservationDate();
 			}
 		});
 		saveChangesBtn.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -421,26 +418,73 @@ public class RoomExternalWindow extends JDialog {
 
 		populatePostPayTable(postPayModel);
 
+		final JPopupMenu popupMenu = new JPopupMenu();
+		final JMenuItem menuItem = new JMenuItem("Delete");
+		menuItem.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_checkout.png")));
+		menuItem.addActionListener(ActionListener ->{
+			deleteRowsListener();
+		});
+		popupMenu.add(menuItem);
+		
 		payPostTable = new JTable(postPayModel);
 		payPostTable.setDefaultRenderer(Object.class, payPostRenderer);
 		payPostTable.setCellSelectionEnabled(false);
 		payPostTable.setAutoCreateRowSorter(true);
 		payPostTable.getTableHeader().setDefaultRenderer(THR);
 		postableScrollPane.setViewportView(payPostTable);
-
+		payPostTable.setComponentPopupMenu(popupMenu);
 		populateReservationDetail();
 
 		custWindow.setActionListener(saveChanges());
 		
 		this.setVisible(true);
 	}
+	
+	private void deleteRowsListener() {
+
+		final int rowIndex = payPostTable.getSelectedRow();
+
+		final String theId = payPostTable.getValueAt(rowIndex, 0).toString();
+		final String type = payPostTable.getValueAt(rowIndex, 1).toString();
+		final String amount = payPostTable.getValueAt(rowIndex, 3).toString();
+
+		final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
+
+		float finalBalance = 0;
+
+		if (type.equalsIgnoreCase("System")) {
+
+			final PostingDaoImpl postImpl = new PostingDaoImpl();
+			final boolean result = postImpl.deletePosting(Long.parseLong(theId));
+
+			if (result) {
+
+				finalBalance = Float.parseFloat(theRoom.getTotalPrice()) - Float.parseFloat(amount);
+				theRoom.setTotalPrice(finalBalance + "");
+				roomDaoImpl.saveRoom(theRoom);
+			}
+		}
+
+		else if (type.equalsIgnoreCase("CASH PAYMENT") || type.equalsIgnoreCase("CREDIT CARD")) {
+
+			final PaymentDaoImpl payImpl = new PaymentDaoImpl();
+			final boolean result = payImpl.deletePayment(Long.parseLong(theId));
+
+			if (result) {
+
+				finalBalance = Float.parseFloat(theRoom.getBalance()) - Float.parseFloat(amount);
+				theRoom.setBalance(finalBalance + "");
+				roomDaoImpl.saveRoom(theRoom);
+			}
+		}
+		populatePostPayTable(postPayModel);
+
+	}
 
 	private void populateReservationDetail() {
 
-		final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 		final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-		final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
-		Reservation reservation = reservationDaoImpl.getReservationById(theRoom.getReservationId());
+		reservation = reservationDaoImpl.getReservationById(theRoom.getReservationId());
 
 		IdField.setText(reservation.getId() + "");
 
@@ -478,13 +522,19 @@ public class RoomExternalWindow extends JDialog {
 		balanceField.setValue(roombalance);
 	}
 
+	private void changeReservationDate() {
+		
+		final String updatedDate = new SimpleDateFormat("yyyy-MM-dd").format(checkoutDate.getDate());
+		reservation.setCheckoutDate(updatedDate);
+		reservationDaoImpl.updateReservation(reservation);
+	}
+	
 	public void populateCustomerTable(String roomText, DefaultTableModel model) {
 
 		// clean table model
 		model.setRowCount(0);
 
 		// import all customers from database
-		final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
 
 		final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
@@ -537,12 +587,13 @@ public class RoomExternalWindow extends JDialog {
 		return adapter;
 	}
 
+	//save all changed properties in customer table
 	private ActionListener saveChanges() {
 		final ActionListener listener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 					theCustomer.setCountry(custWindow.getCountry());
 					theCustomer.setFirstName(custWindow.getName());
 					theCustomer.setLastName(custWindow.getSurname());
@@ -558,9 +609,17 @@ public class RoomExternalWindow extends JDialog {
 					theCustomer.setMaritalStatus(custWindow.getMariageStatus());
 					theCustomer.setReservationId(Long.parseLong(custWindow.getReservationId()));
 					
-					customerDaoImpl.save(theCustomer);
+					boolean success = customerDaoImpl.save(theCustomer);
 					
-					custWindow.setInfoMessage("<html>SUCCESSFULLY ACCOMPLISHED</html>");
+					if(success) {
+						
+						custWindow.setInfoMessage("<html>SUCCESSFULLY ACCOMPLISHED</html>");
+						custWindow.setInfoLabelColor(Color.decode("#00FF00"));
+					}
+					else {
+						custWindow.setInfoMessage("<html>OPERTION IS FAILED!</html>");
+						custWindow.setInfoLabelColor(Color.decode("#cd2626"));
+					}
 
 			}
 		};

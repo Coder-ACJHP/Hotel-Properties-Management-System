@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.entities.SessionBean;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 
@@ -29,7 +30,7 @@ public class MainFrame extends JFrame {
 	private JPanel mainPanel;
 	private static final long serialVersionUID = 1L;
 	private Main_MenuBar customMenuBar;
-//	private static SessionBean sessionBean;
+	private static SessionBean sessionBean;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
@@ -43,7 +44,7 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
-//		sessionBean = SessionBean.getSESSION_BEAN();
+		sessionBean = SessionBean.getSESSION_BEAN();
 		// get operation system name to add icon (if windows to taskbar else for dock)
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
@@ -89,8 +90,7 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(customMenuBar.getMenuBar());
 		
 		//get user name from login frame and add it to main frame
-//		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
-		customBottomToolbar.setUserLabelText("Coder ACJHP");
+		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
 		
 		customBottomToolbar.setUsdLabelText(currency.getUSDToTRYLiveCurrency());
 		customBottomToolbar.setEuroLabelText(currency.getEURToTRYLiveCurrency());

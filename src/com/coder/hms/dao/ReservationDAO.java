@@ -19,5 +19,7 @@ public interface ReservationDAO {
 	
 	public void cancelReservation(long reservationId);
 	
+	public boolean updateReservation(Reservation reservation);
+	
 	public List<Reservation> getAllReservations();
 }

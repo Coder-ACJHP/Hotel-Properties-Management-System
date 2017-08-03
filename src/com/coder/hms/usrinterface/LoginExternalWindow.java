@@ -51,6 +51,7 @@ public class LoginExternalWindow extends JDialog {
 	private JPasswordField passwordField;
 	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
+	final UserDaoImpl userDaoImpl = new UserDaoImpl();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -254,7 +255,7 @@ public class LoginExternalWindow extends JDialog {
 					
 					if(userName.length() > 0 || userPswrd.length() > 0) {
 						
-							final UserDaoImpl userDaoImpl = new UserDaoImpl();
+							
 							final boolean check = userDaoImpl.authentication(userName, userPswrd);
 							
 							if(check) {

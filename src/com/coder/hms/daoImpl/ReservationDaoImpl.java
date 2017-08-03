@@ -8,6 +8,7 @@ package com.coder.hms.daoImpl;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -138,6 +139,23 @@ public class ReservationDaoImpl implements ReservationDAO{
 		Reservation reservationById = query.getSingleResult();
 		session.close();
 		return reservationById;
+	}
+
+	@Override
+	public boolean updateReservation(Reservation reservation) {
+		boolean result = false;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			session.update(reservation);
+			session.getTransaction().commit();
+			session.close();
+			result = true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			result = false;
+		}
+		return result;
 	}
 
 }

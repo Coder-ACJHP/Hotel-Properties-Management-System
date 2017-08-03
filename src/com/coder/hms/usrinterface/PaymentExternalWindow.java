@@ -65,7 +65,7 @@ public class PaymentExternalWindow extends JDialog {
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] PAYMENT_TYPE = {"CASH PAYMENT", "CREDIT CARD", "CITY LEDGER"};
 	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "DOLLAR", "EURO", "POUND"};
-	private final String[] TITLE_LIST = { "BALANCE, ROOM RATES", "RESTAURANT", "MINIBAR", "TELEPHONE", "MISCELLANEOUS"};
+	private final String[] TITLE_LIST = { "BALANCE", "ROOM RATES", "RESTAURANT", "MINIBAR", "TELEPHONE", "MISCELLANEOUS"};
 	private final String[] columnNames = {"DOCUMENT NO", "TYPE", "TITLE", "PRICE", "CURRENCY", "EXPLANATION, DATE TIME"};
 	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 

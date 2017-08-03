@@ -2,6 +2,7 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -28,16 +29,25 @@ public class PaymentDaoImpl implements PaymentDAO {
 		session.close();
 	}
 
+
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void deletePayment(long theId) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		Query query = session.createQuery("delete Payment where id = :theId");
-		query.setParameter("theId", theId);
-		query.executeUpdate();
-		session.close();
-
+	public boolean deletePayment(long theId) {
+		boolean result = false;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			Query query = session.createQuery("delete Payment where id = :theId");
+			query.setParameter("theId", theId);
+			query.executeUpdate();
+			session.close();
+			
+			result = true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			result = false;
+		}
+		return result;
 	}
 
 	@Override

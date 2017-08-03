@@ -46,13 +46,13 @@ import com.coder.hms.entities.Room;
 public class Main_AllRooms {
 
 
-	private String num;
 	protected JButton roomBtn;
 	private List<Room> roomList;
+	private final String innerDate;
+	private String currentRoomNumber;
 	private JPanel contentPanel = new JPanel();
 	private final RoomsAction theAction = new RoomsAction();
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
-//	private final CustomerDaoImpl cImpl = new CustomerDaoImpl();
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ReservationDaoImpl rImpl = new ReservationDaoImpl();
 
@@ -74,6 +74,8 @@ public class Main_AllRooms {
 		contentPanel.setPreferredSize(new Dimension(700, 1000));
 		contentPanel.setLayout(new FlowLayout());
 
+		innerDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		
 		cookRooms(contentPanel);
 		
 		contentPanel.setVisible(true);
@@ -96,8 +98,9 @@ public class Main_AllRooms {
 		
 		roomList = roomDaoImpl.getAllRooms();
 
-		MatteBorder dirtyBorder = BorderFactory.createMatteBorder(8, 0, 0, 0, Color.decode("#ce1d1d"));
-		MatteBorder cleanBorder = BorderFactory.createMatteBorder(8, 0, 0, 0, Color.WHITE);
+		final MatteBorder cleanBorder = BorderFactory.createMatteBorder(10, 0, 0, 0, Color.WHITE);
+		final MatteBorder dndBorder = BorderFactory.createMatteBorder(10, 0, 0, 0, Color.decode("#ffc300"));
+		final MatteBorder dirtyBorder = BorderFactory.createMatteBorder(10, 0, 0, 0, Color.decode("#ce1d1d"));
 
 		final int roomCount =  hotelDaoImpl.getHotel().getRoomCapacity();
 		
@@ -122,21 +125,31 @@ public class Main_AllRooms {
 						break;
 					case "DIRTY":
 						roomBtn.setBorder(dirtyBorder);
+						break;
+					case "DND":
+						roomBtn.setBorder(dndBorder);
+						break;
 					default:
 						break;
 					}
 
-					final String innerDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 					
 					final String ROOM_STATUS = room.getUsageStatus();
 					
-					final Reservation reservation = rImpl.getReservationById(room.getReservationId());
-					
-					if(ROOM_STATUS.equals("FULL")) {
-						roomBtn.setBackground(Color.decode("#fffcbe"));
+					final Reservation theReservation = rImpl.getReservationById(room.getReservationId());
+										
+					 if(ROOM_STATUS.equals("FULL") && theReservation != null) {
+						if(theReservation.getCheckoutDate().equals(innerDate)) {
+							roomBtn.setBackground(Color.decode("#990033"));
+						}
 					}
-					else if(ROOM_STATUS.equals("BLOCKED") && reservation.getCheckinDate().equals(innerDate)) {
-						roomBtn.setBackground(Color.decode("#e13580"));
+					else if(ROOM_STATUS.equals("FULL")) {
+						roomBtn.setBackground(Color.decode("#87a80f"));
+					}
+					else if(ROOM_STATUS.equals("BLOCKED") && theReservation != null) {
+						if(theReservation.getCheckinDate().equals(innerDate)) {
+							roomBtn.setBackground(Color.decode("#ce00a6"));
+						}
 					}
 					else {
 						roomBtn.setBackground(Color.decode("#afe2fb"));
@@ -167,12 +180,12 @@ public class Main_AllRooms {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				String trimmingText = "";
-				
+								
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					trimmingText = e.getSource().toString();
-					num = trimmingText.substring(trimmingText.length() - 25, trimmingText.length() - 21);
+					
+					final String trimmingText = e.getSource().toString();
+					final int textLength = trimmingText.length();
+					currentRoomNumber = trimmingText.substring(textLength - 25, textLength - 21);
 
 				}
 			}
@@ -230,7 +243,7 @@ public class Main_AllRooms {
 				KeyStroke.getKeyStroke(KeyEvent.VK_W, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		clean.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/cleaning_single.png")));
 		clean.addActionListener(ActionListener -> {
-			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(num);
+			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
 			
 			if(theRoom.getCleaningStatus().equals("CLEAN")) {
 				JOptionPane.showMessageDialog(null, "Room is already clean!", JOptionPane.MESSAGE_PROPERTY,
@@ -239,7 +252,7 @@ public class Main_AllRooms {
 			}
 			
 			else {
-				roomDaoImpl.setSingleRoomAsCleanByRoomNumber(num);
+				roomDaoImpl.setSingleRoomAsCleanByRoomNumber(currentRoomNumber);
 				cookRooms(contentPanel);
 				roomBtn.revalidate();
 				roomBtn.repaint();
@@ -253,7 +266,7 @@ public class Main_AllRooms {
 				KeyStroke.getKeyStroke(KeyEvent.VK_D, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		dirty.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_dirty.png")));
 		dirty.addActionListener(ActionListener -> {
-			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(num);
+			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
 			
 			if(theRoom.getCleaningStatus().equals("DIRTY")) {
 				JOptionPane.showMessageDialog(null, "Room is already dirty!", JOptionPane.MESSAGE_PROPERTY,
@@ -262,7 +275,7 @@ public class Main_AllRooms {
 			}
 			
 			else {
-				roomDaoImpl.setSingleRoomAsDirtyByRoomNumber(num);
+				roomDaoImpl.setSingleRoomAsDirtyByRoomNumber(currentRoomNumber);
 				cookRooms(contentPanel);
 				roomBtn.revalidate();
 				roomBtn.repaint();
@@ -270,18 +283,41 @@ public class Main_AllRooms {
 		});
 		changeCleaning.add(dirty);
 
+		JMenuItem dnd = new JMenuItem();
+		dnd.setText("Set as DND");
+		dnd.setAccelerator(
+				KeyStroke.getKeyStroke(KeyEvent.VK_P, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		dnd.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_dnd.png")));
+		dnd.addActionListener(ActionListener -> {
+			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
+			
+			if(theRoom.getCleaningStatus().equals("DND")) {
+				JOptionPane.showMessageDialog(null, "Room is already DND!", JOptionPane.MESSAGE_PROPERTY,
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			else {
+				roomDaoImpl.setSingleRoomAsDNDByRoomNumber(currentRoomNumber);
+				cookRooms(contentPanel);
+				roomBtn.revalidate();
+				roomBtn.repaint();
+			}
+		});
+		changeCleaning.add(dnd);
+		
 		JMenuItem checkout = new JMenuItem(new DefaultEditorKit.PasteAction());
 		checkout.setText("Do checkout");
 		checkout.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		checkout.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_checkout.png")));
 		checkout.addActionListener(ActionListener -> {
-			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(num);
+			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
 
 			if(checkingRoom.getUsageStatus().equals("FULL")) {
 				if (Integer.parseInt(checkingRoom.getBalance()) == 0) {
 					
-					roomDaoImpl.setRoomCheckedOut(num);
+					roomDaoImpl.setRoomCheckedOut(currentRoomNumber);
 					cookRooms(contentPanel);
 					roomBtn.revalidate();
 					roomBtn.repaint();
@@ -310,7 +346,7 @@ public class Main_AllRooms {
 				KeyStroke.getKeyStroke(KeyEvent.VK_R, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		getReservation.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
 		getReservation.addActionListener(ActionListener -> {
-			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(num);
+			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
 			final Reservation rr = rImpl.getReservationById(checkingRoom.getReservationId());
 			
 			
