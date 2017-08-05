@@ -62,6 +62,9 @@ public class Reservation implements Serializable{
 	@Column(name="theNumber")
 	private String theNumber;
 	
+	@Column(name="isCheckedIn")
+	private String isCheckedIn;
+	
 	public Reservation() {
 		// TODO Auto-generated constructor stub
 	}
@@ -162,9 +165,17 @@ public class Reservation implements Serializable{
 		this.theNumber = theNumber;
 	}
 
+	public String getIsCheckedIn() {
+		return isCheckedIn;
+	}
+
+	public void setIsCheckedIn(String isCheckedIn) {
+		this.isCheckedIn = isCheckedIn;
+	}
+
 	public Reservation(String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
 			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus,
-			String theNumber) {
+			String theNumber, String isCheckedIn) {
 		super();
 		this.groupName = groupName;
 		this.checkinDate = checkinDate;
@@ -177,6 +188,7 @@ public class Reservation implements Serializable{
 		this.note = note;
 		this.paymentStatus = paymentStatus;
 		this.theNumber = theNumber;
+		this.isCheckedIn = isCheckedIn;
 	}
 
 	@Override
@@ -184,7 +196,7 @@ public class Reservation implements Serializable{
 		return "Reservation [Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate="
 				+ checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType
 				+ ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus="
-				+ paymentStatus + ", theNumber=" + theNumber + "]";
+				+ paymentStatus + ", theNumber=" + theNumber + ", isCheckedIn=" + isCheckedIn +"]";
 	}
 
 	

@@ -165,6 +165,10 @@ public class LoginExternalWindow extends JDialog {
 		mouseListenerForButtons(btnLogin);
 		actionListenerForButtons(btnLogin);
 		buttonsPanel.add(btnLogin);
+		
+		//set default button
+		getRootPane().setDefaultButton(btnLogin);
+		btnLogin.requestFocus();
 
 		//header label
 		final JLabel jumbotronLabel = new JLabel("HOTEL MANAGEMENT SYSTEM");
@@ -187,7 +191,7 @@ public class LoginExternalWindow extends JDialog {
 		infoLabel.setFont(new Font("Consolas", infoLabel.getFont().getStyle(), 15));
 		infoLabel.setBounds(1, 218, 428, 18);
 		getContentPane().add(infoLabel);
-
+		
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setAlwaysOnTop(false);
 		this.setVisible(true);

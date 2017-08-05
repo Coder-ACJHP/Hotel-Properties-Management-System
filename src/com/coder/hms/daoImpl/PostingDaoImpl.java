@@ -16,6 +16,7 @@ public class PostingDaoImpl implements PostingDAO {
 	private DataSourceFactory dataSourceFactory;
 
 	public PostingDaoImpl() {
+		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
 	}
@@ -56,6 +57,7 @@ public class PostingDaoImpl implements PostingDAO {
 		session.beginTransaction();
 		Posting posting = session.get(Posting.class, Id);
 		session.close();
+		
 		return posting;
 	}
 
@@ -67,6 +69,7 @@ public class PostingDaoImpl implements PostingDAO {
 		query.setParameter("theRoomNumber", theRoomNumber);
 		List<Posting> postList = query.getResultList();
 		session.close();
+		
 		return postList;
 	}
 

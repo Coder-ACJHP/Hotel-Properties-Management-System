@@ -56,6 +56,7 @@ public class PaymentExternalWindow extends JDialog {
 	private JTextArea textPane;
 	private JScrollPane scrollPane;
 	private String roomNumber = "";
+	protected boolean isPayed = false;
 	private JButton btnClear, btnSave;
 	private final NumberFormat formatter;
 	private JFormattedTextField priceField;
@@ -297,6 +298,12 @@ public class PaymentExternalWindow extends JDialog {
 				roomDaoImpl.saveRoom(theRoom);
 			}
 		};
+		
+		isPayed = true;
 		return listener;
+	}
+	
+	public boolean getPaymentStatus() {
+		return this.isPayed;
 	}
 }

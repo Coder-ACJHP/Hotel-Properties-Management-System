@@ -16,6 +16,7 @@ public class PaymentDaoImpl implements PaymentDAO {
 	private DataSourceFactory dataSourceFactory;
 	
 	public PaymentDaoImpl() {
+		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
 	}
@@ -27,17 +28,17 @@ public class PaymentDaoImpl implements PaymentDAO {
 		session.saveOrUpdate(payment);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean deletePayment(long theId) {
 		boolean result = false;
 		try {
 			session = dataSourceFactory.getSessionFactory().getCurrentSession();
 			session.beginTransaction();
-			Query query = session.createQuery("delete Payment where id = :theId");
+			Query<?> query = session.createQuery("delete Payment where id = :theId");
 			query.setParameter("theId", theId);
 			query.executeUpdate();
 			session.close();
@@ -47,6 +48,7 @@ public class PaymentDaoImpl implements PaymentDAO {
 			e.printStackTrace();
 			result = false;
 		}
+		
 		return result;
 	}
 
@@ -56,6 +58,7 @@ public class PaymentDaoImpl implements PaymentDAO {
 		session.beginTransaction();
 		Payment payment = session.get(Payment.class, Id);
 		session.close();
+		
 		return payment;
 	}
 
@@ -67,6 +70,7 @@ public class PaymentDaoImpl implements PaymentDAO {
 		query.setParameter("theRoomNumber", theRoomNumber);
 		List<Payment> paymentList = query.getResultList();
 		session.close();
+		
 		return paymentList;
 	}
 

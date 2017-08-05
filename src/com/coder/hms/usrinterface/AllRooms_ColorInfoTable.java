@@ -63,7 +63,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		JLabel lblFull = new JLabel("FULL");
 		lblFull.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblFull.setOpaque(true);
-		lblFull.setBackground(Color.decode("#87a80f"));
+		lblFull.setBackground(Color.decode("#f29c63"));
 		lblFull.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFull.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		lblFull.setAutoscrolls(true);

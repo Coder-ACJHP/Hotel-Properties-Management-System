@@ -35,13 +35,16 @@ public class Room implements Serializable{
 	private String type;
 	
 	@Column(name="price")
-	private String price;
+	private double price;
 	
 	@Column(name="totalPrice")
 	private String totalPrice;
 	
 	@Column(name="balance")
 	private String balance;
+	
+	@Column(name="remainingDebt")
+	private String remainingDebt;
 	
 	@Column(name="currency")
 	private String currency;
@@ -89,11 +92,11 @@ public class Room implements Serializable{
 		this.type = type;
 	}
 
-	public String getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -103,6 +106,14 @@ public class Room implements Serializable{
 
 	public void setTotalPrice(String totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public String getRemainingDebt() {
+		return remainingDebt;
+	}
+
+	public void setRemainingDebt(String remainingDebt) {
+		this.remainingDebt = remainingDebt;
 	}
 
 	public String getBalance() {
@@ -161,8 +172,9 @@ public class Room implements Serializable{
 		ReservationId = reservationId;
 	}
 
-	public Room(long theRoomId, String number, String type, String price, String totalprice, String balance, String currency,
-			String cleaningStatus, String usageStatus, int personCount, String customerGrupName, long reservationId) {
+	public Room(long theRoomId, String number, String type, double price, String totalprice, String remainingDebt,
+			String balance, String currency, String cleaningStatus, String usageStatus, int personCount, 
+			String customerGrupName, long reservationId) {
 		super();
 		this.theRoomId = theRoomId;
 		this.number = number;
@@ -170,6 +182,7 @@ public class Room implements Serializable{
 		this.price = price;
 		this.totalPrice = totalprice;
 		this.balance = balance;
+		this.remainingDebt = remainingDebt;
 		this.currency = currency;
 		this.cleaningStatus = cleaningStatus;
 		this.usageStatus = usageStatus;
@@ -181,9 +194,9 @@ public class Room implements Serializable{
 	@Override
 	public String toString() {
 		return "Room [theRoomId=" + theRoomId + ", number=" + number + ", type=" + type + ", price=" + price
-				+ ", totalPrice=" + totalPrice + ", balance=" + balance + ", currency=" + currency + 
-				", cleaningStatus=" + cleaningStatus + ", usageStatus=" + usageStatus + ", personCount=" + personCount 
-				+ ", customerGrupName=" + customerGrupName + ", ReservationId=" + ReservationId + "]";
+				+ ", totalPrice=" + totalPrice + ", balance=" + balance + ", remaining debt=" + remainingDebt + 
+				", currency=" + currency + ", cleaningStatus=" + cleaningStatus + ", usageStatus=" + usageStatus +
+				", personCount=" + personCount + ", customerGrupName=" + customerGrupName + ", ReservationId=" + ReservationId + "]";
 	}
 
 	

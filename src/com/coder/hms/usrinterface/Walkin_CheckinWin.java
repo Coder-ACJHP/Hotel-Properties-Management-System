@@ -48,7 +48,7 @@ import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.toedter.calendar.JDateChooser;
 
-public class WalkinRoomCheckinWindow extends JDialog implements ActionListener {
+public class Walkin_CheckinWin extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -89,7 +89,7 @@ public class WalkinRoomCheckinWindow extends JDialog implements ActionListener {
 	/**
 	 * Create the dialog.
 	 */
-	public WalkinRoomCheckinWindow(String roomNumber) {
+	public Walkin_CheckinWin(String roomNumber) {
 
 		this.ownRoomNumber = roomNumber;
 		
@@ -257,7 +257,7 @@ public class WalkinRoomCheckinWindow extends JDialog implements ActionListener {
 
 		JButton roomCheckinBtn = new JButton("Room checkin");
 		roomCheckinBtn.addActionListener(this);
-		roomCheckinBtn.setIcon(new ImageIcon(WalkinRoomCheckinWindow.class.
+		roomCheckinBtn.setIcon(new ImageIcon(Walkin_CheckinWin.class.
 						getResource("/com/coder/hms/icons/extra_checkin.png")));
 		roomCheckinBtn.setBounds(7, 4, 144, 42);
 		buttonPanel.add(roomCheckinBtn);
@@ -365,13 +365,13 @@ public class WalkinRoomCheckinWindow extends JDialog implements ActionListener {
 		//4- Create new room(it will update) and fill it with customers and reservation infos.
 
 		checkingRoom.setNumber(ownRoomNumber);
-		checkingRoom.setPrice(priceValue + "");	
+		checkingRoom.setPrice(priceValue);	
 		checkingRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
 		checkingRoom.setCustomerGrupName(groupNameField.getText().trim());
 		checkingRoom.setReservationId(lastReservation.getId());
 		checkingRoom.setUsageStatus("FULL");
 		
-		final double lastPrice = Integer.parseInt(checkingRoom.getPrice()) * newReservation.getTotalDays();
+		final double lastPrice = checkingRoom.getPrice() * newReservation.getTotalDays();
 		checkingRoom.setTotalPrice(lastPrice + "");
 		
 			if((int)personCountSpinner.getValue() == 0 || (int)personCountSpinner.getValue() == 1) {

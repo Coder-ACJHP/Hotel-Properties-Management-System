@@ -310,7 +310,7 @@ public class Main_Reservations extends JPanel {
 							reservPane.setRoomNumber(room.getNumber());
 							reservPane.setRoomType(room.getType());
 							reservPane.setPersonCountSpinner(room.getPersonCount());
-							reservPane.setPriceOfRoom(Double.parseDouble(room.getPrice()));
+							reservPane.setPriceOfRoom(room.getPrice());
 							reservPane.setCurrency(room.getCurrency());
 							reservPane.setCustomerCountry(customerCountry);
 							

@@ -6,7 +6,6 @@
 package com.coder.hms.daoImpl;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -19,7 +18,6 @@ public class UserDaoImpl implements UserDAO {
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
-	private final Logger LOGGER = Logger.getLogger(HotelDaoImpl.class.getName());
 	
 	public UserDaoImpl() {
 		
@@ -35,10 +33,8 @@ public class UserDaoImpl implements UserDAO {
 		Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
 		query.setParameter("theName", theName);
 		User user = query.getSingleResult();
-		
-		LOGGER.info("Returning user : " + user);
-		
 		session.close();
+
 		return user;
 	}
 
@@ -49,6 +45,7 @@ public class UserDaoImpl implements UserDAO {
 		session.saveOrUpdate(user);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 
 	@Override
@@ -64,7 +61,6 @@ public class UserDaoImpl implements UserDAO {
 		session.getTransaction().commit();
 		session.close();
 		
-		LOGGER.info("User password updated successfully.");
 	}
 
 	@Override
@@ -87,6 +83,7 @@ public class UserDaoImpl implements UserDAO {
 		if(user != null) {
 			isUser = true;
 		}
+		
 		return isUser;
 	}
 

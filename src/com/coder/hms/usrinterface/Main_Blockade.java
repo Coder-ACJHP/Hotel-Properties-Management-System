@@ -274,7 +274,7 @@ public class Main_Blockade extends JPanel {
 		rezervationIdList = new ArrayList<>();
 		
 		for(int i=0; i < resList.size(); i++) {
-			if(resList.get(i).getCheckinDate().equals(date)) {
+			if(resList.get(i).getCheckinDate().equals(date) && resList.get(i).getIsCheckedIn().equals("NO")) {
 				reservation.setId(resList.get(i).getId());
 				reservation.setGroupName(resList.get(i).getGroupName());
 				reservation.setAgency(resList.get(i).getAgency());

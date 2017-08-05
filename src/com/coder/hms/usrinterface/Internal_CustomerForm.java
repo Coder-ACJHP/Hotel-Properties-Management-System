@@ -49,7 +49,7 @@ public class Internal_CustomerForm {
 
 	}
 
-	protected JPanel setCustomerDetailPanel() {
+	public JPanel setCustomerDetailPanel() {
 
 		final Dimension dimension = new Dimension(255, 10);
 
@@ -116,8 +116,8 @@ public class Internal_CustomerForm {
 
 		lastNameField = new JTextField();
 		lastNameField.setBounds(117, 189, 118, 20);
-		customerDetailPanel.add(lastNameField);
 		lastNameField.setColumns(10);
+		customerDetailPanel.add(lastNameField);
 
 		JLabel lblFirstName = new JLabel("First name : ");
 		lblFirstName.setFont(new Font("Verdana", Font.BOLD, 11));
@@ -159,7 +159,8 @@ public class Internal_CustomerForm {
 		customerDetailPanel.add(genderComboBox);
 
 		customerDetailPanel.setSize(dimension);
-
+		
+		
 		return customerDetailPanel;
 	}
 
@@ -246,36 +247,92 @@ public class Internal_CustomerForm {
 		return genderComboBox.getSelectedItem().toString();
 	}
 	
+	public void setGenderComboBoxValue(String gender) {
+		for(int index=0; index < genderComboBox.getItemCount(); index++) {
+			if(genderComboBox.getItemAt(index).equals(gender)) {
+				genderComboBox.setSelectedIndex(index);
+			}
+		}
+	}
+	
 	public String getMarriageComboBoxValue() {
 		return marriageComboBox.getSelectedItem().toString();
+	}
+	
+	public void setMarriageComboBoxValue(String mariage) {
+		for(int index=0; index < marriageComboBox.getItemCount(); index++) {
+			if(marriageComboBox.getItemAt(index).equals(mariage)) {
+				marriageComboBox.setSelectedIndex(index);
+			}
+		}
 	}
 	
 	public Date getDateOfBirthChooserValue() {
 		return dateOfBirthChooser.getDate();
 	}
 	
+	public void setDateOfBirth(Date date) {
+		dateOfBirthChooser.setDate(date);
+	}
+	
 	public String getFirstNameFieldValue() {
 		return firstNameField.getText();
+	}
+	
+	public void setFirstNameValue(String name) {
+		this.firstNameField.setText(name);
 	}
 	
 	public String getLastNameFieldValue() {
 		return lastNameField.getText();
 	}
 	
+	
+	public void setLastNameValue(String lastName) {
+		this.lastNameField.setText(lastName);
+	}
+	
 	public String getTitleComboBoxValue() {
 		return titleComboBox.getSelectedItem().toString();
+	}
+	
+	public void setTitleValue(String title) {
+		for(int index=0; index < titleComboBox.getItemCount(); index++) {
+			if(titleComboBox.getItemAt(index).equals(title)) {
+				titleComboBox.setSelectedIndex(index);
+			}
+		}
 	}
 	
 	public String getDocNoFieldValue() {
 		return docNoField.getText();
 	}
 	
+	public void setDocumentNumber(String docNumber) {
+		this.docNoField.setText(docNumber);
+	}
+	
 	public String getDocumentTypeCmbxValue() {
 		return documentTypeCmbx.getSelectedItem().toString();
+	}
+	
+	public void setDocumentTypeCmbxValue(String docType) {
+		for(int index=0; index < documentTypeCmbx.getItemCount(); index++) {
+			if(documentTypeCmbx.getItemAt(index).equals(docType)) {
+				documentTypeCmbx.setSelectedIndex(index);
+			}
+		}
 	}
 	
 	public String getCustomerCountryCmbBoxValue() {
 		return customerCountryCmbBox.getSelectedItem().toString();
 	}
 	
+	public void setCustomerCountryCmbBoxValue(String country) {
+		for(int index=0; index < customerCountryCmbBox.getItemCount(); index++) {
+			if(customerCountryCmbBox.getItemAt(index).equals(country)) {
+				customerCountryCmbBox.setSelectedIndex(index);
+			}
+		}
+	}
 }

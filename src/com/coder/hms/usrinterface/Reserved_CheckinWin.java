@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,7 +32,7 @@ import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
 
-public class ReservedRoomCheckinWindow extends JDialog implements ActionListener {
+public class Reserved_CheckinWin extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -39,8 +40,12 @@ public class ReservedRoomCheckinWindow extends JDialog implements ActionListener
 	private JSpinner spinner;
 	private JPanel upperPanel;
 	private String ownRoomNumber;
+	private Room prepareRoom;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
+	final  CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+	final ReservationDaoImpl reservDaoImpl = new ReservationDaoImpl();
 	public Internal_CustomerForm customerFormOne = new Internal_CustomerForm();
 	public Internal_CustomerForm customerFormTwo = new Internal_CustomerForm();
 	public Internal_CustomerForm customerFormThree = new Internal_CustomerForm();
@@ -52,7 +57,7 @@ public class ReservedRoomCheckinWindow extends JDialog implements ActionListener
 	/**
 	 * Create the dialog.
 	 */
-	public ReservedRoomCheckinWindow(String roomNumber) {
+	public Reserved_CheckinWin(String roomNumber) {
 
 		this.ownRoomNumber = roomNumber;
 		
@@ -104,7 +109,7 @@ public class ReservedRoomCheckinWindow extends JDialog implements ActionListener
 
 		JButton roomCheckinBtn = new JButton("Room checkin");
 		roomCheckinBtn.addActionListener(this);
-		roomCheckinBtn.setIcon(new ImageIcon(ReservedRoomCheckinWindow.class
+		roomCheckinBtn.setIcon(new ImageIcon(Reserved_CheckinWin.class
 						.getResource("/com/coder/hms/icons/extra_checkin.png")));
 		roomCheckinBtn.setBounds(7, 4, 130, 42);
 		buttonPanel.add(roomCheckinBtn);
@@ -131,14 +136,43 @@ public class ReservedRoomCheckinWindow extends JDialog implements ActionListener
 		buttonPanel.add(roomNumberLbl);
 		
 		contentPanel.add(customerFormOne.setCustomerDetailPanel(), BorderLayout.WEST);
+		prepareCustomerForms(ownRoomNumber);
 
 	}
 
+	private void prepareCustomerForms(String roomNumber) {
+		prepareRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
+		List<Customer> customersList = customerDaoImpl.getCustomerByReservId(prepareRoom.getReservationId());
+		
+		spinner.setValue(prepareRoom.getPersonCount());
+		spinner.revalidate();
+		spinner.repaint();
+				
+		if(customersList.size() == 1) {
+			customerFormOne.setFirstNameValue(customersList.get(0).getFirstName());
+			customerFormOne.setLastNameValue(customersList.get(0).getLastName());
+		}
+		else if(customersList.size() == 2) {
+			customerFormOne.setFirstNameValue(customersList.get(0).getFirstName());
+			customerFormOne.setLastNameValue(customersList.get(0).getLastName());
+			customerFormTwo.setFirstNameValue(customersList.get(1).getFirstName());
+			customerFormTwo.setLastNameValue(customersList.get(1).getLastName());
+		}
+		else {
+			customerFormOne.setFirstNameValue(customersList.get(0).getFirstName());
+			customerFormOne.setLastNameValue(customersList.get(0).getLastName());
+			customerFormTwo.setFirstNameValue(customersList.get(1).getFirstName());
+			customerFormTwo.setLastNameValue(customersList.get(1).getLastName());
+			customerFormThree.setFirstNameValue(customersList.get(2).getFirstName());
+			customerFormThree.setLastNameValue(customersList.get(2).getLastName());
+		}
+	}
+	
 	private ChangeListener customerCounterListener() {
 
 		final ChangeListener spinnerListener = new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-
+				
 				switch ((int) spinner.getValue()) {
 				case 1:
 					contentPanel.removeAll();
@@ -173,12 +207,7 @@ public class ReservedRoomCheckinWindow extends JDialog implements ActionListener
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		//Get all dependencies and make the connection ready.
-		 final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
-		 final  CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
-		 final ReservationDaoImpl reservDaoImpl = new ReservationDaoImpl();
+	public void actionPerformed(ActionEvent e) {		
 		
 		/////////////////////////////////////////////////////////////////////////////////////
 		// In this odd the reservation is found, that's mean the room already reserved     //
@@ -189,8 +218,8 @@ public class ReservedRoomCheckinWindow extends JDialog implements ActionListener
 		/////////////////////////////////////////////////////////////////////////////////////
 		 
 		final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(ownRoomNumber);
-		Reservation foundedReserv = reservDaoImpl.getReservationById(checkingRoom.getReservationId());
-		
+		final Reservation foundedReserv = reservDaoImpl.getReservationById(checkingRoom.getReservationId());
+		final List<Customer> customerList = customerDaoImpl.getCustomerByReservId(foundedReserv.getId());
 		//Just for to be sure, check the reservation
 		if(foundedReserv != null) {
 			
@@ -200,95 +229,90 @@ public class ReservedRoomCheckinWindow extends JDialog implements ActionListener
 			if((int)spinner.getValue() == 0 || (int)spinner.getValue() == 1) {
 				checkingRoom.setPersonCount((int)spinner.getValue());
 				
-				Customer customer = new Customer();
-				customer.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
-				customer.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
-				customer.setDocument(customerFormOne.getDocumentTypeCmbxValue());
-				customer.setDocumentNo(customerFormOne.getDocNoFieldValue());
-				customer.setFirstName(customerFormOne.getFirstNameFieldValue());
-				customer.setLastName(customerFormOne.getLastNameFieldValue());
-				customer.setGender(customerFormOne.getGenderComboxValue());
-				customer.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
-				customer.setReservationId(foundedReserv.getId());
+				customerList.get(0).setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
+				customerList.get(0).setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
+				customerList.get(0).setDocument(customerFormOne.getDocumentTypeCmbxValue());
+				customerList.get(0).setDocumentNo(customerFormOne.getDocNoFieldValue());
+				customerList.get(0).setFirstName(customerFormOne.getFirstNameFieldValue());
+				customerList.get(0).setLastName(customerFormOne.getLastNameFieldValue());
+				customerList.get(0).setGender(customerFormOne.getGenderComboxValue());
+				customerList.get(0).setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
+				customerList.get(0).setReservationId(foundedReserv.getId());
 				
-				customerDaoImpl.save(customer);
+				customerDaoImpl.save(customerList.get(0));
 			}
 			
 			else if((int)spinner.getValue() == 2) {
 				
 				checkingRoom.setPersonCount((int)spinner.getValue());
 				
-				Customer customerOne = new Customer();
-				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
-				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
-				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
-				customerOne.setDocumentNo(customerFormOne.getDocNoFieldValue());
-				customerOne.setFirstName(customerFormOne.getFirstNameFieldValue());
-				customerOne.setLastName(customerFormOne.getLastNameFieldValue());
-				customerOne.setGender(customerFormOne.getGenderComboxValue());
-				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
-				customerOne.setReservationId(foundedReserv.getId());
+				customerList.get(0).setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
+				customerList.get(0).setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
+				customerList.get(0).setDocument(customerFormOne.getDocumentTypeCmbxValue());
+				customerList.get(0).setDocumentNo(customerFormOne.getDocNoFieldValue());
+				customerList.get(0).setFirstName(customerFormOne.getFirstNameFieldValue());
+				customerList.get(0).setLastName(customerFormOne.getLastNameFieldValue());
+				customerList.get(0).setGender(customerFormOne.getGenderComboxValue());
+				customerList.get(0).setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
+				customerList.get(0).setReservationId(foundedReserv.getId());
 				
-				Customer customerTwo = new Customer();
-				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
-				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
-				customerTwo.setDocument(customerFormTwo.getDocumentTypeCmbxValue());
-				customerTwo.setDocumentNo(customerFormTwo.getDocNoFieldValue());
-				customerTwo.setFirstName(customerFormTwo.getFirstNameFieldValue());
-				customerTwo.setLastName(customerFormTwo.getLastNameFieldValue());
-				customerTwo.setGender(customerFormTwo.getGenderComboxValue());
-				customerTwo.setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
-				customerTwo.setReservationId(foundedReserv.getId());
+				customerList.get(1).setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
+				customerList.get(1).setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
+				customerList.get(1).setDocument(customerFormTwo.getDocumentTypeCmbxValue());
+				customerList.get(1).setDocumentNo(customerFormTwo.getDocNoFieldValue());
+				customerList.get(1).setFirstName(customerFormTwo.getFirstNameFieldValue());
+				customerList.get(1).setLastName(customerFormTwo.getLastNameFieldValue());
+				customerList.get(1).setGender(customerFormTwo.getGenderComboxValue());
+				customerList.get(1).setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
+				customerList.get(1).setReservationId(foundedReserv.getId());
 				
-				customerDaoImpl.save(customerOne);
-				customerDaoImpl.save(customerTwo);
+				customerDaoImpl.save(customerList.get(0));
+				customerDaoImpl.save(customerList.get(1));
 			}
 			
 			else if((int)spinner.getValue() == 3) {
 				
 				checkingRoom.setPersonCount((int)spinner.getValue());
 				
-				Customer customerOne = new Customer();
-				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
-				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
-				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
-				customerOne.setDocumentNo(customerFormOne.getDocNoFieldValue());
-				customerOne.setFirstName(customerFormOne.getFirstNameFieldValue());
-				customerOne.setLastName(customerFormOne.getLastNameFieldValue());
-				customerOne.setGender(customerFormOne.getGenderComboxValue());
-				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
-				customerOne.setReservationId(foundedReserv.getId());
+				customerList.get(0).setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
+				customerList.get(0).setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
+				customerList.get(0).setDocument(customerFormOne.getDocumentTypeCmbxValue());
+				customerList.get(0).setDocumentNo(customerFormOne.getDocNoFieldValue());
+				customerList.get(0).setFirstName(customerFormOne.getFirstNameFieldValue());
+				customerList.get(0).setLastName(customerFormOne.getLastNameFieldValue());
+				customerList.get(0).setGender(customerFormOne.getGenderComboxValue());
+				customerList.get(0).setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
+				customerList.get(0).setReservationId(foundedReserv.getId());
 				
-				Customer customerTwo = new Customer();
-				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
-				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
-				customerTwo.setDocument(customerFormTwo.getDocumentTypeCmbxValue());
-				customerTwo.setDocumentNo(customerFormTwo.getDocNoFieldValue());
-				customerTwo.setFirstName(customerFormTwo.getFirstNameFieldValue());
-				customerTwo.setLastName(customerFormTwo.getLastNameFieldValue());
-				customerTwo.setGender(customerFormTwo.getGenderComboxValue());
-				customerTwo.setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
-				customerTwo.setReservationId(foundedReserv.getId());
+				customerList.get(1).setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
+				customerList.get(1).setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
+				customerList.get(1).setDocument(customerFormTwo.getDocumentTypeCmbxValue());
+				customerList.get(1).setDocumentNo(customerFormTwo.getDocNoFieldValue());
+				customerList.get(1).setFirstName(customerFormTwo.getFirstNameFieldValue());
+				customerList.get(1).setLastName(customerFormTwo.getLastNameFieldValue());
+				customerList.get(1).setGender(customerFormTwo.getGenderComboxValue());
+				customerList.get(1).setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
+				customerList.get(1).setReservationId(foundedReserv.getId());
 				
-				Customer customerThree = new Customer();
-				customerThree.setCountry(customerFormThree.getCustomerCountryCmbBoxValue());
-				customerThree.setDateOfBirth(customerFormThree.getDateOfBirthChooserValue());
-				customerThree.setDocument(customerFormThree.getDocumentTypeCmbxValue());
-				customerThree.setDocumentNo(customerFormThree.getDocNoFieldValue());
-				customerThree.setFirstName(customerFormThree.getFirstNameFieldValue());
-				customerThree.setLastName(customerFormThree.getLastNameFieldValue());
-				customerThree.setGender(customerFormThree.getGenderComboxValue());
-				customerThree.setMaritalStatus(customerFormThree.getMarriageComboBoxValue());
-				customerThree.setReservationId(foundedReserv.getId());
+				customerList.get(2).setCountry(customerFormThree.getCustomerCountryCmbBoxValue());
+				customerList.get(2).setDateOfBirth(customerFormThree.getDateOfBirthChooserValue());
+				customerList.get(2).setDocument(customerFormThree.getDocumentTypeCmbxValue());
+				customerList.get(2).setDocumentNo(customerFormThree.getDocNoFieldValue());
+				customerList.get(2).setFirstName(customerFormThree.getFirstNameFieldValue());
+				customerList.get(2).setLastName(customerFormThree.getLastNameFieldValue());
+				customerList.get(2).setGender(customerFormThree.getGenderComboxValue());
+				customerList.get(2).setMaritalStatus(customerFormThree.getMarriageComboBoxValue());
+				customerList.get(2).setReservationId(foundedReserv.getId());
 				
-				customerDaoImpl.save(customerOne);
-				customerDaoImpl.save(customerTwo);
-				customerDaoImpl.save(customerThree);
+				customerDaoImpl.save(customerList.get(0));
+				customerDaoImpl.save(customerList.get(1));
+				customerDaoImpl.save(customerList.get(2));
 			}
 			
-			roomDaoImpl.saveRoom(checkingRoom);
-			System.out.println("Checked in successfully\nNow loading room frame...");
 			
+			roomDaoImpl.saveRoom(checkingRoom);
+			foundedReserv.setIsCheckedIn("YES");
+			reservDaoImpl.saveReservation(foundedReserv);
 			this.dispose();
 			
 			SwingUtilities.invokeLater(new Runnable() {

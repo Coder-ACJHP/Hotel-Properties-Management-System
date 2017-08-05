@@ -78,7 +78,6 @@ public class NewReservExternalWindow extends JDialog {
 	private String[] ROOM_TYPES;
 	private int infoTableRow = 0;
 	private JTable table, table_1;
-	private boolean payment = false;
 	private double priceValue = 0.0;
 	private NumberFormat formatter;
 	private JSpinner personCountSpinner; 
@@ -88,6 +87,7 @@ public class NewReservExternalWindow extends JDialog {
 	private JButton chancelBtn, SaveBtn, reportBtn;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
+	private PaymentExternalWindow paymentWindow;
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -451,8 +451,8 @@ public class NewReservExternalWindow extends JDialog {
 					
 					@Override
 					public void run() {
-						new PaymentExternalWindow(roomNumCmbBox.getSelectedItem().toString());
-						payment = true;
+						paymentWindow = new PaymentExternalWindow(roomNumCmbBox.getSelectedItem().toString());
+						
 					}
 				}); 
 			}
@@ -544,7 +544,7 @@ public class NewReservExternalWindow extends JDialog {
 				Reservation reservation = new Reservation();
 				
 				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
-				reservation.setGroupName(nameSurnameField.getText().trim());
+				reservation.setGroupName(nameSurnameField.getText());
 				reservation.setCheckinDate(sdf.format(startDate));
 				reservation.setCheckoutDate(sdf.format(endDate));
 				reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
@@ -553,24 +553,26 @@ public class NewReservExternalWindow extends JDialog {
 				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
 				reservation.setNote(noteTextArea.getText());
 				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
-				reservation.setPaymentStatus(payment);
-				
-				
+				reservation.setPaymentStatus(paymentWindow.getPaymentStatus());
+				reservation.setIsCheckedIn("NO");
 				rImpl.saveReservation(reservation);
-				final Reservation lastReserv = rImpl.getLastReservation();
+				
+				
 				
 				
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
 				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
 				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
 				theRoom.setPersonCount((int)personCountSpinner.getValue());
-				theRoom.setPrice(String.valueOf(priceValue));
+				theRoom.setPrice(priceValue);
 				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
-				theRoom.setReservationId(lastReserv.getId());
 				theRoom.setCustomerGrupName(nameSurnameField.getText());
 				theRoom.setUsageStatus("BLOCKED");
 				
-				final double lastPrice = Integer.parseInt(theRoom.getPrice()) * reservation.getTotalDays();
+				final Reservation lastReserv = rImpl.getLastReservation();
+				theRoom.setReservationId(lastReserv.getId());
+				
+				final double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
 				theRoom.setTotalPrice(lastPrice + "");
 				
 				roomDaoImpl.saveRoom(theRoom);
@@ -580,13 +582,10 @@ public class NewReservExternalWindow extends JDialog {
 								
 				switch (rowCount) {
 				case 1:
-					
-					Object[] firstrow = new Object[5];
-					firstrow = model.getDataVector().get(0).toString().split(",");
 		
 					final Customer singleCustomer = new Customer();
-					singleCustomer.setFirstName(firstrow[2].toString());
-					singleCustomer.setLastName(firstrow[3].toString());
+					singleCustomer.setFirstName(model.getValueAt(0, 2).toString());
+					singleCustomer.setLastName(model.getValueAt(0, 3).toString());
 					singleCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
 					singleCustomer.setReservationId(lastReserv.getId());
 					cImpl.save(singleCustomer);

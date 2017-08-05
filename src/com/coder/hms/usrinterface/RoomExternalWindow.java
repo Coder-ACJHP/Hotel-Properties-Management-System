@@ -33,6 +33,7 @@ import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -77,11 +78,11 @@ public class RoomExternalWindow extends JDialog {
 	private final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
 	final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
 	private JButton postingBtn, paymentBtn, saveChangesBtn, checkoutBtn;
-	private JFormattedTextField priceField, totalPriceField, balanceField;
 	final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final PayPostTableCellRenderer payPostRenderer = new PayPostTableCellRenderer();
+	private JFormattedTextField priceField, totalPriceField, balanceField, remainDebtField;
 	private final RoomExternalTableHeaderRenderer THR = new RoomExternalTableHeaderRenderer();
 
 	private final String[] customerColnames = new String[] { "INDEX", "FIRSTNAME", "LASTNAME" };
@@ -104,7 +105,7 @@ public class RoomExternalWindow extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		setMinimumSize(new Dimension(1000, 700));
-		setSize(new Dimension(1121, 700));
+		setSize(new Dimension(1184, 700));
 		setPreferredSize(new Dimension(1000, 700));
 		// set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
@@ -194,6 +195,7 @@ public class RoomExternalWindow extends JDialog {
 		checkoutBtn
 				.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/room_checkout.png")));
 		checkoutBtn.setBounds(274, 5, 125, 43);
+		checkoutBtn.addActionListener(checkoutListener());
 		panel.add(checkoutBtn);
 
 		Component verticalStrut = Box.createVerticalStrut(20);
@@ -212,7 +214,7 @@ public class RoomExternalWindow extends JDialog {
 		totalPriceField.setFont(new Font("Arial", Font.BOLD, 15));
 		totalPriceField.setBackground(new Color(240, 128, 128));
 		totalPriceField.setEditable(false);
-		totalPriceField.setBounds(1024, 28, 86, 26);
+		totalPriceField.setBounds(976, 28, 86, 26);
 		panel.add(totalPriceField);
 		totalPriceField.setColumns(10);
 
@@ -223,7 +225,7 @@ public class RoomExternalWindow extends JDialog {
 		balanceLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		balanceLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		balanceLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		balanceLbl.setBounds(907, 5, 114, 20);
+		balanceLbl.setBounds(859, 5, 114, 20);
 		panel.add(balanceLbl);
 
 		balanceField = new JFormattedTextField(formatter);
@@ -233,9 +235,9 @@ public class RoomExternalWindow extends JDialog {
 		balanceField.setFont(new Font("Arial", Font.BOLD, 15));
 		balanceField.setBackground(new Color(102, 205, 170));
 		balanceField.setEditable(false);
-		balanceField.setBounds(1024, 1, 86, 26);
-		panel.add(balanceField);
+		balanceField.setBounds(976, 1, 86, 26);
 		balanceField.setColumns(10);
+		panel.add(balanceField);
 
 		JLabel totalLbl = new JLabel(" Total account : ");
 		totalLbl.setAutoscrolls(true);
@@ -244,8 +246,25 @@ public class RoomExternalWindow extends JDialog {
 		totalLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		totalLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		totalLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		totalLbl.setBounds(907, 30, 114, 20);
+		totalLbl.setBounds(859, 30, 114, 20);
 		panel.add(totalLbl);
+		
+		JLabel lblReamainingDebt = new JLabel("Remaining debt");
+		lblReamainingDebt.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblReamainingDebt.setFont(new Font("Arial", Font.BOLD, 13));
+		lblReamainingDebt.setHorizontalAlignment(SwingConstants.CENTER);
+		lblReamainingDebt.setBounds(1065, 4, 114, 16);
+		panel.add(lblReamainingDebt);
+		
+		remainDebtField = new JFormattedTextField(formatter);
+		remainDebtField.setAlignmentY(Component.TOP_ALIGNMENT);
+		remainDebtField.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		remainDebtField.setFont(new Font("Arial", Font.BOLD, 15));
+		remainDebtField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		remainDebtField.setBackground(Color.ORANGE);
+		remainDebtField.setBounds(1080, 24, 86, 26);
+		remainDebtField.setEditable(false);
+		panel.add(remainDebtField);
 
 		JPanel reservInfoHolder = new JPanel();
 		reservInfoHolder.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -270,7 +289,7 @@ public class RoomExternalWindow extends JDialog {
 		saveChangesBtn.setAutoscrolls(true);
 		saveChangesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				changeReservationDate();
 			}
 		});
@@ -421,11 +440,11 @@ public class RoomExternalWindow extends JDialog {
 		final JPopupMenu popupMenu = new JPopupMenu();
 		final JMenuItem menuItem = new JMenuItem("Delete");
 		menuItem.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_checkout.png")));
-		menuItem.addActionListener(ActionListener ->{
+		menuItem.addActionListener(ActionListener -> {
 			deleteRowsListener();
 		});
 		popupMenu.add(menuItem);
-		
+
 		payPostTable = new JTable(postPayModel);
 		payPostTable.setDefaultRenderer(Object.class, payPostRenderer);
 		payPostTable.setCellSelectionEnabled(false);
@@ -436,10 +455,42 @@ public class RoomExternalWindow extends JDialog {
 		populateReservationDetail();
 
 		custWindow.setActionListener(saveChanges());
-		
+
 		this.setVisible(true);
 	}
-	
+
+	private ActionListener checkoutListener() {
+		final ActionListener listener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(RoomExternalWindow.roomNumber);
+
+				if (checkingRoom.getUsageStatus().equals("FULL")) {
+					if (Double.parseDouble(checkingRoom.getRemainingDebt()) == 0) {
+
+						roomDaoImpl.setRoomCheckedOut(RoomExternalWindow.roomNumber);
+						dispose();
+					}
+
+					else {
+						JOptionPane.showMessageDialog(null, "All room balances need to be zero!",
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+
+				else {
+					JOptionPane.showMessageDialog(null, "Choosed room is empty!\nFor checkingout it must be full.",
+							JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+			}
+		};
+		return listener;
+	}
+
 	private void deleteRowsListener() {
 
 		final int rowIndex = payPostTable.getSelectedRow();
@@ -461,7 +512,6 @@ public class RoomExternalWindow extends JDialog {
 
 				finalBalance = Float.parseFloat(theRoom.getTotalPrice()) - Float.parseFloat(amount);
 				theRoom.setTotalPrice(finalBalance + "");
-				roomDaoImpl.saveRoom(theRoom);
 			}
 		}
 
@@ -474,9 +524,17 @@ public class RoomExternalWindow extends JDialog {
 
 				finalBalance = Float.parseFloat(theRoom.getBalance()) - Float.parseFloat(amount);
 				theRoom.setBalance(finalBalance + "");
-				roomDaoImpl.saveRoom(theRoom);
 			}
 		}
+		
+		
+		remainDebtField.setValue(Float.parseFloat(theRoom.getTotalPrice()) - Float.parseFloat(theRoom.getBalance()));
+		remainDebtField.revalidate();
+		remainDebtField.repaint();
+		
+		theRoom.setRemainingDebt(remainDebtField.getValue() + "");
+		roomDaoImpl.saveRoom(theRoom);
+		
 		populatePostPayTable(postPayModel);
 
 	}
@@ -492,7 +550,7 @@ public class RoomExternalWindow extends JDialog {
 
 		agencyField.setText(reservation.getAgency());
 
-		priceField.setValue(Float.parseFloat(theRoom.getPrice()));
+		priceField.setValue(theRoom.getPrice());
 
 		if (theRoom.getCurrency().equalsIgnoreCase("TURKISH LIRA")) {
 			currencyField.setText("TL");
@@ -520,15 +578,27 @@ public class RoomExternalWindow extends JDialog {
 		totalPriceField.setValue(totalPrice);
 		final double roombalance = Double.parseDouble(theRoom.getBalance());
 		balanceField.setValue(roombalance);
+		
+		remainDebtField.setValue(totalPrice - roombalance);
 	}
 
 	private void changeReservationDate() {
+
+		LocalDate lic = LocalDate.parse(reservation.getCheckinDate());
+		Date oldDate = java.sql.Date.valueOf(lic);
 		
-		final String updatedDate = new SimpleDateFormat("yyyy-MM-dd").format(checkoutDate.getDate());
-		reservation.setCheckoutDate(updatedDate);
+		LocalDate loc = LocalDate.parse(reservation.getCheckoutDate());
+		Date updateDate = java.sql.Date.valueOf(loc);
+		
+		
+		int totalDayResult = (int) ((updateDate.getTime() - oldDate.getTime()) / (1000 * 60 * 60 * 24));
+		
+		reservation.setTotalDays(Math.abs(totalDayResult));
+		String resultDate = new SimpleDateFormat("yyyy-MM-dd").format(checkoutDate.getDate());
+		reservation.setCheckoutDate(resultDate);
 		reservationDaoImpl.updateReservation(reservation);
 	}
-	
+
 	public void populateCustomerTable(String roomText, DefaultTableModel model) {
 
 		// clean table model
@@ -555,14 +625,13 @@ public class RoomExternalWindow extends JDialog {
 			public void mousePressed(MouseEvent e) {
 
 				if (e.getClickCount() == 2) {
-					
+
 					final int rowIndex = customerTable.getSelectedRow();
 					final String name = customerTable.getValueAt(rowIndex, 1).toString();
 					final String lastname = customerTable.getValueAt(rowIndex, 2).toString();
 
-					
-					theCustomer = customerDaoImpl.findCustomerByName(name, lastname);					
-					
+					theCustomer = customerDaoImpl.findCustomerByName(name, lastname);
+
 					custWindow.setId(theCustomer.getCustomerId() + "");
 					custWindow.setName(theCustomer.getFirstName());
 					custWindow.setSurname(theCustomer.getLastName());
@@ -577,7 +646,7 @@ public class RoomExternalWindow extends JDialog {
 					custWindow.setPhone(theCustomer.getPhone());
 					custWindow.setMariaggeStaus(theCustomer.getMaritalStatus());
 					custWindow.setReservationId(theCustomer.getReservationId() + "");
-					
+
 					custWindow.setVisible(true);
 				}
 
@@ -587,45 +656,44 @@ public class RoomExternalWindow extends JDialog {
 		return adapter;
 	}
 
-	//save all changed properties in customer table
+	// save all changed properties in customer table
 	private ActionListener saveChanges() {
 		final ActionListener listener = new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-					theCustomer.setCountry(custWindow.getCountry());
-					theCustomer.setFirstName(custWindow.getName());
-					theCustomer.setLastName(custWindow.getSurname());
-					theCustomer.setDocument(custWindow.getDocument());
-					theCustomer.setDocumentNo(custWindow.getDocNo());
-					theCustomer.setCountry(custWindow.getCountry());
-					theCustomer.setDateOfBirth(custWindow.getDateOfBirth());
-					theCustomer.setEmail(custWindow.getEmail());
-					theCustomer.setFatherName(custWindow.getFatherName());
-					theCustomer.setMotherName(custWindow.getMotherName());
-					theCustomer.setGender(custWindow.getGender());
-					theCustomer.setPhone(custWindow.getPhone());
-					theCustomer.setMaritalStatus(custWindow.getMariageStatus());
-					theCustomer.setReservationId(Long.parseLong(custWindow.getReservationId()));
-					
-					boolean success = customerDaoImpl.save(theCustomer);
-					
-					if(success) {
-						
-						custWindow.setInfoMessage("<html>SUCCESSFULLY ACCOMPLISHED</html>");
-						custWindow.setInfoLabelColor(Color.decode("#00FF00"));
-					}
-					else {
-						custWindow.setInfoMessage("<html>OPERTION IS FAILED!</html>");
-						custWindow.setInfoLabelColor(Color.decode("#cd2626"));
-					}
+				theCustomer.setCountry(custWindow.getCountry());
+				theCustomer.setFirstName(custWindow.getName());
+				theCustomer.setLastName(custWindow.getSurname());
+				theCustomer.setDocument(custWindow.getDocument());
+				theCustomer.setDocumentNo(custWindow.getDocNo());
+				theCustomer.setCountry(custWindow.getCountry());
+				theCustomer.setDateOfBirth(custWindow.getDateOfBirth());
+				theCustomer.setEmail(custWindow.getEmail());
+				theCustomer.setFatherName(custWindow.getFatherName());
+				theCustomer.setMotherName(custWindow.getMotherName());
+				theCustomer.setGender(custWindow.getGender());
+				theCustomer.setPhone(custWindow.getPhone());
+				theCustomer.setMaritalStatus(custWindow.getMariageStatus());
+				theCustomer.setReservationId(Long.parseLong(custWindow.getReservationId()));
+
+				boolean success = customerDaoImpl.save(theCustomer);
+
+				if (success) {
+
+					custWindow.setInfoMessage("<html>SUCCESSFULLY ACCOMPLISHED</html>");
+					custWindow.setInfoLabelColor(Color.decode("#00FF00"));
+				} else {
+					custWindow.setInfoMessage("<html>OPERTION IS FAILED!</html>");
+					custWindow.setInfoLabelColor(Color.decode("#cd2626"));
+				}
 
 			}
 		};
 		return listener;
 	}
-	
+
 	private void populatePostPayTable(DefaultTableModel model) {
 
 		// import all customers from database

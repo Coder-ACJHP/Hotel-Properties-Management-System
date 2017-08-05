@@ -6,7 +6,6 @@
 package com.coder.hms.daoImpl;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -20,9 +19,9 @@ public class ReservationDaoImpl implements ReservationDAO{
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
-	private final Logger LOGGER = Logger.getLogger(ReservationDaoImpl.class.getName());
 	
 	public ReservationDaoImpl() {
+		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
 		
@@ -36,7 +35,6 @@ public class ReservationDaoImpl implements ReservationDAO{
 		query.setParameter("theId", theId);
 		Reservation reservation = query.getSingleResult();
 		
-		LOGGER.info(reservation.toString());
 		
 		session.close();
 		return reservation;
@@ -50,7 +48,6 @@ public class ReservationDaoImpl implements ReservationDAO{
 		query.setParameter("Date", Date);
 		Reservation reservation = query.getSingleResult();
 		
-		LOGGER.info(reservation.toString());
 		
 		session.close();
 		return reservation;
@@ -63,6 +60,7 @@ public class ReservationDaoImpl implements ReservationDAO{
 		session.save(reservation);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 
 	@Override
@@ -77,10 +75,8 @@ public class ReservationDaoImpl implements ReservationDAO{
 		session.beginTransaction();
 		Query<Reservation> query = session.createQuery("from Reservation", Reservation.class);
 		List<Reservation> reservList = query.getResultList();
-		
-		LOGGER.info(reservList.toString());
-		
 		session.close();
+		
 		
 		return reservList;
 	}
@@ -91,10 +87,9 @@ public class ReservationDaoImpl implements ReservationDAO{
 		Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:today", Reservation.class);
 		query.setParameter("today", today);
 		List<Reservation> reservList = query.getResultList();
-		
-		LOGGER.info(reservList.toString());
-		
 		session.close();
+		
+		
 		return reservList;
 	}
 
@@ -106,6 +101,7 @@ public class ReservationDaoImpl implements ReservationDAO{
 		query.setParameter("today", reservDate);
 		List<Reservation> guaranteedList = query.getResultList();
 		session.close();
+				
 		return guaranteedList;
 	}
 
@@ -117,6 +113,7 @@ public class ReservationDaoImpl implements ReservationDAO{
 		query.setParameter("today", reservDate);
 		List<Reservation> waitedList = query.getResultList();
 		session.close();
+				
 		return waitedList;
 	}
 
@@ -127,6 +124,7 @@ public class ReservationDaoImpl implements ReservationDAO{
 		query.setMaxResults(1);
 		Reservation lastRecord = query.getSingleResult();
 		session.close();
+				
 		return lastRecord;
 	}
 
@@ -138,6 +136,7 @@ public class ReservationDaoImpl implements ReservationDAO{
 		query.setMaxResults(1);
 		Reservation reservationById = query.getSingleResult();
 		session.close();
+				
 		return reservationById;
 	}
 
@@ -155,6 +154,7 @@ public class ReservationDaoImpl implements ReservationDAO{
 			e.printStackTrace();
 			result = false;
 		}
+		
 		return result;
 	}
 

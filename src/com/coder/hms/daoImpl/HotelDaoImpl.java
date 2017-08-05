@@ -18,6 +18,7 @@ public class HotelDaoImpl implements HotelDAO {
 	private DataSourceFactory dataSourceFactory;
 	
 	public HotelDaoImpl() {
+		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
 
@@ -30,6 +31,7 @@ public class HotelDaoImpl implements HotelDAO {
 		session.saveOrUpdate(hotel);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 
 	@Override
@@ -39,7 +41,7 @@ public class HotelDaoImpl implements HotelDAO {
 		Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
 		Hotel hotel = query.getSingleResult();
 		session.close();
-		
+				
 		return hotel;
 	}
 

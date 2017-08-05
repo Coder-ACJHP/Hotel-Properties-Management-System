@@ -7,7 +7,6 @@ package com.coder.hms.daoImpl;
 
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -20,10 +19,9 @@ public class RoomDaoImpl implements RoomDAO {
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
-	private final Logger LOGGER = Logger.getLogger(HotelDaoImpl.class.getName());
 	
 	public RoomDaoImpl() {
-		
+
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
 
@@ -36,10 +34,8 @@ public class RoomDaoImpl implements RoomDAO {
 		Query<Room> query = session.createQuery("from Room where number=:roomNumber", Room.class);
 		query.setParameter("roomNumber", roomNumber);
 		Room room = query.getSingleResult();
-		
-		LOGGER.info(room.toString());
-		
 		session.close();
+				
 		return room;
 	}
 
@@ -50,6 +46,7 @@ public class RoomDaoImpl implements RoomDAO {
 		session.saveOrUpdate(room);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 
 	public List<Room> getAllRooms() {
@@ -57,10 +54,8 @@ public class RoomDaoImpl implements RoomDAO {
 		session.beginTransaction();
 		Query<Room> query = session.createQuery("from Room", Room.class);
 		List<Room> roomList = query.getResultList();
-		
-		LOGGER.info(roomList.toString());
-		
 		session.close();
+				
 		return roomList;
 	}
 
@@ -70,40 +65,36 @@ public class RoomDaoImpl implements RoomDAO {
 		Query<Room> query = session.createQuery("from Room where ReservationId=:id", Room.class);
 		query.setParameter("id", id);
 		Room room = query.getSingleResult();
-		
-		LOGGER.info(room.toString());
-		
 		session.close();
+				
 		return room;
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void setAllRoomsAtClean(String clean) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
-		Query query = session.createQuery("UPDATE Room SET cleaningStatus=:clean");
+		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus=:clean");
 		query.setParameter("clean", clean);
 		query.executeUpdate();
 		session.close();
+		
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void setSingleRoomAsCleanByRoomNumber(String rowData) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
-		Query query = session.createQuery("UPDATE Room SET cleaningStatus = 'CLEAN' where number=:rowData");
+		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'CLEAN' where number=:rowData");
 		query.setParameter("rowData", rowData);
 		query.executeUpdate();		
 		session.close();
 		
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void setRoomCheckedOut(String num) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		final String HQL = "UPDATE Room SET cleaningStatus = 'CLEAN', usageStatus = 'EMPTY', personCount = 0, price = 0 where number=:num";
-		Query query = session.createQuery(HQL);
+		Query<?> query = session.createQuery(HQL);
 		query.setParameter("num", num);
 		query.executeUpdate();		
 		session.close();
@@ -117,6 +108,7 @@ public class RoomDaoImpl implements RoomDAO {
 		query.setParameter("dirty", dirty);
 		query.executeUpdate();
 		session.close();
+		
 	}
 	
 	public void setSingleRoomAsDirtyByRoomNumber(String roomNumber) {

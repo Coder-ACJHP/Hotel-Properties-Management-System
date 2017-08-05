@@ -18,9 +18,9 @@ import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.usrinterface.ReservedRoomCheckinWindow;
+import com.coder.hms.usrinterface.Reserved_CheckinWin;
 import com.coder.hms.usrinterface.RoomExternalWindow;
-import com.coder.hms.usrinterface.WalkinRoomCheckinWindow;
+import com.coder.hms.usrinterface.Walkin_CheckinWin;
 
 public class RoomsAction {
 
@@ -86,7 +86,7 @@ public class RoomsAction {
 								@Override
 								public void run() {
 									
-									new ReservedRoomCheckinWindow(theRoom.getNumber())
+									new Reserved_CheckinWin(theRoom.getNumber())
 									.setVisible(true);
 								
 								}
@@ -100,7 +100,7 @@ public class RoomsAction {
 								@Override
 								public void run() {
 									
-									new WalkinRoomCheckinWindow(theRoom.getNumber())
+									new Walkin_CheckinWin(theRoom.getNumber())
 									.setVisible(true);
 									
 								}

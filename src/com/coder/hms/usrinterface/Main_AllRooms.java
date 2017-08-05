@@ -116,8 +116,14 @@ public class Main_AllRooms {
 			for (Room room : roomList) {
 
 				if (room.getNumber().equals(counter + "" + lastNum)) {
-					roomBtn.setToolTipText(room.getType() +"\n"+ room.getUsageStatus());
+					
 					roomBtn.addMouseListener(rightClickListener());
+					
+					roomBtn.setToolTipText("<html>"+"Type : " +room.getType() +"<br>"
+											+"Number : " + room.getNumber() +"<br>"
+											+"Status : " + room.getUsageStatus() + "<br>"
+											+"Person Count : " + room.getPersonCount() + "<br>"
+											+"Group Name : " + room.getCustomerGrupName() +"</html>");
 
 					switch (room.getCleaningStatus()) {
 					case "CLEAN":
@@ -135,26 +141,31 @@ public class Main_AllRooms {
 
 					
 					final String ROOM_STATUS = room.getUsageStatus();
+					final long reservId = room.getReservationId();
 					
-					final Reservation theReservation = rImpl.getReservationById(room.getReservationId());
-										
-					 if(ROOM_STATUS.equals("FULL") && theReservation != null) {
-						if(theReservation.getCheckoutDate().equals(innerDate)) {
-							roomBtn.setBackground(Color.decode("#990033"));
-						}
-					}
-					else if(ROOM_STATUS.equals("FULL")) {
-						roomBtn.setBackground(Color.decode("#87a80f"));
-					}
-					else if(ROOM_STATUS.equals("BLOCKED") && theReservation != null) {
-						if(theReservation.getCheckinDate().equals(innerDate)) {
-							roomBtn.setBackground(Color.decode("#ce00a6"));
-						}
+					if(reservId != 0) {
+						final Reservation theReservation = rImpl.getReservationById(room.getReservationId());
+						 if(ROOM_STATUS.equals("FULL")) {
+								if(theReservation.getCheckoutDate().equals(innerDate)) {
+									roomBtn.setBackground(Color.decode("#990033"));
+								}else {
+									roomBtn.setBackground(Color.decode("#f29c63"));
+								}
+							}
+							
+							else if(ROOM_STATUS.equals("BLOCKED")) {
+								if(theReservation.getCheckinDate().equals(innerDate)) {
+									roomBtn.setBackground(Color.decode("#ce00a6"));
+								}
+							}
+							else {
+								roomBtn.setBackground(Color.decode("#afe2fb"));
+							}
 					}
 					else {
+						
 						roomBtn.setBackground(Color.decode("#afe2fb"));
 					}
-					
 				}
 			}
 
@@ -315,7 +326,7 @@ public class Main_AllRooms {
 			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
 
 			if(checkingRoom.getUsageStatus().equals("FULL")) {
-				if (Integer.parseInt(checkingRoom.getBalance()) == 0) {
+				if (Float.parseFloat(checkingRoom.getBalance()) == 0) {
 					
 					roomDaoImpl.setRoomCheckedOut(currentRoomNumber);
 					cookRooms(contentPanel);
@@ -385,7 +396,7 @@ public class Main_AllRooms {
 						nex.setReservStatus(rr.getBookStatus());
 						nex.setReservNote(rr.getNote());
 						nex.setCurrency(checkingRoom.getCurrency());
-						nex.setPriceOfRoom(Double.parseDouble(checkingRoom.getPrice()));
+						nex.setPriceOfRoom(checkingRoom.getPrice());
 						nex.setPersonCountSpinner(checkingRoom.getPersonCount());
 						
 						nex.setRoomCountTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),

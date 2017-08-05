@@ -6,7 +6,6 @@
 package com.coder.hms.daoImpl;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -20,7 +19,6 @@ public class CustomerDaoImpl implements CustomerDAO {
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
-	private final Logger LOGGER = Logger.getLogger(CustomerDaoImpl.class.getName());
 	
 	public CustomerDaoImpl() {
 		
@@ -39,6 +37,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 		
 		final Customer customer = query.getSingleResult();
 		session.close();
+		
 		return customer;
 	}
 
@@ -55,7 +54,6 @@ public class CustomerDaoImpl implements CustomerDAO {
 		Query<Customer> query = session.createQuery("from Customer", Customer.class);
 		List<Customer> customerList = query.getResultList();
 		session.close();
-		LOGGER.info(customerList.toString());
 		
 		return customerList;
 	}
@@ -68,6 +66,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 			session.saveOrUpdate(theCustomer);
 			session.getTransaction().commit();
 			session.close();
+			
 			success = true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
@@ -83,8 +82,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 		query.setParameter("id", id);
 		List<Customer> customerList = query.getResultList();
 		session.close();
-		LOGGER.info(customerList.toString());
-		
+				
 		return customerList;
 	}
 
