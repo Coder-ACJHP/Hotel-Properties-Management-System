@@ -1,6 +1,6 @@
 # Simple Hotel-Management-System
 Coder HMS basic hotels managing system application, cross platform (Made by Java).Easy to use simple user interface,<br>
-understandable text with icons. The application is composed from seven packs : <br>
+understandable text with icons and every thing colored. The application is composed from seven packs : <br>
 <h4>1- Main window <h4>[All windows will open on this scene, check your current user, date, EURO, DOLLAR, POUND exchange as live from <br> status bar, manage your application from menu bar {Exit, change user, update password, sen email, open calculator, exchange, <br>
 change user interface theme and etc.}]
 <h4>2- Rooms interface </h4>[you can manage your all rooms in one page, just focus on the room you can read all information from tooltip text <br> and there is some shortcuts for quick checkin, set as clean, dirty, dnd and etc. show reservation, do checkout etc. */* for<br>
@@ -46,13 +46,24 @@ search your reservation with date, referance number or agency referange number, 
 
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Cash_desk.png">
 <hr>
+<h2>All rooms with checkin window : </h2>
+
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Ekran%20Resmi%202017-07-31%2013.12.22.png">
 and more...
+
+<h1>How to use?</h1>
+1- Install Mysql server(PhpMyAdmin or Mysql Workbench etc..).
+2- Donload 'hotel_managenet_system_db.sql' file and import it to your database server.
+3- Clone or download the project and open it in any IDE then export it with executable jar.
+4- Congrats enjoy with your day :)
+
+Not : Also you can download Executable jar from Code page. No need to install just double click and play :)
+
 <h2>About database : </h2>
 This project using MySQL database, with hibernate framework.All tables added to ./../../connection package as (.sql)
 file.For creating the database just import the .sql file into MySQL workbench or from terminal lines.
 
-<h2>All rooms with checkin window : </h2>
-
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Ekran%20Resmi%202017-07-31%2013.12.22.png">
+<h2>Another questions ?</h2> 
+For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
 <hr>
-<h2>INFO : under development phase!</h2>
+<h2>INFO : </h2>Please read these lines carefully [The application under development phase! I'm not responsible for any problem that <br> may arise.Feel free use it, copy it but not sell please!]
