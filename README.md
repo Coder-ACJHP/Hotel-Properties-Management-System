@@ -1,6 +1,6 @@
 # Simple Hotel-Management-System
 Coder HMS basic hotels managing system application, cross platform (Made by Java).Easy to use simple user interface,<br>
-understandable text with icons. The application made from seven packs : <br>
+understandable text with icons. The application is composed from seven packs : <br>
 <h4>1- Main window <h4>[All windows will open on this scene, check your current user, date, EURO, DOLLAR, POUND exchange as live from <br> status bar, manage your application from menu bar {Exit, change user, update password, sen email, open calculator, exchange, <br>
 change user interface theme and etc.}]
 <h4>2- Rooms interface </h4>[you can manage your all rooms in one page, just focus on the room you can read all information from tooltip text <br> and there is some shortcuts for quick checkin, set as clean, dirty, dnd and etc. show reservation, do checkout etc. */* for<br>
