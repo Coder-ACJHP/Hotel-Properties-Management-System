@@ -76,8 +76,7 @@ public class NewReservExternalWindow extends JDialog {
 	private JButton btnAddRoom;
 	private Object[] ROOM_NUMS;
 	private String[] ROOM_TYPES;
-	private int infoTableRow = 0;
-	private JTable table, table_1;
+	private JTable table, ePaymentTable;
 	private double priceValue = 0.0;
 	private NumberFormat formatter;
 	private JSpinner personCountSpinner; 
@@ -87,7 +86,7 @@ public class NewReservExternalWindow extends JDialog {
 	private JButton chancelBtn, SaveBtn, reportBtn;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
-	private PaymentExternalWindow paymentWindow;
+	private final PaymentExternalWindow payWin = new PaymentExternalWindow();
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -112,7 +111,10 @@ public class NewReservExternalWindow extends JDialog {
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] cmbList = { "TURKISH LIRA", "DOLLAR", "EURO", "POUND"};
 	private final String[] CREDIT_TYPES = {"BLACK LIST", "INFINITY CREDIT", "STANDART CUSTOMER CREDIT"};
+	
 	private final String[] EARLY_PAYMENT_LIST = {"TITLE", "NAME", "AMOUNT", "CURRENCY", "EXCHANGE", "NOTE"};
+	private final DefaultTableModel earlyPaymetModel = new DefaultTableModel(EARLY_PAYMENT_LIST, 0);
+	
 	private final String[] AGENCY_LIST = {"WALKIN", "WEB", "OTHER"};
 	private JComboBox<String> agencyCmbBox, hostCmbBox, creaditTypeCmbBox, rezervStatusCmbBox, customerCountryCmbBox, 
 	currencyCmbBox, roomTypeCmbBox;
@@ -451,7 +453,7 @@ public class NewReservExternalWindow extends JDialog {
 					
 					@Override
 					public void run() {
-						paymentWindow = new PaymentExternalWindow(roomNumCmbBox.getSelectedItem().toString());
+						payWin.setReadyPaymentWindow(roomNumCmbBox.getSelectedItem().toString());
 						
 					}
 				}); 
@@ -463,18 +465,23 @@ public class NewReservExternalWindow extends JDialog {
 		btnNewButton.setBounds(10, 11, 150, 35);
 		earlyPanel.add(btnNewButton);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_1.setBounds(10, 57, 723, 103);
-		earlyPanel.add(panel_1);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		final JPanel ePaymentTableHolder = new JPanel();
+		ePaymentTableHolder.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		ePaymentTableHolder.setBounds(10, 57, 723, 103);
+		earlyPanel.add(ePaymentTableHolder);
+		ePaymentTableHolder.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		panel_1.add(scrollPane_1, BorderLayout.CENTER);
+		final JScrollPane ePaymentScrollPane = new JScrollPane();
+		ePaymentTableHolder.add(ePaymentScrollPane, BorderLayout.CENTER);
 		
-		table_1 = new JTable(new DefaultTableModel(EARLY_PAYMENT_LIST, 0));
-		scrollPane_1.setViewportView(table_1);
+		ePaymentTable = new JTable(earlyPaymetModel);
+		ePaymentScrollPane.setViewportView(ePaymentTable);
 		panel.add(tabbedPane, BorderLayout.CENTER);
+		
+		if(payWin.getTableRowData() != null) {
+			earlyPaymetModel.setRowCount(0);
+			earlyPaymetModel.addRow(payWin.getTableRowData());
+		}
 
 		
 	}
@@ -541,7 +548,7 @@ public class NewReservExternalWindow extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Reservation reservation = new Reservation();
+				final Reservation reservation = new Reservation();
 				
 				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
 				reservation.setGroupName(nameSurnameField.getText());
@@ -553,12 +560,13 @@ public class NewReservExternalWindow extends JDialog {
 				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
 				reservation.setNote(noteTextArea.getText());
 				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
-				reservation.setPaymentStatus(paymentWindow.getPaymentStatus());
-				reservation.setIsCheckedIn("NO");
+				reservation.setIsCheckedIn("NO");				
+				
+				if(payWin.getPaymentStatus()) {
+					reservation.setPaymentStatus(true);
+				}
 				rImpl.saveReservation(reservation);
-				
-				
-				
+								
 				
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
 				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
@@ -574,79 +582,27 @@ public class NewReservExternalWindow extends JDialog {
 				
 				final double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
 				theRoom.setTotalPrice(lastPrice + "");
+				theRoom.setRemainingDebt(lastPrice);
 				
 				roomDaoImpl.saveRoom(theRoom);
 				
+				System.out.println("ROOM SAVED");
 				
 				final int rowCount = model.getRowCount();
-								
-				switch (rowCount) {
-				case 1:
-		
-					final Customer singleCustomer = new Customer();
-					singleCustomer.setFirstName(model.getValueAt(0, 2).toString());
-					singleCustomer.setLastName(model.getValueAt(0, 3).toString());
-					singleCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-					singleCustomer.setReservationId(lastReserv.getId());
-					cImpl.save(singleCustomer);
-					completionStatus = true;
-					break;
-				case 2:
-					Object[] rowOne = new Object[5];
-					Object[] rowTwo = new Object[5];
-					rowOne = model.getDataVector().get(0).toString().split(",");
-					rowTwo = model.getDataVector().get(1).toString().split(",");
 					
-					final Customer theCustomer = new Customer();
-					theCustomer.setFirstName(rowOne[2].toString());
-					theCustomer.setLastName(rowOne[3].toString());
+				Customer theCustomer = null;
+				
+				for(int i=0; i < rowCount; i++) {
+		
+					theCustomer = new Customer();
+					
+					theCustomer.setFirstName(model.getValueAt(i, 2).toString());
+					theCustomer.setLastName(model.getValueAt(i, 3).toString());
 					theCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
 					theCustomer.setReservationId(lastReserv.getId());
-					
-					final Customer doubleCustomer = new Customer();
-					doubleCustomer.setFirstName(rowTwo[2].toString());
-					doubleCustomer.setLastName(rowTwo[3].toString());
-					doubleCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-					doubleCustomer.setReservationId(lastReserv.getId());
-					
 					cImpl.save(theCustomer);
-					cImpl.save(doubleCustomer);
 					completionStatus = true;
-					break;
-				case 3:
-					
-					Object[] singleRow = new Object[5];
-					Object[] doubleRow = new Object[5];
-					Object[] tripleRow = new Object[5];
-					singleRow = model.getDataVector().get(0).toString().split(",");
-					doubleRow = model.getDataVector().get(1).toString().split(",");
-					tripleRow = model.getDataVector().get(2).toString().split(",");
-					
-					final Customer firstCustomer = new Customer();
-					firstCustomer.setFirstName(singleRow[2].toString());
-					firstCustomer.setLastName(singleRow[3].toString());
-					firstCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-					firstCustomer.setReservationId(lastReserv.getId());
-					
-					final Customer secondCustomer = new Customer();
-					secondCustomer.setFirstName(doubleRow[2].toString());
-					secondCustomer.setLastName(doubleRow[3].toString());
-					secondCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-					secondCustomer.setReservationId(lastReserv.getId());
-					
-					final Customer thirdCustomer = new Customer();
-					thirdCustomer.setFirstName(tripleRow[2].toString());
-					thirdCustomer.setLastName(tripleRow[3].toString());
-					thirdCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-					thirdCustomer.setReservationId(lastReserv.getId());
-					
-					cImpl.save(firstCustomer);
-					cImpl.save(secondCustomer);
-					cImpl.save(thirdCustomer);
-					completionStatus = true;
-					break;	
-				default:
-					break;
+				
 				}
 				dispose();
 			}
@@ -754,8 +710,7 @@ public class NewReservExternalWindow extends JDialog {
 				Object[] row = new Object[]{roomNumber, roomType, personCount, val, currency};
 				roomCountModel.addRow(row);
 				
-				infoTableRow += personCount; 
-				for(int i=0; i < infoTableRow; i++) {
+				for(int i=0; i < personCount; i++) {
 					model.addRow(new Object[]{roomNumber, roomType});
 				}
 			}
@@ -769,8 +724,10 @@ public class NewReservExternalWindow extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
-				Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-				roomTypeCmbBox.setSelectedItem(theRoom.getType());
+				if(!roomNumber.isEmpty()) {
+					Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
+					roomTypeCmbBox.setSelectedItem(theRoom.getType());
+				}
 				repaint();
 				
 			}

@@ -326,7 +326,7 @@ public class Main_AllRooms {
 			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
 
 			if(checkingRoom.getUsageStatus().equals("FULL")) {
-				if (Float.parseFloat(checkingRoom.getBalance()) == 0) {
+				if (checkingRoom.getRemainingDebt() == 0) {
 					
 					roomDaoImpl.setRoomCheckedOut(currentRoomNumber);
 					cookRooms(contentPanel);

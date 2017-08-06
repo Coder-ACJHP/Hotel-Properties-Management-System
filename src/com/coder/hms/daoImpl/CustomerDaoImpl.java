@@ -13,9 +13,10 @@ import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.CustomerDAO;
+import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.entities.Customer;
 
-public class CustomerDaoImpl implements CustomerDAO {
+public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
@@ -30,7 +31,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 	@Override
 	public Customer findCustomerByName(String name, String lastName) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		Query<Customer> query = session.createQuery("from Customer where FirstName=:name and LastName=:lastName", Customer.class);
 		query.setParameter("name", name);
 		query.setParameter("lastName", lastName);
@@ -50,7 +51,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 	@Override
 	public List<Customer> getAllCustomers() {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		Query<Customer> query = session.createQuery("from Customer", Customer.class);
 		List<Customer> customerList = query.getResultList();
 		session.close();
@@ -62,7 +63,7 @@ public class CustomerDaoImpl implements CustomerDAO {
 		 boolean success = false;
 		try {
 			session = dataSourceFactory.getSessionFactory().getCurrentSession();
-			session.beginTransaction();
+			beginTransactionIfAllowed(session);
 			session.saveOrUpdate(theCustomer);
 			session.getTransaction().commit();
 			session.close();
@@ -77,13 +78,22 @@ public class CustomerDaoImpl implements CustomerDAO {
 
 	public List<Customer> getCustomerByReservId(long id) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		Query<Customer> query = session.createQuery("from Customer where ReservationId=:id", Customer.class);
 		query.setParameter("id", id);
 		List<Customer> customerList = query.getResultList();
 		session.close();
 				
 		return customerList;
+	}
+	
+	public void beginTransactionIfAllowed(Session theSession) {
+		if(!theSession.getTransaction().isActive()) {
+			theSession.beginTransaction();	
+		}else {
+			theSession.getTransaction().rollback();
+			theSession.beginTransaction();
+		}
 	}
 
 }

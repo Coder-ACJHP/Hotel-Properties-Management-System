@@ -11,10 +11,11 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
+import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.dao.UserDAO;
 import com.coder.hms.entities.User;
 
-public class UserDaoImpl implements UserDAO {
+public class UserDaoImpl implements UserDAO, TransactionManagement {
 
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
@@ -29,7 +30,7 @@ public class UserDaoImpl implements UserDAO {
 	@Override
 	public User getUserByName(String theName) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
 		query.setParameter("theName", theName);
 		User user = query.getSingleResult();
@@ -41,7 +42,7 @@ public class UserDaoImpl implements UserDAO {
 	@Override
 	public void saveUser(User user) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		session.saveOrUpdate(user);
 		session.getTransaction().commit();
 		session.close();
@@ -51,7 +52,7 @@ public class UserDaoImpl implements UserDAO {
 	@Override
 	public void changePasswordOfUser(String nickName, String newPassword) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		Query<User> query = session.createQuery("from User where NickName=:nickName", User.class);
 		query.setParameter("nickName", nickName);
 		User theUser = query.getSingleResult();
@@ -72,7 +73,7 @@ public class UserDaoImpl implements UserDAO {
 	public boolean authentication(String userName, String userPswrd) {
 		boolean isUser = false;
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		Query<User> query = session.createQuery("from User where NickName=:userName and Password=:userPswrd", User.class);
 		query.setParameter("userName", userName);
 		query.setParameter("userPswrd", userPswrd);
@@ -85,6 +86,17 @@ public class UserDaoImpl implements UserDAO {
 		}
 		
 		return isUser;
+	}
+
+	@Override
+	public void beginTransactionIfAllowed(Session theSession) {
+		if(!theSession.getTransaction().isActive()) {
+			theSession.beginTransaction();	
+		}else {
+			theSession.getTransaction().rollback();
+			theSession.beginTransaction();
+		}
+		
 	}
 
 }

@@ -329,7 +329,7 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 
 		//Get all dependencies and make the connection ready.
 		 final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
-		 final  CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+		 final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
 		 final ReservationDaoImpl reservDaoImpl = new ReservationDaoImpl();
 		
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -374,31 +374,15 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 		final double lastPrice = checkingRoom.getPrice() * newReservation.getTotalDays();
 		checkingRoom.setTotalPrice(lastPrice + "");
 		
+		 Customer customerOne;
+		 Customer customerTwo;
+		
 			if((int)personCountSpinner.getValue() == 0 || (int)personCountSpinner.getValue() == 1) {
 				
 				//Set room person count here
 				checkingRoom.setPersonCount((int)personCountSpinner.getValue());
 				
-				Customer customer = new Customer();
-				customer.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
-				customer.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
-				customer.setDocument(customerFormOne.getDocumentTypeCmbxValue());
-				customer.setDocumentNo(customerFormOne.getDocNoFieldValue());
-				customer.setFirstName(customerFormOne.getFirstNameFieldValue());
-				customer.setLastName(customerFormOne.getLastNameFieldValue());
-				customer.setGender(customerFormOne.getGenderComboxValue());
-				customer.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
-				customer.setReservationId(lastReservation.getId());
-				
-				customerDaoImpl.save(customer);
-				
-			}
-			
-			else if((int)personCountSpinner.getValue() == 2) {
-				
-				checkingRoom.setPersonCount((int)personCountSpinner.getValue());
-				
-				Customer customerOne = new Customer();
+				customerOne = new Customer();
 				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
 				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
 				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
@@ -409,7 +393,28 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
 				customerOne.setReservationId(lastReservation.getId());
 				
-				Customer customerTwo = new Customer();
+				customerDaoImpl.save(customerOne);
+				
+			}
+			
+			else if((int)personCountSpinner.getValue() == 2) {
+				
+				checkingRoom.setPersonCount((int)personCountSpinner.getValue());
+				
+				customerOne = new Customer();
+				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
+				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
+				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
+				customerOne.setDocumentNo(customerFormOne.getDocNoFieldValue());
+				customerOne.setFirstName(customerFormOne.getFirstNameFieldValue());
+				customerOne.setLastName(customerFormOne.getLastNameFieldValue());
+				customerOne.setGender(customerFormOne.getGenderComboxValue());
+				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
+				customerOne.setReservationId(lastReservation.getId());
+				
+				customerDaoImpl.save(customerOne);
+				
+				customerTwo = new Customer();
 				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
 				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
 				customerTwo.setDocument(customerFormTwo.getDocumentTypeCmbxValue());
@@ -429,7 +434,7 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 				
 				checkingRoom.setPersonCount((int)personCountSpinner.getValue());
 				
-				Customer customerOne = new Customer();
+				customerOne = new Customer();
 				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
 				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
 				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
@@ -440,7 +445,9 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
 				customerOne.setReservationId(lastReservation.getId());
 				
-				Customer customerTwo = new Customer();
+				customerDaoImpl.save(customerOne);
+				
+				customerTwo = new Customer();
 				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
 				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
 				customerTwo.setDocument(customerFormTwo.getDocumentTypeCmbxValue());
@@ -451,7 +458,8 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 				customerTwo.setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
 				customerTwo.setReservationId(lastReservation.getId());
 				
-				Customer customerThree = new Customer();
+				
+				final Customer customerThree = new Customer();
 				customerThree.setCountry(customerFormThree.getCustomerCountryCmbBoxValue());
 				customerThree.setDateOfBirth(customerFormThree.getDateOfBirthChooserValue());
 				customerThree.setDocument(customerFormThree.getDocumentTypeCmbxValue());
@@ -536,7 +544,7 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 	}
 	
 	public ItemListener currencyActionListener() {
-		ItemListener ac = new ItemListener() {
+		ItemListener itemListener = new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent event) {
@@ -587,6 +595,6 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 			}
 
 		};
-		return ac;
+		return itemListener;
 	}
 }

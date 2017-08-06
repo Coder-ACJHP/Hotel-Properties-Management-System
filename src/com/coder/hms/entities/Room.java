@@ -44,7 +44,7 @@ public class Room implements Serializable{
 	private String balance;
 	
 	@Column(name="remainingDebt")
-	private String remainingDebt;
+	private double remainingDebt;
 	
 	@Column(name="currency")
 	private String currency;
@@ -108,11 +108,11 @@ public class Room implements Serializable{
 		this.totalPrice = totalPrice;
 	}
 
-	public String getRemainingDebt() {
+	public double getRemainingDebt() {
 		return remainingDebt;
 	}
 
-	public void setRemainingDebt(String remainingDebt) {
+	public void setRemainingDebt(double remainingDebt) {
 		this.remainingDebt = remainingDebt;
 	}
 
@@ -172,7 +172,7 @@ public class Room implements Serializable{
 		ReservationId = reservationId;
 	}
 
-	public Room(long theRoomId, String number, String type, double price, String totalprice, String remainingDebt,
+	public Room(long theRoomId, String number, String type, double price, String totalprice, double remainingDebt,
 			String balance, String currency, String cleaningStatus, String usageStatus, int personCount, 
 			String customerGrupName, long reservationId) {
 		super();

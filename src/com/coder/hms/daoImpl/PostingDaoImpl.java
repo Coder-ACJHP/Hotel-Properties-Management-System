@@ -8,9 +8,10 @@ import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.PostingDAO;
+import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.entities.Posting;
 
-public class PostingDaoImpl implements PostingDAO {
+public class PostingDaoImpl implements PostingDAO, TransactionManagement {
 	
 	private Session session;
 	private DataSourceFactory dataSourceFactory;
@@ -24,7 +25,7 @@ public class PostingDaoImpl implements PostingDAO {
 	@Override
 	public void savePosting(Posting posting) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		session.saveOrUpdate(posting);
 		session.getTransaction().commit();
 		session.close();
@@ -37,9 +38,8 @@ public class PostingDaoImpl implements PostingDAO {
 		
 		try {
 			session = dataSourceFactory.getSessionFactory().getCurrentSession();
-			session.beginTransaction();
-			@SuppressWarnings("rawtypes")
-			Query query = session.createQuery("delete Posting where id = :theId");
+			beginTransactionIfAllowed(session);
+			Query<?> query = session.createQuery("delete Posting where id = :theId");
 			query.setParameter("theId", theId);
 			query.executeUpdate();
 			session.close();
@@ -54,8 +54,8 @@ public class PostingDaoImpl implements PostingDAO {
 	@Override
 	public Posting getPostingById(long Id) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		Posting posting = session.get(Posting.class, Id);
+		beginTransactionIfAllowed(session);
+		final Posting posting = session.get(Posting.class, Id);
 		session.close();
 		
 		return posting;
@@ -64,13 +64,24 @@ public class PostingDaoImpl implements PostingDAO {
 	@Override
 	public List<Posting> getAllPostingsByRoomNumber(String theRoomNumber) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
+		beginTransactionIfAllowed(session);
 		Query<Posting> query = session.createQuery("from Posting where roomNumber = :theRoomNumber", Posting.class);
 		query.setParameter("theRoomNumber", theRoomNumber);
 		List<Posting> postList = query.getResultList();
 		session.close();
 		
 		return postList;
+	}
+
+	@Override
+	public void beginTransactionIfAllowed(Session theSession) {
+		if(!theSession.getTransaction().isActive()) {
+			theSession.beginTransaction();	
+		}else {
+			theSession.getTransaction().rollback();
+			theSession.beginTransaction();
+		}
+		
 	}
 
 }

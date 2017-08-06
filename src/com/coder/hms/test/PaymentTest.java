@@ -10,6 +10,7 @@ public class PaymentTest {
 		
 		new PostingExternalWindow("4003");
 
-		new PaymentExternalWindow("5001");
+		PaymentExternalWindow pyw = new PaymentExternalWindow();
+		pyw.setReadyPaymentWindow("1004");
 	}
 }

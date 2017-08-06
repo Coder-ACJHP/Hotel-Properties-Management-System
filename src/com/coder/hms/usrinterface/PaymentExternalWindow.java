@@ -56,9 +56,10 @@ public class PaymentExternalWindow extends JDialog {
 	private JTextArea textPane;
 	private JScrollPane scrollPane;
 	private String roomNumber = "";
-	protected boolean isPayed = false;
+	protected Object[] rowCol = null;
+	private boolean isPayed = false;
 	private JButton btnClear, btnSave;
-	private final NumberFormat formatter;
+	private NumberFormat formatter;
 	private JFormattedTextField priceField;
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> comboBox, currencyCmbBox, titleCmbBox;
@@ -73,7 +74,11 @@ public class PaymentExternalWindow extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public PaymentExternalWindow(String roomText) {
+	public PaymentExternalWindow() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public void setReadyPaymentWindow(String roomText) {
 		
 		this.roomNumber = roomText;
 		
@@ -283,7 +288,7 @@ public class PaymentExternalWindow extends JDialog {
 				
 				payment.setDateTime(date);
 				
-				final Object[] rowCol = {payment.getTitle(), payment.getPaymentType(),
+				rowCol = new Object[] {payment.getTitle(), payment.getPaymentType(),
 								payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()};
 				model.addRow(rowCol);
 				
@@ -293,8 +298,16 @@ public class PaymentExternalWindow extends JDialog {
 				
 				final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-				final float balance = Float.parseFloat(theRoom.getBalance()) + Float.parseFloat(payment.getPrice().toString());
+				
+				//Add the new paid amount to room account
+				final double balance = Double.parseDouble(theRoom.getBalance()) + Double.parseDouble(payment.getPrice().toString());
+				
+				//subtract the paid amount from total debt
+				final double remainingDebt = theRoom.getRemainingDebt() - balance;
+				theRoom.setRemainingDebt(remainingDebt);
 				theRoom.setBalance(balance + "");
+				
+				
 				roomDaoImpl.saveRoom(theRoom);
 			}
 		};
@@ -305,5 +318,19 @@ public class PaymentExternalWindow extends JDialog {
 	
 	public boolean getPaymentStatus() {
 		return this.isPayed;
+	}
+	
+	public Object[] getTableRowData() {
+		if(isPayed) {
+			return this.rowCol;
+		}
+		return null;
+	}
+	
+	public void refreshLabels(final JFormattedTextField formattedTextField) {
+		if(isPayed) {
+			formattedTextField.revalidate();
+			formattedTextField.repaint();
+		}
 	}
 }

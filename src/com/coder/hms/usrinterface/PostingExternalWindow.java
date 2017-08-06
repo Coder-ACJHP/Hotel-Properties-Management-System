@@ -313,8 +313,8 @@ public class PostingExternalWindow extends JDialog {
 				
 				final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-				final double balance = Double.parseDouble(theRoom.getTotalPrice()) + Double.parseDouble(posting.getPrice().toString());
-				theRoom.setTotalPrice(balance + "");
+				final double balance = theRoom.getRemainingDebt() + Double.parseDouble(posting.getPrice().toString());
+				theRoom.setRemainingDebt(balance);
 				roomDaoImpl.saveRoom(theRoom);
 			}
 		};
