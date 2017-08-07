@@ -15,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -165,20 +168,7 @@ public class Main_ChangePassword extends JDialog {
 		setPasswordVisible.setMaximumSize(new Dimension(16, 16));
 		setPasswordVisible.setMinimumSize(new Dimension(16, 16));
 		setPasswordVisible.setBounds(376, 66, 16, 16);
-		setPasswordVisible.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (clicked == 0) {
-					newPasswordField.setEchoChar((char) 0);
-					clicked++;
-				}
-
-				else {
-					newPasswordField.setEchoChar('\u25CF');
-					clicked = 0;
-				}
-			}
-
-		});
+		setPasswordVisible.addMouseListener(setVisible());
 
 		getContentPane().add(setPasswordVisible);
 
@@ -241,6 +231,29 @@ public class Main_ChangePassword extends JDialog {
 		return listener;
 	}
 
+	private MouseListener setVisible() {
+		final MouseAdapter listener = new MouseAdapter() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(clicked != 0) {
+					passwordField.setEchoChar('\u25CF');
+					clicked = 0;
+				}
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (clicked == 0) {
+					passwordField.setEchoChar((char) 0);
+					clicked++;
+				}
+			}
+		};
+		return listener;
+	}
+	
 	public void keyListenerForFields(JPasswordField passwordField) {
 		KeyAdapter myAdapter = new KeyAdapter() {
 

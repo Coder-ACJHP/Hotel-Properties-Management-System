@@ -216,7 +216,7 @@ public class RoomExternalWindow extends JDialog {
 		totalPriceField.setFont(new Font("Arial", Font.BOLD, 15));
 		totalPriceField.setBackground(new Color(240, 128, 128));
 		totalPriceField.setEditable(false);
-		totalPriceField.setBounds(976, 28, 86, 26);
+		totalPriceField.setBounds(982, 28, 86, 26);
 		panel.add(totalPriceField);
 		totalPriceField.setColumns(10);
 
@@ -227,7 +227,7 @@ public class RoomExternalWindow extends JDialog {
 		balanceLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		balanceLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		balanceLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		balanceLbl.setBounds(859, 5, 114, 20);
+		balanceLbl.setBounds(865, 5, 114, 20);
 		panel.add(balanceLbl);
 
 		balanceField = new JFormattedTextField(formatter);
@@ -237,7 +237,7 @@ public class RoomExternalWindow extends JDialog {
 		balanceField.setFont(new Font("Arial", Font.BOLD, 15));
 		balanceField.setBackground(new Color(102, 205, 170));
 		balanceField.setEditable(false);
-		balanceField.setBounds(976, 1, 86, 26);
+		balanceField.setBounds(982, 1, 86, 26);
 		balanceField.setColumns(10);
 		panel.add(balanceField);
 
@@ -248,14 +248,14 @@ public class RoomExternalWindow extends JDialog {
 		totalLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		totalLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		totalLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		totalLbl.setBounds(859, 30, 114, 20);
+		totalLbl.setBounds(865, 30, 114, 20);
 		panel.add(totalLbl);
 		
 		JLabel lblReamainingDebt = new JLabel("Remaining debt");
 		lblReamainingDebt.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblReamainingDebt.setFont(new Font("Arial", Font.BOLD, 13));
 		lblReamainingDebt.setHorizontalAlignment(SwingConstants.CENTER);
-		lblReamainingDebt.setBounds(1065, 4, 114, 16);
+		lblReamainingDebt.setBounds(1071, 4, 114, 16);
 		panel.add(lblReamainingDebt);
 		
 		remainDebtField = new JFormattedTextField(formatter);
@@ -264,7 +264,7 @@ public class RoomExternalWindow extends JDialog {
 		remainDebtField.setFont(new Font("Arial", Font.BOLD, 15));
 		remainDebtField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		remainDebtField.setBackground(Color.ORANGE);
-		remainDebtField.setBounds(1080, 24, 86, 26);
+		remainDebtField.setBounds(1086, 24, 86, 26);
 		remainDebtField.setEditable(false);
 		remainDebtField.setValue(debtVal);
 		panel.add(remainDebtField);
@@ -275,7 +275,7 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.setAutoscrolls(true);
 		reservInfoHolder.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		reservInfoHolder.setBackground(new Color(176, 196, 222));
-		reservInfoHolder.setPreferredSize(new Dimension(220, 10));
+		reservInfoHolder.setPreferredSize(new Dimension(250, 10));
 		getContentPane().add(reservInfoHolder, BorderLayout.EAST);
 		reservInfoHolder.setLayout(null);
 
@@ -298,98 +298,100 @@ public class RoomExternalWindow extends JDialog {
 		});
 		saveChangesBtn.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		saveChangesBtn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		saveChangesBtn.setBounds(2, 285, 218, 29);
+		saveChangesBtn.setBounds(21, 288, 218, 29);
 		reservInfoHolder.add(saveChangesBtn);
 
 		JLabel IdLbl = new JLabel("Id : ");
-		IdLbl.setBounds(12, 42, 46, 14);
+		IdLbl.setBounds(12, 42, 88, 14);
 		reservInfoHolder.add(IdLbl);
 
 		IdField = new JTextField();
 		IdField.setEditable(false);
-		IdField.setBounds(91, 36, 86, 20);
+		IdField.setBounds(101, 36, 86, 20);
 		reservInfoHolder.add(IdField);
 		IdField.setColumns(10);
 
 		JLabel lblNewLabel = new JLabel("Checkin : ");
-		lblNewLabel.setBounds(12, 205, 70, 14);
+		lblNewLabel.setBounds(12, 205, 88, 14);
 		reservInfoHolder.add(lblNewLabel);
 
 		checkinDate = new JDateChooser();
 		checkinDate.setEnabled(false);
 		checkinDate.setDateFormatString("yyyy-MM-dd");
-		checkinDate.setBounds(91, 202, 127, 20);
+		checkinDate.setBounds(101, 202, 138, 20);
 		reservInfoHolder.add(checkinDate);
 
 		JLabel lblCheckoutDate = new JLabel("Checkout : ");
-		lblCheckoutDate.setBounds(12, 233, 70, 14);
+		lblCheckoutDate.setBounds(12, 233, 88, 14);
 		reservInfoHolder.add(lblCheckoutDate);
 
 		checkoutDate = new JDateChooser();
 		checkoutDate.setDateFormatString("yyyy-MM-dd");
-		checkoutDate.setBounds(91, 230, 127, 20);
+		checkoutDate.setBounds(101, 230, 138, 20);
 		reservInfoHolder.add(checkoutDate);
 
 		JLabel lblGroup = new JLabel("Group : ");
-		lblGroup.setBounds(12, 65, 70, 14);
+		lblGroup.setBounds(12, 65, 88, 14);
 		reservInfoHolder.add(lblGroup);
 
 		groupNameField = new JTextField();
 		groupNameField.setEditable(false);
-		groupNameField.setBounds(91, 62, 125, 20);
+		groupNameField.setBounds(101, 62, 138, 20);
 		reservInfoHolder.add(groupNameField);
 		groupNameField.setColumns(10);
 
 		JLabel lblAgency = new JLabel("Agency : ");
-		lblAgency.setBounds(12, 93, 70, 14);
+		lblAgency.setBounds(12, 93, 88, 14);
 		reservInfoHolder.add(lblAgency);
 
 		agencyField = new JTextField();
 		agencyField.setEditable(false);
-		agencyField.setBounds(91, 90, 125, 20);
+		agencyField.setBounds(101, 90, 138, 20);
 		reservInfoHolder.add(agencyField);
 		agencyField.setColumns(10);
 
 		JLabel lblPrice = new JLabel("Price : ");
-		lblPrice.setBounds(12, 121, 70, 14);
+		lblPrice.setBounds(12, 121, 88, 14);
 		reservInfoHolder.add(lblPrice);
 
-		priceField = new JFormattedTextField();
-		priceField.setEditable(false);
-		priceField.setBounds(91, 118, 64, 20);
+		final NumberFormat format = NumberFormat.getInstance();
+		format.setMinimumIntegerDigits(2);
+		priceField = new JFormattedTextField(format);
+		priceField.setEditable(true);
+		priceField.setBounds(101, 118, 64, 20);
 		reservInfoHolder.add(priceField);
 
 		currencyField = new JTextField();
 		currencyField.setEditable(false);
-		currencyField.setBounds(156, 118, 61, 20);
+		currencyField.setBounds(166, 118, 71, 20);
 		reservInfoHolder.add(currencyField);
 		currencyField.setColumns(10);
 
 		JLabel lblCreditType = new JLabel("Credit type : ");
-		lblCreditType.setBounds(12, 150, 70, 14);
+		lblCreditType.setBounds(12, 150, 88, 14);
 		reservInfoHolder.add(lblCreditType);
 
 		creditField = new JTextField();
-		creditField.setBounds(91, 146, 125, 20);
+		creditField.setBounds(101, 146, 138, 20);
 		reservInfoHolder.add(creditField);
 		creditField.setColumns(10);
 
 		JLabel lblHostType = new JLabel("Host type : ");
-		lblHostType.setBounds(12, 177, 70, 14);
+		lblHostType.setBounds(12, 177, 88, 14);
 		reservInfoHolder.add(lblHostType);
 
 		hostTypeField = new JTextField();
-		hostTypeField.setBounds(91, 174, 127, 20);
+		hostTypeField.setBounds(101, 174, 138, 20);
 		reservInfoHolder.add(hostTypeField);
 		hostTypeField.setColumns(10);
 
 		JLabel lblTotalDays = new JLabel("Total days : ");
-		lblTotalDays.setBounds(12, 260, 70, 14);
+		lblTotalDays.setBounds(12, 260, 88, 14);
 		reservInfoHolder.add(lblTotalDays);
 
 		totalDaysField = new JTextField();
 		totalDaysField.setEditable(false);
-		totalDaysField.setBounds(91, 257, 86, 20);
+		totalDaysField.setBounds(101, 257, 86, 20);
 		reservInfoHolder.add(totalDaysField);
 		totalDaysField.setColumns(10);
 
@@ -423,6 +425,7 @@ public class RoomExternalWindow extends JDialog {
 		customerTable = new JTable(customerModel);
 		customerTable.setCellSelectionEnabled(false);
 		customerTable.setColumnSelectionAllowed(false);
+		customerTable.getColumnModel().getColumn(0).setPreferredWidth(10);
 		customerTable.getTableHeader().setDefaultRenderer(THR);
 		customerTable.addMouseListener(openCustomerListener());
 		scrollPane.setViewportView(customerTable);
@@ -462,6 +465,7 @@ public class RoomExternalWindow extends JDialog {
 		payWin.refreshLabels(balanceField);
 		payWin.refreshLabels(remainDebtField);
 		
+		this.setAlwaysOnTop(false);
 		this.setVisible(true);
 	}
 
@@ -480,6 +484,11 @@ public class RoomExternalWindow extends JDialog {
 					}
 
 					else {
+						roomNote.setFont(new Font("Arial", Font.BOLD, 27));
+						roomNote.setForeground(Color.RED);
+						roomNote.setText("Room balance and Remaining debt must be zero!");
+						roomNote.revalidate();
+						roomNote.repaint();
 						JOptionPane.showMessageDialog(null, "All room balances need to be zero!",
 								JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
 						return;
@@ -593,7 +602,7 @@ public class RoomExternalWindow extends JDialog {
 		final double roombalance = Double.parseDouble(theRoom.getBalance());
 		balanceField.setValue(roombalance);
 		
-		remainDebtField.setValue(totalPrice - roombalance);
+		remainDebtField.setValue(theRoom.getRemainingDebt());
 		
 	}
 
@@ -611,6 +620,16 @@ public class RoomExternalWindow extends JDialog {
 		reservation.setTotalDays(Math.abs(totalDayResult));
 		String resultDate = new SimpleDateFormat("yyyy-MM-dd").format(checkoutDate.getDate());
 		reservation.setCheckoutDate(resultDate);
+		
+		final double priceVal = Double.valueOf(priceField.getValue().toString());
+		
+		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(reservation.getTheNumber());
+		foundedRoom.setPrice(priceVal);
+		roomDaoImpl.saveRoom(foundedRoom);
+		
+		if(!roomNote.getText().isEmpty())
+			reservation.setNote(roomNote.getText());
+		
 		reservationDaoImpl.updateReservation(reservation);
 	}
 

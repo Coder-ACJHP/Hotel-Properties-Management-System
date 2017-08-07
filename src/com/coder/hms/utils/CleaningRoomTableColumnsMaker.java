@@ -17,9 +17,8 @@ public class CleaningRoomTableColumnsMaker {
 		
 		for(int i=0; i < index; i++) {
 			column = theTable.getColumnModel().getColumn(i);
-			
 			if (i == 0 || i == 1) {
-		        column.setPreferredWidth(100); 
+		        column.setPreferredWidth(50); 
 		    } else {
 		        column.setPreferredWidth(450);//third column is bigger
 		    }

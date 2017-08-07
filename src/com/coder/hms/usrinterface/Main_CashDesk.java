@@ -13,6 +13,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -24,6 +26,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.coder.hms.daoImpl.PaymentDaoImpl;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -293,9 +298,45 @@ public class Main_CashDesk extends JPanel {
 		scrollPane.setViewportView(table);
 		centerPanel.add(scrollPane, BorderLayout.NORTH);
 	
+		populateAllFields();
 	}
 
 	/*Getters and setters for access this values from another classes*/
+	
+	private void populateAllFields() {
+		
+		final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		final Calendar date = Calendar.getInstance();
+		date.set(Calendar.HOUR_OF_DAY, 0);
+		final String today = sdf.format(date.getTime());
+		
+		String val = paymentDaoImpl.getTotalLiraPaymentsForOneDay(today);
+		tlCashVal =  val == null ? 0.0 : Double.parseDouble(val);
+		tlCashField.setValue(tlCashVal);
+		tlCashField.revalidate();
+		tlCashField.repaint();
+
+		
+		val = paymentDaoImpl.getTotalDollarForOneDay(today);
+		dlCashVal = val == null ? 0.0 : Double.parseDouble(val);
+		dollarCashField.setValue(dlCashVal);
+		dollarCashField.revalidate();
+		dollarCashField.repaint();
+
+		val = paymentDaoImpl.getTotalEuroPaymentsForOneDay(today);
+		euCashVal = val == null ? 0.0 : Double.parseDouble(val);
+		euroCashField.setValue(euCashVal);
+		euroCashField.revalidate();
+		euroCashField.repaint();
+		
+		val = paymentDaoImpl.getTotalPoundPaymentsForOneDay(today);
+		poCashVal =  val == null ? 0.0 : Double.parseDouble(val);
+		poundCashField.setValue(poCashVal);
+		poundCashField.revalidate();
+		poundCashField.repaint();
+	}
 	
 	public double getTlCashVal() {
 		return tlCashVal;

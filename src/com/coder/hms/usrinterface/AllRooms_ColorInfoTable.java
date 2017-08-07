@@ -1,16 +1,16 @@
 package com.coder.hms.usrinterface;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import java.awt.Font;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
 
 public class AllRooms_ColorInfoTable extends JPanel {
 
@@ -21,96 +21,108 @@ public class AllRooms_ColorInfoTable extends JPanel {
 
 	public AllRooms_ColorInfoTable() {
 		
+		setAutoscrolls(true);
+		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(70, 130, 180), null, null, null));
+		
 		final Dimension dimension = new Dimension(187, 215);
 		setToolTipText("Which color, what does it mean.");
-		setPreferredSize(new Dimension(187, 263));
+		setPreferredSize(new Dimension(193, 299));
 		setMaximumSize(dimension);
 		setMinimumSize(dimension);
-		setBackground(SystemColor.window);
+		setBackground(Color.decode("#066d95"));
 		setLayout(null);
 		setOpaque(false);
 		
 		JLabel lblClean = new JLabel("CLEAN");
+		lblClean.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblClean.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblClean.setOpaque(true);
-		lblClean.setBackground(new Color(255, 255, 255));
+		lblClean.setBackground(Color.WHITE);
 		lblClean.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		lblClean.setBounds(1, 37, 184, 30);
+		lblClean.setBounds(4, 41, 184, 30);
 		lblClean.setAutoscrolls(true);
 		lblClean.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblClean);
 		
 		JLabel lblDrty = new JLabel("DIRTY");
+		lblDrty.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblDrty.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblDrty.setOpaque(true);
 		lblDrty.setBackground(Color.decode("#ce1d1d"));
 		lblDrty.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDrty.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		lblDrty.setAutoscrolls(true);
-		lblDrty.setBounds(1, 68, 184, 30);
+		lblDrty.setBounds(4, 73, 184, 30);
 		add(lblDrty);
 		
 		JLabel lblEmpty = new JLabel("EMPTY");
+		lblEmpty.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblEmpty.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblEmpty.setOpaque(true);
 		lblEmpty.setBackground(Color.decode("#afe2fb"));
 		lblEmpty.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmpty.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		lblEmpty.setAutoscrolls(true);
-		lblEmpty.setBounds(1, 130, 184, 30);
+		lblEmpty.setBounds(4, 139, 184, 30);
 		add(lblEmpty);
 		
 		JLabel lblFull = new JLabel("FULL");
+		lblFull.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblFull.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblFull.setOpaque(true);
-		lblFull.setBackground(Color.decode("#f29c63"));
+		lblFull.setBackground(Color.decode("#0051ab"));
 		lblFull.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFull.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		lblFull.setAutoscrolls(true);
-		lblFull.setBounds(1, 162, 184, 30);
+		lblFull.setBounds(4, 172, 184, 30);
 		add(lblFull);
 		
 		JLabel lblBlocked = new JLabel("BLOCKED");
+		lblBlocked.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblBlocked.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblBlocked.setOpaque(true);
-		lblBlocked.setBackground(Color.decode("#e13580"));
+		lblBlocked.setBackground(Color.decode("#eca7d0"));
 		lblBlocked.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBlocked.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		lblBlocked.setAutoscrolls(true);
-		lblBlocked.setBounds(1, 194, 184, 30);
+		lblBlocked.setBounds(4, 205, 184, 30);
 		add(lblBlocked);
 		
 		JLabel lblNewLabel = new JLabel("COLOR INFO TABLE");
+		lblNewLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		lblNewLabel.setAutoscrolls(true);
 		lblNewLabel.setForeground(new Color(255, 255, 255));
 		lblNewLabel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(192, 192, 192), null, null, null));
 		lblNewLabel.setOpaque(true);
-		lblNewLabel.setBackground(new Color(0, 139, 139));
+		lblNewLabel.setBackground(new Color(0, 191, 255));
 		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblNewLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(0, 2, 186, 30);
+		lblNewLabel.setBounds(0, 1, 193, 36);
 		add(lblNewLabel);
 		
 		setSize(dimension);
 		
 		JLabel lblCheckout = new JLabel("CHECKOUT");
+		lblCheckout.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblCheckout.setOpaque(true);
 		lblCheckout.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCheckout.setFont(new Font("Dialog", Font.BOLD, 13));
 		lblCheckout.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		lblCheckout.setBackground(new Color(255, 0, 0));
 		lblCheckout.setAutoscrolls(true);
-		lblCheckout.setBounds(1, 225, 184, 30);
+		lblCheckout.setBounds(5, 238, 184, 30);
 		add(lblCheckout);
 		
 		JLabel lblDnd = new JLabel("DND");
+		lblDnd.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblDnd.setOpaque(true);
 		lblDnd.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDnd.setFont(new Font("Dialog", Font.BOLD, 13));
 		lblDnd.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		lblDnd.setBackground(Color.decode("#ffc300"));
 		lblDnd.setAutoscrolls(true);
-		lblDnd.setBounds(1, 99, 184, 30);
+		lblDnd.setBounds(4, 106, 184, 30);
 		add(lblDnd);
 	}
 }

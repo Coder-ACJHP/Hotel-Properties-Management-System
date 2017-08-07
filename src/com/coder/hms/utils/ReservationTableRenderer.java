@@ -30,6 +30,10 @@ public class ReservationTableRenderer extends DefaultTableCellRenderer {
 				cellComponent.setBackground(Color.decode("#10d6d1"));
 			}
 			
+			else if(column == 0) {
+				cellComponent.setBackground(Color.decode("#effbad"));
+			}
+			
 			else if(column == 2) {
 				String trimmed = colrowVal.toString().substring(0, colrowVal.toString().length()-1);
 				float val = Float.parseFloat(trimmed);

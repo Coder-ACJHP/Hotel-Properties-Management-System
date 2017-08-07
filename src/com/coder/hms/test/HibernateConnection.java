@@ -5,22 +5,26 @@
  */
 package com.coder.hms.test;
 
-import org.hibernate.Session;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-import com.coder.hms.connection.DataSourceFactory;
+import com.coder.hms.daoImpl.PaymentDaoImpl;
 
 public class HibernateConnection {
 
 	public static void main(String[] args) {
 
-			final DataSourceFactory cf = new DataSourceFactory();
+			PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
-			Session session = cf.getSessionFactory().getCurrentSession();
+			Calendar date = Calendar.getInstance();
+			date.set(Calendar.HOUR_OF_DAY, 0);
+			final String today = sdf.format(date.getTime());
 			
-			
-			session.beginTransaction();
-			System.out.println(session.isConnected());
-			session.close();
+			System.out.println(paymentDaoImpl.getTotalDollarForOneDay(today));
+			System.out.println(paymentDaoImpl.getTotalEuroPaymentsForOneDay(today));
+			System.out.println(paymentDaoImpl.getTotalPoundPaymentsForOneDay(today));
+			System.out.println(paymentDaoImpl.getTotalLiraPaymentsForOneDay(today));
 
 		
 	}

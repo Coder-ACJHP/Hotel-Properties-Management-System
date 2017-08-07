@@ -13,4 +13,14 @@ public interface PaymentDAO {
 	public Payment getPaymentById(long Id);
 		
 	public List<Payment> getAllPaymentsByRoomNumber(String roomNumber);
+	
+	public String getTotalDollarForOneDay(String date);
+	
+	public String getTotalLiraPaymentsForOneDay(String date);
+	
+	public String getTotalEuroPaymentsForOneDay(String date);
+	
+	public String getTotalPoundPaymentsForOneDay(String date);
+	
+	public String getTotalCreditPaymentsForOneDay(String date);
 }

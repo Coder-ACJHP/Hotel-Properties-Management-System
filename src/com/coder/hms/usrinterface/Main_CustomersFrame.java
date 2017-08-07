@@ -34,8 +34,8 @@ import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
-import com.coder.hms.utils.ReservationTableRenderer;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.utils.CustomersTableRenderer;
 
 
 public class Main_CustomersFrame extends JPanel {
@@ -53,7 +53,7 @@ public class Main_CustomersFrame extends JPanel {
 					"AGENCY", "GROUP", "CHECK/IN DATE", "CHECK/OUT DATE", "COUNTRY"};
 	private DefaultTableModel model = new DefaultTableModel(colsName, 0);
 	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
-	private final ReservationTableRenderer renderer = new ReservationTableRenderer();
+	private final CustomersTableRenderer renderer = new CustomersTableRenderer();
 
 	public Main_CustomersFrame() {
 		
@@ -124,11 +124,11 @@ public class Main_CustomersFrame extends JPanel {
 		
 		customerTable = new JTable(model);
 		customerTable.setFillsViewportHeight(true);
-		customerTable.setCellSelectionEnabled(true);
+		customerTable.setRowSelectionAllowed(true);
 		
 		THR.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		customerTable.setDefaultRenderer(String.class, renderer);
+		customerTable.setDefaultRenderer(Object.class, renderer);
 		customerTable.getTableHeader().setDefaultRenderer(THR);
 		customerTable.setFont(new Font("Dialog", Font.PLAIN, 14));
 		customerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

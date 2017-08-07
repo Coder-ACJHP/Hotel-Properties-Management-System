@@ -151,20 +151,26 @@ public class Reserved_CheckinWin extends JDialog implements ActionListener {
 		if(customersList.size() == 1) {
 			customerFormOne.setFirstNameValue(customersList.get(0).getFirstName());
 			customerFormOne.setLastNameValue(customersList.get(0).getLastName());
+			customerFormOne.setCustomerCountryCmbBoxValue(customersList.get(0).getCountry());
 		}
 		else if(customersList.size() == 2) {
 			customerFormOne.setFirstNameValue(customersList.get(0).getFirstName());
 			customerFormOne.setLastNameValue(customersList.get(0).getLastName());
+			customerFormOne.setCustomerCountryCmbBoxValue(customersList.get(0).getCountry());
 			customerFormTwo.setFirstNameValue(customersList.get(1).getFirstName());
 			customerFormTwo.setLastNameValue(customersList.get(1).getLastName());
+			customerFormTwo.setCustomerCountryCmbBoxValue(customersList.get(1).getCountry());
 		}
 		else {
 			customerFormOne.setFirstNameValue(customersList.get(0).getFirstName());
 			customerFormOne.setLastNameValue(customersList.get(0).getLastName());
+			customerFormOne.setCustomerCountryCmbBoxValue(customersList.get(0).getCountry());
 			customerFormTwo.setFirstNameValue(customersList.get(1).getFirstName());
 			customerFormTwo.setLastNameValue(customersList.get(1).getLastName());
+			customerFormTwo.setCustomerCountryCmbBoxValue(customersList.get(1).getCountry());
 			customerFormThree.setFirstNameValue(customersList.get(2).getFirstName());
 			customerFormThree.setLastNameValue(customersList.get(2).getLastName());
+			customerFormThree.setCustomerCountryCmbBoxValue(customersList.get(2).getCountry());
 		}
 	}
 	

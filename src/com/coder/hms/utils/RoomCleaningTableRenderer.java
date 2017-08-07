@@ -23,12 +23,16 @@ public class RoomCleaningTableRenderer extends DefaultTableCellRenderer {
 		String colrowVal = String.valueOf(value);
 
 		if(isSelected || hasFocus) {
-			cellComponent.setBackground(table.getBackground());
+			cellComponent.setBackground(Color.decode("#10d6d1"));
 		}
 		
 		else {
 			
-			if (colrowVal.equalsIgnoreCase("CLEAN")) {
+			if(column == 0) {
+				cellComponent.setBackground(Color.decode("#effbad"));
+			}
+			
+			else if (colrowVal.equalsIgnoreCase("CLEAN")) {
 				cellComponent.setBackground(Color.decode("#afe2fb"));
 			}
 
@@ -40,12 +44,8 @@ public class RoomCleaningTableRenderer extends DefaultTableCellRenderer {
 				cellComponent.setBackground(Color.decode("#ffc300"));
 			}
 			
-			else if (colrowVal.contains("00")) {
-				cellComponent.setBackground(Color.decode("#bfaec9"));
-			}
-			
 			else {
-				cellComponent.setBackground(Color.decode("#ffeec9"));
+				cellComponent.setBackground(Color.decode("#f4a0c4"));
 			}
 
 		}

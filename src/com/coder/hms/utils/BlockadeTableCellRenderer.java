@@ -33,8 +33,11 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 			
 		}else {
 			
+			if(column == 0) {
+				cellComponent.setBackground(Color.decode("#effbad"));
+			}
 			
-			if(colrowVal.equalsIgnoreCase("BUSY") || colrowVal.equalsIgnoreCase("BLOCKED")) {
+			else if(colrowVal.equalsIgnoreCase("FULL") || colrowVal.equalsIgnoreCase("BLOCKED")) {
 				cellComponent.setBackground(Color.decode("#f9d692"));
 			}
 			
@@ -44,10 +47,6 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 			
 			else if(colrowVal.equalsIgnoreCase("SINGLE") ||colrowVal.equalsIgnoreCase("DOUBLE") || colrowVal.equalsIgnoreCase("TWIN") || colrowVal.equalsIgnoreCase("TRIPLE")) {
 				cellComponent.setBackground(Color.decode("#f4a0c4"));
-			}
-			
-			else if(colrowVal.contains("00")) {
-				cellComponent.setBackground(Color.decode("#effbad"));
 			}
 			
 			else {

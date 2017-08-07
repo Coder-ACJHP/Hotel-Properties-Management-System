@@ -98,9 +98,9 @@ public class Main_AllRooms {
 		
 		roomList = roomDaoImpl.getAllRooms();
 
-		final MatteBorder cleanBorder = BorderFactory.createMatteBorder(10, 0, 0, 0, Color.WHITE);
-		final MatteBorder dndBorder = BorderFactory.createMatteBorder(10, 0, 0, 0, Color.decode("#ffc300"));
-		final MatteBorder dirtyBorder = BorderFactory.createMatteBorder(10, 0, 0, 0, Color.decode("#ce1d1d"));
+		final MatteBorder cleanBorder = BorderFactory.createMatteBorder(11, 0, 0, 0, Color.WHITE);
+		final MatteBorder dndBorder = BorderFactory.createMatteBorder(11, 0, 0, 0, Color.decode("#ffc300"));
+		final MatteBorder dirtyBorder = BorderFactory.createMatteBorder(11, 0, 0, 0, Color.decode("#ce1d1d"));
 
 		final int roomCount =  hotelDaoImpl.getHotel().getRoomCapacity();
 		
@@ -108,7 +108,7 @@ public class Main_AllRooms {
 			++lastNum;
 			roomBtn = new JButton();
 
-			roomBtn.setFont(new Font("Arial", Font.BOLD, 12));
+			roomBtn.setFont(new Font("Arial", Font.BOLD, 14));
 			roomBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 			roomBtn.setText(counter + "" + lastNum);
 			roomBtn.setBorderPainted(true);
@@ -121,7 +121,7 @@ public class Main_AllRooms {
 					
 					roomBtn.setToolTipText("<html>"+"Type : " +room.getType() +"<br>"
 											+"Number : " + room.getNumber() +"<br>"
-											+"Status : " + room.getUsageStatus() + "<br>"
+											+"Status : " + room.getUsageStatus() +" / "+ room.getCleaningStatus() + "<br>"
 											+"Person Count : " + room.getPersonCount() + "<br>"
 											+"Group Name : " + room.getCustomerGrupName() +"</html>");
 
@@ -149,13 +149,14 @@ public class Main_AllRooms {
 								if(theReservation.getCheckoutDate().equals(innerDate)) {
 									roomBtn.setBackground(Color.decode("#990033"));
 								}else {
-									roomBtn.setBackground(Color.decode("#f29c63"));
+									roomBtn.setForeground(Color.WHITE);
+									roomBtn.setBackground(Color.decode("#0051ab"));
 								}
 							}
 							
 							else if(ROOM_STATUS.equals("BLOCKED")) {
 								if(theReservation.getCheckinDate().equals(innerDate)) {
-									roomBtn.setBackground(Color.decode("#ce00a6"));
+									roomBtn.setBackground(Color.decode("#eca7d0"));
 								}
 							}
 							else {

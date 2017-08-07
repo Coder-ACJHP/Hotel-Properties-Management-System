@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
@@ -66,6 +67,7 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JDateChooser checkinDateChooser, checkoutDateChooser;
+	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	public final Internal_CustomerForm customerFormOne = new Internal_CustomerForm();
 	public final Internal_CustomerForm customerFormTwo = new Internal_CustomerForm();
@@ -324,6 +326,112 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 		return spinnerListener;
 	}
 
+	
+	private PropertyChangeListener chechkDates() {
+		final PropertyChangeListener listener = new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				
+				// here leave ancestors empty because we need dates not ancestor
+				if (evt.getPropertyName().equals("ancestor")) {
+					return;
+				}
+				
+				boolean showed = false;
+				startDate = checkinDateChooser.getDate();
+				endDate = checkoutDateChooser.getDate();
+
+				if (startDate != null && endDate != null) {
+					// add to calendar to be able get day of date
+					// and compare
+					Calendar cs = Calendar.getInstance();
+					cs.setTime(startDate);
+					Calendar ce = Calendar.getInstance();
+					ce.setTime(endDate);
+
+					// compare if start date greater than end date
+					if (cs.after(ce) && !showed) {
+						JOptionPane.showMessageDialog(null, "Start date is after end date!",
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+						showed = true;
+					}
+					// or both is same date
+					else if (cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
+						JOptionPane.showMessageDialog(null,
+								"Start date equals end date!\nPlease be sure you're choose right date.",
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+						showed = true;
+					}
+					// other odds
+					else {
+						value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
+						totalDaysField.setText(Math.abs(value) + "");
+						totalDaysField.revalidate();
+						totalDaysField.repaint();
+					}
+
+				}
+			}
+		};
+		return listener;
+	}
+	
+	public ItemListener currencyActionListener() {
+		ItemListener itemListener = new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent event) {
+
+				final String choosed = currencyCmbBox.getSelectedItem().toString();
+				NumberFormatter nf = null;
+				DefaultFormatterFactory dfc = null;
+				priceField.removeAll();
+				
+					switch (choosed) {
+					case "TURKISH LIRA":
+						
+						formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
+						nf = new NumberFormatter(formatter);
+						dfc = new DefaultFormatterFactory(nf);
+						priceField.setFormatterFactory(dfc);
+						priceField.revalidate();
+						priceField.repaint();
+						break;
+					case "DOLLAR":
+						formatter.setCurrency(Currency.getInstance(Locale.US));
+						nf = new NumberFormatter(formatter);
+						dfc = new DefaultFormatterFactory(nf);
+						priceField.setFormatterFactory(dfc);
+						priceField.revalidate();
+						priceField.repaint();
+						break;
+					case "EURO":
+						formatter.setCurrency(Currency.getInstance(Locale.FRANCE));
+						nf = new NumberFormatter(formatter);
+						dfc = new DefaultFormatterFactory(nf);
+						priceField.setFormatterFactory(dfc);
+						priceField.revalidate();
+						priceField.repaint();
+						break;
+					case "POUND":
+						formatter.setCurrency(Currency.getInstance(Locale.UK));
+						nf = new NumberFormatter(formatter);
+						dfc = new DefaultFormatterFactory(nf);
+						priceField.setFormatterFactory(dfc);
+						priceField.revalidate();
+						priceField.repaint();
+						break;
+					default:
+						break;
+					}
+					repaint();
+			}
+
+		};
+		return itemListener;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -347,14 +455,15 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 		//2- Create new reservation for walkin and populate it from from fields.	
 		Reservation newReservation = new Reservation();
 		newReservation.setAgency(agencyCmbBox.getSelectedItem().toString());
-		newReservation.setCheckinDate(checkinDateChooser.getDate().toString());
-		newReservation.setCheckoutDate(checkoutDateChooser.getDate().toString());
+		newReservation.setCheckinDate(sdf.format(checkinDateChooser.getDate()));
+		newReservation.setCheckoutDate(sdf.format(checkoutDateChooser.getDate()));
 		newReservation.setTheNumber(checkingRoom.getNumber());
 		newReservation.setCreditType(creditTypeCmbBox.getSelectedItem().toString());
 		newReservation.setGroupName(groupNameField.getText().trim());
 		newReservation.setHostType(hostTypeCmbBox.getSelectedItem().toString());
-		newReservation.setTotalDays(value);
+		newReservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
 		newReservation.setBookStatus("GUARANTEE");
+		newReservation.setIsCheckedIn("YES");
 		reservDaoImpl.saveReservation(newReservation);
 		
 		System.out.println("New Reservation : " + newReservation.getId() + "saved successfully.");
@@ -365,6 +474,8 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 		//4- Create new room(it will update) and fill it with customers and reservation infos.
 
 		checkingRoom.setNumber(ownRoomNumber);
+		final String val = priceField.getValue().toString();
+		priceValue = Double.valueOf(val);
 		checkingRoom.setPrice(priceValue);	
 		checkingRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
 		checkingRoom.setCustomerGrupName(groupNameField.getText().trim());
@@ -373,6 +484,7 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 		
 		final double lastPrice = checkingRoom.getPrice() * newReservation.getTotalDays();
 		checkingRoom.setTotalPrice(lastPrice + "");
+		checkingRoom.setRemainingDebt(lastPrice);
 		
 		 Customer customerOne;
 		 Customer customerTwo;
@@ -491,110 +603,5 @@ public class Walkin_CheckinWin extends JDialog implements ActionListener {
 				}
 			});
 			
-	}
-	
-	private PropertyChangeListener chechkDates() {
-		final PropertyChangeListener listener = new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				
-				// here leave ancestors empty because we need dates not ancestor
-				if (evt.getPropertyName().equals("ancestor")) {
-					return;
-				}
-				
-				boolean showed = false;
-				startDate = checkinDateChooser.getDate();
-				endDate = checkoutDateChooser.getDate();
-
-				if (startDate != null && endDate != null) {
-					// add to calendar to be able get day of date
-					// and compare
-					Calendar cs = Calendar.getInstance();
-					cs.setTime(startDate);
-					Calendar ce = Calendar.getInstance();
-					ce.setTime(endDate);
-
-					// compare if start date greater than end date
-					if (cs.after(ce) && !showed) {
-						JOptionPane.showMessageDialog(null, "Start date is after end date!",
-								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-						showed = true;
-					}
-					// or both is same date
-					else if (cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
-						JOptionPane.showMessageDialog(null,
-								"Start date equals end date!\nPlease be sure you're choose right date.",
-								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-						showed = true;
-					}
-					// other odds
-					else {
-						value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
-						totalDaysField.setText(Math.abs(value) + "");
-						totalDaysField.revalidate();
-						totalDaysField.repaint();
-					}
-
-				}
-			}
-		};
-		return listener;
-	}
-	
-	public ItemListener currencyActionListener() {
-		ItemListener itemListener = new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent event) {
-
-				final String choosed = currencyCmbBox.getSelectedItem().toString();
-				NumberFormatter nf = null;
-				DefaultFormatterFactory dfc = null;
-				priceField.removeAll();
-				
-					switch (choosed) {
-					case "TURKISH LIRA":
-						
-						formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "DOLLAR":
-						formatter.setCurrency(Currency.getInstance(Locale.US));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "EURO":
-						formatter.setCurrency(Currency.getInstance(Locale.FRANCE));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "POUND":
-						formatter.setCurrency(Currency.getInstance(Locale.UK));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					default:
-						break;
-					}
-					repaint();
-			}
-
-		};
-		return itemListener;
 	}
 }

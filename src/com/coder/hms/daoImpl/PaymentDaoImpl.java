@@ -76,6 +76,61 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	}
 
 	@Override
+	public String getTotalDollarForOneDay(String date) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'DOLLAR' and dateTime >= :date", String.class);
+		query.setParameter("date", date);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	@Override
+	public String getTotalLiraPaymentsForOneDay(String date) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
+		query.setParameter("date", date);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	@Override
+	public String getTotalEuroPaymentsForOneDay(String date) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'EURO' and dateTime >= :date", String.class);
+		query.setParameter("date", date);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	@Override
+	public String getTotalPoundPaymentsForOneDay(String date) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'POUND' and dateTime >= :date", String.class);
+		query.setParameter("date", date);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	@Override
+	public String getTotalCreditPaymentsForOneDay(String date) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Payment where paymentType = 'CASH PAYMENT', currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
+		query.setParameter("date", date);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+	
+	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
 			theSession.beginTransaction();	

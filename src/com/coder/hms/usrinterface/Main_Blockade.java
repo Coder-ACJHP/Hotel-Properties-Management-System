@@ -178,7 +178,7 @@ public class Main_Blockade extends JPanel {
 		
 		model = new DefaultTableModel(vecColsName, 0);
 		
-		cellRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+		cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		THR.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		table = new JTable(model);
@@ -187,6 +187,9 @@ public class Main_Blockade extends JPanel {
 		table.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
+		table.getColumnModel().getColumn(0).setPreferredWidth(25);
+		table.getColumnModel().getColumn(1).setPreferredWidth(25);
+		table.getColumnModel().getColumn(2).setPreferredWidth(25);
 		table.setFont(new Font("Dialog", Font.PLAIN, 14));
 		table.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		

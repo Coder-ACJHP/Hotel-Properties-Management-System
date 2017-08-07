@@ -322,13 +322,12 @@ public class NewReservExternalWindow extends JDialog {
 		SaveBtn = new JButton("SAVE");
 		SaveBtn.setMaximumSize(new Dimension(120, 23));
 		SaveBtn.setMinimumSize(new Dimension(120, 23));
+		SaveBtn.setMnemonic(KeyEvent.VK_ENTER);
 		SaveBtn.setToolTipText("Press ALT + ENTER keys for shortcut");
-		SaveBtn.setSelectedIcon(null);
 		SaveBtn.setIcon(new ImageIcon(NewReservExternalWindow.class.getResource("/com/coder/hms/icons/reserv_save.png")));
 		SaveBtn.setForeground(new Color(0, 191, 255));
 		SaveBtn.setOpaque(true);
 		SaveBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		SaveBtn.setMnemonic(KeyEvent.VK_ENTER);
 		SaveBtn.setPreferredSize(new Dimension(130, 40));
 		SaveBtn.setFont(new Font("Verdana", Font.BOLD, 15));
 		SaveBtn.addActionListener(newReservAction());
@@ -482,8 +481,6 @@ public class NewReservExternalWindow extends JDialog {
 			earlyPaymetModel.setRowCount(0);
 			earlyPaymetModel.addRow(payWin.getTableRowData());
 		}
-
-		
 	}
 	
 	private PropertyChangeListener chechkDates() {
@@ -580,8 +577,10 @@ public class NewReservExternalWindow extends JDialog {
 				final Reservation lastReserv = rImpl.getLastReservation();
 				theRoom.setReservationId(lastReserv.getId());
 				
-				final double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
-				theRoom.setTotalPrice(lastPrice + "");
+				double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
+				theRoom.setTotalPrice(String.valueOf(lastPrice));
+				
+				lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
 				theRoom.setRemainingDebt(lastPrice);
 				
 				roomDaoImpl.saveRoom(theRoom);

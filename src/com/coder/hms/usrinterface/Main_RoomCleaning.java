@@ -114,10 +114,13 @@ public class Main_RoomCleaning extends JPanel {
 
 		table.setModel(model);
 		headerRenderer = new CustomTableHeaderRenderer();
+		headerRenderer.setVerticalAlignment(SwingConstants.CENTER);
+		headerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.getTableHeader().setDefaultRenderer(headerRenderer);
 		cleaningRoomTableColumn = new CleaningRoomTableColumnsMaker();
 		cleaningRoomTableColumn.setHeadersWidth(table);
 		renderer.setHorizontalAlignment(SwingConstants.CENTER);
+		renderer.setVerticalAlignment(SwingConstants.CENTER);
 		table.setDefaultRenderer(Object.class, renderer);
 		scrollPane.setViewportView(table);
 	}

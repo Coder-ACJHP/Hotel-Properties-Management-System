@@ -205,6 +205,8 @@ public class ExchangeExternalWindow extends JDialog {
 		String trimmed = "";
 		String choosen = comboBox.getSelectedItem().toString();
 		
+		model.setRowCount(0);
+		
 		if(choosen.contains("DOLLAR")) {
 			
 			currency = rates.getUSDToTRYLiveCurrency();

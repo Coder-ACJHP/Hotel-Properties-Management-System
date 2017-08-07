@@ -17,6 +17,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -45,9 +46,11 @@ public class LoginExternalWindow extends JDialog {
 	/**
 	 * 
 	 */
-	private JLabel infoLabel;
 	private String newDate;
+	private int clicked = 0;
+	private JLabel infoLabel;
 	private JTextField userNameField;
+	private JButton setPasswordVisible;
 	private JPasswordField passwordField;
 	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
@@ -128,6 +131,19 @@ public class LoginExternalWindow extends JDialog {
 		passwordLabel.setLabelFor(passwordField);
 		getContentPane().add(passwordField);
 		
+		setPasswordVisible = new JButton("");
+		setPasswordVisible.setHorizontalTextPosition(SwingConstants.CENTER);
+		setPasswordVisible.setToolTipText("Make password visible");
+		setPasswordVisible.setOpaque(false);
+		setPasswordVisible
+				.setIcon(new ImageIcon(Main_ChangePassword.class.getResource("/com/coder/hms/icons/login_show_pwd.png")));
+		setPasswordVisible.setPreferredSize(new Dimension(16, 16));
+		setPasswordVisible.setMaximumSize(new Dimension(16, 16));
+		setPasswordVisible.setMinimumSize(new Dimension(16, 16));
+		setPasswordVisible.setBounds(373, 124, 16, 16);
+		setPasswordVisible.addMouseListener(setVisible());
+		getContentPane().add(setPasswordVisible);
+		
 		//add listener for both fields to clear info label when key typed
 		keyListenerForFields(userNameField, passwordField);
 
@@ -135,7 +151,7 @@ public class LoginExternalWindow extends JDialog {
 		*	need to new panel for adding our buttons
 		*/
 		final JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setBounds(112, 168, 277, 49);
+		buttonsPanel.setBounds(112, 159, 277, 49);
 		buttonsPanel.setForeground(new Color(95, 158, 160));
 		buttonsPanel.setBackground(Color.decode("#066d95"));
 		getContentPane().add(buttonsPanel);
@@ -188,8 +204,8 @@ public class LoginExternalWindow extends JDialog {
 		infoLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		infoLabel.setAutoscrolls(true);
 		infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		infoLabel.setFont(new Font("Consolas", infoLabel.getFont().getStyle(), 15));
-		infoLabel.setBounds(1, 218, 428, 18);
+		infoLabel.setFont(new Font("Consolas", infoLabel.getFont().getStyle() | Font.BOLD, 15));
+		infoLabel.setBounds(1, 213, 428, 24);
 		getContentPane().add(infoLabel);
 		
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -273,7 +289,8 @@ public class LoginExternalWindow extends JDialog {
 								new MainFrame();
 								
 							}else {
-								infoLabel.setText("INFO :BAD CREDENTIALS! Sorry username and password does'nt match !");
+								infoLabel.setForeground(new Color(220, 20, 60));
+								infoLabel.setText("INFO :Username and password doesn't match !!");
 							}
 					}else {
 						//change label font color and warn the user.						
@@ -297,4 +314,26 @@ public class LoginExternalWindow extends JDialog {
 		jButton.addActionListener(myListner);
 	}
 
+	private MouseListener setVisible() {
+		final MouseAdapter listener = new MouseAdapter() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(clicked != 0) {
+					passwordField.setEchoChar('\u25CF');
+					clicked = 0;
+				}
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (clicked == 0) {
+					passwordField.setEchoChar((char) 0);
+					clicked++;
+				}
+			}
+		};
+		return listener;
+	}
 }

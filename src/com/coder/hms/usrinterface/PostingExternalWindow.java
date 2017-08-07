@@ -38,6 +38,8 @@ import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.GetLiveCurrencyRates;
+
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.JTable;
@@ -63,6 +65,7 @@ public class PostingExternalWindow extends JDialog {
 	private JFormattedTextField priceField;
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> currencyCmbBox, titleCmbBox, typeCmbBox;
+	private final GetLiveCurrencyRates rates = new GetLiveCurrencyRates();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] POST_COLMNS = {"DOCUMENT NO", "TYPE", "TITLE", "PRICE", "CURRENCY", "EXPLANATION, DATE TIME"};
@@ -313,8 +316,47 @@ public class PostingExternalWindow extends JDialog {
 				
 				final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-				final double balance = theRoom.getRemainingDebt() + Double.parseDouble(posting.getPrice().toString());
-				theRoom.setRemainingDebt(balance);
+				
+				//here we have to check payment currency if other than TL thats mean to exchange.
+				final String choosen = currencyCmbBox.getSelectedItem().toString();
+				double inputVal = Double.valueOf(posting.getPrice().toString());
+				
+				double balance = 0.0;
+				double parsedVal = 0.0;
+				String currency  = "";
+				String trimmed = "";
+				
+				if(choosen.contains("DOLLAR")) {
+					
+					currency = rates.getUSDToTRYLiveCurrency();
+					trimmed  = currency.substring(currency.length() -6, currency.length());
+					parsedVal = Double.parseDouble(trimmed);
+					balance = parsedVal * inputVal;
+					
+				}
+				else if(choosen.contains("EURO")) {
+					
+					currency = rates.getEURToTRYLiveCurrency();
+					trimmed  = currency.substring(currency.length() -6, currency.length());
+					parsedVal = Double.parseDouble(trimmed);
+					balance = parsedVal * inputVal;
+					
+				}
+				else if(choosen.contains("POUND")) {
+					
+					currency = rates.getGBPToTRYLiveCurrency();
+					trimmed  = currency.substring(currency.length() -6, currency.length());
+					parsedVal = Double.parseDouble(trimmed);
+					balance = parsedVal * inputVal;
+					
+				}
+				else {
+				//Add the new paid amount to room account
+					balance = inputVal;
+				}
+				
+				final double remainingDebt = theRoom.getRemainingDebt() + balance;
+				theRoom.setRemainingDebt(remainingDebt);
 				roomDaoImpl.saveRoom(theRoom);
 			}
 		};
