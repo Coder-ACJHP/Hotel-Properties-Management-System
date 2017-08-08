@@ -303,7 +303,6 @@ public class PaymentExternalWindow extends JDialog {
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
 				
 				//here we have to check payment currency if other than TL thats mean to exchange.
-				String choosen = currencyCmbBox.getSelectedItem().toString();
 				double inputVal = Double.valueOf(payment.getPrice().toString());
 				
 				double balance = 0.0;
@@ -311,40 +310,35 @@ public class PaymentExternalWindow extends JDialog {
 				String currency  = "";
 				String trimmed = "";
 				
-				if(choosen.contains("DOLLAR")) {
-					
+				switch (currencyCmbBox.getItemAt(currencyCmbBox.getSelectedIndex())) {
+				
+				case "TURKISH LIRA":
+					balance = inputVal;
+					break;
+				case "DOLLAR":
 					currency = rates.getUSDToTRYLiveCurrency();
 					trimmed  = currency.substring(currency.length() -6, currency.length());
 					parsedVal = Double.parseDouble(trimmed);
 					balance = parsedVal * inputVal;
-					
-				}
-				else if(choosen.contains("EURO")) {
-					
+					break;
+				case "EURO":
 					currency = rates.getEURToTRYLiveCurrency();
 					trimmed  = currency.substring(currency.length() -6, currency.length());
 					parsedVal = Double.parseDouble(trimmed);
 					balance = parsedVal * inputVal;
-					
-				}
-				else if(choosen.contains("POUND")) {
-					
+					break;
+				case "POUND":
 					currency = rates.getGBPToTRYLiveCurrency();
 					trimmed  = currency.substring(currency.length() -6, currency.length());
 					parsedVal = Double.parseDouble(trimmed);
 					balance = parsedVal * inputVal;
-					
+					break;
+				default:
+					break;
 				}
-				else {
-				//Add the new paid amount to room account
-					balance = Double.parseDouble(theRoom.getBalance()) + inputVal;
-				}
-				//subtract the paid amount from total debt
-				final double remainingDebt = theRoom.getRemainingDebt() - balance;
-				theRoom.setRemainingDebt(remainingDebt);
-				theRoom.setBalance(balance + "");
 				
-				
+				final double totalBalance = Double.parseDouble(theRoom.getBalance()) + balance;
+				theRoom.setBalance(totalBalance + "");
 				roomDaoImpl.saveRoom(theRoom);
 			}
 		};
@@ -363,11 +357,5 @@ public class PaymentExternalWindow extends JDialog {
 		}
 		return null;
 	}
-	
-	public void refreshLabels(final JFormattedTextField formattedTextField) {
-		if(isPayed) {
-			formattedTextField.revalidate();
-			formattedTextField.repaint();
-		}
-	}
+
 }

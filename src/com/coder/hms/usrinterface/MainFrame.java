@@ -28,9 +28,9 @@ public class MainFrame extends JFrame {
 	 * 
 	 */
 	private JPanel mainPanel;
-	private static final long serialVersionUID = 1L;
 	private Main_MenuBar customMenuBar;
 	private static SessionBean sessionBean;
+	private static final long serialVersionUID = 1L;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
@@ -44,7 +44,8 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
-		sessionBean = SessionBean.getSESSION_BEAN();
+		sessionBean = SessionBean.getSESSION_BEAN();		
+		
 		// get operation system name to add icon (if windows to taskbar else for dock)
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());

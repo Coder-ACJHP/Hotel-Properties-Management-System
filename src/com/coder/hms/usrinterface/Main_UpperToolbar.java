@@ -27,13 +27,14 @@ import javax.swing.border.SoftBevelBorder;
 public class Main_UpperToolbar {
 
 	private JPanel panel;
+	private Main_Audit audit;
 	private Main_AllRooms theRooms;
 	private Main_Blockade blockadeFrame;
 	private Main_CustomersFrame customersFrame;
 	private Main_CashDesk cashdesk; 
 	private Main_Reservations rezervFrame;
 	private Main_RoomCleaning cleaningFrame;
-	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn, refreshBtn;
+	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn, auditBtn;
 
 	public JPanel getJPanel() {
 		return this.panel;
@@ -125,15 +126,15 @@ public class Main_UpperToolbar {
 		separator.setPreferredSize(new Dimension(10, 20));
 		panel.add(separator);
 		
-		refreshBtn = new JButton("Refresh");
-		refreshBtn.setIcon(new ImageIcon(Main_UpperToolbar.class.getResource("/com/coder/hms/icons/cleaning-refresh.png")));
-		refreshBtn.setPreferredSize(new Dimension(200, 40));
-		refreshBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		refreshBtn.setFont(new Font("Arial", Font.BOLD, 12));
-		refreshBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		refreshBtn.setBounds(905, 7, 137, 40);
-		refreshBtn.addActionListener(UpperToolbarActionListener(mainPanel));
-		panel.add(refreshBtn);
+		auditBtn = new JButton("Audit");
+		auditBtn.setIcon(new ImageIcon(Main_UpperToolbar.class.getResource("/com/coder/hms/icons/main_audit.png")));
+		auditBtn.setPreferredSize(new Dimension(200, 40));
+		auditBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+		auditBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		auditBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		auditBtn.setBounds(905, 7, 137, 40);
+		auditBtn.addActionListener(UpperToolbarActionListener(mainPanel));
+		panel.add(auditBtn);
 		
 
 	}
@@ -208,10 +209,12 @@ public class Main_UpperToolbar {
 					mainPanel.add(cashdesk, BorderLayout.CENTER);
 				}
 				
-				else if (command.equalsIgnoreCase("Refresh")) {
+				else if (command.equalsIgnoreCase("Audit")) {
+					audit = new Main_Audit();
 					mainPanel.removeAll();
 					mainPanel.revalidate();
 					mainPanel.repaint();
+					mainPanel.add(audit, BorderLayout.CENTER);
 
 				}
 				

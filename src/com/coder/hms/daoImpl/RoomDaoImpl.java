@@ -94,7 +94,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 	public void setRoomCheckedOut(String num) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		final String HQL = "UPDATE Room SET cleaningStatus = 'CLEAN', usageStatus = 'EMPTY', personCount = 0, price = 0, "
+		final String HQL = "UPDATE Room SET usageStatus = 'EMPTY', personCount = 0, price = 0, "
 				+ "totalPrice = 0, balance = '0', customerGrupName = '', currency = '', remainingDebt = 0, ReservationId = 0 where number=:num";
 		Query<?> query = session.createQuery(HQL);
 		query.setParameter("num", num);

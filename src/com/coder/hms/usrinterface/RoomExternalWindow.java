@@ -79,6 +79,7 @@ public class RoomExternalWindow extends JDialog {
 	private final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
 	final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
 	private final PaymentExternalWindow payWin = new PaymentExternalWindow();
+	private final PostingExternalWindow postWin = new PostingExternalWindow();
 	private JButton postingBtn, paymentBtn, saveChangesBtn, checkoutBtn;
 	final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -157,7 +158,10 @@ public class RoomExternalWindow extends JDialog {
 
 					@Override
 					public void run() {
-						new PostingExternalWindow(roomText);
+						postWin.setReadyPaymentWindow(roomText);
+						if (postWin.getPostingStatus()) {
+							populateReservationDetail();
+						}
 						populatePostPayTable(postPayModel);
 					}
 				});
@@ -179,6 +183,9 @@ public class RoomExternalWindow extends JDialog {
 					@Override
 					public void run() {
 						payWin.setReadyPaymentWindow(roomText);
+						if (payWin.getPaymentStatus()) {
+							populateReservationDetail();
+						}
 						populatePostPayTable(postPayModel);
 					}
 				});
@@ -250,14 +257,14 @@ public class RoomExternalWindow extends JDialog {
 		totalLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalLbl.setBounds(865, 30, 114, 20);
 		panel.add(totalLbl);
-		
+
 		JLabel lblReamainingDebt = new JLabel("Remaining debt");
 		lblReamainingDebt.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblReamainingDebt.setFont(new Font("Arial", Font.BOLD, 13));
 		lblReamainingDebt.setHorizontalAlignment(SwingConstants.CENTER);
 		lblReamainingDebt.setBounds(1071, 4, 114, 16);
 		panel.add(lblReamainingDebt);
-		
+
 		remainDebtField = new JFormattedTextField(formatter);
 		remainDebtField.setAlignmentY(Component.TOP_ALIGNMENT);
 		remainDebtField.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -454,6 +461,7 @@ public class RoomExternalWindow extends JDialog {
 		payPostTable = new JTable(postPayModel);
 		payPostTable.setDefaultRenderer(Object.class, payPostRenderer);
 		payPostTable.setCellSelectionEnabled(false);
+		payPostTable.setRowSelectionAllowed(true);
 		payPostTable.setAutoCreateRowSorter(true);
 		payPostTable.getTableHeader().setDefaultRenderer(THR);
 		postableScrollPane.setViewportView(payPostTable);
@@ -461,10 +469,7 @@ public class RoomExternalWindow extends JDialog {
 		populateReservationDetail();
 
 		custWindow.setActionListener(saveChanges());
-		
-		payWin.refreshLabels(balanceField);
-		payWin.refreshLabels(remainDebtField);
-		
+
 		this.setAlwaysOnTop(false);
 		this.setVisible(true);
 	}
@@ -516,7 +521,7 @@ public class RoomExternalWindow extends JDialog {
 
 		final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
 
-		float finalBalance = 0;
+		double finalBalance = 0.0;
 
 		if (type.equalsIgnoreCase("System")) {
 
@@ -525,8 +530,11 @@ public class RoomExternalWindow extends JDialog {
 
 			if (result) {
 
-				finalBalance = Float.parseFloat(theRoom.getTotalPrice()) - Float.parseFloat(amount);
+				finalBalance = Double.parseDouble(theRoom.getTotalPrice()) - Double.parseDouble(amount);
 				theRoom.setTotalPrice(finalBalance + "");
+				totalPriceField.setValue(finalBalance);
+				totalPriceField.revalidate();
+				totalPriceField.repaint();
 			}
 		}
 
@@ -537,19 +545,22 @@ public class RoomExternalWindow extends JDialog {
 
 			if (result) {
 
-				finalBalance = Float.parseFloat(theRoom.getBalance()) - Float.parseFloat(amount);
+				finalBalance = Double.parseDouble(theRoom.getBalance()) - Double.parseDouble(amount);
 				theRoom.setBalance(finalBalance + "");
+				balanceField.setValue(finalBalance);
+				balanceField.revalidate();
+				balanceField.repaint();
 			}
 		}
-		
+
 		debtVal = Double.parseDouble(theRoom.getTotalPrice()) - Double.parseDouble(theRoom.getBalance());
 		remainDebtField.setValue(debtVal);
 		remainDebtField.revalidate();
 		remainDebtField.repaint();
-		
+
 		theRoom.setRemainingDebt(debtVal);
 		roomDaoImpl.saveRoom(theRoom);
-		
+
 		populatePostPayTable(postPayModel);
 
 	}
@@ -561,16 +572,12 @@ public class RoomExternalWindow extends JDialog {
 
 		IdField.setText(reservation.getId() + "");
 
-
 		groupNameField.setText(reservation.getGroupName());
-
 
 		agencyField.setText(reservation.getAgency());
 
-		
 		priceField.setValue(theRoom.getPrice());
 
-		
 		if (theRoom.getCurrency().equalsIgnoreCase("TURKISH LIRA")) {
 			currencyField.setText("TL");
 		}
@@ -579,57 +586,54 @@ public class RoomExternalWindow extends JDialog {
 			currencyField.setText(theRoom.getCurrency());
 		}
 
-		
 		creditField.setText(reservation.getCreditType());
 
-		
 		hostTypeField.setText(reservation.getHostType());
 
-		
 		LocalDate localDate = LocalDate.parse(reservation.getCheckinDate());
 		Date date = java.sql.Date.valueOf(localDate);
 		checkinDate.setDate(date);
-		
+
 		localDate = LocalDate.parse(reservation.getCheckoutDate());
 		date = java.sql.Date.valueOf(localDate);
 		checkoutDate.setDate(date);
-		
+
 		totalDaysField.setText(reservation.getTotalDays() + "");
-		
+
 		final double totalPrice = Double.parseDouble(theRoom.getTotalPrice());
 		totalPriceField.setValue(totalPrice);
-		
+
 		final double roombalance = Double.parseDouble(theRoom.getBalance());
 		balanceField.setValue(roombalance);
-		
-		remainDebtField.setValue(theRoom.getRemainingDebt());
-		
+
+		remainDebtField.setValue(totalPrice - roombalance);
+		theRoom.setRemainingDebt(totalPrice - roombalance);
+		roomDaoImpl.saveRoom(theRoom);
 	}
 
 	private void changeReservationDate() {
 
 		LocalDate lic = LocalDate.parse(reservation.getCheckinDate());
 		Date oldDate = java.sql.Date.valueOf(lic);
-		
+
 		LocalDate loc = LocalDate.parse(reservation.getCheckoutDate());
 		Date updateDate = java.sql.Date.valueOf(loc);
-		
-		
+
 		int totalDayResult = (int) ((updateDate.getTime() - oldDate.getTime()) / (1000 * 60 * 60 * 24));
-		
+
 		reservation.setTotalDays(Math.abs(totalDayResult));
 		String resultDate = new SimpleDateFormat("yyyy-MM-dd").format(checkoutDate.getDate());
 		reservation.setCheckoutDate(resultDate);
-		
+
 		final double priceVal = Double.valueOf(priceField.getValue().toString());
-		
+
 		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(reservation.getTheNumber());
 		foundedRoom.setPrice(priceVal);
 		roomDaoImpl.saveRoom(foundedRoom);
-		
-		if(!roomNote.getText().isEmpty())
+
+		if (!roomNote.getText().isEmpty())
 			reservation.setNote(roomNote.getText());
-		
+
 		reservationDaoImpl.updateReservation(reservation);
 	}
 

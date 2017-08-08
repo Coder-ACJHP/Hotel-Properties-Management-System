@@ -60,8 +60,10 @@ public class PostingExternalWindow extends JDialog {
 	private JTable postingTable;
 	private JTextField docNoField;
 	private String roomNumber = "";
+	protected Object[] rowCol = null;
+	private boolean isPosted = false;
 	private JButton btnClear, btnSave;
-	private final NumberFormat formatter;
+	private NumberFormat formatter;
 	private JFormattedTextField priceField;
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> currencyCmbBox, titleCmbBox, typeCmbBox;
@@ -77,7 +79,11 @@ public class PostingExternalWindow extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public PostingExternalWindow(String roomText) {
+	public PostingExternalWindow() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public void setReadyPaymentWindow(String roomText)  {
 		
 		this.roomNumber = roomText;
 		
@@ -306,7 +312,7 @@ public class PostingExternalWindow extends JDialog {
 				
 				posting.setDateTime(date);
 				
-				final Object[] rowCol = new Object[] {posting.getId(), posting.getTitle(), posting.getPostType(),
+				rowCol = new Object[] {posting.getId(), posting.getTitle(), posting.getPostType(),
 								posting.getPrice(), posting.getCurrency(), posting.getExplanation(), posting.getDateTime()};
 				model.addRow(rowCol);
 				
@@ -318,7 +324,6 @@ public class PostingExternalWindow extends JDialog {
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
 				
 				//here we have to check payment currency if other than TL thats mean to exchange.
-				final String choosen = currencyCmbBox.getSelectedItem().toString();
 				double inputVal = Double.valueOf(posting.getPrice().toString());
 				
 				double balance = 0.0;
@@ -326,40 +331,51 @@ public class PostingExternalWindow extends JDialog {
 				String currency  = "";
 				String trimmed = "";
 				
-				if(choosen.contains("DOLLAR")) {
-					
+				switch (currencyCmbBox.getItemAt(currencyCmbBox.getSelectedIndex())) {
+				
+				case "TURKISH LIRA":
+					balance = inputVal;
+					break;
+				case "DOLLAR":
 					currency = rates.getUSDToTRYLiveCurrency();
 					trimmed  = currency.substring(currency.length() -6, currency.length());
 					parsedVal = Double.parseDouble(trimmed);
 					balance = parsedVal * inputVal;
-					
-				}
-				else if(choosen.contains("EURO")) {
-					
+					break;
+				case "EURO":
 					currency = rates.getEURToTRYLiveCurrency();
 					trimmed  = currency.substring(currency.length() -6, currency.length());
 					parsedVal = Double.parseDouble(trimmed);
 					balance = parsedVal * inputVal;
-					
-				}
-				else if(choosen.contains("POUND")) {
-					
+					break;
+				case "POUND":
 					currency = rates.getGBPToTRYLiveCurrency();
 					trimmed  = currency.substring(currency.length() -6, currency.length());
 					parsedVal = Double.parseDouble(trimmed);
 					balance = parsedVal * inputVal;
-					
-				}
-				else {
-				//Add the new paid amount to room account
-					balance = inputVal;
+					break;
+				default:
+					break;
 				}
 				
-				final double remainingDebt = theRoom.getRemainingDebt() + balance;
-				theRoom.setRemainingDebt(remainingDebt);
+				final double totalPrice = Double.parseDouble(theRoom.getTotalPrice()) + balance;
+				theRoom.setTotalPrice(totalPrice + "");
 				roomDaoImpl.saveRoom(theRoom);
 			}
 		};
+		isPosted = true;
 		return listener;
 	}
+	
+	public boolean getPostingStatus() {
+		return this.isPosted;
+	}
+	
+	public Object[] getTableRowData() {
+		if(isPosted) {
+			return this.rowCol;
+		}
+		return null;
+	}
+
 }
