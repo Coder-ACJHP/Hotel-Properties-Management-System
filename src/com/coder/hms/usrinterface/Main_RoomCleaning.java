@@ -106,6 +106,7 @@ public class Main_RoomCleaning extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 
 		table = new JTable();
+		table.setRowHeight(18);
 		table.setRowSelectionAllowed(true);
 		table.setColumnSelectionAllowed(false);
 		table.setFont(new Font("Verdana", Font.PLAIN, 14));

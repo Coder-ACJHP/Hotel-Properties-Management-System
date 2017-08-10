@@ -44,7 +44,7 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
-		sessionBean = SessionBean.getSESSION_BEAN();		
+//		sessionBean = SessionBean.getSESSION_BEAN();		
 		
 		// get operation system name to add icon (if windows to taskbar else for dock)
 		mainPanel = new JPanel();
@@ -91,7 +91,8 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(customMenuBar.getMenuBar());
 		
 		//get user name from login frame and add it to main frame
-		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
+//		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
+		customBottomToolbar.setUserLabelText("System test");
 		
 		customBottomToolbar.setUsdLabelText(currency.getUSDToTRYLiveCurrency());
 		customBottomToolbar.setEuroLabelText(currency.getEURToTRYLiveCurrency());

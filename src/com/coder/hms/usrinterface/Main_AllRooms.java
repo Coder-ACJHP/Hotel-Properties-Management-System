@@ -157,6 +157,8 @@ public class Main_AllRooms {
 							else if(ROOM_STATUS.equals("BLOCKED")) {
 								if(theReservation.getCheckinDate().equals(innerDate)) {
 									roomBtn.setBackground(Color.decode("#eca7d0"));
+								}else {
+									roomBtn.setBackground(Color.decode("#afe2fb"));
 								}
 							}
 							else {

@@ -6,19 +6,26 @@
 package com.coder.hms.usrinterface;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -28,6 +35,9 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
@@ -37,14 +47,16 @@ import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.BlockadeTableCellRenderer;
-import com.coder.hms.utils.CustomTableHeaderRenderer;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
+import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.toedter.calendar.JDateChooser;
 
-public class Main_Blockade extends JPanel {
+public class Main_Blockade extends JPanel implements ActionListener {
 
 	/**
 	 * 
 	 */
+	
 	private List<Long> rezervationIdList;
 	
 	private RoomDaoImpl rImpl;
@@ -57,16 +69,20 @@ public class Main_Blockade extends JPanel {
 	private List<Customer> customerList;
 	
 	private String today = "";
-	private String[] weekDates = new String[7];
+	private final Calendar masterDate = Calendar.getInstance();
+	private String[] weekDates = new String[10];
 	
-	private JPanel leftSidePanel;
+	private JDateChooser dateChooser;
+	private JButton previousBtn, nextBtn;
+	private JPanel leftSidePanel, buttonPanel;
 	private static final long serialVersionUID = 1L;
+	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private JTable table, blokajTable, blokajRoomsTable, blokajCustomerTable;
 	private JSplitPane mainVerticalSplitter, leftCenterSplitter, centerRightSplitter;
 	private JScrollPane generalScrollPane, blokajScrollPane, roomScrollPane, customerScrollPane;
 	
-	private final Vector<String> vecColsName = new Vector<String>();
-	private DefaultTableModel model;
+	private final String[] bottomTableHeader = new String[10];
+	private DefaultTableModel model = new DefaultTableModel(bottomTableHeader, 0);
 	
 	private final String[] blokajColsName = {"REZERV. NO", "GROUP", "AGENCY", "CHECK/IN", "CHECK/OUT", "EARLY PAY"};
 	private DefaultTableModel blokajModel = new DefaultTableModel(blokajColsName, 0);
@@ -84,13 +100,14 @@ public class Main_Blockade extends JPanel {
 	 * Create the frame.
 	 */
 	public Main_Blockade() {
-		
+						
 		setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 
 		this.setAutoscrolls(true);
 		this.setMinimumSize(new Dimension(800, 600));
 		/*make it default size of frame maximized */
 		this.setMaximumSize(new Dimension(1000, 900));
+		this.setLayout(new BorderLayout());
 		
 		mainVerticalSplitter = new JSplitPane();
 		mainVerticalSplitter.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -105,7 +122,7 @@ public class Main_Blockade extends JPanel {
 		mainVerticalSplitter.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		mainVerticalSplitter.resetToPreferredSizes();
 		setLayout(new BorderLayout(0, 0));
-		add(mainVerticalSplitter);
+		add(mainVerticalSplitter, BorderLayout.CENTER);
 		
 		leftSidePanel = new JPanel();
 		leftSidePanel.setAutoscrolls(true);
@@ -131,6 +148,7 @@ public class Main_Blockade extends JPanel {
 		blokajTable.setRowSelectionAllowed(true);
 		blokajTable.getTableHeader().setDefaultRenderer(THRC);
 		blokajTable.addMouseListener(blokajMouseListener());
+		blokajTable.setRowHeight(20);
 		blokajTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		blokajScrollPane = new JScrollPane();
@@ -155,6 +173,7 @@ public class Main_Blockade extends JPanel {
 		blokajRoomsTable.setCellSelectionEnabled(false);
 		blokajRoomsTable.setRowSelectionAllowed(true);
 		blokajRoomsTable.getTableHeader().setDefaultRenderer(THRC);
+		blokajRoomsTable.setRowHeight(20);
 		blokajRoomsTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		roomScrollPane = new JScrollPane();
@@ -167,36 +186,87 @@ public class Main_Blockade extends JPanel {
 		blokajCustomerTable.setCellSelectionEnabled(false);
 		blokajCustomerTable.setColumnSelectionAllowed(false);
 		blokajCustomerTable.getTableHeader().setDefaultRenderer(THRC);
+		blokajCustomerTable.setRowHeight(20);
 		blokajCustomerTable.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		customerScrollPane = new JScrollPane();
 		customerScrollPane.setViewportView(blokajCustomerTable);
 		centerRightSplitter.setRightComponent(customerScrollPane);
 		
-		//populate table headers from this method.
-		populateTableHeaders(vecColsName, new Date());
-		
-		model = new DefaultTableModel(vecColsName, 0);
-		
 		cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		THR.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		table = new JTable(model);
 		table.getTableHeader().setDefaultRenderer(THR);
 		table.setDefaultRenderer(Object.class, cellRenderer);
 		table.setGridColor(UIManager.getColor("InternalFrame.inactiveTitleForeground"));
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
-		table.getColumnModel().getColumn(0).setPreferredWidth(25);
-		table.getColumnModel().getColumn(1).setPreferredWidth(25);
-		table.getColumnModel().getColumn(2).setPreferredWidth(25);
+		table.setRowHeight(20);
 		table.setFont(new Font("Dialog", Font.PLAIN, 14));
 		table.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
+		//populate table headers from this method.
+		populateTableHeaders();
+
 		generalScrollPane = new JScrollPane();
 		generalScrollPane.setViewportView(table);
 		
 		mainVerticalSplitter.setRightComponent(generalScrollPane);
+		
+		final JPanel upperPanel = new JPanel();
+		upperPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		upperPanel.setAutoscrolls(true);
+		upperPanel.setPreferredSize(new Dimension(300, 40));
+		upperPanel.setBackground(Color.decode("#066d95"));
+		upperPanel.setLayout(new BorderLayout());
+		add(upperPanel, BorderLayout.NORTH);
+		
+		//make a panel to add date chooser and buttons with null layout.
+		buttonPanel = new JPanel();
+		buttonPanel.setBorder(null);
+		buttonPanel.setAutoscrolls(true);
+		buttonPanel.setPreferredSize(new Dimension(300, 40));
+		buttonPanel.setBackground(Color.decode("#066d95"));
+		buttonPanel.setLayout(null);
+		upperPanel.add(buttonPanel, BorderLayout.WEST);
+		
+		dateChooser = new JDateChooser();
+		dateChooser.setDate(new Date());
+		dateChooser.setDateFormatString("yyyy-MM-dd");
+		dateChooser.setBounds(55, 6, 164, 26);
+		dateChooser.addPropertyChangeListener(customPropListener());
+		buttonPanel.add(dateChooser);
+		
+		previousBtn = new JButton("");
+		previousBtn.setMaximumSize(new Dimension(400, 29));
+		previousBtn.setMinimumSize(new Dimension(400, 29));
+		previousBtn.setAutoscrolls(true);
+		previousBtn.addActionListener(this);
+		previousBtn.setIcon(new ImageIcon(Main_Blockade.class.getResource("/com/coder/hms/icons/blockade_previous.png")));
+		previousBtn.setBounds(6, 6, 49, 26);
+		buttonPanel.add(previousBtn);
+		
+		nextBtn = new JButton("");
+		nextBtn.addActionListener(this);
+		nextBtn.setIcon(new ImageIcon(Main_Blockade.class.getResource("/com/coder/hms/icons/blockade_next.png.png")));
+		nextBtn.setBounds(219, 6, 49, 26);
+		buttonPanel.add(nextBtn);
+		
+		//add this label to upperPanel(main) to be centered.
+		final JLabel lblBlockade = new JLabel("BLOCKADE");
+		lblBlockade.setAutoscrolls(true);
+		lblBlockade.setMinimumSize(new Dimension(70, 16));
+		lblBlockade.setPreferredSize(new Dimension(70, 16));
+		lblBlockade.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblBlockade.setLabelFor(buttonPanel);
+		lblBlockade.setLocation(571, 6);
+		lblBlockade.setSize(159, 30);
+		lblBlockade.setForeground(UIManager.getColor("Button.highlight"));
+		lblBlockade.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblBlockade.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBlockade.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 25));
+		upperPanel.add(lblBlockade, BorderLayout.CENTER);
 		
 		this.setVisible(true);
 		
@@ -217,29 +287,41 @@ public class Main_Blockade extends JPanel {
 		customerList = cImpl.getAllCustomers();
 	}
 	
-	public void populateTableHeaders(final Vector<String> cols, Date date) {
-
+	public void populateTableHeaders() {
+		
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		final Calendar c = Calendar.getInstance();
-		c.setTime(date);
+		c.setTime(masterDate.getTime());
 			
-		cols.add("ROOM");
-		cols.add("TYPE");
-		cols.add("STATUS");
+		JTableHeader tableHeader = table.getTableHeader();
+		TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+		TableColumn tableColumn;
+		
+		tableColumn = tableColumnModel.getColumn(0);
+		tableColumn.setHeaderValue("ROOM");
+		tableColumn = tableColumnModel.getColumn(1);
+		tableColumn.setHeaderValue("TYPE");
+		tableColumn = tableColumnModel.getColumn(2);
+		tableColumn.setHeaderValue("STATUS");
+		
 		c.add(Calendar.DATE, -1);
-		for(int i = 0; i < 7; i++) {
+		for(int i = 3; i < 10; i++) {
 			c.add(Calendar.DATE, 1);
-			date = c.getTime();
-			today = sdf.format(date);
-			cols.add(today);
-			//this date array for tables
+			today = sdf.format(c.getTime());
+			tableColumn = tableColumnModel.getColumn(i);
+			tableColumn.setHeaderValue(today);
+
 			weekDates[i] = today;
 		}
+		
+		tableHeader.revalidate();
+		tableHeader.repaint();
 		
 	}
 
 	public void populateMainTable(DefaultTableModel model) {
 		
+		model.setRowCount(0);
 		/*Simple object POJO class (entity)*/
 		Blockade blockade = null;
 		
@@ -257,27 +339,24 @@ public class Main_Blockade extends JPanel {
 					for(int x=0; x < weekDates.length; x++) {
 						if(resList.get(j).getCheckinDate().equals(weekDates[x])) {
 							//add 3 to weekDates[x] because weekDates start from -3 in table;
-							model.setValueAt(resList.get(j).getGroupName(), i, x + 3);
+							model.setValueAt(resList.get(j).getGroupName(), i, x);
 						}
 					}
-			}
-			
-			
-			
-		}
-		
+			}			
+		}	
 	}
 	
 	public void populateBlokajTable(DefaultTableModel blokajModel) {
-		
-		final String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+				
+		String workingDate = sdf.format(dateChooser.getDate());
 		
 		final Reservation reservation = new Reservation();
-		
 		rezervationIdList = new ArrayList<>();
 		
+		blokajModel.setRowCount(0);
+		
 		for(int i=0; i < resList.size(); i++) {
-			if(resList.get(i).getCheckinDate().equals(date) && resList.get(i).getIsCheckedIn().equals("NO")) {
+			if(resList.get(i).getCheckinDate().equals(workingDate) && resList.get(i).getIsCheckedIn().equals("NO")) {
 				reservation.setId(resList.get(i).getId());
 				reservation.setGroupName(resList.get(i).getGroupName());
 				reservation.setAgency(resList.get(i).getAgency());
@@ -328,5 +407,48 @@ public class Main_Blockade extends JPanel {
 			}
 		};
 		return adapter;
+	}
+
+	//this listener for changing table headers when date chosen from two rows.
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		masterDate.setTime(dateChooser.getDate());
+		
+		if(e.getSource() == nextBtn) {
+			masterDate.add(Calendar.DATE, 1);
+
+		}
+		else if(e.getSource() == previousBtn){
+			masterDate.add(Calendar.DATE, -1);
+			
+		}
+		
+		dateChooser.setDate(masterDate.getTime());
+		dateChooser.revalidate();
+		dateChooser.repaint();
+		
+		populateTableHeaders();
+		populateBlokajTable(blokajModel);
+		populateMainTable(model);
+		
+	}
+	
+	//this listener for changing table headers when date chosen from date component.
+	private PropertyChangeListener customPropListener() {
+		final PropertyChangeListener propListener = new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if("date".equals(evt.getPropertyName())) {
+					masterDate.setTime((Date) evt.getNewValue());
+					populateTableHeaders();
+					populateBlokajTable(blokajModel);
+					populateMainTable(model);
+				}
+				
+			}
+		};
+		return propListener;
 	}
 }

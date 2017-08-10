@@ -21,17 +21,17 @@ import java.util.Locale;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.coder.hms.daoImpl.PaymentDaoImpl;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.UIManager;
+import com.coder.hms.utils.BlockadeTableHeaderRenderer;
 
 public class Main_CashDesk extends JPanel {
 
@@ -56,6 +56,7 @@ public class Main_CashDesk extends JPanel {
 	private NumberFormat dlFormatter = NumberFormat.getCurrencyInstance();
 	private NumberFormat euFormatter = NumberFormat.getCurrencyInstance();
 	private NumberFormat poFormatter = NumberFormat.getCurrencyInstance();
+	private final BlockadeTableHeaderRenderer THRC = new BlockadeTableHeaderRenderer();
 
 	/**
 	 * Create the dialog.
@@ -74,27 +75,33 @@ public class Main_CashDesk extends JPanel {
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setAutoscrolls(true);
 		buttonPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, SystemColor.controlShadow, null, null, null));
-		buttonPanel.setPreferredSize(new Dimension(10, 50));
+		buttonPanel.setPreferredSize(new Dimension(10, 40));
 		buttonPanel.setBackground(new Color(173, 216, 230));
 		add(buttonPanel, BorderLayout.NORTH);
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		buttonPanel.setLayout(new BorderLayout(0, 0));
 		
 		final JLabel lblCashDesk = new JLabel("CASH DESK");
-		lblCashDesk.setForeground(SystemColor.window);
+		lblCashDesk.setForeground(new Color(70, 130, 180));
 		lblCashDesk.setHorizontalTextPosition(SwingConstants.LEADING);
 		lblCashDesk.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCashDesk.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 23));
+		lblCashDesk.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 25));
 		lblCashDesk.setAlignmentY(Component.TOP_ALIGNMENT);
 		lblCashDesk.setPreferredSize(new Dimension(200, 40));
 		buttonPanel.add(lblCashDesk);
 		
 		final JPanel panel = new JPanel();
-		panel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, SystemColor.controlShadow, null, null, null));
-		panel.setBackground(UIManager.getColor("textHighlight"));
-		panel.setAutoscrolls(true);
+		panel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel.setPreferredSize(new Dimension(10, 180));
+		panel.setAutoscrolls(true);
+		
+		final JPanel pricePanel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		pricePanel.setPreferredSize(new Dimension(1000, 165));
+		pricePanel.setBackground(UIManager.getColor("textHighlight"));
+		pricePanel.setLayout(null);
+		
+		panel.add(pricePanel);
 		add(panel, BorderLayout.SOUTH);
-		panel.setLayout(null);
 		
 		final JLabel lblTurkshLra = new JLabel("TURKISH LIRA : ");
 		lblTurkshLra.setFont(new Font("Arial", Font.BOLD, 14));
@@ -102,7 +109,7 @@ public class Main_CashDesk extends JPanel {
 		lblTurkshLra.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTurkshLra.setForeground(new Color(0, 0, 0));
 		lblTurkshLra.setBounds(223, 38, 113, 25);
-		panel.add(lblTurkshLra);
+		pricePanel.add(lblTurkshLra);
 		
 		final JLabel lblAmercanDollar = new JLabel("DOLLAR : ");
 		lblAmercanDollar.setFont(new Font("Arial", Font.BOLD, 14));
@@ -110,7 +117,7 @@ public class Main_CashDesk extends JPanel {
 		lblAmercanDollar.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblAmercanDollar.setForeground(new Color(0, 0, 0));
 		lblAmercanDollar.setBounds(223, 68, 113, 25);
-		panel.add(lblAmercanDollar);
+		pricePanel.add(lblAmercanDollar);
 		
 		final JLabel lblEuro = new JLabel("EURO : ");
 		lblEuro.setFont(new Font("Arial", Font.BOLD, 14));
@@ -118,7 +125,7 @@ public class Main_CashDesk extends JPanel {
 		lblEuro.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblEuro.setForeground(new Color(0, 0, 0));
 		lblEuro.setBounds(223, 102, 113, 25);
-		panel.add(lblEuro);
+		pricePanel.add(lblEuro);
 		
 		final JLabel lblPound = new JLabel("POUND : ");
 		lblPound.setFont(new Font("Arial", Font.BOLD, 14));
@@ -126,28 +133,28 @@ public class Main_CashDesk extends JPanel {
 		lblPound.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblPound.setForeground(new Color(0, 0, 0));
 		lblPound.setBounds(223, 133, 113, 25);
-		panel.add(lblPound);
+		pricePanel.add(lblPound);
 		
 		final JLabel lblCash = new JLabel("CASH");
 		lblCash.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblCash.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblCash.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCash.setBounds(352, 6, 141, 25);
-		panel.add(lblCash);
+		pricePanel.add(lblCash);
 		
 		final JLabel lblCredtCard = new JLabel("CREDIT CARD");
 		lblCredtCard.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblCredtCard.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblCredtCard.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCredtCard.setBounds(524, 6, 141, 25);
-		panel.add(lblCredtCard);
+		pricePanel.add(lblCredtCard);
 		
 		final JLabel lblCtyLedger = new JLabel("CITY LEDGER");
 		lblCtyLedger.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblCtyLedger.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblCtyLedger.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCtyLedger.setBounds(696, 6, 141, 25);
-		panel.add(lblCtyLedger);
+		pricePanel.add(lblCtyLedger);
 		
 		tlCashField = new JFormattedTextField(tlFormatter);
 		tlCashField.setBackground(SystemColor.controlLtHighlight);
@@ -157,7 +164,7 @@ public class Main_CashDesk extends JPanel {
 		tlCashField.setFont(new Font("Arial", Font.PLAIN, 14));
 		tlCashField.setBounds(352, 36, 141, 27);
 		tlCashField.setValue(tlCashVal);
-		panel.add(tlCashField);
+		pricePanel.add(tlCashField);
 		tlCashField.setColumns(10);
 		
 		dollarCashField = new JFormattedTextField(dlFormatter);
@@ -168,7 +175,7 @@ public class Main_CashDesk extends JPanel {
 		dollarCashField.setFont(new Font("Arial", Font.PLAIN, 14));
 		dollarCashField.setBounds(352, 69, 141, 27);
 		dollarCashField.setValue(dlCashVal);
-		panel.add(dollarCashField);
+		pricePanel.add(dollarCashField);
 		dollarCashField.setColumns(10);
 		
 		euroCashField = new JFormattedTextField(euFormatter);
@@ -179,7 +186,7 @@ public class Main_CashDesk extends JPanel {
 		euroCashField.setFont(new Font("Arial", Font.PLAIN, 14));
 		euroCashField.setBounds(352, 102, 141, 27);
 		euroCashField.setValue(euCashVal);
-		panel.add(euroCashField);
+		pricePanel.add(euroCashField);
 		euroCashField.setColumns(10);
 		
 		poundCashField = new JFormattedTextField(poFormatter);
@@ -190,7 +197,7 @@ public class Main_CashDesk extends JPanel {
 		poundCashField.setFont(new Font("Arial", Font.PLAIN, 14));
 		poundCashField.setBounds(352, 135, 141, 27);
 		poundCashField.setValue(poCashVal);
-		panel.add(poundCashField);
+		pricePanel.add(poundCashField);
 		poundCashField.setColumns(10);
 		
 		poundCredit = new JFormattedTextField(poFormatter);
@@ -202,7 +209,7 @@ public class Main_CashDesk extends JPanel {
 		poundCredit.setColumns(10);
 		poundCredit.setBounds(524, 135, 141, 27);
 		poundCredit.setValue(poCreditVal);
-		panel.add(poundCredit);
+		pricePanel.add(poundCredit);
 		
 		euroCredit = new JFormattedTextField(euFormatter);
 		euroCredit.setBackground(SystemColor.controlLtHighlight);
@@ -213,7 +220,7 @@ public class Main_CashDesk extends JPanel {
 		euroCredit.setColumns(10);
 		euroCredit.setBounds(524, 102, 141, 27);
 		euroCredit.setValue(euCreditVal);
-		panel.add(euroCredit);
+		pricePanel.add(euroCredit);
 		
 		dollarCredit = new JFormattedTextField(dlFormatter);
 		dollarCredit.setBackground(SystemColor.controlLtHighlight);
@@ -224,7 +231,7 @@ public class Main_CashDesk extends JPanel {
 		dollarCredit.setColumns(10);
 		dollarCredit.setBounds(524, 69, 141, 27);
 		dollarCredit.setValue(dlCreditVal);
-		panel.add(dollarCredit);
+		pricePanel.add(dollarCredit);
 		
 		tlCredit = new JFormattedTextField(tlFormatter);
 		tlCredit.setBackground(SystemColor.controlLtHighlight);
@@ -235,7 +242,7 @@ public class Main_CashDesk extends JPanel {
 		tlCredit.setColumns(10);
 		tlCredit.setBounds(524, 36, 141, 27);
 		tlCredit.setValue(tlCreditVal);
-		panel.add(tlCredit);
+		pricePanel.add(tlCredit);
 		
 		poundCityLedger = new JFormattedTextField(poFormatter);
 		poundCityLedger.setBackground(SystemColor.controlLtHighlight);
@@ -246,7 +253,7 @@ public class Main_CashDesk extends JPanel {
 		poundCityLedger.setColumns(10);
 		poundCityLedger.setBounds(696, 135, 141, 27);
 		poundCityLedger.setValue(poCityLedgerVal);
-		panel.add(poundCityLedger);
+		pricePanel.add(poundCityLedger);
 		
 		euroCityLedger = new JFormattedTextField(euFormatter);
 		euroCityLedger.setBackground(SystemColor.controlLtHighlight);
@@ -257,7 +264,7 @@ public class Main_CashDesk extends JPanel {
 		euroCityLedger.setColumns(10);
 		euroCityLedger.setBounds(696, 102, 141, 27);
 		euroCityLedger.setValue(euCityLedgerVal);
-		panel.add(euroCityLedger);
+		pricePanel.add(euroCityLedger);
 		
 		dollarCityLedger = new JFormattedTextField(dlFormatter);
 		dollarCityLedger.setBackground(SystemColor.controlLtHighlight);
@@ -268,7 +275,7 @@ public class Main_CashDesk extends JPanel {
 		dollarCityLedger.setColumns(10);
 		dollarCityLedger.setBounds(696, 69, 141, 27);
 		dollarCityLedger.setValue(dlCityLedgerVal);
-		panel.add(dollarCityLedger);
+		pricePanel.add(dollarCityLedger);
 		
 		tlCityLedger = new JFormattedTextField(tlFormatter);
 		tlCityLedger.setBackground(SystemColor.controlLtHighlight);
@@ -279,7 +286,7 @@ public class Main_CashDesk extends JPanel {
 		tlCityLedger.setColumns(10);
 		tlCityLedger.setBounds(696, 36, 141, 27);
 		tlCityLedger.setValue(tlCityLedgerVal);
-		panel.add(tlCityLedger);
+		pricePanel.add(tlCityLedger);
 		
 		centerPanel = new JPanel();
 		centerPanel.setBackground(Color.decode("#066d95"));
@@ -287,12 +294,13 @@ public class Main_CashDesk extends JPanel {
 		centerPanel.setLayout(new BorderLayout(0, 0));
 		
 		table = new JTable(model);
+		table.getTableHeader().setDefaultRenderer(THRC);
 		table.setFillsViewportHeight(true);
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(2, 150));
+		scrollPane.setPreferredSize(new Dimension(2, 200));
 		scrollPane.setMaximumSize(new Dimension(32767, 300));
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
 		scrollPane.setViewportView(table);
