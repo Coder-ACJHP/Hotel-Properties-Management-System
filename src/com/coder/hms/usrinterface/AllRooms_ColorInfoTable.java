@@ -18,6 +18,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private JLabel lblClean, lblDrty, lblDnd, lblEmpty, lblTitle, lblFull, lblBlocked, lblCheckout;
 
 	public AllRooms_ColorInfoTable() {
 		
@@ -33,7 +34,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		setLayout(null);
 		setOpaque(false);
 		
-		JLabel lblClean = new JLabel("CLEAN");
+		lblClean = new JLabel("CLEAN");
 		lblClean.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblClean.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblClean.setOpaque(true);
@@ -44,7 +45,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		lblClean.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblClean);
 		
-		JLabel lblDrty = new JLabel("DIRTY");
+		lblDrty = new JLabel("DIRTY");
 		lblDrty.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblDrty.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblDrty.setOpaque(true);
@@ -55,7 +56,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		lblDrty.setBounds(4, 73, 184, 30);
 		add(lblDrty);
 		
-		JLabel lblEmpty = new JLabel("EMPTY");
+		lblEmpty = new JLabel("EMPTY");
 		lblEmpty.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblEmpty.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblEmpty.setOpaque(true);
@@ -66,7 +67,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		lblEmpty.setBounds(4, 139, 184, 30);
 		add(lblEmpty);
 		
-		JLabel lblFull = new JLabel("FULL");
+		lblFull = new JLabel("FULL");
 		lblFull.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblFull.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblFull.setOpaque(true);
@@ -77,7 +78,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		lblFull.setBounds(4, 172, 184, 30);
 		add(lblFull);
 		
-		JLabel lblBlocked = new JLabel("BLOCKED");
+		lblBlocked = new JLabel("BLOCKED");
 		lblBlocked.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblBlocked.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblBlocked.setOpaque(true);
@@ -88,22 +89,22 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		lblBlocked.setBounds(4, 205, 184, 30);
 		add(lblBlocked);
 		
-		JLabel lblNewLabel = new JLabel("COLOR INFO TABLE");
-		lblNewLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		lblNewLabel.setAutoscrolls(true);
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(192, 192, 192), null, null, null));
-		lblNewLabel.setOpaque(true);
-		lblNewLabel.setBackground(new Color(0, 191, 255));
-		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblNewLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(0, 1, 193, 36);
-		add(lblNewLabel);
+		lblTitle = new JLabel("COLOR INFO TABLE");
+		lblTitle.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		lblTitle.setAutoscrolls(true);
+		lblTitle.setForeground(new Color(255, 255, 255));
+		lblTitle.setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(192, 192, 192), null, null, null));
+		lblTitle.setOpaque(true);
+		lblTitle.setBackground(new Color(0, 191, 255));
+		lblTitle.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblTitle.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setBounds(0, 1, 193, 36);
+		add(lblTitle);
 		
 		setSize(dimension);
 		
-		JLabel lblCheckout = new JLabel("CHECKOUT");
+		lblCheckout = new JLabel("CHECKOUT");
 		lblCheckout.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblCheckout.setOpaque(true);
 		lblCheckout.setHorizontalAlignment(SwingConstants.CENTER);
@@ -114,7 +115,7 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		lblCheckout.setBounds(5, 238, 184, 30);
 		add(lblCheckout);
 		
-		JLabel lblDnd = new JLabel("DND");
+		lblDnd = new JLabel("DND");
 		lblDnd.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblDnd.setOpaque(true);
 		lblDnd.setHorizontalAlignment(SwingConstants.CENTER);
@@ -124,5 +125,17 @@ public class AllRooms_ColorInfoTable extends JPanel {
 		lblDnd.setAutoscrolls(true);
 		lblDnd.setBounds(4, 106, 184, 30);
 		add(lblDnd);
+	}
+	
+	public void setCleanLabelCount(int count) {
+		lblClean.setText("CLEAN : " + count);
+	}
+	
+	public void setDirtyLabelCount(int count) {
+		lblDrty.setText("DIRTY : " + count);
+	}
+	
+	public void setDndLabelCount(int count) {
+		lblDnd.setText("DND : " + count);
 	}
 }

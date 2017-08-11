@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -33,7 +34,6 @@ import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -43,6 +43,7 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -57,6 +58,7 @@ import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.CustomersTableRenderer;
 import com.coder.hms.utils.PayPostTableCellRenderer;
 import com.coder.hms.utils.RoomExternalTableHeaderRenderer;
 import com.toedter.calendar.JDateChooser;
@@ -75,11 +77,14 @@ public class RoomExternalWindow extends JDialog {
 	private JTable payPostTable, customerTable;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
+	final DialogFrame dialogFrame = new DialogFrame();
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
+	private JScrollPane postableScrollPane, cstTableScrollPane;
 	private final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
 	final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
 	private final PaymentExternalWindow payWin = new PaymentExternalWindow();
 	private final PostingExternalWindow postWin = new PostingExternalWindow();
+	private final static CustomersTableRenderer customerTableRenderer = new CustomersTableRenderer();
 	private JButton postingBtn, paymentBtn, saveChangesBtn, checkoutBtn;
 	final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -95,6 +100,9 @@ public class RoomExternalWindow extends JDialog {
 			"EXPLANATION", "DATE TIME" };
 	private final DefaultTableModel postPayModel = new DefaultTableModel(postPayColnames, 0);
 	private JTextField IdField, groupNameField, agencyField, currencyField, creditField, hostTypeField, totalDaysField;
+	private JPanel upperPanel, buttonsPanel, pricePanel, reservInfoHolder, cusomerTableHolder, noteHolder, postTableHolder;
+	private JLabel balanceLbl, totalLbl, lblReamainingDebt, lblReservatonInfo, IdLbl, lblNewLabel, lblCheckoutDate, lblGroup, 
+	lblAgency, lblPrice, lblCreditType, lblHostType, lblTotalDays, lblAddSomeNote;
 
 	/**
 	 * Create the dialog.
@@ -144,78 +152,67 @@ public class RoomExternalWindow extends JDialog {
 		formatter = NumberFormat.getCurrencyInstance();
 		formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel.setAutoscrolls(true);
-		panel.setPreferredSize(new Dimension(10, 55));
-		getContentPane().add(panel, BorderLayout.NORTH);
-		panel.setLayout(null);
+		upperPanel = new JPanel();
+		upperPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		upperPanel.setAutoscrolls(true);
+		upperPanel.setPreferredSize(new Dimension(300, 55));
+		upperPanel.setLayout(new BorderLayout());
+		getContentPane().add(upperPanel, BorderLayout.NORTH);
 
+		buttonsPanel = new JPanel();
+		buttonsPanel.setBorder(null);
+		buttonsPanel.setAutoscrolls(true);
+		buttonsPanel.setPreferredSize(new Dimension(500, 54));
+		buttonsPanel.setLayout(null);
+		upperPanel.add(buttonsPanel, BorderLayout.WEST);
+		
 		postingBtn = new JButton("Posting");
-		postingBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-
-					@Override
-					public void run() {
-						postWin.setReadyPaymentWindow(roomText);
-						if (postWin.getPostingStatus()) {
-							populateReservationDetail();
-						}
-						populatePostPayTable(postPayModel);
-					}
-				});
-			}
-		});
+		postingBtn.addActionListener(postingAction());
 		postingBtn.setAutoscrolls(true);
 		postingBtn.setFont(new Font("Arial", Font.PLAIN, 15));
 		postingBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		postingBtn
-				.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/room_posting.png")));
-		postingBtn.setBounds(10, 5, 125, 43);
-		panel.add(postingBtn);
+		postingBtn.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/room_posting.png")));
+		postingBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		postingBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		postingBtn.setBounds(10, 3, 125, 43);
+		buttonsPanel.add(postingBtn);
 
 		paymentBtn = new JButton("Payment");
-		paymentBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-
-					@Override
-					public void run() {
-						payWin.setReadyPaymentWindow(roomText);
-						if (payWin.getPaymentStatus()) {
-							populateReservationDetail();
-						}
-						populatePostPayTable(postPayModel);
-					}
-				});
-			}
-		});
+		paymentBtn.addActionListener(paymentListener());
 		paymentBtn.setAutoscrolls(true);
 		paymentBtn.setFont(new Font("Arial", Font.PLAIN, 15));
-		paymentBtn
-				.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/payment_cash.png")));
-		paymentBtn.setBounds(142, 5, 125, 43);
-		panel.add(paymentBtn);
+		paymentBtn.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/payment_cash.png")));
+		paymentBtn.setBounds(142, 3, 125, 43);
+		paymentBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		paymentBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		buttonsPanel.add(paymentBtn);
 
 		checkoutBtn = new JButton("Checkout");
 		checkoutBtn.setAutoscrolls(true);
 		checkoutBtn.setFont(new Font("Arial", Font.PLAIN, 15));
-		checkoutBtn
-				.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/room_checkout.png")));
-		checkoutBtn.setBounds(274, 5, 125, 43);
+		checkoutBtn.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/room_checkout.png")));
+		checkoutBtn.setBounds(274, 3, 125, 43);
+		checkoutBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		checkoutBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		checkoutBtn.addActionListener(checkoutListener());
-		panel.add(checkoutBtn);
+		buttonsPanel.add(checkoutBtn);
 
-		Component verticalStrut = Box.createVerticalStrut(20);
+		final Component verticalStrut = Box.createVerticalStrut(20);
 		verticalStrut.setSize(new Dimension(5, 20));
 		verticalStrut.setMinimumSize(new Dimension(5, 20));
 		verticalStrut.setIgnoreRepaint(true);
 		verticalStrut.setPreferredSize(new Dimension(5, 20));
 		verticalStrut.setBackground(Color.BLACK);
 		verticalStrut.setBounds(406, 5, 10, 43);
-		panel.add(verticalStrut);
+		buttonsPanel.add(verticalStrut);
 
+		pricePanel = new JPanel();
+		pricePanel.setBorder(null);
+		pricePanel.setAutoscrolls(true);
+		pricePanel.setPreferredSize(new Dimension(500, 54));
+		pricePanel.setLayout(null);
+		upperPanel.add(pricePanel, BorderLayout.EAST);
+		
 		totalPriceField = new JFormattedTextField(formatter);
 		totalPriceField.setAlignmentY(Component.TOP_ALIGNMENT);
 		totalPriceField.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -223,19 +220,19 @@ public class RoomExternalWindow extends JDialog {
 		totalPriceField.setFont(new Font("Arial", Font.BOLD, 15));
 		totalPriceField.setBackground(new Color(240, 128, 128));
 		totalPriceField.setEditable(false);
-		totalPriceField.setBounds(982, 28, 86, 26);
-		panel.add(totalPriceField);
+		totalPriceField.setBounds(294, 25, 86, 26);
+		pricePanel.add(totalPriceField);
 		totalPriceField.setColumns(10);
 
-		JLabel balanceLbl = new JLabel("Balance : ");
+		balanceLbl = new JLabel("Balance : ");
 		balanceLbl.setAutoscrolls(true);
 		balanceLbl.setAlignmentY(Component.TOP_ALIGNMENT);
 		balanceLbl.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		balanceLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		balanceLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		balanceLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		balanceLbl.setBounds(865, 5, 114, 20);
-		panel.add(balanceLbl);
+		balanceLbl.setBounds(168, 4, 114, 20);
+		pricePanel.add(balanceLbl);
 
 		balanceField = new JFormattedTextField(formatter);
 		balanceField.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -244,26 +241,28 @@ public class RoomExternalWindow extends JDialog {
 		balanceField.setFont(new Font("Arial", Font.BOLD, 15));
 		balanceField.setBackground(new Color(102, 205, 170));
 		balanceField.setEditable(false);
-		balanceField.setBounds(982, 1, 86, 26);
+		balanceField.setBounds(294, 0, 86, 26);
 		balanceField.setColumns(10);
-		panel.add(balanceField);
+		pricePanel.add(balanceField);
 
-		JLabel totalLbl = new JLabel(" Total account : ");
+		totalLbl = new JLabel(" Total account : ");
 		totalLbl.setAutoscrolls(true);
 		totalLbl.setAlignmentY(Component.TOP_ALIGNMENT);
 		totalLbl.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		totalLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		totalLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		totalLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		totalLbl.setBounds(865, 30, 114, 20);
-		panel.add(totalLbl);
+		totalLbl.setBounds(168, 25, 114, 20);
+		pricePanel.add(totalLbl);
 
-		JLabel lblReamainingDebt = new JLabel("Remaining debt");
+		lblReamainingDebt = new JLabel("Remaining debt");
+		lblReamainingDebt.setAutoscrolls(true);
+		lblReamainingDebt.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblReamainingDebt.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblReamainingDebt.setFont(new Font("Arial", Font.BOLD, 13));
 		lblReamainingDebt.setHorizontalAlignment(SwingConstants.CENTER);
-		lblReamainingDebt.setBounds(1071, 4, 114, 16);
-		panel.add(lblReamainingDebt);
+		lblReamainingDebt.setBounds(384, 3, 114, 16);
+		pricePanel.add(lblReamainingDebt);
 
 		remainDebtField = new JFormattedTextField(formatter);
 		remainDebtField.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -271,12 +270,12 @@ public class RoomExternalWindow extends JDialog {
 		remainDebtField.setFont(new Font("Arial", Font.BOLD, 15));
 		remainDebtField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		remainDebtField.setBackground(Color.ORANGE);
-		remainDebtField.setBounds(1086, 24, 86, 26);
+		remainDebtField.setBounds(400, 20, 86, 26);
 		remainDebtField.setEditable(false);
 		remainDebtField.setValue(debtVal);
-		panel.add(remainDebtField);
+		pricePanel.add(remainDebtField);
 
-		JPanel reservInfoHolder = new JPanel();
+		reservInfoHolder = new JPanel();
 		reservInfoHolder.setAlignmentY(Component.TOP_ALIGNMENT);
 		reservInfoHolder.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		reservInfoHolder.setAutoscrolls(true);
@@ -286,29 +285,30 @@ public class RoomExternalWindow extends JDialog {
 		getContentPane().add(reservInfoHolder, BorderLayout.EAST);
 		reservInfoHolder.setLayout(null);
 
-		JLabel lblReservatonInfo = new JLabel("RESERVATION INFO");
+		lblReservatonInfo = new JLabel("RESERVATION INFO");
 		lblReservatonInfo.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblReservatonInfo.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblReservatonInfo.setHorizontalAlignment(SwingConstants.CENTER);
-		lblReservatonInfo.setBounds(2, 4, 216, 29);
+		lblReservatonInfo.setBounds(2, 4, 248, 29);
 		reservInfoHolder.add(lblReservatonInfo);
 
 		saveChangesBtn = new JButton("SAVE CHANGES");
-		saveChangesBtn
-				.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/reserv_save.png")));
+		saveChangesBtn.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/reserv_save.png")));
 		saveChangesBtn.setAutoscrolls(true);
+		saveChangesBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		saveChangesBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		saveChangesBtn.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		saveChangesBtn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		saveChangesBtn.setBounds(16, 288, 218, 29);
 		saveChangesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
 				changeReservationDate();
 			}
 		});
-		saveChangesBtn.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		saveChangesBtn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		saveChangesBtn.setBounds(21, 288, 218, 29);
 		reservInfoHolder.add(saveChangesBtn);
 
-		JLabel IdLbl = new JLabel("Id : ");
+		IdLbl = new JLabel("Id : ");
 		IdLbl.setBounds(12, 42, 88, 14);
 		reservInfoHolder.add(IdLbl);
 
@@ -318,7 +318,7 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.add(IdField);
 		IdField.setColumns(10);
 
-		JLabel lblNewLabel = new JLabel("Checkin : ");
+		lblNewLabel = new JLabel("Checkin : ");
 		lblNewLabel.setBounds(12, 205, 88, 14);
 		reservInfoHolder.add(lblNewLabel);
 
@@ -328,7 +328,7 @@ public class RoomExternalWindow extends JDialog {
 		checkinDate.setBounds(101, 202, 138, 20);
 		reservInfoHolder.add(checkinDate);
 
-		JLabel lblCheckoutDate = new JLabel("Checkout : ");
+		lblCheckoutDate = new JLabel("Checkout : ");
 		lblCheckoutDate.setBounds(12, 233, 88, 14);
 		reservInfoHolder.add(lblCheckoutDate);
 
@@ -337,7 +337,7 @@ public class RoomExternalWindow extends JDialog {
 		checkoutDate.setBounds(101, 230, 138, 20);
 		reservInfoHolder.add(checkoutDate);
 
-		JLabel lblGroup = new JLabel("Group : ");
+		lblGroup = new JLabel("Group : ");
 		lblGroup.setBounds(12, 65, 88, 14);
 		reservInfoHolder.add(lblGroup);
 
@@ -347,7 +347,7 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.add(groupNameField);
 		groupNameField.setColumns(10);
 
-		JLabel lblAgency = new JLabel("Agency : ");
+		lblAgency = new JLabel("Agency : ");
 		lblAgency.setBounds(12, 93, 88, 14);
 		reservInfoHolder.add(lblAgency);
 
@@ -357,7 +357,7 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.add(agencyField);
 		agencyField.setColumns(10);
 
-		JLabel lblPrice = new JLabel("Price : ");
+		lblPrice = new JLabel("Price : ");
 		lblPrice.setBounds(12, 121, 88, 14);
 		reservInfoHolder.add(lblPrice);
 
@@ -374,7 +374,7 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.add(currencyField);
 		currencyField.setColumns(10);
 
-		JLabel lblCreditType = new JLabel("Credit type : ");
+		lblCreditType = new JLabel("Credit type : ");
 		lblCreditType.setBounds(12, 150, 88, 14);
 		reservInfoHolder.add(lblCreditType);
 
@@ -383,7 +383,7 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.add(creditField);
 		creditField.setColumns(10);
 
-		JLabel lblHostType = new JLabel("Host type : ");
+		lblHostType = new JLabel("Host type : ");
 		lblHostType.setBounds(12, 177, 88, 14);
 		reservInfoHolder.add(lblHostType);
 
@@ -392,7 +392,7 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.add(hostTypeField);
 		hostTypeField.setColumns(10);
 
-		JLabel lblTotalDays = new JLabel("Total days : ");
+		lblTotalDays = new JLabel("Total days : ");
 		lblTotalDays.setBounds(12, 260, 88, 14);
 		reservInfoHolder.add(lblTotalDays);
 
@@ -402,47 +402,67 @@ public class RoomExternalWindow extends JDialog {
 		reservInfoHolder.add(totalDaysField);
 		totalDaysField.setColumns(10);
 
-		JPanel cusomerTableHolder = new JPanel();
+		cusomerTableHolder = new JPanel();
 		cusomerTableHolder.setBackground(Color.decode("#066d95"));
 		cusomerTableHolder.setAutoscrolls(true);
 		getContentPane().add(cusomerTableHolder, BorderLayout.CENTER);
 		cusomerTableHolder.setLayout(new BorderLayout(0, 0));
 
+		noteHolder = new JPanel();
+		noteHolder.setBorder(new LineBorder(new Color(0, 0, 0)));
+		noteHolder.setAutoscrolls(true);
+		noteHolder.setLayout(new BorderLayout());
+		cusomerTableHolder.add(noteHolder, BorderLayout.SOUTH);
+		
 		roomNote = new JTextPane();
 		roomNote.setLocale(new Locale("tr", "TR"));
 		roomNote.setToolTipText("Write some note.");
 		roomNote.setMargin(new Insets(5, 5, 5, 5));
-		roomNote.setPreferredSize(new Dimension(0, 45));
+		roomNote.setPreferredSize(new Dimension(700, 45));
 		roomNote.setBackground(new Color(255, 255, 224));
 		roomNote.setAlignmentX(Component.LEFT_ALIGNMENT);
 		roomNote.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		roomNote.setFont(new Font("Arial", Font.BOLD, 15));
 		roomNote.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		cusomerTableHolder.add(roomNote, BorderLayout.SOUTH);
+		noteHolder.add(roomNote, BorderLayout.CENTER);
+		
+		lblAddSomeNote = new JLabel("Note : ");
+		lblAddSomeNote.setIcon(new ImageIcon(RoomExternalWindow.class.getResource("/com/coder/hms/icons/room_note.png")));
+		lblAddSomeNote.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		lblAddSomeNote.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAddSomeNote.setHorizontalTextPosition(SwingConstants.RIGHT);
+		lblAddSomeNote.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		lblAddSomeNote.setBackground(new Color(176, 196, 222));
+		lblAddSomeNote.setAutoscrolls(true);
+		lblAddSomeNote.setOpaque(true);
+		noteHolder.add(lblAddSomeNote, BorderLayout.WEST);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBackground(Color.decode("#e1fcff"));
-		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
-		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-		scrollPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		cusomerTableHolder.add(scrollPane, BorderLayout.NORTH);
+		cstTableScrollPane = new JScrollPane();
+		cstTableScrollPane.setBackground(Color.decode("#e1fcff"));
+		cstTableScrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
+		cstTableScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		cstTableScrollPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		cusomerTableHolder.add(cstTableScrollPane, BorderLayout.NORTH);
 
 		populateCustomerTable(roomText, customerModel);
 
 		customerTable = new JTable(customerModel);
+		customerTable.setRowHeight(20);
+		customerTable.setDefaultRenderer(Object.class, customerTableRenderer);
 		customerTable.setCellSelectionEnabled(false);
 		customerTable.setColumnSelectionAllowed(false);
+		customerTable.setRowSelectionAllowed(true);
 		customerTable.getColumnModel().getColumn(0).setPreferredWidth(10);
 		customerTable.getTableHeader().setDefaultRenderer(THR);
 		customerTable.addMouseListener(openCustomerListener());
-		scrollPane.setViewportView(customerTable);
+		cstTableScrollPane.setViewportView(customerTable);
 
-		JPanel postTableHolder = new JPanel();
+		postTableHolder = new JPanel();
 		postTableHolder.setPreferredSize(new Dimension(10, 300));
 		getContentPane().add(postTableHolder, BorderLayout.SOUTH);
 		postTableHolder.setLayout(new BorderLayout(0, 0));
 
-		JScrollPane postableScrollPane = new JScrollPane();
+		postableScrollPane = new JScrollPane();
 		postableScrollPane.setBackground(Color.decode("#e1fcff"));
 		postableScrollPane.setBackground(new Color(230, 230, 250));
 		postableScrollPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -454,11 +474,13 @@ public class RoomExternalWindow extends JDialog {
 		final JMenuItem menuItem = new JMenuItem("Delete");
 		menuItem.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_checkout.png")));
 		menuItem.addActionListener(ActionListener -> {
+			
 			deleteRowsListener();
 		});
 		popupMenu.add(menuItem);
 
 		payPostTable = new JTable(postPayModel);
+		payPostTable.setRowHeight(20);
 		payPostTable.setDefaultRenderer(Object.class, payPostRenderer);
 		payPostTable.setCellSelectionEnabled(false);
 		payPostTable.setRowSelectionAllowed(true);
@@ -469,9 +491,51 @@ public class RoomExternalWindow extends JDialog {
 		populateReservationDetail();
 
 		custWindow.setActionListener(saveChanges());
-
-		this.setAlwaysOnTop(false);
 		this.setVisible(true);
+	}
+	
+	private ActionListener paymentListener() {
+		final ActionListener theListener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						payWin.setReadyPaymentWindow(RoomExternalWindow.roomNumber);
+						if (payWin.getPaymentStatus()) {
+							populateReservationDetail();
+						}
+						populatePostPayTable(postPayModel);
+					}
+				});
+				
+			}
+		};
+		return theListener;
+	}
+
+	private ActionListener postingAction() {
+		final ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						postWin.setReadyPaymentWindow(RoomExternalWindow.roomNumber);
+						if (postWin.getPostingStatus()) {
+							populateReservationDetail();
+						}
+						populatePostPayTable(postPayModel);
+					}
+				});
+				
+			}
+		};
+		return listener;
 	}
 
 	private ActionListener checkoutListener() {
@@ -479,30 +543,49 @@ public class RoomExternalWindow extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(RoomExternalWindow.roomNumber);
+				
+				dialogFrame.setMessage("Are you sure to checkout this room?");
+				dialogFrame.setVisible(true);
 
-				if (checkingRoom.getUsageStatus().equals("FULL")) {
-					if (checkingRoom.getRemainingDebt() == 0) {
+				String response = dialogFrame.getAnswer();
+				
 
-						roomDaoImpl.setRoomCheckedOut(RoomExternalWindow.roomNumber);
-						dispose();
+				if(!response.isEmpty() && response.equals("YES")) {
+					
+					final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(RoomExternalWindow.roomNumber);
+
+					if (checkingRoom.getUsageStatus().equals("FULL")) {
+						if (checkingRoom.getRemainingDebt() == 0) {
+
+							roomDaoImpl.setRoomCheckedOut(RoomExternalWindow.roomNumber);
+							dialogFrame.dispose();
+							dispose();
+						}
+
+						else {
+							roomNote.setFont(new Font("Arial", Font.BOLD, 27));
+							roomNote.setForeground(Color.RED);
+							roomNote.setText("Room balance and Remaining debt must be zero!");
+							roomNote.revalidate();
+							roomNote.repaint();
+							dialogFrame.setMessage("All room balances need to be zero!");
+							dialogFrame.revalidate();
+							dialogFrame.repaint();
+							return;
+						}
 					}
 
 					else {
-						roomNote.setFont(new Font("Arial", Font.BOLD, 27));
-						roomNote.setForeground(Color.RED);
-						roomNote.setText("Room balance and Remaining debt must be zero!");
-						roomNote.revalidate();
-						roomNote.repaint();
-						JOptionPane.showMessageDialog(null, "All room balances need to be zero!",
-								JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
+
+						dialogFrame.setMessage("Choosed room is empty!\nFor checkingout it must be full.");
+						dialogFrame.revalidate();
+						dialogFrame.repaint();
 						return;
 					}
 				}
-
-				else {
-					JOptionPane.showMessageDialog(null, "Choosed room is empty!\nFor checkingout it must be full.",
-							JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
+				
+				else if(!response.isEmpty() && response.equals("NO")) {
+					dialogFrame.dispose();
 					return;
 				}
 

@@ -76,6 +76,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private JButton previousBtn, nextBtn;
 	private JPanel leftSidePanel, buttonPanel;
 	private static final long serialVersionUID = 1L;
+	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private JTable table, blokajTable, blokajRoomsTable, blokajCustomerTable;
 	private JSplitPane mainVerticalSplitter, leftCenterSplitter, centerRightSplitter;

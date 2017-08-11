@@ -25,7 +25,8 @@ public class CustomersTableRenderer extends DefaultTableCellRenderer {
 		}
 		
 		else {
-			cellComponent.setBackground(table.getBackground());
+			
+			cellComponent.setBackground(row % 2 == 0 ? table.getSelectionBackground() : table.getBackground());
 		}
 		
 		return cellComponent;

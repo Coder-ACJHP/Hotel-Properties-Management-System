@@ -23,7 +23,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
-
 public class Main_UpperToolbar {
 
 	private JPanel panel;
@@ -31,17 +30,15 @@ public class Main_UpperToolbar {
 	private Main_AllRooms theRooms;
 	private Main_Blockade blockadeFrame;
 	private Main_CustomersFrame customersFrame;
-	private Main_CashDesk cashdesk; 
+	private Main_CashDesk cashdesk;
 	private Main_Reservations rezervFrame;
 	private Main_RoomCleaning cleaningFrame;
+	private AllRooms_ColorInfoTable infoColorTable;
 	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn, auditBtn;
 
-	public JPanel getJPanel() {
-		return this.panel;
-	}
-
+	
 	public Main_UpperToolbar(final JPanel mainPanel) {
-				
+
 		panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setBackground(SystemColor.activeCaption);
@@ -82,7 +79,7 @@ public class Main_UpperToolbar {
 		rezervationBtn.setPreferredSize(new Dimension(200, 40));
 		rezervationBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(rezervationBtn);
-		
+
 		blockadeBtn = new JButton("Blockade");
 		blockadeBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		blockadeBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -104,7 +101,7 @@ public class Main_UpperToolbar {
 		roomCleaningBtn.setPreferredSize(new Dimension(200, 40));
 		roomCleaningBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(roomCleaningBtn);
-		
+
 		cashBtn = new JButton("Cash Desk");
 		cashBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		cashBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -114,8 +111,8 @@ public class Main_UpperToolbar {
 		cashBtn.setFont(new Font("Arial", Font.BOLD, 12));
 		cashBtn.setPreferredSize(new Dimension(200, 40));
 		cashBtn.addActionListener(UpperToolbarActionListener(mainPanel));
-		panel.add(cashBtn);	
-		
+		panel.add(cashBtn);
+
 		final JSeparator separator = new JSeparator();
 		separator.setBackground(Color.DARK_GRAY);
 		separator.setBounds(895, 6, 13, 43);
@@ -125,7 +122,7 @@ public class Main_UpperToolbar {
 		separator.setAutoscrolls(true);
 		separator.setPreferredSize(new Dimension(10, 20));
 		panel.add(separator);
-		
+
 		auditBtn = new JButton("Audit");
 		auditBtn.setIcon(new ImageIcon(Main_UpperToolbar.class.getResource("/com/coder/hms/icons/main_audit.png")));
 		auditBtn.setPreferredSize(new Dimension(200, 40));
@@ -135,93 +132,97 @@ public class Main_UpperToolbar {
 		auditBtn.setBounds(905, 7, 137, 40);
 		auditBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(auditBtn);
-		
 
 	}
 
-	
-	public ActionListener UpperToolbarActionListener(final JPanel mainPanel){
+	public ActionListener UpperToolbarActionListener(final JPanel mainPanel) {
 
-		
 		ActionListener actionListener = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				
+
 				String command = e.getActionCommand();
 
 				if (command.equalsIgnoreCase("Rooms Plain")) {
-					
+
 					theRooms = new Main_AllRooms();
+					infoColorTable = new AllRooms_ColorInfoTable();
+
+					// Set the usage of room into info table
+					infoColorTable.setCleanLabelCount(theRooms.cleanCounter);
+					infoColorTable.setDirtyLabelCount(theRooms.dirtyCounter);
+					infoColorTable.setDndLabelCount(theRooms.dndCounter);
+
 					mainPanel.removeAll();
+					mainPanel.add(theRooms.getWindow(), BorderLayout.WEST);
+					mainPanel.add(infoColorTable, BorderLayout.EAST);
 					mainPanel.revalidate();
 					mainPanel.repaint();
-					mainPanel.add(theRooms.getWindow(), BorderLayout.WEST);
-					mainPanel.add(new AllRooms_ColorInfoTable(), BorderLayout.EAST);
 
 				}
 
 				else if (command.equalsIgnoreCase("Guests")) {
-					
+
 					customersFrame = new Main_CustomersFrame();
 					mainPanel.removeAll();
+					mainPanel.add(customersFrame, BorderLayout.CENTER);
 					mainPanel.revalidate();
 					mainPanel.repaint();
-					mainPanel.add(customersFrame, BorderLayout.CENTER);
 				}
 
 				else if (command.equalsIgnoreCase("Reservations")) {
 
 					rezervFrame = new Main_Reservations();
 					mainPanel.removeAll();
-					mainPanel.revalidate();
-					mainPanel.repaint();
 					rezervFrame.populateMainTable();
 					mainPanel.add(rezervFrame, BorderLayout.CENTER);
+					mainPanel.revalidate();
+					mainPanel.repaint();
 				}
 
 				else if (command.equalsIgnoreCase("Blockade")) {
-					
+
 					blockadeFrame = new Main_Blockade();
 					mainPanel.removeAll();
+					mainPanel.add(blockadeFrame, BorderLayout.CENTER);
 					mainPanel.revalidate();
 					mainPanel.repaint();
-					mainPanel.add(blockadeFrame, BorderLayout.CENTER);
-					
+
 				}
-				
+
 				else if (command.equalsIgnoreCase("Room Cleaning")) {
-					
+
 					cleaningFrame = new Main_RoomCleaning();
 					mainPanel.removeAll();
+					mainPanel.add(cleaningFrame, BorderLayout.CENTER);
 					mainPanel.revalidate();
 					mainPanel.repaint();
-					mainPanel.add(cleaningFrame, BorderLayout.CENTER);
 				}
-				
+
 				else if (command.equalsIgnoreCase("Cash Desk")) {
-					
+
 					cashdesk = new Main_CashDesk();
 					mainPanel.removeAll();
+					mainPanel.add(cashdesk, BorderLayout.CENTER);
 					mainPanel.revalidate();
 					mainPanel.repaint();
-					mainPanel.add(cashdesk, BorderLayout.CENTER);
 				}
-				
+
 				else if (command.equalsIgnoreCase("Audit")) {
 					audit = new Main_Audit();
 					mainPanel.removeAll();
+					mainPanel.add(audit, BorderLayout.CENTER);
 					mainPanel.revalidate();
 					mainPanel.repaint();
-					mainPanel.add(audit, BorderLayout.CENTER);
 
 				}
-				
 			}
 		};
-		
 		return actionListener;
 	}
 
+	public JPanel getJPanel() {
+		return this.panel;
+	}
 }

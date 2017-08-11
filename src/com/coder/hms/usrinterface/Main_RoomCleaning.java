@@ -49,54 +49,65 @@ public class Main_RoomCleaning extends JPanel {
 		this.setMaximumSize(new Dimension(1000, 900));
 		setLayout(new BorderLayout(0, 0));
 
-		JPanel panel = new JPanel();
+		final JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel.setAutoscrolls(true);
-		panel.setPreferredSize(new Dimension(10, 45));
+		panel.setPreferredSize(new Dimension(10, 50));
 		panel.setBackground(Color.decode("#066d95"));
 		add(panel, BorderLayout.NORTH);
 		panel.setLayout(null);
 
-		JButton btnCleanSelected = new JButton("Clean Selected");
+		final JButton btnCleanSelected = new JButton("Clean Selected");
+		btnCleanSelected.setPreferredSize(new Dimension(135, 35));
+		btnCleanSelected.setAutoscrolls(true);
 		btnCleanSelected.addActionListener(cleanSelectedRoom());
 		btnCleanSelected.setIcon(
 				new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/cleaning_single.png")));
 		btnCleanSelected.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnCleanSelected.setBounds(6, 6, 147, 37);
+		btnCleanSelected.setBounds(9, 3, 147, 44);
+		btnCleanSelected.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnCleanSelected.setFont(new Font("Arial", Font.BOLD, 14));
 		panel.add(btnCleanSelected);
 
-		JButton btnCleanAll = new JButton("Clean All");
+		final JButton btnCleanAll = new JButton("Clean All");
+		btnCleanAll.setAutoscrolls(true);
 		btnCleanAll.addActionListener(cleanAllListener());
 		btnCleanAll.setIcon(new ImageIcon(Main_RoomCleaning.class.
 				getResource("/com/coder/hms/icons/cleaning_all.png")));
 		btnCleanAll.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnCleanAll.setBounds(161, 6, 147, 37);
+		btnCleanAll.setBounds(165, 3, 147, 44);
+		btnCleanAll.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnCleanAll.setFont(new Font("Arial", Font.BOLD, 14));
 		panel.add(btnCleanAll);
 		
-		JButton btnPollute = new JButton("Pollute Selected");
+		final JButton btnPollute = new JButton("Pollute Selected");
+		btnPollute.setAutoscrolls(true);
 		btnPollute.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/room_dirty.png")));
 		btnPollute.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnPollute.setFont(new Font("Arial", Font.BOLD, 13));
-		btnPollute.setBounds(316, 6, 147, 37);
+		btnPollute.setBounds(321, 3, 147, 44);
+		btnPollute.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnPollute.addActionListener(putPolluteListener());
 		panel.add(btnPollute);
 		
-		JButton btnPolluteAll = new JButton("Pollute All");
+		final JButton btnPolluteAll = new JButton("Pollute All");
+		btnPolluteAll.setAutoscrolls(true);
 		btnPolluteAll.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/rezaerv_report.png")));
 		btnPolluteAll.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnPolluteAll.setFont(new Font("Arial", Font.BOLD, 14));
-		btnPolluteAll.setBounds(468, 6, 147, 37);
+		btnPolluteAll.setBounds(477, 3, 147, 44);
+		btnPolluteAll.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnPolluteAll.addActionListener(polluteAllListener());
 		panel.add(btnPolluteAll);
 		
-		JButton btnPutAtDnd = new JButton("Put at DND");
+		final JButton btnPutAtDnd = new JButton("Put at DND");
+		btnPutAtDnd.setAutoscrolls(true);
 		btnPutAtDnd.addActionListener(putAtDndListener());
 		btnPutAtDnd.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/room_dnd.png")));
 		btnPutAtDnd.setHorizontalTextPosition(SwingConstants.RIGHT);
 		btnPutAtDnd.setFont(new Font("Arial", Font.BOLD, 14));
-		btnPutAtDnd.setBounds(621, 6, 147, 37);
+		btnPutAtDnd.setBounds(633, 3, 147, 44);
+		btnPutAtDnd.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.add(btnPutAtDnd);
 
 

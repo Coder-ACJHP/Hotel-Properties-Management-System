@@ -47,6 +47,9 @@ public class Main_AllRooms {
 
 
 	protected JButton roomBtn;
+	public int dndCounter = 0;
+	public int cleanCounter = 0;
+	public int dirtyCounter = 0;
 	private List<Room> roomList;
 	private final String innerDate;
 	private String currentRoomNumber;
@@ -59,14 +62,6 @@ public class Main_AllRooms {
 	/**
 	 * Create the dialog.
 	 */
-	public JPanel getWindow() {
-		return this.contentPanel;
-	}
-
-	public void setWindow(JPanel thePanel) {
-		this.contentPanel = thePanel;
-	}
-	
 	public Main_AllRooms() {
 
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -98,9 +93,9 @@ public class Main_AllRooms {
 		
 		roomList = roomDaoImpl.getAllRooms();
 
-		final MatteBorder cleanBorder = BorderFactory.createMatteBorder(11, 0, 0, 0, Color.WHITE);
-		final MatteBorder dndBorder = BorderFactory.createMatteBorder(11, 0, 0, 0, Color.decode("#ffc300"));
-		final MatteBorder dirtyBorder = BorderFactory.createMatteBorder(11, 0, 0, 0, Color.decode("#ce1d1d"));
+		final MatteBorder cleanBorder = BorderFactory.createMatteBorder(11, 1, 1, 1, Color.WHITE);
+		final MatteBorder dndBorder = BorderFactory.createMatteBorder(11, 1, 1, 1, Color.decode("#ffc300"));
+		final MatteBorder dirtyBorder = BorderFactory.createMatteBorder(11, 1, 1, 1, Color.decode("#ce1d1d"));
 
 		final int roomCount =  hotelDaoImpl.getHotel().getRoomCapacity();
 		
@@ -128,12 +123,15 @@ public class Main_AllRooms {
 					switch (room.getCleaningStatus()) {
 					case "CLEAN":
 						roomBtn.setBorder(cleanBorder);
+						cleanCounter++;
 						break;
 					case "DIRTY":
 						roomBtn.setBorder(dirtyBorder);
+						dirtyCounter++;
 						break;
 					case "DND":
 						roomBtn.setBorder(dndBorder);
+						dndCounter++;
 						break;
 					default:
 						break;
@@ -180,9 +178,9 @@ public class Main_AllRooms {
 
 			roomBtn.setHorizontalTextPosition(SwingUtilities.LEFT);
 			roomBtn.setVerticalAlignment(SwingUtilities.BOTTOM);
-			roomBtn.setPreferredSize(new Dimension(100, 60));
-			roomBtn.setMaximumSize(new Dimension(100, 60));
-			roomBtn.addActionListener(theAction.getActionListener());
+			roomBtn.setPreferredSize(new Dimension(100, 65));
+			roomBtn.setMaximumSize(new Dimension(100, 65));
+			roomBtn.addMouseListener(theAction.getActionListener());
 			contentPanel.add(roomBtn);
 
 		}
@@ -224,34 +222,34 @@ public class Main_AllRooms {
 
 	private JPopupMenu getPopupMenu() {
 
-		JPopupMenu popupMenu = new JPopupMenu();
-		JMenuItem cut = new JMenuItem(new DefaultEditorKit.CutAction());
+		final JPopupMenu popupMenu = new JPopupMenu();
+		final JMenuItem cut = new JMenuItem(new DefaultEditorKit.CutAction());
 		cut.setText("Cut");
 		cut.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_X, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		cut.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_cut.png")));
 		popupMenu.add(cut);
 
-		JMenuItem copy = new JMenuItem(new DefaultEditorKit.CopyAction());
+		final JMenuItem copy = new JMenuItem(new DefaultEditorKit.CopyAction());
 		copy.setText("Copy");
 		copy.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		copy.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_copy.png")));
 		popupMenu.add(copy);
 
-		JMenuItem paste = new JMenuItem(new DefaultEditorKit.PasteAction());
+		final JMenuItem paste = new JMenuItem(new DefaultEditorKit.PasteAction());
 		paste.setText("Paste");
 		paste.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_V, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		paste.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_paste.png")));
 		popupMenu.add(paste);
 
-		JMenu changeCleaning = new JMenu();
+		final JMenu changeCleaning = new JMenu();
 		changeCleaning.setText("Change status");
 		changeCleaning.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_changeStatus.png")));
 		popupMenu.add(changeCleaning);
 		
-		JMenuItem clean = new JMenuItem();
+		final JMenuItem clean = new JMenuItem();
 		clean.setText("Set as clean");
 		clean.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_W, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
@@ -274,7 +272,7 @@ public class Main_AllRooms {
 		});
 		changeCleaning.add(clean);
 		
-		JMenuItem dirty = new JMenuItem();
+		final JMenuItem dirty = new JMenuItem();
 		dirty.setText("Set as dirty");
 		dirty.setAccelerator(
 				KeyStroke.getKeyStroke(KeyEvent.VK_D, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
@@ -384,7 +382,7 @@ public class Main_AllRooms {
 							customerSurName = cst.getLastName();
 						}
 						
-						NewReservExternalWindow nex = new NewReservExternalWindow();
+						final NewReservExternalWindow nex = new NewReservExternalWindow();
 						nex.setRezIdField(rr.getId());
 						nex.setAgency(rr.getAgency());
 						nex.setRoomNumber(checkingRoom.getNumber());
@@ -424,5 +422,9 @@ public class Main_AllRooms {
 		popupMenu.add(getReservation);
 
 		return popupMenu;
+	}
+	
+	public JPanel getWindow() {
+		return this.contentPanel;
 	}
 }

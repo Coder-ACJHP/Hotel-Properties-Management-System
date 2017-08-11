@@ -30,12 +30,12 @@ public class PayPostTableCellRenderer extends DefaultTableCellRenderer {
 		
 			if(rowVal.equals("CASH PAYMENT")) {
 					
-				cellComponent.setBackground(Color.decode("#1ba999"));
+				cellComponent.setBackground(Color.decode("#75dbcf"));
 					
 			}
 			else if(rowVal.equals("SYSTEM")) {
 				
-				cellComponent.setBackground(Color.decode("#d60027"));
+				cellComponent.setBackground(Color.decode("#d66c7f"));
 			}
 			else {
 				

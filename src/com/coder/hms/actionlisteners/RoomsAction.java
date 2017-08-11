@@ -5,11 +5,12 @@
  */
 package com.coder.hms.actionlisteners;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import com.coder.hms.daoImpl.HotelDaoImpl;
@@ -31,7 +32,7 @@ public class RoomsAction {
 	private String roomText = "";
 	private RoomDaoImpl roomDaoImpl;
 	private HotelDaoImpl hotelDaoImpl;
-	private ActionListener customActionListener;
+	private MouseAdapter customMouseListener;
 
 	public RoomsAction() {
 
@@ -40,79 +41,105 @@ public class RoomsAction {
 
 		roomDaoImpl = new RoomDaoImpl();
 
-		customActionListener = new ActionListener() {
-
+		customMouseListener = new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				int counter = 100;
-				int lastNum = 0;
-				String command = e.getActionCommand();
-
-				final String innerDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+			public void mouseClicked(MouseEvent e) {
 				
-				for (int i = 1; i <= hotel.getRoomCapacity(); i++) {
-					++lastNum;
+				//set the button when click one time just focus on
+				if(e.getClickCount() == 1) {
+					
+					JButton comp = (JButton) e.getComponent();
+					comp.setFocusPainted(true);
+				}
+				
+				//in double click do some thing other
+				else if(e.getClickCount() == 2) {
+					
+					int counter = 100;
+					int lastNum = 0;
+					
+					//get the button text
+					String command = (String) e.getSource().toString();
+					
+					//get new date as String 
+					final String innerDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+					
+					//start loop to get all rooms as room capacity
+					for (int i = 1; i <= hotel.getRoomCapacity(); i++) {
+						++lastNum;
 
-					roomText = counter + "" + lastNum;
+						//create the button text with same algorithm like in 'AllRooms.class'
+						roomText = counter + "" + lastNum;
 
-					if (i % 6 == 0) {
-						counter += 100;
-						lastNum = 0;
-					}
-
-					if (command.equals(roomText)) {
-
-						final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
-						final ReservationDaoImpl rImpl = new ReservationDaoImpl();
-						final Reservation foundedReserv = rImpl.getReservationById(theRoom.getReservationId());
-						
-						if (theRoom.getUsageStatus().equals("FULL")) {
-							SwingUtilities.invokeLater(new Runnable() {
-
-								@Override
-								public void run() {
-									new RoomExternalWindow(roomText);
-
-								}
-							});
-							break;
-						} 
-						
-						else if (theRoom.getUsageStatus().equals("BLOCKED") && innerDate.equals(foundedReserv.getCheckinDate())) {
-
-							SwingUtilities.invokeLater(new Runnable() {
-								
-								@Override
-								public void run() {
-									
-									new Reserved_CheckinWin(theRoom.getNumber())
-									.setVisible(true);
-								
-								}
-							});
+						if (i % 6 == 0) {
+							counter += 100;
+							lastNum = 0;
 						}
-						
-						else if (theRoom.getUsageStatus().equals("EMPTY")) {
+
+						///////////////////////////////////////////////
+						// check the clicked button if contains same // 
+						// looping button text work with that button //
+						///////////////////////////////////////////////
+					
+						// NOTE: Don't forget to add 'break' command when you finished 
+						// your job to quit from the loop.
+						if (command.contains(roomText)) {
+
+							final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
+							final ReservationDaoImpl rImpl = new ReservationDaoImpl();
+							final Reservation foundedReserv = rImpl.getReservationById(theRoom.getReservationId());
 							
-							SwingUtilities.invokeLater(new Runnable() {
+							if (theRoom.getUsageStatus().equals("FULL")) {
+								SwingUtilities.invokeLater(new Runnable() {
+
+									@Override
+									public void run() {
+										new RoomExternalWindow(roomText);
+
+									}
+								});
+								break;
+							} 
+							
+							else if (theRoom.getUsageStatus().equals("BLOCKED") && 
+											innerDate.equals(foundedReserv.getCheckinDate())) {
+
+								SwingUtilities.invokeLater(new Runnable() {
+									
+									@Override
+									public void run() {
+										
+										new Reserved_CheckinWin(theRoom.getNumber())
+										.setVisible(true);
+									
+									}
+								});
+								break;
+							}
+							
+							else if (theRoom.getUsageStatus().equals("EMPTY")) {
 								
-								@Override
-								public void run() {
+								SwingUtilities.invokeLater(new Runnable() {
 									
-									new Walkin_CheckinWin(theRoom.getNumber())
-									.setVisible(true);
-									
-								}
-							});
+									@Override
+									public void run() {
+										
+										new Walkin_CheckinWin(theRoom.getNumber())
+										.setVisible(true);
+										
+									}
+								});
+								break;
+							}
 						}
 					}
 				}
+				super.mouseClicked(e);
 			}
 		};
 	}
 
-	public ActionListener getActionListener() {
-		return this.customActionListener;
+	public MouseAdapter getActionListener() {
+		return this.customMouseListener;
 	}
 }
