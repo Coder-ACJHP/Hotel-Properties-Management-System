@@ -90,7 +90,7 @@ public class NewReservExternalWindow extends JDialog {
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
-	private final RoomNumberMaker srn = new RoomNumberMaker();
+	private final RoomNumberMaker roomNumberMaker = new RoomNumberMaker();
 	private ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private JLabel agencyLbl, creditTypeLbl, customerCountryLbl;
 	private JTextField rezIdField, nameSurnameField, totalDaysField;
@@ -306,17 +306,17 @@ public class NewReservExternalWindow extends JDialog {
 
 		
 		reportBtn = new JButton("REPORT");
-		reportBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
 		reportBtn.setIcon(new ImageIcon(NewReservExternalWindow.class.getResource("/com/coder/hms/icons/rezaerv_report.png")));
 		reportBtn.setForeground(new Color(0, 128, 128));
 		reportBtn.setOpaque(true);
 		reportBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reportBtn.setPreferredSize(new Dimension(110, 40));
 		reportBtn.setFont(new Font("Verdana", Font.BOLD, 15));
+		reportBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		buttonsPanel.add(reportBtn);
 		
 		SaveBtn = new JButton("SAVE");
@@ -381,15 +381,14 @@ public class NewReservExternalWindow extends JDialog {
 		lblCurrency.setBounds(498, 12, 86, 14);
 		roomTypePanel.add(lblCurrency);
 		
-		HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
-		Hotel hotel = hotelDaoImpl.getHotel();
+		final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
+		final Hotel hotel = hotelDaoImpl.getHotel();
 		ROOM_TYPES = hotel.getRoomType().split(" ");
 		
 		roomTypeCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(ROOM_TYPES));
 		roomTypeCmbBox.setBounds(154, 35, 140, 20);
 		roomTypeCmbBox.addActionListener(roomTypeActionListener());
 		roomTypePanel.add(roomTypeCmbBox);
-		
 		
 		personCountSpinner = new JSpinner();
 		personCountSpinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
@@ -420,8 +419,15 @@ public class NewReservExternalWindow extends JDialog {
 		roomLbl.setBounds(41, 11, 61, 16);
 		roomTypePanel.add(roomLbl);
 		
+		///////////////////////////////////////////////////////////////
+		//Populate this comboBox with special method that return just//
+		//empty rooms, all 'BLOCKED' & 'FULL' rooms removed because  // 
+		//when we create a new reservation we will see all rooms this//
+		//is a big mistake, we have to choose rooms that not blocked //
+		//or not full                                                //
 		ROOM_NUMS = new String[]{};
-		ROOM_NUMS = srn.getNotReservedRooms(sdf.format(new Date()));
+		ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
+		
 		roomNumCmbBox = new JComboBox<Object>(new DefaultComboBoxModel<>(ROOM_NUMS));
 		roomNumCmbBox.setBounds(34, 35, 86, 20);
 		roomNumCmbBox.addActionListener(privateItemListener());

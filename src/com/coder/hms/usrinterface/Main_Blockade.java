@@ -12,6 +12,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -30,6 +33,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
@@ -38,6 +43,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
@@ -76,6 +82,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private JButton previousBtn, nextBtn;
 	private JPanel leftSidePanel, buttonPanel;
 	private static final long serialVersionUID = 1L;
+	private TableRowSorter<DefaultTableModel> tableRowShorter;
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private JTable table, blokajTable, blokajRoomsTable, blokajCustomerTable;
@@ -97,6 +104,8 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private final BlockadeTableCellRenderer cellRenderer = new BlockadeTableCellRenderer();
 	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
 	private final BlockadeTableHeaderRenderer THRC = new BlockadeTableHeaderRenderer();
+	private JPanel panel;
+	private JTextField searchField;
 	/**
 	 * Create the frame.
 	 */
@@ -196,7 +205,8 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		
 		cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		THR.setHorizontalAlignment(SwingConstants.CENTER);
-
+		tableRowShorter = new TableRowSorter<DefaultTableModel>(model);
+		
 		table = new JTable(model);
 		table.getTableHeader().setDefaultRenderer(THR);
 		table.setDefaultRenderer(Object.class, cellRenderer);
@@ -205,12 +215,15 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		table.setCellSelectionEnabled(true);
 		table.setRowHeight(20);
 		table.setFont(new Font("Dialog", Font.PLAIN, 14));
+		table.setRowSorter(tableRowShorter);
 		table.setBackground(UIManager.getColor("InternalFrame.borderColor"));
 		
 		//populate table headers from this method.
 		populateTableHeaders();
 
 		generalScrollPane = new JScrollPane();
+		generalScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		generalScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		generalScrollPane.setViewportView(table);
 		
 		mainVerticalSplitter.setRightComponent(generalScrollPane);
@@ -269,6 +282,31 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		lblBlockade.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 25));
 		upperPanel.add(lblBlockade, BorderLayout.CENTER);
 		
+		panel = new JPanel();
+		panel.setAutoscrolls(true);
+		panel.setOpaque(false);
+		panel.setPreferredSize(new Dimension(300, 40));
+		upperPanel.add(panel, BorderLayout.EAST);
+		panel.setLayout(null);
+		
+		JLabel lblSearch = new JLabel("Search : ");
+		lblSearch.setHorizontalTextPosition(SwingConstants.RIGHT);
+		lblSearch.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSearch.setForeground(new Color(255, 255, 51));
+		lblSearch.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblSearch.setBounds(6, 6, 93, 22);
+		panel.add(lblSearch);
+		
+		searchField = new JTextField();
+		searchField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		searchField.setSelectionColor(new Color(102, 153, 255));
+		searchField.setPreferredSize(new Dimension(13, 26));
+		searchField.setIgnoreRepaint(true);
+		searchField.setBounds(111, 5, 183, 26);
+		searchField.setColumns(10);
+		searchField.addKeyListener(customKeyListener());
+		panel.add(searchField);
+		
 		this.setVisible(true);
 		
 		//invoke this method at last
@@ -277,6 +315,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		populateMainTable(model);
 	}
 
+	// before creating GUI make ready all dependencies
 	public synchronized void getReadyForTables() {
 		rImpl = new RoomDaoImpl();		
 		roomList = rImpl.getAllRooms();
@@ -305,13 +344,18 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		tableColumn = tableColumnModel.getColumn(2);
 		tableColumn.setHeaderValue("STATUS");
 		
+		//start the date from minus 1 to get today date.
 		c.add(Calendar.DATE, -1);
+		
+		//start the loop from 3 because first 3 columns already 
+		//populated up and the loop on 10 to get one week 
 		for(int i = 3; i < 10; i++) {
 			c.add(Calendar.DATE, 1);
 			today = sdf.format(c.getTime());
 			tableColumn = tableColumnModel.getColumn(i);
 			tableColumn.setHeaderValue(today);
 
+			//store dates in special array to use it in bottom
 			weekDates[i] = today;
 		}
 		
@@ -320,36 +364,51 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		
 	}
 
+	//Bottom main tabel that include all reservations
 	public void populateMainTable(DefaultTableModel model) {
 		
 		model.setRowCount(0);
 		/*Simple object POJO class (entity)*/
 		Blockade blockade = null;
 		
-		for(int i=0; i < roomList.size(); i++) {
+		for(int colindex=0; colindex < roomList.size(); colindex++) {
+			/////////////////////////////////////////////////////////////////
+			//here we created new 'Blockade' object special for this table //
+			//and we will use this object to move datas as desire          //
+			blockade = new Blockade();                                     //
+			blockade.setNumber(roomList.get(colindex).getNumber());        //
+			blockade.setType(roomList.get(colindex).getType());            //
+			blockade.setStatus(roomList.get(colindex).getCleaningStatus());//
+			/////////////////////////////////////////////////////////////////
 			
-			blockade = new Blockade();
-			blockade.setNumber(roomList.get(i).getNumber());
-			blockade.setType(roomList.get(i).getType());
-			blockade.setStatus(roomList.get(i).getUsageStatus());
-			
+			//populate first three columns with following informations
 			model.addRow(new Object[]{blockade.getNumber(), blockade.getType(), blockade.getStatus()});
 			
-			for (int j = 0; j < resList.size(); j++) {
-				if(blockade.getNumber().equals(resList.get(j).getTheNumber()))
-					for(int x=0; x < weekDates.length; x++) {
-						if(resList.get(j).getCheckinDate().equals(weekDates[x])) {
-							//add 3 to weekDates[x] because weekDates start from -3 in table;
-							model.setValueAt(resList.get(j).getGroupName(), i, x);
+			////////////////////////////////////////////////////////////////////
+			//in this part of code we gonna use special date array 'weekDates'// 
+			//that initialized up and populated table header as date, so after//
+			//checking the date we have to get that reservation is equals with//
+			//header date and finally populate the table.                     //
+			for (int listIndex = 0; listIndex < resList.size(); listIndex++) {
+				
+				if(blockade.getNumber().equals(resList.get(listIndex).getTheNumber()))
+					
+					for(int rowIndex=0; rowIndex < weekDates.length; rowIndex++) {
+						
+						if(resList.get(listIndex).getCheckinDate().equals(weekDates[rowIndex])) {
+							
+							//populating table and sorting as dates
+							model.setValueAt(resList.get(listIndex).getGroupName(), colindex, rowIndex);
 						}
 					}
 			}			
 		}	
 	}
 	
+	//Upper first at left tabel including blockade reservations
 	public void populateBlokajTable(DefaultTableModel blokajModel) {
 				
-		String workingDate = sdf.format(dateChooser.getDate());
+		final String workingDate = sdf.format(dateChooser.getDate());
 		
 		final Reservation reservation = new Reservation();
 		rezervationIdList = new ArrayList<>();
@@ -429,6 +488,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		dateChooser.revalidate();
 		dateChooser.repaint();
 		
+		//refresh all tables to getting new informations
 		populateTableHeaders();
 		populateBlokajTable(blokajModel);
 		populateMainTable(model);
@@ -451,5 +511,21 @@ public class Main_Blockade extends JPanel implements ActionListener {
 			}
 		};
 		return propListener;
+	}
+	
+	private KeyListener customKeyListener() {
+		final KeyAdapter adapter = new KeyAdapter() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				String modifiedQuery = "(?i)" + searchField.getText();
+				tableRowShorter.setRowFilter(RowFilter.regexFilter(modifiedQuery));
+				
+				super.keyTyped(e);
+			}
+			
+		};
+		return adapter;
 	}
 }

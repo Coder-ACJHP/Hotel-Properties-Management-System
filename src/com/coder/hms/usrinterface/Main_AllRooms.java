@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -136,15 +137,28 @@ public class Main_AllRooms {
 					default:
 						break;
 					}
-
 					
 					final String ROOM_STATUS = room.getUsageStatus();
 					final long reservId = room.getReservationId();
 					
 					if(reservId != 0) {
 						final Reservation theReservation = rImpl.getReservationById(room.getReservationId());
+						
+						///////////////////////////////////////////////////////////////////////////
+						//Convert check in, check out, today from String to date than compare all// 
+						LocalDate localDate = LocalDate.parse(theReservation.getCheckoutDate()); //
+						final Date checkoutDate = java.sql.Date.valueOf(localDate);              //
+						                                                                         //
+						localDate = LocalDate.parse(innerDate);                                  //
+						final Date defaultDate = java.sql.Date.valueOf(localDate);               //
+						                                                                         //
+						localDate = LocalDate.parse(theReservation.getCheckinDate());            //
+						final Date checkinDate = java.sql.Date.valueOf(localDate);               //
+						///////////////////////////////////////////////////////////////////////////
+						
 						 if(ROOM_STATUS.equals("FULL")) {
-								if(theReservation.getCheckoutDate().equals(innerDate)) {
+	
+								if(checkoutDate.equals(defaultDate) || checkoutDate.before(defaultDate)) {
 									roomBtn.setBackground(Color.decode("#990033"));
 								}else {
 									roomBtn.setForeground(Color.WHITE);
@@ -153,7 +167,7 @@ public class Main_AllRooms {
 							}
 							
 							else if(ROOM_STATUS.equals("BLOCKED")) {
-								if(theReservation.getCheckinDate().equals(innerDate)) {
+								if(checkinDate.equals(defaultDate)) {
 									roomBtn.setBackground(Color.decode("#eca7d0"));
 								}else {
 									roomBtn.setBackground(Color.decode("#afe2fb"));
@@ -251,8 +265,7 @@ public class Main_AllRooms {
 		
 		final JMenuItem clean = new JMenuItem();
 		clean.setText("Set as clean");
-		clean.setAccelerator(
-				KeyStroke.getKeyStroke(KeyEvent.VK_W, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		clean.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		clean.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/cleaning_single.png")));
 		clean.addActionListener(ActionListener -> {
 			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
@@ -274,8 +287,7 @@ public class Main_AllRooms {
 		
 		final JMenuItem dirty = new JMenuItem();
 		dirty.setText("Set as dirty");
-		dirty.setAccelerator(
-				KeyStroke.getKeyStroke(KeyEvent.VK_D, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		dirty.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		dirty.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_dirty.png")));
 		dirty.addActionListener(ActionListener -> {
 			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
@@ -297,8 +309,7 @@ public class Main_AllRooms {
 
 		JMenuItem dnd = new JMenuItem();
 		dnd.setText("Set as DND");
-		dnd.setAccelerator(
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		dnd.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		dnd.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_dnd.png")));
 		dnd.addActionListener(ActionListener -> {
 			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
@@ -320,14 +331,16 @@ public class Main_AllRooms {
 		
 		JMenuItem checkout = new JMenuItem(new DefaultEditorKit.PasteAction());
 		checkout.setText("Do checkout");
-		checkout.setAccelerator(
-				KeyStroke.getKeyStroke(KeyEvent.VK_O, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		checkout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		checkout.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/room_checkout.png")));
 		checkout.addActionListener(ActionListener -> {
 			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
 
 			if(checkingRoom.getUsageStatus().equals("FULL")) {
-				if (checkingRoom.getRemainingDebt() == 0) {
+				
+				final double price = Math.ceil(checkingRoom.getRemainingDebt());
+				
+				if (price == 0) {
 					
 					roomDaoImpl.setRoomCheckedOut(currentRoomNumber);
 					cookRooms(contentPanel);

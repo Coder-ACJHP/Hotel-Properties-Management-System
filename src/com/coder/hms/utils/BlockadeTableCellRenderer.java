@@ -37,16 +37,20 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 				cellComponent.setBackground(table.getBackground());
 			}
 			
-			else if(colrowVal.equalsIgnoreCase("FULL") || colrowVal.equalsIgnoreCase("BLOCKED")) {
-				cellComponent.setBackground(Color.decode("#f9d692"));
-			}
-			
-			else if(colrowVal.equalsIgnoreCase("EMPTY")) {
-				cellComponent.setBackground(Color.decode("#ddf6f3"));
-			}
-			
-			else if(colrowVal.equalsIgnoreCase("SINGLE") ||colrowVal.equalsIgnoreCase("DOUBLE") || colrowVal.equalsIgnoreCase("TWIN") || colrowVal.equalsIgnoreCase("TRIPLE")) {
+			else if(column == 1) {
 				cellComponent.setBackground(Color.decode("#f5f6dd"));
+			}
+			
+			else if(column == 2 && colrowVal.equalsIgnoreCase("CLEAN")) {
+				cellComponent.setBackground(Color.decode("#afe2fb"));
+			}
+			
+			else if(column == 2 && colrowVal.equalsIgnoreCase("DIRTY")) {
+				cellComponent.setBackground(Color.decode("#ce1d1d"));
+			}
+
+			else if(column == 2 && colrowVal.equalsIgnoreCase("DND")) {
+				cellComponent.setBackground(Color.decode("#ffc300"));
 			}
 			
 			else if(column == 3 && !colrowVal.isEmpty()) {
@@ -76,11 +80,6 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 			else if(column == 9 && !colrowVal.isEmpty()) {
 				cellComponent.setBackground(Color.decode("#944af4"));
 			}
-			
-			else {
-				cellComponent.setBackground(table.getBackground());
-			}
-
 		}
 		
 		if(hasFocus) {

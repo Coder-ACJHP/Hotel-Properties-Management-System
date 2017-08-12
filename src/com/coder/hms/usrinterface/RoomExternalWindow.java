@@ -544,51 +544,36 @@ public class RoomExternalWindow extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(RoomExternalWindow.roomNumber);
+				
 				dialogFrame.setMessage("Are you sure to checkout this room?");
 				dialogFrame.setVisible(true);
+				dialogFrame.btnYes.addActionListener(ActionListener -> {
 
-				String response = dialogFrame.getAnswer();
+				final double price = Math.ceil(checkingRoom.getRemainingDebt());
 				
+					if (price == 0) {
 
-				if(!response.isEmpty() && response.equals("YES")) {
-					
-					final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(RoomExternalWindow.roomNumber);
+						roomDaoImpl.setRoomCheckedOut(RoomExternalWindow.roomNumber);
+						dialogFrame.dispose();
+						dispose();
 
-					if (checkingRoom.getUsageStatus().equals("FULL")) {
-						if (checkingRoom.getRemainingDebt() == 0) {
-
-							roomDaoImpl.setRoomCheckedOut(RoomExternalWindow.roomNumber);
-							dialogFrame.dispose();
-							dispose();
-						}
-
-						else {
-							roomNote.setFont(new Font("Arial", Font.BOLD, 27));
-							roomNote.setForeground(Color.RED);
-							roomNote.setText("Room balance and Remaining debt must be zero!");
-							roomNote.revalidate();
-							roomNote.repaint();
-							dialogFrame.setMessage("All room balances need to be zero!");
-							dialogFrame.revalidate();
-							dialogFrame.repaint();
-							return;
-						}
-					}
-
-					else {
-
-						dialogFrame.setMessage("Choosed room is empty!\nFor checkingout it must be full.");
-						dialogFrame.revalidate();
-						dialogFrame.repaint();
+					} else {
+						roomNote.setFont(new Font("Arial", Font.BOLD, 27));
+						roomNote.setForeground(Color.RED);
+						roomNote.setText("Room balance and Remaining debt must be zero!");
+						roomNote.revalidate();
+						roomNote.repaint();
+						dialogFrame.dispose();
 						return;
 					}
-				}
+
+				});
 				
-				else if(!response.isEmpty() && response.equals("NO")) {
+				dialogFrame.btnNo.addActionListener(ActionListener -> {
 					dialogFrame.dispose();
 					return;
-				}
-
+				});
 			}
 		};
 		return listener;
@@ -691,6 +676,8 @@ public class RoomExternalWindow extends JDialog {
 
 		remainDebtField.setValue(totalPrice - roombalance);
 		theRoom.setRemainingDebt(totalPrice - roombalance);
+		
+		roomNote.setText(reservation.getNote());
 		roomDaoImpl.saveRoom(theRoom);
 	}
 

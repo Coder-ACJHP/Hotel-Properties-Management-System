@@ -111,10 +111,7 @@ public class Main_Audit extends JPanel {
 		btnAudit.setAutoscrolls(true);
 		btnAudit.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnAudit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnAudit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnAudit.addActionListener(customAuditlistener());
 		btnAudit.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		btnAudit.setIcon(new ImageIcon(Main_Audit.class.getResource("/com/coder/hms/icons/main_audit.png")));
 		btnAudit.setBounds(6, 11, 127, 40);
@@ -166,6 +163,28 @@ public class Main_Audit extends JPanel {
 
 		getReadyDependencies();
 		populateMainTable(model);
+	}
+
+	private ActionListener customAuditlistener() {
+		final ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final DialogFrame dialog = new DialogFrame();
+				dialog.setMessage("Are you sure ?");
+				dialog.btnYes.addActionListener(ActionListener ->{
+			
+					dialog.dispose();
+				});
+				dialog.btnNo.addActionListener(ActionListener->{
+					dialog.dispose();
+					return;
+				});
+				dialog.setVisible(true);
+				
+			}
+		};
+		return listener;
 	}
 
 	private synchronized void getReadyDependencies() {
@@ -286,13 +305,9 @@ public class Main_Audit extends JPanel {
 						cl.setTime(today);
 						cl.add(Calendar.DATE, 1);
 						newDate = sdf.format(cl.getTime());
-						
-						System.out.println("RESERVATION NEW DATE IS : " + newDate);
-						
+											
 						foundRes.setCheckinDate(newDate);
 						resDaoImpl.saveReservation(foundRes);
-						
-						System.out.println("RESERVATION UPDATED SUCCESSFULLY.");
 					}
 				}
 				
@@ -306,18 +321,25 @@ public class Main_Audit extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				System.out.println("CANCEL RESERVATION WORKING...");
-				System.out.println("SELECTED ROW : 'rowId :'" + rowId);
-				
-				for (Reservation foundRes : foundReservationlist) {
-					if(foundRes.getId() == rowId) {
-						
-						foundRes.setBookStatus("CANCELLED");
-						resDaoImpl.saveReservation(foundRes);
-						
-						System.out.println("RESERVATION UPDATED SUCCESSFULLY.");
+				final DialogFrame dialog = new DialogFrame();
+				dialog.setMessage("Are you sure to cancel this reservation?");
+				dialog.btnYes.addActionListener(ActionListener ->{
+					for (Reservation foundRes : foundReservationlist) {
+						if(foundRes.getId() == rowId) {
+							
+							foundRes.setBookStatus("CANCELLED");
+							resDaoImpl.saveReservation(foundRes);
+							
+							System.out.println("RESERVATION UPDATED SUCCESSFULLY.");
+						}
 					}
-				}
+					dialog.dispose();
+				});
+				dialog.btnNo.addActionListener(ActionListener->{
+					dialog.dispose();
+					return;
+				});
+				dialog.setVisible(true);
 				
 			}
 		};

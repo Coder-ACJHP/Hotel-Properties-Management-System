@@ -12,8 +12,10 @@ import java.util.List;
 
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
+import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Reservation;
+import com.coder.hms.entities.Room;
 
 public class RoomNumberMaker {
 
@@ -49,20 +51,35 @@ public class RoomNumberMaker {
 	
 	public Object[] getNotReservedRooms(final String date) {
 		
+		//get All reserved room numbers
 		final ReservationDaoImpl rImpl = new ReservationDaoImpl();
 		List<Reservation> reservList = rImpl.getReservsByDate(date);
 		
+		//create a String array and add all numbers to in with loop
 		final String[] roomNumbers = new String[reservList.size()];
-		
 		for(int index=0; index < reservList.size(); index++) {
 			
 			roomNumbers[index] = reservList.get(index).getTheNumber();
 		}
 		
+		//get all rooms and check them if it status is 'FULL' add to list
+		//than remove all list from all rooms.
+		final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
+		final List<Room> roomList = roomDaoImpl.getAllRooms();
+		
+		String[] appendBusys = new String[roomList.size()];
+		for (int i=0; i < roomList.size(); i++) {
+			if(roomList.get(i).getUsageStatus().equals("FULL")) {
+				appendBusys[i] = roomList.get(i).getNumber();
+			}
+		}
+		
 		final Collection<String> allRooms = new ArrayList<String>(Arrays.asList(getRoomNumbers()));
-		final Collection<String> busyRooms = new ArrayList<String>(Arrays.asList(roomNumbers));
+		final Collection<String> busyRooms = new ArrayList<String>(Arrays.asList(appendBusys));
+		final Collection<String> blockedRooms = new ArrayList<String>(Arrays.asList(roomNumbers));
+		allRooms.removeAll(blockedRooms);
 		allRooms.removeAll(busyRooms);
-
+		
 		return allRooms.toArray();
 	}
 }
