@@ -9,8 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.coder.hms.usrinterface.LoginExternalWindow;
-import com.coder.hms.usrinterface.MainFrame;
+import com.coder.hms.ui.external.LoginWindow;
 
 
 public class StartApplication {
@@ -31,9 +30,8 @@ public class StartApplication {
 			@Override
 			public void run() {
 				//start the application.
-//				new LoginExternalWindow();
+				new LoginWindow();
 				
-				new MainFrame();
 			}
 		});
 

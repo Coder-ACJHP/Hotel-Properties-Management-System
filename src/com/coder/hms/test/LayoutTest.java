@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import com.coder.hms.usrinterface.Main_AllRooms;
+import com.coder.hms.ui.main.Main_AllRooms;
 
 public class LayoutTest extends JFrame {
 

@@ -1,6 +1,6 @@
 package com.coder.hms.test;
 
-import com.coder.hms.usrinterface.Internal_CustomerForm;
+import com.coder.hms.ui.inner.Internal_CustomerForm;
 
 public class InternalCustomerFormTest {
 

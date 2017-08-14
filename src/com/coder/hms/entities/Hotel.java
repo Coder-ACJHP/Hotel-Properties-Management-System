@@ -24,20 +24,35 @@ public class Hotel {
     @Column(name="Name")
 	private String Name;
 	
+    @Column(name="starCount")
+	private int starCount;
+    
+    @Column(name="picture")
+    private String picture;
+    
 	@Column(name="Owner")
-	private String Owner;
-	
-	@Column(name="Address")
-	private String Address;
+	private String Owner;	
 	
 	@Column(name="PhoneNumber")
 	private String PhoneNumber;
 	
+	@Column(name="country")
+    private String country;
+	
+	@Column(name="type")
+    private String type;
+	
 	@Column(name="RoomCapacity")
 	private int RoomCapacity;
 	
+	@Column(name="city")
+    private String city;
+	
 	@Column(name="RoomTypes")
 	private String RoomTypes;
+
+	@Column(name="Address")
+	private String Address;
 	
 	public Hotel() {
 		
@@ -59,20 +74,28 @@ public class Hotel {
 		Name = name;
 	}
 
+	public int getStarCount() {
+		return starCount;
+	}
+
+	public void setStarCount(int starCount) {
+		this.starCount = starCount;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
 	public String getOwner() {
 		return Owner;
 	}
 
 	public void setOwner(String owner) {
 		Owner = owner;
-	}
-
-	public String getAddress() {
-		return Address;
-	}
-
-	public void setAddress(String address) {
-		Address = address;
 	}
 
 	public String getPhoneNumber() {
@@ -83,6 +106,22 @@ public class Hotel {
 		PhoneNumber = phoneNumber;
 	}
 
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public int getRoomCapacity() {
 		return RoomCapacity;
 	}
@@ -91,39 +130,52 @@ public class Hotel {
 		RoomCapacity = roomCapacity;
 	}
 
-	public String getRoomType() {
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getRoomTypes() {
 		return RoomTypes;
 	}
 
-	public void setRoomType(String roomType) {
-		this.RoomTypes = roomType;
+	public void setRoomTypes(String roomTypes) {
+		RoomTypes = roomTypes;
 	}
 
-	public Hotel(String name, String owner, String address, String phoneNumber, int roomCapacity, String roomType) {
-		super();
-		Name = name;
-		Owner = owner;
-		Address = address;
-		PhoneNumber = phoneNumber;
-		RoomCapacity = roomCapacity;
-		this.RoomTypes = roomType;
+	public String getAddress() {
+		return Address;
 	}
 
-	public Hotel(long Id, String name, String owner, String address, String phoneNumber, int roomCapacity, String roomType) {
-		super();
-		this.Id = Id;
-		Name = name;
-		Owner = owner;
+	public void setAddress(String address) {
 		Address = address;
-		PhoneNumber = phoneNumber;
-		RoomCapacity = roomCapacity;
-		this.RoomTypes = roomType;
 	}
-	
+
+	public Hotel(long id, String name, int starCount, String picture, String owner, String phoneNumber, String country,
+			String type, int roomCapacity, String city, String roomTypes, String address) {
+		super();
+		Id = id;
+		Name = name;
+		this.starCount = starCount;
+		this.picture = picture;
+		Owner = owner;
+		PhoneNumber = phoneNumber;
+		this.country = country;
+		this.type = type;
+		RoomCapacity = roomCapacity;
+		this.city = city;
+		RoomTypes = roomTypes;
+		Address = address;
+	}
+
 	@Override
 	public String toString() {
-		return "Hotel [Id="+ Id +"Name=" + Name + ", Owner=" + Owner + ", Address=" + Address + ", PhoneNumber=" + PhoneNumber
-				+ ", RoomCapacity=" + RoomCapacity + ", roomType=" + RoomTypes + "]";
+		return "Hotel [Id=" + Id + ", Name=" + Name + ", starCount=" + starCount + ", picture=" + picture + ", Owner="
+				+ Owner + ", PhoneNumber=" + PhoneNumber + ", country=" + country + ", type=" + type + ", RoomCapacity="
+				+ RoomCapacity + ", city=" + city + ", RoomTypes=" + RoomTypes + ", Address=" + Address + "]";
 	}
-	
+
 }

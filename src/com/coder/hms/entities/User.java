@@ -44,6 +44,9 @@ public class User implements Serializable{
 	@Column(name="Email")
 	private String Email;
 	
+	@Column(name="Role")
+	private String Role;
+	
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
@@ -96,22 +99,16 @@ public class User implements Serializable{
 		Email = email;
 	}
 
-	@Override
-	public String toString() {
-		return "User [Id=" + Id + ", FirstName=" + FirstName + ", LastName=" + LastName + ", NickName=" + NickName
-				+ ", Password=" + Password + ", Email=" + Email + "]";
+	public String getRole() {
+		return Role;
 	}
 
-	public User(String firstName, String lastName, String nickName, String password, String email) {
-		super();
-		FirstName = firstName;
-		LastName = lastName;
-		NickName = nickName;
-		Password = password;
-		Email = email;
+	public void setRole(String role) {
+		Role = role;
 	}
 
-	public User(long id, String firstName, String lastName, String nickName, String password, String email) {
+	public User(long id, String firstName, String lastName, String nickName, String password, String email,
+			String role) {
 		super();
 		Id = id;
 		FirstName = firstName;
@@ -119,6 +116,14 @@ public class User implements Serializable{
 		NickName = nickName;
 		Password = password;
 		Email = email;
+		Role = role;
 	}
+
+	@Override
+	public String toString() {
+		return "User [Id=" + Id + ", FirstName=" + FirstName + ", LastName=" + LastName + ", NickName=" + NickName
+				+ ", Password=" + Password + ", Email=" + Email + ", Role=" + Role + "]";
+	}
+
 	
 }

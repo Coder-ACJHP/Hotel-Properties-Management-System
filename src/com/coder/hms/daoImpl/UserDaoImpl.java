@@ -88,6 +88,21 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
 		return isUser;
 	}
 
+	public User getUserByEmail(String theEmail) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<User> query = session.createQuery("from User where Email=:theEmail", User.class);
+		query.setParameter("theEmail", theEmail);
+		User user = query.getSingleResult();
+		
+		if(user != null) {
+			return user;
+		}
+		
+		session.close();
+		return null;
+	}
+	
 	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
@@ -98,5 +113,6 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
 		}
 		
 	}
+
 
 }

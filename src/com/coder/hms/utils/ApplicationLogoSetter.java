@@ -10,9 +10,10 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 
 import com.apple.eawt.Application;
-import com.coder.hms.usrinterface.LoginExternalWindow;
+import com.coder.hms.ui.external.LoginWindow;
 
 
 public class ApplicationLogoSetter {
@@ -28,7 +29,7 @@ public class ApplicationLogoSetter {
 		if (opSystem.contains("windows") || opSystem.contains("nux")) {
 			
 			frame.setIconImage(Toolkit.getDefaultToolkit().
-					getImage(LoginExternalWindow.class.getResource(thePath)));
+					getImage(LoginWindow.class.getResource(thePath)));
 		}else {
 			Application.getApplication().setDockIconImage(new ImageIcon(getClass().
 													getResource(thePath)).getImage());
@@ -42,7 +43,20 @@ public class ApplicationLogoSetter {
 		if (opSystem.contains("windows") || opSystem.contains("nux")) {
 			
 			dialog.setIconImage(Toolkit.getDefaultToolkit().
-					getImage(LoginExternalWindow.class.getResource(thePath)));
+					getImage(LoginWindow.class.getResource(thePath)));
+		}else {
+			Application.getApplication().setDockIconImage(new ImageIcon(getClass().
+													getResource(thePath)).getImage());
+		}
+	}
+	
+	public void setApplicationLogoJInternalFrame(final JInternalFrame dialog, String thePath) {
+		
+		String opSystem = System.getProperty("os.name").toLowerCase();
+
+		if (opSystem.contains("windows") || opSystem.contains("nux")) {
+			
+			dialog.setFrameIcon(new ImageIcon(thePath));
 		}else {
 			Application.getApplication().setDockIconImage(new ImageIcon(getClass().
 													getResource(thePath)).getImage());
