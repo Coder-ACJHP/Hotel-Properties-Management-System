@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,7 +37,7 @@ public class Main_UpperToolbar {
 	private Main_Reservations rezervFrame;
 	private Main_RoomCleaning cleaningFrame;
 	private AllRooms_ColorInfoTable infoColorTable;
-	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn, auditBtn;
+	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn, auditBtn, refreshBtn;
 
 	
 	public Main_UpperToolbar(final JPanel mainPanel) {
@@ -46,7 +47,7 @@ public class Main_UpperToolbar {
 		panel.setBackground(SystemColor.activeCaption);
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAutoscrolls(true);
-		panel.setPreferredSize(new Dimension(1096, 55));
+		panel.setPreferredSize(new Dimension(1224, 55));
 		panel.setLayout(null);
 
 		roomsBtn = new JButton("Rooms Plain");
@@ -117,7 +118,7 @@ public class Main_UpperToolbar {
 
 		final JSeparator separator = new JSeparator();
 		separator.setBackground(Color.DARK_GRAY);
-		separator.setBounds(895, 6, 13, 43);
+		separator.setBounds(889, 6, 13, 43);
 		separator.setOrientation(SwingConstants.VERTICAL);
 		separator.setFocusable(true);
 		separator.setForeground(Color.DARK_GRAY);
@@ -131,9 +132,32 @@ public class Main_UpperToolbar {
 		auditBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		auditBtn.setFont(new Font("Arial", Font.BOLD, 12));
 		auditBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		auditBtn.setBounds(905, 7, 137, 40);
+		auditBtn.setBounds(906, 7, 137, 40);
 		auditBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(auditBtn);
+		
+		JSeparator secondSeparator = new JSeparator();
+		secondSeparator.setPreferredSize(new Dimension(10, 20));
+		secondSeparator.setOrientation(SwingConstants.VERTICAL);
+		secondSeparator.setForeground(Color.DARK_GRAY);
+		secondSeparator.setFocusable(true);
+		secondSeparator.setBackground(Color.DARK_GRAY);
+		secondSeparator.setAutoscrolls(true);
+		secondSeparator.setBounds(1049, 6, 13, 43);
+		panel.add(secondSeparator);
+		
+		refreshBtn = new JButton("");
+		refreshBtn.setToolTipText("Refresh the application main window.");
+		refreshBtn.setMnemonic(KeyEvent.VK_F5);
+		refreshBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+		refreshBtn.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		refreshBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		refreshBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		refreshBtn.setIcon(new ImageIcon(Main_UpperToolbar.class.getResource("/com/coder/hms/icons/menubar_exchange_calculate.png")));
+		refreshBtn.setBounds(1066, 7, 55, 40);
+		refreshBtn.setActionCommand("Refresh");
+		refreshBtn.addActionListener(UpperToolbarActionListener(mainPanel));
+		panel.add(refreshBtn);
 
 	}
 
@@ -218,6 +242,12 @@ public class Main_UpperToolbar {
 					mainPanel.revalidate();
 					mainPanel.repaint();
 
+				}
+				
+				else if(command.equalsIgnoreCase("Refresh")) {
+					mainPanel.removeAll();
+					mainPanel.revalidate();
+					mainPanel.repaint();
 				}
 			}
 		};

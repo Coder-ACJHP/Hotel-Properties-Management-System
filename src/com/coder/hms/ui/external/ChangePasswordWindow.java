@@ -11,6 +11,9 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -44,7 +47,7 @@ public class ChangePasswordWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final UserDaoImpl userDaoImpl;
 	private JPasswordField oldPasswordField, newPasswordField;
-	private final JButton btnClear, btnUpdate, setPasswordVisible;
+	private final JButton btnClear, btnUpdate, setPasswordVisible, capslockBtn;
 
 	/**
 	 * Create the dialog.
@@ -178,7 +181,21 @@ public class ChangePasswordWindow extends JDialog {
 		markerLbl.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		markerLbl.setBounds(376, 33, 16, 16);
 		getContentPane().add(markerLbl);
+		
+		capslockBtn = new JButton("");
+		capslockBtn.setIcon(new ImageIcon(ChangePasswordWindow.class.getResource("/com/coder/hms/icons/login_capslock.png")));
+		capslockBtn.setToolTipText("CAPS_LOCK status.");
+		capslockBtn.setPreferredSize(new Dimension(16, 16));
+		capslockBtn.setOpaque(false);
+		capslockBtn.setMinimumSize(new Dimension(16, 16));
+		capslockBtn.setMaximumSize(new Dimension(16, 16));
+		capslockBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+		capslockBtn.setBounds(378, 94, 16, 16);
+		getContentPane().add(capslockBtn);
 
+		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new MyDispatcher());
+        
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 
@@ -238,6 +255,8 @@ public class ChangePasswordWindow extends JDialog {
 			public void mouseReleased(MouseEvent e) {
 				if(clicked != 0) {
 					passwordField.setEchoChar('\u25CF');
+					oldPasswordField.setEchoChar('\u25CF');
+					newPasswordField.setEchoChar('\u25CF');
 					clicked = 0;
 				}
 				
@@ -247,6 +266,8 @@ public class ChangePasswordWindow extends JDialog {
 			public void mousePressed(MouseEvent e) {
 				if (clicked == 0) {
 					passwordField.setEchoChar((char) 0);
+					oldPasswordField.setEchoChar((char) 0);
+					newPasswordField.setEchoChar((char) 0);
 					clicked++;
 				}
 			}
@@ -279,4 +300,30 @@ public class ChangePasswordWindow extends JDialog {
 		System.out.println("checkPassword(String oldPassword) : "+ correct);
 		return correct;
 	}
+	
+	  private class MyDispatcher implements KeyEventDispatcher {
+	        @Override
+	        public boolean dispatchKeyEvent(KeyEvent e) {
+	            if (e.getID() == KeyEvent.KEY_PRESSED) {
+	                boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+	                
+	                if(isOn) {
+	                	capslockBtn.setBackground(Color.RED);
+	                	capslockBtn.revalidate();
+	                	capslockBtn.repaint();
+	                }
+	                
+	            } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+	            	 boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+		                
+		                if(isOn == false) {
+		                	capslockBtn.setBackground(getBackground());
+		                	capslockBtn.revalidate();
+		                	capslockBtn.repaint();
+		                }
+	            	
+	            }
+	            return false;
+	        }
+	    }
 }

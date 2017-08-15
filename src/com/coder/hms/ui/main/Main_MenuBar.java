@@ -113,6 +113,19 @@ public class Main_MenuBar {
 		});
 		menuItemFrontDesk.add(restart);
 		
+		
+		final JMenuItem refresh = new JMenuItem("Refresh");
+		refresh.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5,
+				(InputEvent.SHIFT_MASK) | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+		refresh.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/cleaning-refresh.png")));
+		refresh.addActionListener(ActionListener ->{
+			
+			mainFrame.revalidate();
+			mainFrame.repaint();
+
+		});
+		menuItemFrontDesk.add(refresh);
+		
 		final JMenuItem menuInnerItemExit = new JMenuItem("Exit");
 		menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
 		//add shortcut keys
@@ -122,7 +135,7 @@ public class Main_MenuBar {
 		//add listener for exiting when CTRL+SHIFT+Q pressed
 		menuInnerItemExit.addActionListener(ActionEvent -> {
 
-			final int decision = JOptionPane.showConfirmDialog(null, "Are you sure to exit?", "Confirm",
+			final int decision = JOptionPane.showConfirmDialog(null, "Do you really want to exit?", "Confirm",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 			if (decision == JOptionPane.YES_OPTION) {

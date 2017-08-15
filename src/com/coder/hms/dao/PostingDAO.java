@@ -13,4 +13,14 @@ public interface PostingDAO {
 	public Posting getPostingById(long Id);
 	
 	public List<Posting> getAllPostingsByRoomNumber(String roomNumber);
+	
+	public String getTotalDollarForOneDay(String date);
+	
+	public String getTotalLiraPostingsForOneDay(String date);
+	
+	public String getTotalEuroPostingsForOneDay(String date);
+	
+	public String getTotalPoundPostingsForOneDay(String date);
+	
+	public String getTotalCreditPostingsForOneDay(String date);
 }

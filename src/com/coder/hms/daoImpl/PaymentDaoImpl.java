@@ -130,6 +130,18 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 		return totalVal;
 	}
 	
+
+	public List<Payment> getAllPaymentsForToday(String today) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Payment> query = session.createQuery("from Payment where dateTime >= :today", Payment.class);
+		query.setParameter("today", today);
+		List<Payment> paymentList = query.getResultList();
+		session.close();
+		
+		return paymentList;
+	}
+
 	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
@@ -140,5 +152,4 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 		}
 		
 	}
-
 }

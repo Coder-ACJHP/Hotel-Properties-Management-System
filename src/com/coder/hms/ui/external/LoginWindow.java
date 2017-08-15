@@ -11,6 +11,9 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -52,9 +55,9 @@ public class LoginWindow extends JDialog {
 	private int clicked = 0;
 	private JLabel infoLabel;
 	private JTextField userNameField;
-	private JButton setPasswordVisible;
 	private JPasswordField passwordField;
 	private static SessionBean sessionBean;
+	private JButton setPasswordVisible, capslockBtn;
 	private static final long serialVersionUID = 1L;
 	final UserDaoImpl userDaoImpl = new UserDaoImpl();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
@@ -142,7 +145,7 @@ public class LoginWindow extends JDialog {
 		setPasswordVisible.setPreferredSize(new Dimension(16, 16));
 		setPasswordVisible.setMaximumSize(new Dimension(16, 16));
 		setPasswordVisible.setMinimumSize(new Dimension(16, 16));
-		setPasswordVisible.setBounds(373, 124, 16, 16);
+		setPasswordVisible.setBounds(373, 118, 16, 16);
 		setPasswordVisible.addMouseListener(setVisible());
 		getContentPane().add(setPasswordVisible);
 		
@@ -240,11 +243,26 @@ public class LoginWindow extends JDialog {
 		lblResetYourPassword.setBounds(241, 151, 134, 9);
 		getContentPane().add(lblResetYourPassword);
 		
-		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setAlwaysOnTop(false);
-		this.setVisible(true);
+		capslockBtn = new JButton("");
+		capslockBtn.setIcon(new ImageIcon(LoginWindow.class.getResource("/com/coder/hms/icons/login_capslock.png")));
+		capslockBtn.setToolTipText("CAPS_LOCK status.");
+		capslockBtn.setPreferredSize(new Dimension(16, 16));
+		capslockBtn.setOpaque(false);
+		capslockBtn.setMinimumSize(new Dimension(16, 16));
+		capslockBtn.setMaximumSize(new Dimension(16, 16));
+		capslockBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+		capslockBtn.setBounds(373, 136, 16, 16);
+		getContentPane().add(capslockBtn);
+		
+		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new MyDispatcher());
+        
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setAlwaysOnTop(false);
+		setVisible(true);
 
 	}
+
 
 	public void mouseListenerForButtons(final JButton jButton) {
 		
@@ -282,6 +300,7 @@ public class LoginWindow extends JDialog {
 			
 			@Override
 			public void keyTyped(KeyEvent e) {
+				
 				infoLabel.setText(null);
 				super.keyTyped(e);
 			}
@@ -368,4 +387,30 @@ public class LoginWindow extends JDialog {
 		};
 		return listener;
 	}
+	
+	  private class MyDispatcher implements KeyEventDispatcher {
+	        @Override
+	        public boolean dispatchKeyEvent(KeyEvent e) {
+	            if (e.getID() == KeyEvent.KEY_PRESSED) {
+	                boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+	                
+	                if(isOn) {
+	                	capslockBtn.setBackground(Color.RED);
+	                	capslockBtn.revalidate();
+	                	capslockBtn.repaint();
+	                }
+	                
+	            } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+	            	 boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+		                
+		                if(isOn == false) {
+		                	capslockBtn.setBackground(getBackground());
+		                	capslockBtn.revalidate();
+		                	capslockBtn.repaint();
+		                }
+	            	
+	            }
+	            return false;
+	        }
+	    }
 }

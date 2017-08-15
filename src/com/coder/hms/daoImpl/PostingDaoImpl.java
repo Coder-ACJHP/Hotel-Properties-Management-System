@@ -73,6 +73,18 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
 		return postList;
 	}
 
+
+	public List<Posting> getAllPostingsForToday(String today) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Posting> query = session.createQuery("from Posting where dateTime >= :today", Posting.class);
+		query.setParameter("today", today);
+		List<Posting> postList = query.getResultList();
+		session.close();
+		
+		return postList;
+	}
+
 	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
@@ -82,6 +94,63 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
 			theSession.beginTransaction();
 		}
 		
+	}
+
+	public String getTotalLiraPostingsForOneDay(String today) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'TURKISH LIRA' and dateTime >= :today", String.class);
+		query.setParameter("today", today);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	public String getTotalDollarPostingsForOneDay(String today) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'DOLLAR' and dateTime >= :today", String.class);
+		query.setParameter("today", today);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	public String getTotalEuroPostingsForOneDay(String today) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'EURO' and dateTime >= :today", String.class);
+		query.setParameter("today", today);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	public String getTotalPoundPostingsForOneDay(String today) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'POUND' and dateTime >= :today", String.class);
+		query.setParameter("today", today);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
+	}
+
+	@Override
+	public String getTotalDollarForOneDay(String date) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTotalCreditPostingsForOneDay(String date) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'CREDIT CARD' and dateTime >= :date", String.class);
+		query.setParameter("date", date);
+		final String totalVal = query.getSingleResult();
+		session.close();
+		return totalVal;
 	}
 
 }

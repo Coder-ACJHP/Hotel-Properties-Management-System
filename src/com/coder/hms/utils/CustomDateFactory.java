@@ -22,15 +22,15 @@ public class CustomDateFactory {
 	////////////////////////////////////////////////////////
 	//this method working on main application date,       //
 	//we need to stop changing date after 00:00 o'clock   //
-	//because hotel systems audit is between 1 AM and 5 AM//
-	//not at midnigth, thats why in this method we have to//
+	//because hotel systems audit is between 1 AM and 6 AM//
+	//not at midnight, thats why in this method we have to//
 	//bring back the date after 00:00 to yesterday.Thats  //
 	//mean we will stop the date changing to new day until//
 	//as desired time.                                    //
 	////////////////////////////////////////////////////////
 	public void setValidDateUntilAudit(int counter) {
 		///////////////////////////////////////////////////////
-		//we need to repeat the the method in every second to//
+		//we need to repeat the method in every second to    //
 		//catch if the hour and minutes equals 00:00.That's  //
 		//why we gonna using timer schedule                  //
 		final Timer timer = new Timer();
@@ -53,8 +53,8 @@ public class CustomDateFactory {
 						date = calendar.getTime();
 					}
 				//////////////////////////////////////////////////////	
-				//else give normal date because date not initialized//
-				//that's mean NULL POINTER EXCEPTION!               //
+				//else return normal date because date not          //
+				//initialized that's mean NULL POINTER EXCEPTION!   //
 				} else {
 					date = new Date();
 				}
@@ -62,7 +62,7 @@ public class CustomDateFactory {
 			}
 		};
 		/////////////////////////////////////////////////////////
-		//repeating in every 100 miliseconds not second because//
+		//repeating in every 100 milliseconds not second because//
 		//when we create new object from this class it will    //
 		//create in less than one second [running from NULL    //
 		// POINTER EXCEPTION!]                                 //
@@ -71,7 +71,7 @@ public class CustomDateFactory {
 	}
 
 	//////////////////////////////////////////
-	//Get the cooked date as desired pattern//
+	//Get the prepared date as desired pattern//
 	public Date getDate() {
 		final String today = sdf.format(date);
 		final LocalDate ld = LocalDate.parse(today);

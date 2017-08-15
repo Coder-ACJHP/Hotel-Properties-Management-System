@@ -5,6 +5,8 @@
  */
 package com.coder.hms.start;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -25,15 +27,18 @@ public class StartApplication {
 			e.printStackTrace();
 		}
 		
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				//start the application.
-				new LoginWindow();
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
 				
-			}
-		});
+				@Override
+				public void run() {
+					new LoginWindow();
+					
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
 
 	}
 

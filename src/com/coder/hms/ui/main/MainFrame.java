@@ -68,7 +68,7 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				final int decision =JOptionPane.showConfirmDialog(null, "Are you sure to exit?", 
+				final int decision =JOptionPane.showConfirmDialog(null, "Do you really want to exit?", 
 						"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				
 				if(decision == JOptionPane.YES_OPTION) {

@@ -8,22 +8,29 @@ package com.coder.hms.ui.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Currency;
+import java.util.List;
 import java.util.Locale;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
@@ -31,6 +38,10 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.coder.hms.daoImpl.PaymentDaoImpl;
+import com.coder.hms.daoImpl.PostingDaoImpl;
+import com.coder.hms.entities.Payment;
+import com.coder.hms.entities.Posting;
+import com.coder.hms.ui.external.MoneyTransaction;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
 
 public class Main_CashDesk extends JPanel {
@@ -41,6 +52,9 @@ public class Main_CashDesk extends JPanel {
 	private JTable table;
 	private JPanel centerPanel;
 	private JScrollPane scrollPane;
+	private PaymentDaoImpl paymentDaoImpl;
+	private PostingDaoImpl postingDaoImpl;
+	private MoneyTransaction moneyTransaction;
 	private static final long serialVersionUID = 1L;
 	private double tlCashVal, tlCreditVal, tlCityLedgerVal;
 	private double dlCashVal, dlCreditVal, dlCityLedgerVal;
@@ -57,28 +71,37 @@ public class Main_CashDesk extends JPanel {
 	private NumberFormat euFormatter = NumberFormat.getCurrencyInstance();
 	private NumberFormat poFormatter = NumberFormat.getCurrencyInstance();
 	private final BlockadeTableHeaderRenderer THRC = new BlockadeTableHeaderRenderer();
+	private JPanel buttonPanel;
+	private JButton btnNewOperation;
+	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	final Calendar date = Calendar.getInstance();
+	final String today;
 
 	/**
 	 * Create the dialog.
 	 */
 	public Main_CashDesk() {
+		
 		setAutoscrolls(true);
 		setVisible(true);
 		setBackground(Color.decode("#066d95"));
 		setLayout(new BorderLayout(0, 0));
+		
+		date.set(Calendar.HOUR_OF_DAY, 0);
+		today = sdf.format(date.getTime());
 		
 		tlFormatter.setCurrency(Currency.getInstance(Locale.getDefault()));
 		dlFormatter.setCurrency(Currency.getInstance(Locale.US));
 		euFormatter.setCurrency(Currency.getInstance(Locale.FRANCE));
 		poFormatter.setCurrency(Currency.getInstance(Locale.UK));
 		
-		final JPanel buttonPanel = new JPanel();
-		buttonPanel.setAutoscrolls(true);
-		buttonPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, SystemColor.controlShadow, null, null, null));
-		buttonPanel.setPreferredSize(new Dimension(10, 40));
-		buttonPanel.setBackground(new Color(173, 216, 230));
-		add(buttonPanel, BorderLayout.NORTH);
-		buttonPanel.setLayout(new BorderLayout(0, 0));
+		final JPanel titlePanel = new JPanel();
+		titlePanel.setAutoscrolls(true);
+		titlePanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, SystemColor.controlShadow, null, null, null));
+		titlePanel.setPreferredSize(new Dimension(10, 40));
+		titlePanel.setBackground(new Color(173, 216, 230));
+		add(titlePanel, BorderLayout.NORTH);
+		titlePanel.setLayout(new BorderLayout(0, 0));
 		
 		final JLabel lblCashDesk = new JLabel("CASH DESK");
 		lblCashDesk.setForeground(new Color(70, 130, 180));
@@ -87,7 +110,7 @@ public class Main_CashDesk extends JPanel {
 		lblCashDesk.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 25));
 		lblCashDesk.setAlignmentY(Component.TOP_ALIGNMENT);
 		lblCashDesk.setPreferredSize(new Dimension(200, 40));
-		buttonPanel.add(lblCashDesk);
+		titlePanel.add(lblCashDesk);
 		
 		final JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -296,8 +319,12 @@ public class Main_CashDesk extends JPanel {
 		table = new JTable(model);
 		table.getTableHeader().setDefaultRenderer(THRC);
 		table.setFillsViewportHeight(true);
-		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(true);
+		table.setColumnSelectionAllowed(false);
+		table.setCellSelectionEnabled(false);
+		table.setRowSelectionAllowed(true);
+		table.setRowHeight(18);
+		//populate the table rows with shorting
+		populateMainTable(model);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setPreferredSize(new Dimension(2, 200));
@@ -305,43 +332,99 @@ public class Main_CashDesk extends JPanel {
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
 		scrollPane.setViewportView(table);
 		centerPanel.add(scrollPane, BorderLayout.NORTH);
-	
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setBackground(new Color(173, 216, 230));
+		buttonPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		buttonPanel.setPreferredSize(new Dimension(10, 50));
+		centerPanel.add(buttonPanel, BorderLayout.SOUTH);
+		buttonPanel.setLayout(null);
+		
+		btnNewOperation = new JButton("New transaction");
+		btnNewOperation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						moneyTransaction = new MoneyTransaction();
+						if(moneyTransaction.isFinished()) {
+							populateMainTable(model);
+						}
+					}
+				});
+			}
+		});
+		btnNewOperation.setToolTipText("Start a new money transaction\npost, pay etc.");
+		btnNewOperation.setAutoscrolls(true);
+		btnNewOperation.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnNewOperation.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		btnNewOperation.setIcon(new ImageIcon(Main_CashDesk.class.getResource("/com/coder/hms/icons/room_posting.png")));
+		btnNewOperation.setFont(new Font("Arial", Font.BOLD, 12));
+		btnNewOperation.setBounds(6, 6, 137, 40);
+		btnNewOperation.setPreferredSize(new Dimension(200, 40));
+		buttonPanel.add(btnNewOperation);
+		
 		populateAllFields();
 	}
 
-	/*Getters and setters for access this values from another classes*/
+	private void populateMainTable(DefaultTableModel theModel) {
+
+		theModel.setRowCount(0);
+
+		paymentDaoImpl = new PaymentDaoImpl();
+		postingDaoImpl = new PostingDaoImpl();
+
+		final List<Posting> postingList = postingDaoImpl.getAllPostingsForToday(today);
+		final List<Payment> paymentList = paymentDaoImpl.getAllPaymentsForToday(today);
+
+		for (Posting posting : postingList) {
+
+			Object[] postData = { posting.getRoomNumber(), posting.getPostType(), posting.getPrice(),
+					posting.getCurrency(), posting.getDateTime(), posting.getExplanation() };
+			theModel.addRow(postData);
+
+		}
+		for (Payment payment : paymentList) {
+			Object[] payData = { payment.getRoomNumber(), payment.getPaymentType(), payment.getPrice(),
+					payment.getCurrency(), payment.getDateTime(), payment.getExplanation() };
+			theModel.addRow(payData);
+		}
+
+	}
 	
+	/*Getters and setters for access this values from another classes*/
 	private void populateAllFields() {
 		
-		final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		final Calendar date = Calendar.getInstance();
-		date.set(Calendar.HOUR_OF_DAY, 0);
-		final String today = sdf.format(date.getTime());
-		
 		String val = paymentDaoImpl.getTotalLiraPaymentsForOneDay(today);
+		String postVal = postingDaoImpl.getTotalLiraPostingsForOneDay(today);
+		double postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		tlCashVal =  val == null ? 0.0 : Double.parseDouble(val);
-		tlCashField.setValue(tlCashVal);
+		tlCashField.setValue(tlCashVal - postValue);
 		tlCashField.revalidate();
 		tlCashField.repaint();
-
 		
 		val = paymentDaoImpl.getTotalDollarForOneDay(today);
+		postVal = postingDaoImpl.getTotalDollarPostingsForOneDay(today);
+		postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		dlCashVal = val == null ? 0.0 : Double.parseDouble(val);
-		dollarCashField.setValue(dlCashVal);
+		dollarCashField.setValue(dlCashVal - postValue);
 		dollarCashField.revalidate();
 		dollarCashField.repaint();
 
 		val = paymentDaoImpl.getTotalEuroPaymentsForOneDay(today);
+		postVal = postingDaoImpl.getTotalEuroPostingsForOneDay(today);
+		postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		euCashVal = val == null ? 0.0 : Double.parseDouble(val);
-		euroCashField.setValue(euCashVal);
+		euroCashField.setValue(euCashVal - postValue);
 		euroCashField.revalidate();
 		euroCashField.repaint();
 		
 		val = paymentDaoImpl.getTotalPoundPaymentsForOneDay(today);
+		postVal = postingDaoImpl.getTotalPoundPostingsForOneDay(today);
+		postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		poCashVal =  val == null ? 0.0 : Double.parseDouble(val);
-		poundCashField.setValue(poCashVal);
+		poundCashField.setValue(poCashVal - postValue);
 		poundCashField.revalidate();
 		poundCashField.repaint();
 	}
