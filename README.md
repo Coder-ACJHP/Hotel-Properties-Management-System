@@ -1,4 +1,4 @@
-# Hotel-Management-System Application <span><img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png"></span>
+<span><img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png"></span># Hotel-Management-System Application
 Coder HMS basic hotels managing system application, cross platform (Made by Java).Easy to use simple user interface,<br>
 understandable text with icons and every thing colored. The application is composed from seven packs : <br>
 <h4>1- Main window <h4>[All windows will open on this scene, check your current user, date, EURO, DOLLAR, POUND exchange as live from <br> status bar, manage your application from menu bar {Exit, change user, update password, sen email, open calculator, exchange, <br>
