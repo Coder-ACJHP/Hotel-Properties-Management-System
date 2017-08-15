@@ -1,4 +1,4 @@
-<div aling="center">
+<div align="center">
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png">
 </div>    
                                                                                                                            
