@@ -1,8 +1,8 @@
 <div align="center">
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png">
+  <h1>Hotel-Management-System Application</h1>  
 </div>    
-                                                                                                                           
-# Hotel-Management-System Application
+                                                                                                                          
 
 Coder HMS basic hotels managing system application, cross platform (Made by Java).Easy to use simple user interface,<br>
 understandable text with icons and every thing colored. The application is composed from seven packs : <br>
