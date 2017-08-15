@@ -1,4 +1,4 @@
-# Simple Hotel-Management-System
+# Hotel-Management-System Application
 Coder HMS basic hotels managing system application, cross platform (Made by Java).Easy to use simple user interface,<br>
 understandable text with icons and every thing colored. The application is composed from seven packs : <br>
 <h4>1- Main window <h4>[All windows will open on this scene, check your current user, date, EURO, DOLLAR, POUND exchange as live from <br> status bar, manage your application from menu bar {Exit, change user, update password, sen email, open calculator, exchange, <br>
@@ -67,4 +67,4 @@ file.For creating the database just import the .sql file into MySQL workbench or
 <h2>Another questions ?</h2> 
 For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
 <hr>
-<h2>INFO : </h2>Please read these lines carefully [The application under development phase! I'm not responsible for any problem that <br> may arise.Feel free use it, copy it but not sell please!]
+<h2>INFO : </h2>Please read the license carefully.
