@@ -32,8 +32,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.UserDaoImpl;
-import com.coder.hms.entities.SessionBean;
 
 public class ChangePasswordWindow extends JDialog {
 
@@ -65,7 +65,7 @@ public class ChangePasswordWindow extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 
-		this.setTitle("Coder for HMS - [Change Password]");
+		this.setTitle("Coder HMS - [Change Password]");
 
 		this.setSize(410, 250);
 		this.setLocationRelativeTo(null);

@@ -45,10 +45,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
+import com.coder.hms.beans.Blockade;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
-import com.coder.hms.entities.Blockade;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;

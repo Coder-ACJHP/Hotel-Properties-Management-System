@@ -3,7 +3,7 @@
  * @Email hexa.octabin@gmail.com
  * @Date 15/07/2017
  */
-package com.coder.hms.entities;
+package com.coder.hms.beans;
 
 import java.io.Serializable;
 

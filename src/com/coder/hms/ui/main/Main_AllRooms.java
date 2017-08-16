@@ -14,8 +14,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class Main_AllRooms {
 	public int cleanCounter = 0;
 	public int dirtyCounter = 0;
 	private List<Room> roomList;
-	private final String innerDate;
+	private final ZonedDateTime zdt;
 	private String currentRoomNumber;
 	private JPanel contentPanel = new JPanel();
 	private final RoomsAction theAction = new RoomsAction();
@@ -66,12 +67,12 @@ public class Main_AllRooms {
 	 */
 	public Main_AllRooms() {
 
+		zdt = ZonedDateTime.now();
+		
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setBackground(Color.decode("#066d95"));
 		contentPanel.setPreferredSize(new Dimension(700, 1000));
 		contentPanel.setLayout(new FlowLayout());
-
-		innerDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		
 		cookRooms(contentPanel);
 		
@@ -148,13 +149,12 @@ public class Main_AllRooms {
 						///////////////////////////////////////////////////////////////////////////
 						//Convert check in, check out, today from String to date than compare all// 
 						LocalDate localDate = LocalDate.parse(theReservation.getCheckoutDate()); //
-						final Date checkoutDate = java.sql.Date.valueOf(localDate);              //
-						                                                                         //
-						localDate = LocalDate.parse(innerDate);                                  //
-						final Date defaultDate = java.sql.Date.valueOf(localDate);               //
+						final Date checkoutDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());        
+						    
+						final Date defaultDate = Date.from(zdt.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
 						                                                                         //
 						localDate = LocalDate.parse(theReservation.getCheckinDate());            //
-						final Date checkinDate = java.sql.Date.valueOf(localDate);               //
+						final Date checkinDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());           
 						///////////////////////////////////////////////////////////////////////////
 						
 						 if(ROOM_STATUS.equals("FULL")) {

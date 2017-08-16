@@ -4,19 +4,24 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 
 public class CustomDateFactory {
 
-	private Date date;
+	private Date date = null;
 	private Calendar calendar;
 	private SimpleDateFormat sdf;
 
 	public CustomDateFactory() {
+		
 		//for formatting date as desired
 		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		//get hour and minute from calendar
+		calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
 	}
 
 	////////////////////////////////////////////////////////
@@ -28,46 +33,43 @@ public class CustomDateFactory {
 	//mean we will stop the date changing to new day until//
 	//as desired time.                                    //
 	////////////////////////////////////////////////////////
-	public void setValidDateUntilAudit(int counter) {
-		///////////////////////////////////////////////////////
-		//we need to repeat the method in every second to    //
-		//catch if the hour and minutes equals 00:00.That's  //
-		//why we gonna using timer schedule                  //
-		final Timer timer = new Timer();
-		final TimerTask task = new TimerTask() {
-
-			@Override
-			public void run() {
-				//get hour and minute from calendar
-				calendar = Calendar.getInstance();
-				int hour = calendar.get(Calendar.HOUR);
-				int min = calendar.get(Calendar.MINUTE);
-				int sec = calendar.get(Calendar.SECOND);
+	public void setValidDateUntilAudit(boolean isAuditted) {
 
 				//check if the field value equals -1
-				if (counter == -1) {
-					//and the time at 00:00
-					if (hour == 0 && min == 0 && sec == 2) {
+				if (calendar.get(Calendar.HOUR_OF_DAY) <= 6 && isAuditted == false) {
+					
 						//bring the date one day back
-						calendar.add(Calendar.DATE, counter);
+						calendar.add(Calendar.DATE, -1);
 						date = calendar.getTime();
-					}
-				//////////////////////////////////////////////////////	
-				//else return normal date because date not          //
-				//initialized that's mean NULL POINTER EXCEPTION!   //
-				} else {
-					date = new Date();
+						System.out.println("ILK IHTIMAL");
 				}
+				
+				else if(calendar.get(Calendar.HOUR_OF_DAY) > 6 && isAuditted == true){
+					
+					isAuditted = false;
+					date = new Date();
 
-			}
-		};
-		/////////////////////////////////////////////////////////
-		//repeating in every 100 milliseconds not second because//
-		//when we create new object from this class it will    //
-		//create in less than one second [running from NULL    //
-		// POINTER EXCEPTION!]                                 //
-		/////////////////////////////////////////////////////////
-		timer.schedule(task, 0, 100);
+					System.out.println("IKINCI IHTIMAL");
+				}
+				
+				else if(isAuditted) {
+					
+					ImageIcon icon = new ImageIcon(getClass().getResource("/com/coder/hms/icons/dialogPane_question.png"));
+					
+					int choosedVal = JOptionPane.showOptionDialog(null, "You're doing early audit, are you sure about this?",
+							"Approving question", 0, JOptionPane.YES_NO_OPTION, icon, null, null);
+					
+					if(choosedVal == JOptionPane.YES_OPTION) {
+						date = new Date();
+					}
+					
+					else {
+						isAuditted = false;
+						return;
+					}
+					
+				}
+				
 	}
 
 	//////////////////////////////////////////

@@ -1,4 +1,4 @@
-package com.coder.hms.entities;
+package com.coder.hms.beans;
 
 public class RoomInfoRow {
 	

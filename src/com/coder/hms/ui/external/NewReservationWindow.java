@@ -51,6 +51,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
+import com.coder.hms.beans.RoomCountRow;
+import com.coder.hms.beans.RoomInfoRow;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
@@ -59,8 +61,6 @@ import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.entities.RoomCountRow;
-import com.coder.hms.entities.RoomInfoRow;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;

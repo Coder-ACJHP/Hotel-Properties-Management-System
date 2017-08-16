@@ -37,8 +37,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.UserDaoImpl;
-import com.coder.hms.entities.SessionBean;
 import com.coder.hms.ui.main.MainFrame;
 import com.coder.hms.utils.ApplicationLogoSetter;
 

@@ -27,9 +27,9 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.UserDaoImpl;
-import com.coder.hms.entities.SessionBean;
 import com.coder.hms.entities.User;
 import com.coder.hms.ui.external.ChangePasswordWindow;
 import com.coder.hms.ui.external.ExchangeWindow;

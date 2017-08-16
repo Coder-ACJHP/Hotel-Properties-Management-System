@@ -67,7 +67,7 @@ public class Main_Audit extends JPanel {
 	private final AuditTableCellRenderer renderer = new AuditTableCellRenderer();
 
 	public Main_Audit() {
-		
+						
 		setLayout(new BorderLayout(0, 0));
 
 		upperPanel = new JPanel();
@@ -175,7 +175,7 @@ public class Main_Audit extends JPanel {
 				final DialogFrame dialog = new DialogFrame();
 				dialog.setMessage("Are you sure ?");
 				dialog.btnYes.addActionListener(ActionListener ->{
-			
+					
 					dialog.dispose();
 				});
 				dialog.btnNo.addActionListener(ActionListener->{
