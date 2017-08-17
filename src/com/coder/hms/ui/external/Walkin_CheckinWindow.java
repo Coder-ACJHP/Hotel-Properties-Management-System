@@ -46,7 +46,7 @@ import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.ui.inner.Internal_CustomerForm;
+import com.coder.hms.ui.inner.CustomerForm;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.toedter.calendar.JDateChooser;
 
@@ -70,9 +70,9 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	private JDateChooser checkinDateChooser, checkoutDateChooser;
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
-	public final Internal_CustomerForm customerFormOne = new Internal_CustomerForm();
-	public final Internal_CustomerForm customerFormTwo = new Internal_CustomerForm();
-	public final Internal_CustomerForm customerFormThree = new Internal_CustomerForm();
+	public final CustomerForm customerFormOne = new CustomerForm();
+	public final CustomerForm customerFormTwo = new CustomerForm();
+	public final CustomerForm customerFormThree = new CustomerForm();
 	private JComboBox<String> agencyCmbBox, customerCnrtyCmbBox, creditTypeCmbBox, hostTypeCmbBox, currencyCmbBox;
 	private final String[] AGENCY_LIST = {"WALKIN"};
 	private final String[] HOST_TYPES = {"B.B", "F.B", "H.B", "O.B"};

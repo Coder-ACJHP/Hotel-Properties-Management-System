@@ -11,9 +11,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -41,8 +41,8 @@ import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.NewReservationWindow;
-import com.coder.hms.utils.ReservationTableRenderer;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.utils.ReservationTableRenderer;
 import com.toedter.calendar.JDateChooser;
 
 public class Main_Reservations extends JPanel {
@@ -51,14 +51,14 @@ public class Main_Reservations extends JPanel {
 	 * 
 	 */
 	private JTable table;
-	private Date reservDate;
 	private JPanel buttonPanel;
+	private LocalDate reservDate;
 	private JTextField refNoField;
 	private JScrollPane scrollPane;
+	private RoomDaoImpl roomDaoImpl;
 	private DefaultTableModel model;
 	private JTextField agencyRefField;
 	private JButton newRezBtn, findBtn;
-	private RoomDaoImpl roomDaoImpl;
 	
 	private HotelDaoImpl hotelDoaImpl;
 	
@@ -70,7 +70,6 @@ public class Main_Reservations extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private JDateChooser startDatePicker, endDatePicker;
-	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private JLabel startdateLbl, endDateLbl, referansNoLbl, agencyRefLbl;
 	private final String[] rezColsName = {"DATE", "CAPASITE ", "FULL ", "EMPTY", "GARANTED", "WAITING"};
 	private final ReservationTableRenderer customTCR = new ReservationTableRenderer();
@@ -205,19 +204,16 @@ public class Main_Reservations extends JPanel {
 		
 		model.setRowCount(0);
 	
-		final Calendar c = Calendar.getInstance();
-		reservDate = new Date();
-		c.setTime(reservDate);
-		c.add(Calendar.DATE, -1);
+		reservDate = LocalDate.now();
+		reservDate = reservDate.minusDays(1);
 		
 		//get hotel capasite.
-		Hotel hotel = hotelDoaImpl.getHotel();
+		final Hotel hotel = hotelDoaImpl.getHotel();
 		
 		for(int i = 0; i < 31; i++) {
 			
-			c.add(Calendar.DATE, 1);
-			reservDate = c.getTime();
-			String today = sdf.format(reservDate);
+			reservDate = reservDate.plusDays(1);
+			String today = reservDate.toString();
 			
 			List<Reservation> reservList = reservationDaoImpl.getReservsByDate(today); 
 			List<Reservation> garanteedReservList = reservationDaoImpl.getGaranteedReservs(today);
@@ -257,22 +253,17 @@ public class Main_Reservations extends JPanel {
 				
 				else {
 					//get dates from date pickers
-					final Date startDate = startDatePicker.getDate();
-					final Date endDate = endDatePicker.getDate();
+					final LocalDate startDate = startDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					final LocalDate endDate = endDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					
-					//add to calendar to be able get day of date and compare
-					Calendar cs = Calendar.getInstance();
-					cs.setTime(startDate);
-					Calendar ce = Calendar.getInstance();
-					ce.setTime(endDate);
 					
 						//compare if start date greater than end date
-						if(cs.after(ce)) {
+						if(startDate.isAfter(endDate)) {
 							JOptionPane.showMessageDialog(null, "Start date is after end date!", 
 											JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 						}
 						//or both is same date
-						else if(cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR)) {
+						else if(startDate.equals(endDate)) {
 							JOptionPane.showMessageDialog(null, "Start date equals end date!\nPlease be sure you're choose right date.", 
 									JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 						}
@@ -280,7 +271,7 @@ public class Main_Reservations extends JPanel {
 						else {
 														
 							
-							Reservation reservation = reservationDaoImpl.findReservationByDate(sdf.format(startDate));
+							Reservation reservation = reservationDaoImpl.findReservationByDate(startDate.toString());
 							
 							List<Customer> customerList = customerDaoImpl.getCustomerByReservId(reservation.getId());
 							

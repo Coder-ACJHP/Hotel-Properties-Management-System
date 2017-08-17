@@ -11,10 +11,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -45,26 +44,25 @@ public class Main_Audit extends JPanel {
 	 * 
 	 */
 	private static long rowId;
-
 	private List<Room> theRoomList;
 	private List<Reservation> resList;
 	private RoomDaoImpl roomDaoImpl;
 	private ReservationDaoImpl resDaoImpl;
-
-	private Date today;
+	
 	private JTable table;
 	private Room theRoom;
 	private String newDate;
-	private SimpleDateFormat sdf;
-	private List<Reservation> foundReservationlist;
+	private LocalDate today;
+	private DateTimeFormatter sdf;
 	private JPanel upperPanel, buttonPanel;
-	private JButton btnUpdate, btnCancel, btnAudit, btnShowRes;
+	private List<Reservation> foundReservationlist;
 	private static final long serialVersionUID = 1L;
+	private JButton btnUpdate, btnCancel, btnAudit, btnShowRes;
 	private final String[] columnNames = { "RESERVATION NO", "GROUP NAME", 
 						"ROOM NUMBER", "CHECK/IN DATE", "PRICE", "AGENCY" };
+	private final AuditTableCellRenderer renderer = new AuditTableCellRenderer();
 	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 	private final BlockadeTableHeaderRenderer THR = new BlockadeTableHeaderRenderer();
-	private final AuditTableCellRenderer renderer = new AuditTableCellRenderer();
 
 	public Main_Audit() {
 						
@@ -138,8 +136,8 @@ public class Main_Audit extends JPanel {
 		btnShowRes.setBounds(6, 123, 127, 40);
 		buttonPanel.add(btnShowRes);
 
-		today = new Date();
-		sdf = new SimpleDateFormat("dd/MM/YYYY EEEE");
+		today = LocalDate.now();
+		sdf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE");
 		newDate = sdf.format(today);
 
 		JLabel lblTitle = new JLabel("SYSTEM DAILY AUDIT [" + newDate + "]");
@@ -165,6 +163,7 @@ public class Main_Audit extends JPanel {
 
 		getReadyDependencies();
 		populateMainTable(model);
+		
 	}
 
 	private ActionListener customAuditlistener() {
@@ -175,7 +174,6 @@ public class Main_Audit extends JPanel {
 				final DialogFrame dialog = new DialogFrame();
 				dialog.setMessage("Are you sure ?");
 				dialog.btnYes.addActionListener(ActionListener ->{
-					
 					dialog.dispose();
 				});
 				dialog.btnNo.addActionListener(ActionListener->{
@@ -301,14 +299,9 @@ public class Main_Audit extends JPanel {
 				for (Reservation foundRes : foundReservationlist) {
 					if(foundRes.getId() == rowId) {
 						
-						today = new Date();
-						Calendar cl = Calendar.getInstance();
-						sdf = new SimpleDateFormat("yyyy-MM-dd");
-						cl.setTime(today);
-						cl.add(Calendar.DATE, 1);
-						newDate = sdf.format(cl.getTime());
-											
-						foundRes.setCheckinDate(newDate);
+						today = LocalDate.now();
+						today = today.plusDays(1);											
+						foundRes.setCheckinDate(today.toString());
 						resDaoImpl.saveReservation(foundRes);
 					}
 				}

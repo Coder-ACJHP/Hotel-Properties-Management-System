@@ -8,8 +8,8 @@ package com.coder.hms.ui.main;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -111,11 +111,10 @@ public class Main_BottomToolbar {
 	protected void setDateLabelText(String yourText) {
 		
 		if(yourText.length() <= 0 || yourText.equals("")) {
-			final Date today = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY EEEE");
-			final String newDate = sdf.format(today);
+			final LocalDate today = LocalDate.now();
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE");
 
-			dateLabel.setText(" " + newDate);
+			dateLabel.setText(" " + dtf.format(today));
 		}
 		else {
 			dateLabel.setText(yourText);

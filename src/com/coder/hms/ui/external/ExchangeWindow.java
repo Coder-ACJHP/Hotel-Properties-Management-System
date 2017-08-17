@@ -53,15 +53,16 @@ public class ExchangeWindow extends JDialog {
 	private final String[] cmbList = { "TURKISH LIRA", "$ DOLLAR", "€ EURO", "£ POUND"};
 
 	public ExchangeWindow() {
-		setResizable(false);
+		
 		this.getContentPane().setForeground(new Color(255, 99, 71));
 		this.getContentPane().setFocusCycleRoot(true);
 		this.getContentPane().setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		this.getContentPane().setFont(new Font("Monospaced", Font.BOLD, 15));
 		this.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		this.setModal(true);
+		this.setResizable(false);
 		
-		this.setTitle("Coder for HMS - [Exchange]");
+		this.setTitle("Coder HMS - [Exchange]");
 		
 		this.setSize(410, 340);
 		this.setLocationRelativeTo(null);

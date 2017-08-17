@@ -30,7 +30,7 @@ import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.ui.inner.Internal_CustomerForm;
+import com.coder.hms.ui.inner.CustomerForm;
 import com.coder.hms.utils.ApplicationLogoSetter;
 
 public class Reserved_CheckinWindow extends JDialog implements ActionListener {
@@ -47,9 +47,9 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 	final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 	final  CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
 	final ReservationDaoImpl reservDaoImpl = new ReservationDaoImpl();
-	public Internal_CustomerForm customerFormOne = new Internal_CustomerForm();
-	public Internal_CustomerForm customerFormTwo = new Internal_CustomerForm();
-	public Internal_CustomerForm customerFormThree = new Internal_CustomerForm();
+	public CustomerForm customerFormOne = new CustomerForm();
+	public CustomerForm customerFormTwo = new CustomerForm();
+	public CustomerForm customerFormThree = new CustomerForm();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 

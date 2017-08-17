@@ -21,8 +21,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -59,7 +59,7 @@ public class LoginWindow extends JDialog {
 	private static SessionBean sessionBean;
 	private JButton setPasswordVisible, capslockBtn;
 	private static final long serialVersionUID = 1L;
-	final UserDaoImpl userDaoImpl = new UserDaoImpl();
+	private final UserDaoImpl userDaoImpl = new UserDaoImpl();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -71,8 +71,8 @@ public class LoginWindow extends JDialog {
 		//set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
 		
-		final Date today = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY EEEE");
+		final LocalDate today = LocalDate.now();
+		final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE");
 		newDate = sdf.format(today);
 		
 		getContentPane().setForeground(new Color(255, 99, 71));
@@ -84,7 +84,7 @@ public class LoginWindow extends JDialog {
 		setResizable(false);
 
 
-		this.setTitle("Coder for HMS - [Login] - (" + newDate +")");
+		this.setTitle("Coder HMS - [Login] - (" + newDate +")");
 		SessionBean.setDate(newDate);
 		
 		/* Set default size of frame */
@@ -255,7 +255,7 @@ public class LoginWindow extends JDialog {
 		getContentPane().add(capslockBtn);
 		
 		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new MyDispatcher());
+        manager.addKeyEventDispatcher(new CustomKeyDispatcher());
         
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setAlwaysOnTop(false);
@@ -388,7 +388,10 @@ public class LoginWindow extends JDialog {
 		return listener;
 	}
 	
-	  private class MyDispatcher implements KeyEventDispatcher {
+	//////////////////////////////////////////////////////////////////////////
+	//Private inner class for listening key dispatch just for the main frame//
+	//////////////////////////////////////////////////////////////////////////
+	  private class CustomKeyDispatcher implements KeyEventDispatcher {
 	        @Override
 	        public boolean dispatchKeyEvent(KeyEvent e) {
 	            if (e.getID() == KeyEvent.KEY_PRESSED) {

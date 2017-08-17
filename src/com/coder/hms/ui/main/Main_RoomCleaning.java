@@ -40,15 +40,15 @@ public class Main_RoomCleaning extends JPanel {
 	 * 
 	 */
 	private JTable table;
+	private JTextField searchField;
 	private static final long serialVersionUID = 1L;
 	private final CustomTableHeaderRenderer headerRenderer;
 	private TableRowSorter<DefaultTableModel> tableRowShorter;
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 	private CleaningRoomTableColumnsMaker cleaningRoomTableColumn;
+	private final RoomCleaningTableRenderer renderer = new RoomCleaningTableRenderer();
 	private final String[] columnNames = new String[] { "ROOM NUMBER", "ROOM TYPE", "CLEANING STATUS" };
 	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-	private final RoomCleaningTableRenderer renderer = new RoomCleaningTableRenderer();
-	private JTextField searchField;
 
 	public Main_RoomCleaning() {
 

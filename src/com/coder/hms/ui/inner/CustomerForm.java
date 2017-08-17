@@ -25,7 +25,7 @@ import javax.swing.border.LineBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-public class Internal_CustomerForm {
+public class CustomerForm {
 
 	private JCheckBox chckbxCheckin;
 	private JDateChooser dateOfBirthChooser;
@@ -45,7 +45,7 @@ public class Internal_CustomerForm {
 			"Uruguay", "Uzbekistan", "Virgin Islands U.S.", "Yemen", "Zambia", "Zimbabwe" };
 
 
-	public Internal_CustomerForm() {
+	public CustomerForm() {
 
 	}
 
