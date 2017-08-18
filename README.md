@@ -1,6 +1,8 @@
 <div align="center">
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png">
-  <h1>Hotel-Management-System Application</h1>  
+  <h1>Hotel-Management-System Application <br>
+  This project is being carried out by Coder ACJHP.
+  </h1>  
 </div>    
                                                                                                                           
 
