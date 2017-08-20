@@ -23,6 +23,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,10 +39,13 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.UserDaoImpl;
+import com.coder.hms.ui.inner.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.ResourceControl;
 
 /**
  * @author Coder ACJHP
@@ -53,13 +58,16 @@ public class LoginWindow extends JDialog {
 	 */
 	private String newDate;
 	private int clicked = 0;
-	private JLabel infoLabel;
+	private ResourceBundle bundle;
 	private JTextField userNameField;
+	private JButton btnClear, btnLogin;
 	private JPasswordField passwordField;
+	private LanguageCmbBox languagesCmbBox;
 	private static SessionBean sessionBean;
 	private JButton setPasswordVisible, capslockBtn;
 	private static final long serialVersionUID = 1L;
-	private final UserDaoImpl userDaoImpl = new UserDaoImpl();
+	final LocaleBean bean = LocaleBean.getInstance();
+	private JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel;
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -93,7 +101,7 @@ public class LoginWindow extends JDialog {
 		this.getContentPane().setBackground(Color.decode("#066d95"));
 		getContentPane().setLayout(null);
 
-		final JLabel userNameLabel = new JLabel("User name : ");
+		userNameLabel = new JLabel("User name : ");
 		userNameLabel.setForeground(new Color(255, 255, 255));
 		userNameLabel.setBounds(29, 79, 113, 18);
 		userNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -116,7 +124,7 @@ public class LoginWindow extends JDialog {
 		getContentPane().add(userNameField);
 		userNameField.setColumns(10);
 
-		final JLabel passwordLabel = new JLabel("Password : ");
+		passwordLabel = new JLabel("Password : ");
 		passwordLabel.setForeground(new Color(255, 255, 255));
 		passwordLabel.setBounds(30, 122, 113, 18);
 		passwordLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -162,18 +170,18 @@ public class LoginWindow extends JDialog {
 		getContentPane().add(buttonsPanel);
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		final JButton btnClear = new JButton("CLEAR");
+		btnClear = new JButton("CLEAR");
 		btnClear.setIcon(new ImageIcon(LoginWindow.class.getResource("/com/coder/hms/icons/login_clear.png")));
 		btnClear.setForeground(new Color(220, 20, 60));
 		btnClear.setOpaque(true);
 		btnClear.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		btnClear.setPreferredSize(new Dimension(110, 40));
+		btnClear.setPreferredSize(new Dimension(125, 40));
 		btnClear.setFont(new Font("Verdana", Font.BOLD, 15));
 		mouseListenerForButtons(btnClear);
 		actionListenerForButtons(btnClear);
 		buttonsPanel.add(btnClear);
 
-		final JButton btnLogin = new JButton("LOGIN");
+		btnLogin = new JButton("LOGIN");
 		btnLogin.setToolTipText("Press ALT + ENTER keys for shortcut");
 		btnLogin.setSelectedIcon(null);
 		btnLogin.setIcon(new ImageIcon(LoginWindow.class.getResource("/com/coder/hms/icons/login_key.png")));
@@ -181,7 +189,7 @@ public class LoginWindow extends JDialog {
 		btnLogin.setOpaque(true);
 		btnLogin.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnLogin.setMnemonic(KeyEvent.VK_ENTER);
-		btnLogin.setPreferredSize(new Dimension(110, 40));
+		btnLogin.setPreferredSize(new Dimension(125, 40));
 		btnLogin.setFont(new Font("Verdana", Font.BOLD, 15));
 		mouseListenerForButtons(btnLogin);
 		actionListenerForButtons(btnLogin);
@@ -192,14 +200,14 @@ public class LoginWindow extends JDialog {
 		btnLogin.requestFocus();
 
 		//header label
-		final JLabel jumbotronLabel = new JLabel("HOTEL MANAGEMENT SYSTEM");
+		jumbotronLabel = new JLabel("HOTEL MANAGEMENT SYSTEM");
 		jumbotronLabel.setForeground(new Color(255, 255, 255));
 		jumbotronLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(70, 130, 180)));
 		jumbotronLabel.setBackground(new Color(135, 206, 235));
 		jumbotronLabel.setFont(new Font("Verdana", Font.PLAIN, 20));
 		jumbotronLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		jumbotronLabel.setOpaque(true);
-		jumbotronLabel.setBounds(28, 11, 358, 47);
+		jumbotronLabel.setBounds(10, 13, 351, 47);
 		getContentPane().add(jumbotronLabel);
 		
 		//information label
@@ -254,15 +262,79 @@ public class LoginWindow extends JDialog {
 		capslockBtn.setBounds(373, 136, 16, 16);
 		getContentPane().add(capslockBtn);
 		
+		languagesCmbBox = new LanguageCmbBox();
+		languagesCmbBox.setBounds(370, 38, 40, 20);
+		languagesCmbBox.addActionToLanguageBox(getActionOfLangBox());
+		getContentPane().add(languagesCmbBox);
+		
+		JLabel iconLabel = new JLabel("");
+		iconLabel.setIcon(new ImageIcon(LoginWindow.class.getResource("/com/coder/hms/icons/languages.png")));
+		iconLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		iconLabel.setBounds(370, 13, 39, 24);
+		getContentPane().add(iconLabel);
+		
 		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(new CustomKeyDispatcher());
         
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		changeLanguage(getLocale());
 		setAlwaysOnTop(false);
 		setVisible(true);
 
 	}
 
+	private void changeLanguage(Locale locale) {
+
+		bundle = ResourceBundle
+				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		this.setTitle(bundle.getString("MainTitle") +"(" + newDate +")");
+		this.btnClear.setText(bundle.getString("Clear"));
+		this.btnLogin.setText(bundle.getString("Login"));
+		this.userNameLabel.setText(bundle.getString("UserName"));
+		this.passwordLabel.setText(bundle.getString("Password"));
+		this.revalidate();
+		this.repaint();
+	}
+	
+	private ActionListener getActionOfLangBox() {
+		final ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Integer selectedInt = languagesCmbBox.comboBox.getSelectedIndex();
+				
+				
+				Locale currentLocale;
+				switch (selectedInt) {
+				case 0:
+					currentLocale = new Locale("en", "US");
+					bean.setLocale(currentLocale);
+					break;
+				case 1:
+					currentLocale = new Locale("ar", "IQ");
+					bean.setLocale(currentLocale);
+					setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+					break;
+				case 2:
+					currentLocale = new Locale("es", "ES");
+					bean.setLocale(currentLocale);
+					break;
+				case 3:
+					currentLocale = new Locale("tr", "TR");
+					bean.setLocale(currentLocale);
+					break;
+					
+				default:
+					bean.setLocale(getLocale());
+					break;
+				}
+				
+				changeLanguage(bean.getLocale());
+			}
+		};
+		return listener;
+	}
 
 	public void mouseListenerForButtons(final JButton jButton) {
 		
@@ -321,12 +393,11 @@ public class LoginWindow extends JDialog {
 				String userName = userNameField.getText().toLowerCase();
 				String userPswrd = String.valueOf(passwordField.getPassword());
 
-				
 				if (e.getActionCommand().equalsIgnoreCase("LOGIN")) {
 					
 					if(userName.length() > 0 || userPswrd.length() > 0) {
 						
-							
+						    final UserDaoImpl userDaoImpl = new UserDaoImpl();
 							final boolean check = userDaoImpl.authentication(userName, userPswrd);
 							
 							if(check) {

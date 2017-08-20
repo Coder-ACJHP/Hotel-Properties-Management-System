@@ -15,6 +15,8 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,7 +26,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.ui.inner.AllRooms_ColorInfoTable;
+import com.coder.hms.utils.ResourceControl;
 
 public class Main_UpperToolbar {
 
@@ -37,6 +41,7 @@ public class Main_UpperToolbar {
 	private Main_Reservations rezervFrame;
 	private Main_RoomCleaning cleaningFrame;
 	private AllRooms_ColorInfoTable infoColorTable;
+	private final LocaleBean bean = LocaleBean.getInstance();
 	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn, auditBtn, refreshBtn;
 
 	
@@ -158,9 +163,25 @@ public class Main_UpperToolbar {
 		refreshBtn.setActionCommand("Refresh");
 		refreshBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(refreshBtn);
+		
+		changeLanguage(bean.getLocale());
 
 	}
 
+	private void changeLanguage(Locale locale) {
+
+		final ResourceBundle bundle = ResourceBundle
+				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		this.roomsBtn.setText(bundle.getString("RoomsPlan"));
+		this.guestsBtn.setText(bundle.getString("Guests"));
+		this.auditBtn.setText(bundle.getString("Audit"));
+		this.blockadeBtn.setText(bundle.getString("Blockade"));
+		this.rezervationBtn.setText(bundle.getString("Reservations"));
+		this.roomCleaningBtn.setText(bundle.getString("RoomCleaning"));
+		this.cashBtn.setText(bundle.getString("CashDesk"));
+		
+	}
+	
 	public ActionListener UpperToolbarActionListener(final JPanel mainPanel) {
 
 		ActionListener actionListener = new ActionListener() {
@@ -237,6 +258,7 @@ public class Main_UpperToolbar {
 
 				else if (command.equalsIgnoreCase("Audit")) {
 					audit = new Main_Audit();
+					audit.initializeAuditPane();
 					mainPanel.removeAll();
 					mainPanel.add(audit, BorderLayout.CENTER);
 					mainPanel.revalidate();

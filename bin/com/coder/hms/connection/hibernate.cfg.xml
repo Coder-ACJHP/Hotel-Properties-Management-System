@@ -22,5 +22,6 @@
 		<mapping class="com.coder.hms.entities.User" />
 		<mapping class="com.coder.hms.entities.Payment" />
 		<mapping class="com.coder.hms.entities.Posting" />
+		<mapping class="com.coder.hms.entities.HotelSystemStatus" />
 	</session-factory>
 </hibernate-configuration>

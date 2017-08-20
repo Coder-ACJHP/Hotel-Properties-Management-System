@@ -10,16 +10,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
+import com.coder.hms.utils.ResourceControl;
 
 
 public class MainFrame extends JFrame {
@@ -31,6 +35,7 @@ public class MainFrame extends JFrame {
 	private Main_MenuBar customMenuBar;
 	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
+	private final LocaleBean bean = LocaleBean.getInstance();
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
@@ -104,10 +109,18 @@ public class MainFrame extends JFrame {
 		
 		getContentPane().add(customBottomToolbar.getToolBar(), BorderLayout.SOUTH);
 
-		
+		changeLanguage(bean.getLocale());
 		this.setVisible(true);
 
 	}
 	
+	private void changeLanguage(Locale locale) {
+
+		final ResourceBundle bundle = ResourceBundle
+				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		this.setTitle(bundle.getString("MainTitle"));
+		this.revalidate();
+		this.repaint();
+	}
 
 }

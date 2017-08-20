@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -27,6 +29,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.UserDaoImpl;
@@ -37,15 +40,21 @@ import com.coder.hms.ui.external.HotelPropertiesWindow;
 import com.coder.hms.ui.external.LicenseWindow;
 import com.coder.hms.ui.external.LoginWindow;
 import com.coder.hms.utils.ApplicaitonThemeChanger;
+import com.coder.hms.utils.ResourceControl;
 
 public class Main_MenuBar {
 
 	private JMenuBar menuBar;
 	private JFrame mainFrame;
 	private final Runtime run = Runtime.getRuntime();
+	private final LocaleBean bean = LocaleBean.getInstance();
 	private final static Desktop desktop = Desktop.getDesktop();
 	private final String command = System.getProperty("os.name");
 	public final ApplicaitonThemeChanger themeChanger = new ApplicaitonThemeChanger();
+	private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
+	private JMenuItem hoteProps, restart, refresh, menuInnerItemExit, calculator, sendMail, exchange, 
+	defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, chngPassword, aboutDeveloper,
+	sourceCode, shareYourOpinion, license;
 	
 	//getter method for getting the modified menubar from another class
 	public JMenuBar getMenuBar() {
@@ -65,10 +74,10 @@ public class Main_MenuBar {
 		menuBar.setBorder(new LineBorder(new Color(128, 128, 128)));
 		menuBar.setAutoscrolls(true);
 		
-		final JMenu menuItemFrontDesk = new JMenu("Front Desk");
-		menuBar.add(menuItemFrontDesk);
+		frontDesk = new JMenu("Front Desk");
+		menuBar.add(frontDesk);
 		
-		final JMenuItem hoteProps = new JMenuItem("Hotel Properties");
+		hoteProps = new JMenuItem("Hotel Properties");
 		hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
 		hoteProps.addActionListener(ActionListener ->{
 
@@ -95,9 +104,9 @@ public class Main_MenuBar {
 				});
 			}
 		});
-		menuItemFrontDesk.add(hoteProps);
+		frontDesk.add(hoteProps);
 		
-		final JMenuItem restart = new JMenuItem("Restart");
+		restart = new JMenuItem("Restart");
 		restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
 		restart.addActionListener(ActionListener ->{
 			mainFrame.dispose();
@@ -111,10 +120,10 @@ public class Main_MenuBar {
 				}
 			});
 		});
-		menuItemFrontDesk.add(restart);
+		frontDesk.add(restart);
 		
 		
-		final JMenuItem refresh = new JMenuItem("Refresh");
+		refresh = new JMenuItem("Refresh");
 		refresh.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5,
 				(InputEvent.SHIFT_MASK) | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
 		refresh.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/cleaning-refresh.png")));
@@ -124,9 +133,9 @@ public class Main_MenuBar {
 			mainFrame.repaint();
 
 		});
-		menuItemFrontDesk.add(refresh);
+		frontDesk.add(refresh);
 		
-		final JMenuItem menuInnerItemExit = new JMenuItem("Exit");
+		menuInnerItemExit = new JMenuItem("Exit");
 		menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
 		//add shortcut keys
 		menuInnerItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,(InputEvent.SHIFT_MASK |
@@ -146,14 +155,14 @@ public class Main_MenuBar {
 			}
 
 		});
-		menuItemFrontDesk.add(menuInnerItemExit);
+		frontDesk.add(menuInnerItemExit);
 		
 		
-		final JMenu mnTools = new JMenu("Tools");
+		mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
 		
 		//add calculator application section to menubar
-		final JMenuItem calculator = new JMenuItem("Calculator");
+		calculator = new JMenuItem("Calculator");
 		calculator.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_calc.png")));
 		calculator.addActionListener(ActionListener ->{
 
@@ -184,7 +193,7 @@ public class Main_MenuBar {
 		mnTools.add(calculator);
 		
 		//add send mail  section to menubar
-		JMenuItem sendMail = new JMenuItem("Send email");
+		sendMail = new JMenuItem("Send email");
 		sendMail.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_sendMail.png")));
 		sendMail.addActionListener(ActionListener ->{
 			
@@ -210,7 +219,7 @@ public class Main_MenuBar {
 		
 		mnTools.add(sendMail);
 		
-		JMenuItem exchange = new JMenuItem("Exchange");
+		exchange = new JMenuItem("Exchange");
 		exchange.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_exchange.png")));
 		exchange.addActionListener(ActionListener ->{
 			new ExchangeWindow();
@@ -218,27 +227,27 @@ public class Main_MenuBar {
 		mnTools.add(exchange);
 		
 		/*Add new menu into Tools menu*/	
-		JMenu themes = new JMenu("Themes");
+		themes = new JMenu("Themes");
 		menuBar.add(themes);
 		
 		/*Add all themes into themes section */		
-		JMenuItem defaultTheme = new JMenuItem("Nimbus");
+		defaultTheme = new JMenuItem("Nimbus");
 		defaultTheme.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("Nimbus");
 		});
-		JMenuItem mnitmAero = new JMenuItem("Aero");
+		mnitmAero = new JMenuItem("Aero");
 		mnitmAero.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("Aero");
 		});
-		JMenuItem mnitmBernstain = new JMenuItem("Bernstein");
+		mnitmBernstain = new JMenuItem("Bernstein");
 		mnitmBernstain.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("bernstein");
 		});
-		JMenuItem mnitmMint = new JMenuItem("Mint");
+		mnitmMint = new JMenuItem("Mint");
 		mnitmMint.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("Mint");
 		});
-		JMenuItem mnitmMcwin = new JMenuItem("McWin");
+		mnitmMcwin = new JMenuItem("McWin");
 		mnitmMcwin.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("McWin");
 		});
@@ -249,10 +258,10 @@ public class Main_MenuBar {
 		themes.add(mnitmMint);
 		themes.add(mnitmMcwin);
 		
-		JMenu usersMenu = new JMenu("Users");
+		usersMenu = new JMenu("Users");
 		menuBar.add(usersMenu);
 		
-		JMenuItem changeUser = new JMenuItem("Change user");
+		changeUser = new JMenuItem("Change user");
 		changeUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_user.png")));
 		changeUser.addActionListener(ActionListener ->{
 		
@@ -268,7 +277,7 @@ public class Main_MenuBar {
 		});
 		usersMenu.add(changeUser);
 		
-		final JMenuItem chngPassword = new JMenuItem("Change password");
+		chngPassword = new JMenuItem("Change password");
 		chngPassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
 		chngPassword.addActionListener(ActionListener ->{
 		
@@ -283,12 +292,12 @@ public class Main_MenuBar {
 		});
 		
 		usersMenu.add(chngPassword);
-		
-		JMenu mnAbout = new JMenu("Others");
+				
+		mnAbout = new JMenu("Others");
 		menuBar.add(mnAbout);
 		
 		//add about developer section to menubar
-		final JMenuItem aboutDeveloper = new JMenuItem("Developers");
+		aboutDeveloper = new JMenuItem("Developers");
 		aboutDeveloper.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_developer.png")));
 		aboutDeveloper.addActionListener(ActionListener ->{
 			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -305,7 +314,7 @@ public class Main_MenuBar {
 		mnAbout.add(aboutDeveloper);
 		
 		//add source code section to menubar
-		final JMenuItem sourceCode = new JMenuItem("Source code");
+		sourceCode = new JMenuItem("Source code");
 		sourceCode.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_source_code.png")));
 		sourceCode.addActionListener(ActionListener ->{
 			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -322,7 +331,7 @@ public class Main_MenuBar {
 		mnAbout.add(sourceCode);
 		
 		//add feedback section to menubar
-		final JMenuItem shareYourOpinion = new JMenuItem("Feedback");
+		shareYourOpinion = new JMenuItem("Feedback");
 		shareYourOpinion.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_feedback.png")));
 		shareYourOpinion.addActionListener(ActionListener ->{
 			
@@ -339,7 +348,7 @@ public class Main_MenuBar {
 		
 		mnAbout.add(shareYourOpinion);
 		
-		final JMenuItem license = new JMenuItem("App License");
+		license = new JMenuItem("App License");
 		license.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_license.png")));
 		license.addActionListener(ActionListener ->{
 			SwingUtilities.invokeLater(new Runnable() {
@@ -353,8 +362,19 @@ public class Main_MenuBar {
 		
 		mnAbout.add(license);
 		
+		changeLanguage(bean.getLocale());
 	}
 	
-	
+	private void changeLanguage(Locale locale) {
+
+		final ResourceBundle bundle = ResourceBundle
+				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+
+		frontDesk.setText(bundle.getString("FrontDesk"));
+		mnTools.setText(bundle.getString("Tools"));
+		themes.setText(bundle.getString("Themes"));
+		usersMenu.setText(bundle.getString("Users"));
+		mnAbout.setText(bundle.getString("Others"));
+	}
 	
 }

@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,9 +48,11 @@ import javax.swing.table.TableRowSorter;
 
 import com.coder.hms.beans.Blockade;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
+import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
+import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.BlockadeTableCellRenderer;
@@ -83,6 +86,9 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private JPanel leftSidePanel, buttonPanel;
 	private static final long serialVersionUID = 1L;
 	private TableRowSorter<DefaultTableModel> tableRowShorter;
+	
+	private final HotelSystemStatus systemStatus;
+	private final HotelSystemStatusImpl statusImpl = new HotelSystemStatusImpl();
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private JTable table, blokajTable, blokajRoomsTable, blokajCustomerTable;
@@ -245,12 +251,17 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		buttonPanel.setLayout(null);
 		upperPanel.add(buttonPanel, BorderLayout.WEST);
 		
+		systemStatus = statusImpl.getSystemStatus();
+		final Date convertedDate = Date.from(systemStatus.getDateTime().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
 		dateChooser = new JDateChooser();
-		dateChooser.setDate(new Date());
+		dateChooser.setDate(convertedDate);
 		dateChooser.setDateFormatString("yyyy-MM-dd");
 		dateChooser.setBounds(55, 6, 164, 26);
 		dateChooser.addPropertyChangeListener(customPropListener());
 		buttonPanel.add(dateChooser);
+		
+		masterDate.setTime(convertedDate);
 		
 		previousBtn = new JButton("");
 		previousBtn.setMaximumSize(new Dimension(400, 29));

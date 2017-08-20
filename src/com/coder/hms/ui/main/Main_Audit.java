@@ -12,13 +12,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -29,8 +29,10 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
+import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.NewReservationWindow;
@@ -43,6 +45,7 @@ public class Main_Audit extends JPanel {
 	/**
 	 * 
 	 */
+	
 	private static long rowId;
 	private List<Room> theRoomList;
 	private List<Reservation> resList;
@@ -51,12 +54,15 @@ public class Main_Audit extends JPanel {
 	
 	private JTable table;
 	private Room theRoom;
-	private String newDate;
 	private LocalDate today;
-	private DateTimeFormatter sdf;
+	private JLabel lblTitle;
 	private JPanel upperPanel, buttonPanel;
 	private List<Reservation> foundReservationlist;
 	private static final long serialVersionUID = 1L;
+	
+	private HotelSystemStatus systemStatus;
+	private final HotelSystemStatusImpl systemStatusImpl = new HotelSystemStatusImpl();
+	
 	private JButton btnUpdate, btnCancel, btnAudit, btnShowRes;
 	private final String[] columnNames = { "RESERVATION NO", "GROUP NAME", 
 						"ROOM NUMBER", "CHECK/IN DATE", "PRICE", "AGENCY" };
@@ -64,8 +70,10 @@ public class Main_Audit extends JPanel {
 	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 	private final BlockadeTableHeaderRenderer THR = new BlockadeTableHeaderRenderer();
 
-	public Main_Audit() {
-						
+	public Main_Audit() {}
+	
+	public void initializeAuditPane() {
+		
 		setLayout(new BorderLayout(0, 0));
 
 		upperPanel = new JPanel();
@@ -96,7 +104,8 @@ public class Main_Audit extends JPanel {
 		buttonPanel.add(btnUpdate);
 
 		btnCancel = new JButton("Cancel res.");
-		btnCancel.setToolTipText("<html>Select a reservation from the table with <br>single click and press this button to cancel it.</html>\n");
+		btnCancel.setToolTipText("<html>Select a reservation from the table with "
+				+ "<br>single click and press this button to cancel it.</html>\n");
 		btnCancel.setAutoscrolls(true);
 		btnCancel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -107,7 +116,8 @@ public class Main_Audit extends JPanel {
 		buttonPanel.add(btnCancel);
 
 		btnAudit = new JButton("Audit");
-		btnAudit.setToolTipText("<html>Finish your all reservations job and press<br> this button to change system date to new date.</html>");
+		btnAudit.setToolTipText("<html>Finish your all reservations job and press"
+				+ "<br> this button to change system date to new date.</html>");
 		btnAudit.setAutoscrolls(true);
 		btnAudit.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnAudit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -126,7 +136,8 @@ public class Main_Audit extends JPanel {
 		buttonPanel.add(sep);
 
 		btnShowRes = new JButton("Show res.");
-		btnShowRes.setToolTipText("<html>Select a reservation from the table with <br>single click and press this button to show it.</html>");
+		btnShowRes.setToolTipText("<html>Select a reservation from the table with <br>"
+				+ "single click and press this button to show it.</html>");
 		btnShowRes.addActionListener(showReservation());
 		btnShowRes.setIcon(new ImageIcon(Main_Audit.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
 		btnShowRes.setFont(new Font("Dialog", Font.PLAIN, 15));
@@ -135,12 +146,11 @@ public class Main_Audit extends JPanel {
 		btnShowRes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnShowRes.setBounds(6, 123, 127, 40);
 		buttonPanel.add(btnShowRes);
+		
+		systemStatus = systemStatusImpl.getSystemStatus();
 
-		today = LocalDate.now();
-		sdf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE");
-		newDate = sdf.format(today);
-
-		JLabel lblTitle = new JLabel("SYSTEM DAILY AUDIT [" + newDate + "]");
+		lblTitle = new JLabel("SYSTEM DAILY AUDIT [" + systemStatus.getDateTime() + " " 
+								+ systemStatus.getDateTime().getDayOfWeek().name() + "]");
 		lblTitle.setForeground(UIManager.getColor("Button.highlight"));
 		lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblTitle.setAutoscrolls(true);
@@ -165,8 +175,9 @@ public class Main_Audit extends JPanel {
 		populateMainTable(model);
 		
 	}
-
+	
 	private ActionListener customAuditlistener() {
+		
 		final ActionListener listener = new ActionListener() {
 			
 			@Override
@@ -174,7 +185,19 @@ public class Main_Audit extends JPanel {
 				final DialogFrame dialog = new DialogFrame();
 				dialog.setMessage("Are you sure ?");
 				dialog.btnYes.addActionListener(ActionListener ->{
-					dialog.dispose();
+					
+					if(systemStatus.getIsAuditted() == false) {
+						final LocalDate localDate = LocalDate.now();
+						systemStatus.setDateTime(localDate);
+						systemStatus.setIsAuditted(true);
+						systemStatusImpl.updateSystemStatus(systemStatus);
+						dialog.dispose();
+					}else {
+						JOptionPane.showMessageDialog(dialog, 
+								"Your system already 'Auditted' to night!", JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+						dialog.dispose();
+					}
+					
 				});
 				dialog.btnNo.addActionListener(ActionListener->{
 					dialog.dispose();
@@ -204,7 +227,7 @@ public class Main_Audit extends JPanel {
 		model.setRowCount(0);
 
 		for (int i = 0; i < resList.size(); i++) {
-			if (resList.get(i).getCheckinDate().equals(newDate) && resList.get(i).getIsCheckedIn().equals("NO")) {
+			if (resList.get(i).getCheckinDate().equals(systemStatus.getDateTime()) && resList.get(i).getIsCheckedIn().equals("NO")) {
 
 				theRoom = roomDaoImpl.getRoomByReservId(resList.get(i).getId());
 

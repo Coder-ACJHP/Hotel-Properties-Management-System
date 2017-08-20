@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -34,10 +34,12 @@ import javax.swing.table.DefaultTableModel;
 
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.NewReservationWindow;
@@ -51,6 +53,7 @@ public class Main_Reservations extends JPanel {
 	 * 
 	 */
 	private JTable table;
+	private Date convertedDate;
 	private JPanel buttonPanel;
 	private LocalDate reservDate;
 	private JTextField refNoField;
@@ -67,6 +70,9 @@ public class Main_Reservations extends JPanel {
 	private NewReservationWindow newReservationEx;
 
 	private ReservationDaoImpl reservationDaoImpl;
+	
+	private final HotelSystemStatus systemStatus;
+	private final HotelSystemStatusImpl statusImpl = new HotelSystemStatusImpl();
 	
 	private static final long serialVersionUID = 1L;
 	private JDateChooser startDatePicker, endDatePicker;
@@ -120,8 +126,11 @@ public class Main_Reservations extends JPanel {
 		startdateLbl.setBounds(192, 8, 79, 26);
 		buttonPanel.add(startdateLbl);
 		
+		systemStatus = statusImpl.getSystemStatus();
+		convertedDate = Date.from(systemStatus.getDateTime().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
 		startDatePicker = new JDateChooser();
-		startDatePicker.setCalendar(Calendar.getInstance());
+		startDatePicker.setDate(convertedDate);
 		startDatePicker.setDateFormatString("yyyy-MM-dd");
 		startDatePicker.setBounds(275, 8, 155, 26);
 		buttonPanel.add(startDatePicker);
@@ -131,7 +140,7 @@ public class Main_Reservations extends JPanel {
 		buttonPanel.add(endDateLbl);
 		
 		endDatePicker = new JDateChooser();
-		endDatePicker.setCalendar(Calendar.getInstance());
+		endDatePicker.setDate(convertedDate);
 		endDatePicker.setDateFormatString("yyyy-MM-dd");
 		endDatePicker.setBounds(275, 35, 155, 26);
 		buttonPanel.add(endDatePicker);
@@ -203,8 +212,8 @@ public class Main_Reservations extends JPanel {
 	public void populateMainTable() {
 		
 		model.setRowCount(0);
-	
-		reservDate = LocalDate.now();
+
+		reservDate = systemStatus.getDateTime();
 		reservDate = reservDate.minusDays(1);
 		
 		//get hotel capasite.

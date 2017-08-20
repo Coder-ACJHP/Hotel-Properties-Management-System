@@ -586,6 +586,7 @@ public class HotelPropertiesWindow extends JDialog {
 		countryCmbBox.getItemAt(countryCmbBox.getSelectedIndex());
 		hotelTypeCmbBox.getItemAt(hotelTypeCmbBox.getSelectedIndex());
 		capacityVal = (int)capacitySpinner.getValue();
+		roomTypeVal = "";
 		for(int i=0; i < roomTypeFields.length; i++) {
 			roomTypeVal += roomTypeFields[i].getText() + " ";
 		}
