@@ -270,16 +270,14 @@ public class Main_Reservations extends JPanel {
 										
 					if(theReservation != null) {
 						List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReservation.getId());
-						System.out.println("HERE FOUR");
+
 						Room room = roomDaoImpl.getRoomByReservId(theReservation.getId());
-						System.out.println("HERE FIVE");
 						
 						for(Customer cst: customerList) {
 							customerCountry = cst.getCountry();
 							customerName = cst.getFirstName();
 							customerSurName = cst.getLastName();
 						}
-						System.out.println("HERE SIX");
 						
 						reservationPane.setRezIdField(theReservation.getId());
 						reservationPane.setNameSurnameField(theReservation.getGroupName());
@@ -299,7 +297,6 @@ public class Main_Reservations extends JPanel {
 						reservationPane.setPriceOfRoom(room.getPrice());
 						reservationPane.setCurrency(room.getCurrency());
 						reservationPane.setCustomerCountry(customerCountry);
-						System.out.println("HERE SEVEN");
 						
 						reservationPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
 								room.getPersonCount(), room.getPrice(), room.getCurrency()});
