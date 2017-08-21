@@ -25,37 +25,41 @@ search your reservation with date, referance number or agency referange number, 
 
 <h4>7- Cash desk window <h4>[Check your cash desk as difference currencies and report them.Add, delete payments.]
 <hr>
+<h2>Login : </h2>
+
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/login.png">
+<hr>
 <h2>Main window : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Main_Window.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/main.png">
 <hr>
 <h2>Reservation window : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Reservation_window.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/reservations.png">
 <hr>
 <h2>Blockade window : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Blockade_window.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/blockade.png">
 <hr>
 <h2>Customers window : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Customers_window.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/customers.png">
 <hr>
 <h2>Room cleaning window : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Room_cleaning_window.png">
-<hr>
-<h2>Inside room with payment window : </h2>
-
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Room_inside_payment.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/roomStatus.png">
 <hr>
 <h2>Cash desk window : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Cash_desk.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/cashDesk.png">
 <hr>
-<h2>All rooms with checkin window : </h2>
+<h2>All rooms window : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/Ekran%20Resmi%202017-07-31%2013.12.22.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/roomPlan.png">
+<hr>
+<h2>Audit window : </h2>
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/audit.png">
+<hr>
 and more...
 
 <h1>How to use?</h1>
