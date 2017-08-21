@@ -6,7 +6,7 @@
                                                                                                                           
 
 Coder HMS is hotels managing system application, cross platform (Made by Java).Easy to use simple user interface,<br>
-understandable text with icons and every thing colored. The application is composed from seven packs : <br>
+understandable text with icons and every object colored.It's support 4 different languages [ENG, AR, ES, TR] and it composed from seven packs : <br>
 <h4>1- Main window <h4>[All windows will open on this scene, check your current user, date, EURO, DOLLAR, POUND exchange as live from <br> status bar, manage your application from menu bar {Exit, change user, update password, sen email, open calculator, exchange, <br>
 change user interface theme and etc.}]
 
@@ -21,9 +21,9 @@ search your reservation with date, referance number or agency referange number, 
 
 <h4>5- Blockade window </h4>[Check your all reservation for one week in single list with room datails and dates.]
 
-<h4>6- Rooms status manging window </h4>[easly play with your room status from this page, set as clean, dirty, dnd single or plural]
+<h4>6- Rooms status manging window </h4>[easily play with your room status from this page, set as clean, dirty, dnd single or plural]
 
-<h4>7- Cash desk window <h4>[Check your cash desk as difference currencies and report them.Add, delete payments.]
+<h4>7- Cash desk window <h4>[Check your cash desk as difference currencies and report them.Add, delete payments]
 <hr>
 <h2>Login : </h2>
 
