@@ -59,6 +59,7 @@ public class LoginWindow extends JDialog {
 	private String newDate;
 	private int clicked = 0;
 	private ResourceBundle bundle;
+	private static LocaleBean bean;
 	private JTextField userNameField;
 	private JButton btnClear, btnLogin;
 	private JPasswordField passwordField;
@@ -66,7 +67,7 @@ public class LoginWindow extends JDialog {
 	private static SessionBean sessionBean;
 	private JButton setPasswordVisible, capslockBtn;
 	private static final long serialVersionUID = 1L;
-	final LocaleBean bean = LocaleBean.getInstance();
+	final UserDaoImpl userDaoImpl = new UserDaoImpl();
 	private JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel;
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	
@@ -75,6 +76,8 @@ public class LoginWindow extends JDialog {
 	// Set some basic properties
 	public LoginWindow() {
 		
+		bean = LocaleBean.getInstance();
+		bean.setLocale(getLocale());
 		sessionBean = SessionBean.getSESSION_BEAN();
 		//set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
@@ -148,8 +151,8 @@ public class LoginWindow extends JDialog {
 		setPasswordVisible.setHorizontalTextPosition(SwingConstants.CENTER);
 		setPasswordVisible.setToolTipText("Make password visible");
 		setPasswordVisible.setOpaque(false);
-		setPasswordVisible
-				.setIcon(new ImageIcon(ChangePasswordWindow.class.getResource("/com/coder/hms/icons/login_show_pwd.png")));
+		setPasswordVisible.setIcon(new ImageIcon(ChangePasswordWindow.class
+				.getResource("/com/coder/hms/icons/login_show_pwd.png")));
 		setPasswordVisible.setPreferredSize(new Dimension(16, 16));
 		setPasswordVisible.setMaximumSize(new Dimension(16, 16));
 		setPasswordVisible.setMinimumSize(new Dimension(16, 16));
@@ -182,7 +185,7 @@ public class LoginWindow extends JDialog {
 		buttonsPanel.add(btnClear);
 
 		btnLogin = new JButton("LOGIN");
-		btnLogin.setToolTipText("Press ALT + ENTER keys for shortcut");
+		btnLogin.setToolTipText("ENTER for shortcut");
 		btnLogin.setSelectedIcon(null);
 		btnLogin.setIcon(new ImageIcon(LoginWindow.class.getResource("/com/coder/hms/icons/login_key.png")));
 		btnLogin.setForeground(new Color(0, 191, 255));
@@ -276,19 +279,18 @@ public class LoginWindow extends JDialog {
 		
 		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(new CustomKeyDispatcher());
-        
+     
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		changeLanguage(getLocale());
 		setAlwaysOnTop(false);
 		setVisible(true);
-
 	}
 
 	private void changeLanguage(Locale locale) {
 
 		bundle = ResourceBundle
 				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
-		this.setTitle(bundle.getString("MainTitle") +"(" + newDate +")");
+		this.setTitle(bundle.getString("MainTitle") +" (" + newDate +")");
 		this.btnClear.setText(bundle.getString("Clear"));
 		this.btnLogin.setText(bundle.getString("Login"));
 		this.userNameLabel.setText(bundle.getString("UserName"));
@@ -304,29 +306,30 @@ public class LoginWindow extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				Integer selectedInt = languagesCmbBox.comboBox.getSelectedIndex();
 				
-				
 				Locale currentLocale;
 				switch (selectedInt) {
 				case 0:
 					currentLocale = new Locale("en", "US");
 					bean.setLocale(currentLocale);
+					setLocale(currentLocale);
 					break;
 				case 1:
 					currentLocale = new Locale("ar", "IQ");
 					bean.setLocale(currentLocale);
-					setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+					setLocale(currentLocale);
 					break;
 				case 2:
 					currentLocale = new Locale("es", "ES");
 					bean.setLocale(currentLocale);
+					setLocale(currentLocale);
 					break;
 				case 3:
 					currentLocale = new Locale("tr", "TR");
 					bean.setLocale(currentLocale);
+					setLocale(currentLocale);
 					break;
 					
 				default:
-					bean.setLocale(getLocale());
 					break;
 				}
 				
@@ -392,13 +395,12 @@ public class LoginWindow extends JDialog {
 				
 				String userName = userNameField.getText().toLowerCase();
 				String userPswrd = String.valueOf(passwordField.getPassword());
-
-				if (e.getActionCommand().equalsIgnoreCase("LOGIN")) {
+								
+				if (e.getSource() == btnLogin) {
 					
 					if(userName.length() > 0 || userPswrd.length() > 0) {
-						
-						    final UserDaoImpl userDaoImpl = new UserDaoImpl();
-							final boolean check = userDaoImpl.authentication(userName, userPswrd);
+		
+							boolean check = userDaoImpl.authentication(userName, userPswrd);
 							
 							if(check) {
 								//store informations in bean to use it in another frames.
@@ -421,7 +423,7 @@ public class LoginWindow extends JDialog {
 					}
 					
 					
-				} else if (e.getActionCommand().equalsIgnoreCase("CLEAR")) {
+				} else if (e.getSource() == btnClear) {
 					// clear all fields
 					userNameField.setText(null);
 					passwordField.setText(null);

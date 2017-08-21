@@ -1,11 +1,18 @@
 package com.coder.hms.beans;
 
+import java.io.Serializable;
 import java.util.Locale;
 
-public class LocaleBean {
+public class LocaleBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static LocaleBean instance = null;
 	private static Locale locale;
+	
+	public LocaleBean() {}
 	
 	public static LocaleBean getInstance() {
 		if(instance == null) {

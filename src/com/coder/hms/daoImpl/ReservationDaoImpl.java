@@ -7,6 +7,8 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -160,6 +162,45 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 	}
 
 	@Override
+	public Reservation findReservationByAgencyRefNo(String agencyRefNo) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Reservation> query = session.createQuery("from Reservation where agencyRefNo=:agencyRefNo",
+				Reservation.class);
+		query.setParameter("agencyRefNo", agencyRefNo);
+		query.setMaxResults(1);
+		Reservation reservWithAgencyRefNo = query.getSingleResult();
+		session.close();
+
+		if (reservWithAgencyRefNo == null) {
+			JOptionPane.showMessageDialog(null, "There is no reservation with this \nagency referance number!",
+					JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+			return null;
+		} else {
+			return reservWithAgencyRefNo;
+		}
+
+	}
+	
+	@Override
+	public Reservation findReservationByRefNo(String refNo) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Reservation> query = session.createQuery("from Reservation where referanceNo=:refNo", Reservation.class);
+		query.setParameter("refNo", refNo);
+		query.setMaxResults(1);
+		Reservation reservWithRefNo = query.getSingleResult();
+		session.close();
+		if (reservWithRefNo == null) {
+			JOptionPane.showMessageDialog(null, "There is no reservation with this \nreferance number!",
+					JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+			return null;
+		} else {
+			return reservWithRefNo;
+		}
+	}
+	
+	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
 			theSession.beginTransaction();	
@@ -169,5 +210,6 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 		}
 		
 	}
+
 
 }

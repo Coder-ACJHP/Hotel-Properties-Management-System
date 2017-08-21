@@ -21,5 +21,9 @@ public interface ReservationDAO {
 	
 	public boolean updateReservation(Reservation reservation);
 	
+	public Reservation findReservationByAgencyRefNo(String text);
+	
+	public Reservation findReservationByRefNo(String refNo);
+	
 	public List<Reservation> getAllReservations();
 }

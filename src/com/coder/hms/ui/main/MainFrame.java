@@ -32,10 +32,12 @@ public class MainFrame extends JFrame {
 	 * 
 	 */
 	private JPanel mainPanel;
+	private static LocaleBean bean;
+	private String exitMessage = "";
+	private String titleMessage = "";
 	private Main_MenuBar customMenuBar;
 	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
-	private final LocaleBean bean = LocaleBean.getInstance();
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
@@ -49,6 +51,7 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
+		 bean = LocaleBean.getInstance();
 		sessionBean = SessionBean.getSESSION_BEAN();		
 		
 		// get operation system name to add icon (if windows to taskbar else for dock)
@@ -73,8 +76,8 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				final int decision =JOptionPane.showConfirmDialog(null, "Do you really want to exit?", 
-						"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				final int decision =JOptionPane.showConfirmDialog(null, exitMessage, 
+						titleMessage, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				
 				if(decision == JOptionPane.YES_OPTION) {
 					new DataSourceFactory().shutDown();
@@ -108,7 +111,7 @@ public class MainFrame extends JFrame {
 		getContentPane().add(customToolbar.getJPanel(), BorderLayout.NORTH);
 		
 		getContentPane().add(customBottomToolbar.getToolBar(), BorderLayout.SOUTH);
-
+		setLocale(bean.getLocale());
 		changeLanguage(bean.getLocale());
 		this.setVisible(true);
 
@@ -119,6 +122,8 @@ public class MainFrame extends JFrame {
 		final ResourceBundle bundle = ResourceBundle
 				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
 		this.setTitle(bundle.getString("MainTitle"));
+		this.exitMessage = bundle.getString("ExitMessage");
+		this.titleMessage = bundle.getString("Confirmation");
 		this.revalidate();
 		this.repaint();
 	}

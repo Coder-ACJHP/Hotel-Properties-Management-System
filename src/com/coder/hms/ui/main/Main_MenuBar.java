@@ -69,12 +69,13 @@ public class Main_MenuBar {
 		
 		menuBar = new JMenuBar();
 		menuBar.setPreferredSize(new Dimension(0, 30));
-		menuBar.setFont(new Font("Verdana", Font.BOLD, 15));
+		menuBar.setFont(new Font("Dialog", Font.BOLD, 14));
 		menuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		menuBar.setBorder(new LineBorder(new Color(128, 128, 128)));
 		menuBar.setAutoscrolls(true);
 		
 		frontDesk = new JMenu("Front Desk");
+		frontDesk.setFont(new Font("Dialog", Font.BOLD, 13));
 		menuBar.add(frontDesk);
 		
 		hoteProps = new JMenuItem("Hotel Properties");
@@ -159,6 +160,7 @@ public class Main_MenuBar {
 		
 		
 		mnTools = new JMenu("Tools");
+		mnTools.setFont(new Font("Dialog", Font.BOLD, 13));
 		menuBar.add(mnTools);
 		
 		//add calculator application section to menubar
@@ -228,6 +230,7 @@ public class Main_MenuBar {
 		
 		/*Add new menu into Tools menu*/	
 		themes = new JMenu("Themes");
+		themes.setFont(new Font("Dialog", Font.BOLD, 13));
 		menuBar.add(themes);
 		
 		/*Add all themes into themes section */		
@@ -259,6 +262,7 @@ public class Main_MenuBar {
 		themes.add(mnitmMcwin);
 		
 		usersMenu = new JMenu("Users");
+		usersMenu.setFont(new Font("Dialog", Font.BOLD, 13));
 		menuBar.add(usersMenu);
 		
 		changeUser = new JMenuItem("Change user");
@@ -294,10 +298,11 @@ public class Main_MenuBar {
 		usersMenu.add(chngPassword);
 				
 		mnAbout = new JMenu("Others");
+		mnAbout.setFont(new Font("Dialog", Font.BOLD, 13));
 		menuBar.add(mnAbout);
 		
 		//add about developer section to menubar
-		aboutDeveloper = new JMenuItem("Developers");
+		aboutDeveloper = new JMenuItem("About developer");
 		aboutDeveloper.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_developer.png")));
 		aboutDeveloper.addActionListener(ActionListener ->{
 			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -371,10 +376,26 @@ public class Main_MenuBar {
 				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
 
 		frontDesk.setText(bundle.getString("FrontDesk"));
+		hoteProps.setText(bundle.getString("HotelProperties"));
+		restart.setText(bundle.getString("Restart"));
+		refresh.setText(bundle.getString("Refresh"));
+		menuInnerItemExit.setText(bundle.getString("Exit"));
 		mnTools.setText(bundle.getString("Tools"));
+		calculator.setText(bundle.getString("Calculator"));
+		sendMail.setText(bundle.getString("SendEmail"));
+		exchange.setText(bundle.getString("Exchange"));
 		themes.setText(bundle.getString("Themes"));
 		usersMenu.setText(bundle.getString("Users"));
+		changeUser.setText(bundle.getString("ChangeUser"));
+		chngPassword.setText(bundle.getString("ChangePwd"));
 		mnAbout.setText(bundle.getString("Others"));
+		aboutDeveloper.setText(bundle.getString("AboutDev"));
+		sourceCode.setText(bundle.getString("SourceCode"));
+		shareYourOpinion.setText(bundle.getString("Feedback"));
+		license.setText(bundle.getString("License"));
+		
+		menuBar.revalidate();
+		menuBar.repaint();
 	}
 	
 }

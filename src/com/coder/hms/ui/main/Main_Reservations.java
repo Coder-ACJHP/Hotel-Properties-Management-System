@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,6 +34,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
@@ -45,6 +48,7 @@ import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.NewReservationWindow;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
 import com.coder.hms.utils.ReservationTableRenderer;
+import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
 
 public class Main_Reservations extends JPanel {
@@ -57,23 +61,20 @@ public class Main_Reservations extends JPanel {
 	private JPanel buttonPanel;
 	private LocalDate reservDate;
 	private JTextField refNoField;
+	private final LocaleBean bean;
+	private ResourceBundle bundle;
 	private JScrollPane scrollPane;
 	private RoomDaoImpl roomDaoImpl;
 	private DefaultTableModel model;
 	private JTextField agencyRefField;
 	private JButton newRezBtn, findBtn;
-	
 	private HotelDaoImpl hotelDoaImpl;
-	
 	private CustomerDaoImpl customerDaoImpl;
-
 	private NewReservationWindow newReservationEx;
-
 	private ReservationDaoImpl reservationDaoImpl;
 	
 	private final HotelSystemStatus systemStatus;
 	private final HotelSystemStatusImpl statusImpl = new HotelSystemStatusImpl();
-	
 	private static final long serialVersionUID = 1L;
 	private JDateChooser startDatePicker, endDatePicker;
 	private JLabel startdateLbl, endDateLbl, referansNoLbl, agencyRefLbl;
@@ -83,6 +84,7 @@ public class Main_Reservations extends JPanel {
 	
 	public Main_Reservations() {
 		
+		bean = LocaleBean.getInstance();
 		setLayout(new BorderLayout(0, 0));
 		
 		buttonPanel = new JPanel();
@@ -153,7 +155,7 @@ public class Main_Reservations extends JPanel {
 		agencyRefLbl.setBounds(442, 33, 94, 26);
 		buttonPanel.add(agencyRefLbl);
 		
-		findBtn = new JButton("Find");
+		findBtn = new JButton("Search");
 		findBtn.setIcon(new ImageIcon(Main_Reservations.class.getResource("/com/coder/hms/icons/main_find.png")));
 		findBtn.setPreferredSize(new Dimension(150, 33));
 		findBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -193,7 +195,16 @@ public class Main_Reservations extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		getReadyForDataFlow();
+		changeLanguage(bean.getLocale());
+	}
+	
+	private void changeLanguage(Locale locale) {
 
+		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		
+		this.newRezBtn.setText(bundle.getString("NewReservation"));
+		this.findBtn.setText(bundle.getString("Search"));
+		
 	}
 	
 	private float calcFullnessPersentage(int count, int capasite) {
@@ -246,18 +257,115 @@ public class Main_Reservations extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				final NewReservationWindow reservationPane = new NewReservationWindow();
+				
+				String customerCountry = "";
+				String customerName = "";
+				String customerSurName = "";
+				
+				
 				if(agencyRefField.getText().length() > 0) {
+										
+					Reservation theReservation = reservationDaoImpl.findReservationByAgencyRefNo(agencyRefField.getText());
+										
+					if(theReservation != null) {
+						List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReservation.getId());
+						System.out.println("HERE FOUR");
+						Room room = roomDaoImpl.getRoomByReservId(theReservation.getId());
+						System.out.println("HERE FIVE");
+						
+						for(Customer cst: customerList) {
+							customerCountry = cst.getCountry();
+							customerName = cst.getFirstName();
+							customerSurName = cst.getLastName();
+						}
+						System.out.println("HERE SIX");
+						
+						reservationPane.setRezIdField(theReservation.getId());
+						reservationPane.setNameSurnameField(theReservation.getGroupName());
+						reservationPane.setCheckinDate(theReservation.getCheckinDate());
+						reservationPane.setCheckoutDate(theReservation.getCheckoutDate());
+						reservationPane.setTotalDaysField(theReservation.getTotalDays());
+						reservationPane.setReservNote(theReservation.getNote());
+						reservationPane.setAgency(theReservation.getAgency());
+						reservationPane.setHostType(theReservation.getHostType());
+						reservationPane.setCreditType(theReservation.getCreditType());
+						reservationPane.setReservStatus(theReservation.getBookStatus());
+						reservationPane.setReferanceNo(theReservation.getReferanceNo());
+						reservationPane.setAgencyRefNo(theReservation.getAgencyRefNo());
+						reservationPane.setRoomNumber(room.getNumber());
+						reservationPane.setRoomType(room.getType());
+						reservationPane.setPersonCountSpinner(room.getPersonCount());
+						reservationPane.setPriceOfRoom(room.getPrice());
+						reservationPane.setCurrency(room.getCurrency());
+						reservationPane.setCustomerCountry(customerCountry);
+						System.out.println("HERE SEVEN");
+						
+						reservationPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
+								room.getPersonCount(), room.getPrice(), room.getCurrency()});
+						
+						reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
+								customerName, customerSurName});
+						
+						reservationPane.setVisible(true);
+					}
 					
-					//search in database
-					JOptionPane.showMessageDialog(null, "Agency field not null", 
-							JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					else {
+						return;
+					}
 				}
 				
 				else if(refNoField.getText().length() > 0) {
 					
-					//search in database
-					JOptionPane.showMessageDialog(null, "Referance Number not null", 
-							JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					Reservation theReserv = reservationDaoImpl.findReservationByRefNo(refNoField.getText());
+					
+					if(theReserv != null) {
+						List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReserv.getId());
+						
+						Room room = roomDaoImpl.getRoomByReservId(theReserv.getId());
+						
+						
+						for(Customer cst: customerList) {
+							customerCountry = cst.getCountry();
+							customerName = cst.getFirstName();
+							customerSurName = cst.getLastName();
+						}
+						
+						
+						
+						reservationPane.setRezIdField(theReserv.getId());
+						reservationPane.setNameSurnameField(theReserv.getGroupName());
+						reservationPane.setCheckinDate(theReserv.getCheckinDate());
+						reservationPane.setCheckoutDate(theReserv.getCheckoutDate());
+						reservationPane.setTotalDaysField(theReserv.getTotalDays());
+						reservationPane.setReservNote(theReserv.getNote());
+						reservationPane.setAgency(theReserv.getAgency());
+						reservationPane.setHostType(theReserv.getHostType());
+						reservationPane.setCreditType(theReserv.getCreditType());
+						reservationPane.setReservStatus(theReserv.getBookStatus());
+						reservationPane.setReferanceNo(theReserv.getReferanceNo());
+						reservationPane.setAgencyRefNo(theReserv.getAgencyRefNo());
+						reservationPane.setRoomNumber(room.getNumber());
+						reservationPane.setRoomType(room.getType());
+						reservationPane.setPersonCountSpinner(room.getPersonCount());
+						reservationPane.setPriceOfRoom(room.getPrice());
+						reservationPane.setCurrency(room.getCurrency());
+						reservationPane.setCustomerCountry(customerCountry);
+						
+						
+						reservationPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
+								room.getPersonCount(), room.getPrice(), room.getCurrency()});
+						
+						reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
+								customerName, customerSurName});
+						
+						reservationPane.setVisible(true);
+					}
+					
+					else {
+						return;
+					}
+					
 				}
 				
 				else {
@@ -286,9 +394,6 @@ public class Main_Reservations extends JPanel {
 							
 							Room room = roomDaoImpl.getRoomByReservId(reservation.getId());
 							
-							String customerCountry = "";
-							String customerName = "";
-							String customerSurName = "";
 							
 							for(Customer cst: customerList) {
 								customerCountry = cst.getCountry();
@@ -296,33 +401,34 @@ public class Main_Reservations extends JPanel {
 								customerSurName = cst.getLastName();
 							}
 							
-							NewReservationWindow reservPane = new NewReservationWindow();
 							
-							reservPane.setRezIdField(reservation.getId());
-							reservPane.setNameSurnameField(reservation.getGroupName());
-							reservPane.setCheckinDate(reservation.getCheckinDate());
-							reservPane.setCheckoutDate(reservation.getCheckoutDate());
-							reservPane.setTotalDaysField(reservation.getTotalDays());
-							reservPane.setReservNote(reservation.getNote());
-							reservPane.setAgency(reservation.getAgency());
-							reservPane.setHostType(reservation.getHostType());
-							reservPane.setCreditType(reservation.getCreditType());
-							reservPane.setReservStatus(reservation.getBookStatus());
-							reservPane.setRoomNumber(room.getNumber());
-							reservPane.setRoomType(room.getType());
-							reservPane.setPersonCountSpinner(room.getPersonCount());
-							reservPane.setPriceOfRoom(room.getPrice());
-							reservPane.setCurrency(room.getCurrency());
-							reservPane.setCustomerCountry(customerCountry);
+							reservationPane.setRezIdField(reservation.getId());
+							reservationPane.setNameSurnameField(reservation.getGroupName());
+							reservationPane.setCheckinDate(reservation.getCheckinDate());
+							reservationPane.setCheckoutDate(reservation.getCheckoutDate());
+							reservationPane.setTotalDaysField(reservation.getTotalDays());
+							reservationPane.setReservNote(reservation.getNote());
+							reservationPane.setAgency(reservation.getAgency());
+							reservationPane.setHostType(reservation.getHostType());
+							reservationPane.setCreditType(reservation.getCreditType());
+							reservationPane.setReservStatus(reservation.getBookStatus());
+							reservationPane.setReferanceNo(reservation.getReferanceNo());
+							reservationPane.setAgencyRefNo(reservation.getAgencyRefNo());
+							reservationPane.setRoomNumber(room.getNumber());
+							reservationPane.setRoomType(room.getType());
+							reservationPane.setPersonCountSpinner(room.getPersonCount());
+							reservationPane.setPriceOfRoom(room.getPrice());
+							reservationPane.setCurrency(room.getCurrency());
+							reservationPane.setCustomerCountry(customerCountry);
 							
 							
-							reservPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
+							reservationPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
 									room.getPersonCount(), room.getPrice(), room.getCurrency()});
 							
-							reservPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
+							reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
 									customerName, customerSurName});
 							
-							reservPane.setVisible(true);
+							reservationPane.setVisible(true);
 						}
 				}
 

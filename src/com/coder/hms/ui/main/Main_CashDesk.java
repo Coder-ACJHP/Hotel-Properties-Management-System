@@ -13,14 +13,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,30 +36,38 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.ui.external.MoneyTransaction;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
+import com.coder.hms.utils.ResourceControl;
 
 public class Main_CashDesk extends JPanel {
 
 	/**
 	 * 
 	 */
+	final String today;
 	private JTable table;
-	private JPanel centerPanel;
+	private final LocaleBean bean;
+	private ResourceBundle bundle;
 	private JScrollPane scrollPane;
+	private JButton btnNewOperation;
 	private PaymentDaoImpl paymentDaoImpl;
 	private PostingDaoImpl postingDaoImpl;
+	private JPanel centerPanel, buttonPanel;
 	private MoneyTransaction moneyTransaction;
 	private static final long serialVersionUID = 1L;
+	private final Calendar date = Calendar.getInstance();
 	private double tlCashVal, tlCreditVal, tlCityLedgerVal;
 	private double dlCashVal, dlCreditVal, dlCityLedgerVal;
 	private double euCashVal, euCreditVal, euCityLedgerVal;
 	private double poCashVal, poCreditVal, poCityLedgerVal;
 	private JFormattedTextField tlCashField, tlCredit, tlCityLedger;
+	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private final String[] columnNames = new String[]{"ROOM", "PAYMENT TYPE", "AMOUNT", "CURRENCY", "TIME", "NOTE"};
 	private DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 	private JFormattedTextField dollarCashField, dollarCredit,dollarCityLedger;
@@ -71,16 +78,13 @@ public class Main_CashDesk extends JPanel {
 	private NumberFormat euFormatter = NumberFormat.getCurrencyInstance();
 	private NumberFormat poFormatter = NumberFormat.getCurrencyInstance();
 	private final BlockadeTableHeaderRenderer THRC = new BlockadeTableHeaderRenderer();
-	private JPanel buttonPanel;
-	private JButton btnNewOperation;
-	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	final Calendar date = Calendar.getInstance();
-	final String today;
 
 	/**
 	 * Create the dialog.
 	 */
 	public Main_CashDesk() {
+		
+		bean = LocaleBean.getInstance();
 		
 		setAutoscrolls(true);
 		setVisible(true);
@@ -341,8 +345,8 @@ public class Main_CashDesk extends JPanel {
 		buttonPanel.setLayout(null);
 		
 		btnNewOperation = new JButton("New transaction");
-		btnNewOperation.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnNewOperation.addActionListener(ActionListener-> {
+			
 				SwingUtilities.invokeLater(new Runnable() {
 					
 					@Override
@@ -353,8 +357,7 @@ public class Main_CashDesk extends JPanel {
 						}
 					}
 				});
-			}
-		});
+			});
 		btnNewOperation.setToolTipText("Start a new money transaction\npost, pay etc.");
 		btnNewOperation.setAutoscrolls(true);
 		btnNewOperation.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -366,8 +369,16 @@ public class Main_CashDesk extends JPanel {
 		buttonPanel.add(btnNewOperation);
 		
 		populateAllFields();
+		changeLanguage(bean.getLocale());
 	}
 
+	private void changeLanguage(Locale locale) {
+
+		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		
+		this.btnNewOperation.setText(bundle.getString("NewTransaction"));
+	}
+	
 	private void populateMainTable(DefaultTableModel theModel) {
 
 		theModel.setRowCount(0);

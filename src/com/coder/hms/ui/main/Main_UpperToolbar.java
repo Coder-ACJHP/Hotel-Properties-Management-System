@@ -35,18 +35,20 @@ public class Main_UpperToolbar {
 	private JPanel panel;
 	private Main_Audit audit;
 	private Main_AllRooms theRooms;
-	private Main_Blockade blockadeFrame;
-	private Main_CustomersFrame customersFrame;
 	private Main_CashDesk cashdesk;
+	private Main_Blockade blockadeFrame;
+	private static LocaleBean bean;
 	private Main_Reservations rezervFrame;
 	private Main_RoomCleaning cleaningFrame;
+	private Main_CustomersFrame customersFrame;
 	private AllRooms_ColorInfoTable infoColorTable;
-	private final LocaleBean bean = LocaleBean.getInstance();
 	private JButton roomsBtn, guestsBtn, rezervationBtn, blockadeBtn, roomCleaningBtn, cashBtn, auditBtn, refreshBtn;
 
 	
 	public Main_UpperToolbar(final JPanel mainPanel) {
 
+		bean = LocaleBean.getInstance();
+		
 		panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setBackground(SystemColor.activeCaption);
@@ -61,7 +63,7 @@ public class Main_UpperToolbar {
 		roomsBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_room.png")));
 		roomsBtn.setBounds(10, 7, 137, 40);
 		roomsBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		roomsBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		roomsBtn.setFont(new Font("Dialog", Font.BOLD, 13));
 		roomsBtn.setPreferredSize(new Dimension(200, 40));
 		roomsBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(roomsBtn);
@@ -72,7 +74,7 @@ public class Main_UpperToolbar {
 		guestsBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_guests.png")));
 		guestsBtn.setBounds(157, 7, 137, 40);
 		guestsBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		guestsBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		guestsBtn.setFont(new Font("Dialog", Font.BOLD, 13));
 		guestsBtn.setPreferredSize(new Dimension(200, 40));
 		guestsBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(guestsBtn);
@@ -83,7 +85,7 @@ public class Main_UpperToolbar {
 		rezervationBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_rezerv.png")));
 		rezervationBtn.setBounds(304, 7, 137, 40);
 		rezervationBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		rezervationBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		rezervationBtn.setFont(new Font("Dialog", Font.BOLD, 13));
 		rezervationBtn.setPreferredSize(new Dimension(200, 40));
 		rezervationBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(rezervationBtn);
@@ -94,7 +96,7 @@ public class Main_UpperToolbar {
 		blockadeBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_blockade.png")));
 		blockadeBtn.setBounds(451, 7, 137, 40);
 		blockadeBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		blockadeBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		blockadeBtn.setFont(new Font("Dialog", Font.BOLD, 13));
 		blockadeBtn.setPreferredSize(new Dimension(200, 40));
 		blockadeBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(blockadeBtn);
@@ -105,7 +107,7 @@ public class Main_UpperToolbar {
 		roomCleaningBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/login_clear.png")));
 		roomCleaningBtn.setBounds(599, 7, 137, 40);
 		roomCleaningBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		roomCleaningBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		roomCleaningBtn.setFont(new Font("Dialog", Font.BOLD, 13));
 		roomCleaningBtn.setPreferredSize(new Dimension(200, 40));
 		roomCleaningBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(roomCleaningBtn);
@@ -116,7 +118,7 @@ public class Main_UpperToolbar {
 		cashBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_cash.png")));
 		cashBtn.setBounds(746, 7, 137, 40);
 		cashBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		cashBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		cashBtn.setFont(new Font("Dialog", Font.BOLD, 13));
 		cashBtn.setPreferredSize(new Dimension(200, 40));
 		cashBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(cashBtn);
@@ -135,7 +137,7 @@ public class Main_UpperToolbar {
 		auditBtn.setIcon(new ImageIcon(Main_UpperToolbar.class.getResource("/com/coder/hms/icons/main_audit.png")));
 		auditBtn.setPreferredSize(new Dimension(200, 40));
 		auditBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		auditBtn.setFont(new Font("Arial", Font.BOLD, 12));
+		auditBtn.setFont(new Font("Dialog", Font.BOLD, 13));
 		auditBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		auditBtn.setBounds(906, 7, 137, 40);
 		auditBtn.addActionListener(UpperToolbarActionListener(mainPanel));
@@ -171,7 +173,7 @@ public class Main_UpperToolbar {
 	private void changeLanguage(Locale locale) {
 
 		final ResourceBundle bundle = ResourceBundle
-				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
 		this.roomsBtn.setText(bundle.getString("RoomsPlan"));
 		this.guestsBtn.setText(bundle.getString("Guests"));
 		this.auditBtn.setText(bundle.getString("Audit"));
@@ -179,7 +181,9 @@ public class Main_UpperToolbar {
 		this.rezervationBtn.setText(bundle.getString("Reservations"));
 		this.roomCleaningBtn.setText(bundle.getString("RoomCleaning"));
 		this.cashBtn.setText(bundle.getString("CashDesk"));
-		
+
+		panel.revalidate();
+		panel.repaint();
 	}
 	
 	public ActionListener UpperToolbarActionListener(final JPanel mainPanel) {
@@ -189,9 +193,7 @@ public class Main_UpperToolbar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				String command = e.getActionCommand();
-
-				if (command.equalsIgnoreCase("Rooms Plain")) {
+				if (e.getSource() == roomsBtn) {
 
 					theRooms = new Main_AllRooms();
 					infoColorTable = new AllRooms_ColorInfoTable();
@@ -209,7 +211,7 @@ public class Main_UpperToolbar {
 
 				}
 
-				else if (command.equalsIgnoreCase("Guests")) {
+				else if (e.getSource() == guestsBtn) {
 
 					customersFrame = new Main_CustomersFrame();
 					mainPanel.removeAll();
@@ -218,7 +220,7 @@ public class Main_UpperToolbar {
 					mainPanel.repaint();
 				}
 
-				else if (command.equalsIgnoreCase("Reservations")) {
+				else if (e.getSource() == rezervationBtn) {
 
 					rezervFrame = new Main_Reservations();
 					mainPanel.removeAll();
@@ -228,7 +230,7 @@ public class Main_UpperToolbar {
 					mainPanel.repaint();
 				}
 
-				else if (command.equalsIgnoreCase("Blockade")) {
+				else if (e.getSource() == blockadeBtn) {
 
 					blockadeFrame = new Main_Blockade();
 					mainPanel.removeAll();
@@ -238,7 +240,7 @@ public class Main_UpperToolbar {
 
 				}
 
-				else if (command.equalsIgnoreCase("Room Cleaning")) {
+				else if (e.getSource() == roomCleaningBtn) {
 
 					cleaningFrame = new Main_RoomCleaning();
 					mainPanel.removeAll();
@@ -247,7 +249,7 @@ public class Main_UpperToolbar {
 					mainPanel.repaint();
 				}
 
-				else if (command.equalsIgnoreCase("Cash Desk")) {
+				else if (e.getSource() == cashBtn) {
 
 					cashdesk = new Main_CashDesk();
 					mainPanel.removeAll();
@@ -256,7 +258,8 @@ public class Main_UpperToolbar {
 					mainPanel.repaint();
 				}
 
-				else if (command.equalsIgnoreCase("Audit")) {
+				else if (e.getSource() == auditBtn) {
+					
 					audit = new Main_Audit();
 					audit.initializeAuditPane();
 					mainPanel.removeAll();
@@ -266,7 +269,7 @@ public class Main_UpperToolbar {
 
 				}
 				
-				else if(command.equalsIgnoreCase("Refresh")) {
+				else if(e.getSource() == refreshBtn) {
 					mainPanel.removeAll();
 					mainPanel.revalidate();
 					mainPanel.repaint();
@@ -279,4 +282,5 @@ public class Main_UpperToolbar {
 	public JPanel getJPanel() {
 		return this.panel;
 	}
+	
 }

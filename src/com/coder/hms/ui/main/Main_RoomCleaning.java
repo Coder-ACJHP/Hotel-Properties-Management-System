@@ -4,43 +4,50 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.inner.DialogFrame;
 import com.coder.hms.utils.CleaningRoomTableColumnsMaker;
-import com.coder.hms.utils.RoomCleaningTableRenderer;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.utils.ResourceControl;
+import com.coder.hms.utils.RoomCleaningTableRenderer;
 
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-
-public class Main_RoomCleaning extends JPanel {
+public class Main_RoomCleaning extends JPanel implements ActionListener {
 
 	/**
 	 * 
 	 */
 	private JTable table;
+	private LocaleBean bean;
+	private JLabel lblSearch;
+	private ResourceBundle bundle;
 	private JTextField searchField;
+	private JPanel upperPanel, buttonsPanel, panel;
 	private static final long serialVersionUID = 1L;
 	private final CustomTableHeaderRenderer headerRenderer;
 	private TableRowSorter<DefaultTableModel> tableRowShorter;
@@ -49,9 +56,11 @@ public class Main_RoomCleaning extends JPanel {
 	private final RoomCleaningTableRenderer renderer = new RoomCleaningTableRenderer();
 	private final String[] columnNames = new String[] { "ROOM NUMBER", "ROOM TYPE", "CLEANING STATUS" };
 	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
+	private JButton btnCleanSelected, btnCleanAll, btnPollute, btnPolluteAll, btnSetAsDnd;
+	
 	public Main_RoomCleaning() {
 
+		bean = LocaleBean.getInstance();
 		setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 
 		this.setAutoscrolls(true);
@@ -60,84 +69,84 @@ public class Main_RoomCleaning extends JPanel {
 		this.setMaximumSize(new Dimension(1000, 900));
 		setLayout(new BorderLayout(0, 0));
 
-		final JPanel upperPanel = new JPanel();
+		upperPanel = new JPanel();
 		upperPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		upperPanel.setLayout(new BorderLayout());
 		upperPanel.setBackground(Color.decode("#066d95"));
 		add(upperPanel, BorderLayout.NORTH);
 		
-		final JPanel buttonsPanel = new JPanel();
+		buttonsPanel = new JPanel();
 		buttonsPanel.setAutoscrolls(true);
-		buttonsPanel.setPreferredSize(new Dimension(750, 48));
+		buttonsPanel.setPreferredSize(new Dimension(850, 48));
 		buttonsPanel.setBackground(Color.decode("#066d95"));
 		buttonsPanel.setLayout(null);
 		upperPanel.add(buttonsPanel, BorderLayout.WEST);
 
-		final JButton btnCleanSelected = new JButton("Clean Selected");
+		btnCleanSelected = new JButton("Clean Selected");
 		btnCleanSelected.setPreferredSize(new Dimension(135, 35));
 		btnCleanSelected.setAutoscrolls(true);
-		btnCleanSelected.addActionListener(cleanSelectedRoom());
+		btnCleanSelected.addActionListener(this);
 		btnCleanSelected.setIcon(
 				new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/cleaning_single.png")));
 		btnCleanSelected.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnCleanSelected.setBounds(12, 2, 135, 44);
+		btnCleanSelected.setBounds(12, 2, 146, 44);
 		btnCleanSelected.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		btnCleanSelected.setFont(new Font("Arial", Font.BOLD, 14));
+		btnCleanSelected.setFont(new Font("Dialog", Font.BOLD, 13));
 		buttonsPanel.add(btnCleanSelected);
 
-		final JButton btnCleanAll = new JButton("Clean All");
+		btnCleanAll = new JButton("Clean All");
 		btnCleanAll.setAutoscrolls(true);
-		btnCleanAll.addActionListener(cleanAllListener());
+		btnCleanAll.addActionListener(this);
 		btnCleanAll.setIcon(new ImageIcon(Main_RoomCleaning.class.
 				getResource("/com/coder/hms/icons/cleaning_all.png")));
 		btnCleanAll.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnCleanAll.setBounds(159, 2, 135, 44);
+		btnCleanAll.setBounds(172, 2, 146, 44);
 		btnCleanAll.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		btnCleanAll.setFont(new Font("Arial", Font.BOLD, 14));
+		btnCleanAll.setFont(new Font("Dialog", Font.BOLD, 13));
 		buttonsPanel.add(btnCleanAll);
 		
-		final JButton btnPollute = new JButton("Pollute Selected");
+		btnPollute = new JButton("Pollute Selected");
 		btnPollute.setAutoscrolls(true);
 		btnPollute.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/room_dirty.png")));
 		btnPollute.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnPollute.setFont(new Font("Arial", Font.BOLD, 13));
-		btnPollute.setBounds(306, 2, 135, 44);
+		btnPollute.setFont(new Font("Dialog", Font.BOLD, 13));
+		btnPollute.setBounds(332, 2, 146, 44);
 		btnPollute.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		btnPollute.addActionListener(putPolluteListener());
+		btnPollute.addActionListener(this);
 		buttonsPanel.add(btnPollute);
 		
-		final JButton btnPolluteAll = new JButton("Pollute All");
+		btnPolluteAll = new JButton("Pollute All");
 		btnPolluteAll.setAutoscrolls(true);
 		btnPolluteAll.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/rezaerv_report.png")));
 		btnPolluteAll.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnPolluteAll.setFont(new Font("Arial", Font.BOLD, 14));
-		btnPolluteAll.setBounds(453, 2, 135, 44);
+		btnPolluteAll.setFont(new Font("Dialog", Font.BOLD, 13));
+		btnPolluteAll.setBounds(492, 2, 146, 44);
 		btnPolluteAll.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		btnPolluteAll.addActionListener(polluteAllListener());
+		btnPolluteAll.addActionListener(this);
 		buttonsPanel.add(btnPolluteAll);
 		
-		final JButton btnPutAtDnd = new JButton("Put at DND");
-		btnPutAtDnd.setAutoscrolls(true);
-		btnPutAtDnd.addActionListener(putAtDndListener());
-		btnPutAtDnd.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/room_dnd.png")));
-		btnPutAtDnd.setHorizontalTextPosition(SwingConstants.RIGHT);
-		btnPutAtDnd.setFont(new Font("Arial", Font.BOLD, 14));
-		btnPutAtDnd.setBounds(600, 2, 135, 44);
-		btnPutAtDnd.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		buttonsPanel.add(btnPutAtDnd);
+		btnSetAsDnd = new JButton("Set As DND");
+		btnSetAsDnd.setAutoscrolls(true);
+		btnSetAsDnd.addActionListener(this);
+		btnSetAsDnd.setIcon(new ImageIcon(Main_RoomCleaning.class.getResource("/com/coder/hms/icons/room_dnd.png")));
+		btnSetAsDnd.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnSetAsDnd.setFont(new Font("Dialog", Font.BOLD, 13));
+		btnSetAsDnd.setBounds(653, 2, 146, 44);
+		btnSetAsDnd.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		buttonsPanel.add(btnSetAsDnd);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setPreferredSize(new Dimension(250, 10));
 		upperPanel.add(panel, BorderLayout.EAST);
 		panel.setLayout(null);
 		
-		JLabel lblSearch = new JLabel("Search : ");
+		lblSearch = new JLabel("Search : ");
 		lblSearch.setForeground(new Color(255, 255, 0));
 		lblSearch.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblSearch.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSearch.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSearch.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		lblSearch.setBounds(6, 12, 72, 23);
+		lblSearch.setBounds(32, 12, 46, 23);
 		panel.add(lblSearch);
 		
 		searchField = new JTextField();
@@ -153,9 +162,9 @@ public class Main_RoomCleaning extends JPanel {
 		scrollPane.setAutoscrolls(true);
 		add(scrollPane, BorderLayout.CENTER);
 		
-		tableRowShorter = new TableRowSorter<DefaultTableModel>(model);
 		/* Before adding model to table we need to populate it */
 		populateTableModel(model);
+		tableRowShorter = new TableRowSorter<DefaultTableModel>(model);
 
 		table = new JTable();
 		table.setModel(model);
@@ -175,9 +184,22 @@ public class Main_RoomCleaning extends JPanel {
 		renderer.setVerticalAlignment(SwingConstants.CENTER);
 		table.setDefaultRenderer(Object.class, renderer);
 		scrollPane.setViewportView(table);
+		
+		changeLanguage(bean.getLocale());
 	}
 
+	private void changeLanguage(Locale locale) {
 
+		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		
+		this.btnCleanSelected.setText(bundle.getString("CleanSelected"));
+		this.btnCleanAll.setText(bundle.getString("CleanAll"));
+		this.btnPollute.setText(bundle.getString("PolluteSelected"));
+		this.btnPolluteAll.setText(bundle.getString("PolluteAll"));
+		this.btnSetAsDnd.setText(bundle.getString("SetAsDnd"));
+		this.lblSearch.setText(bundle.getString("Search"));
+		
+	}
 
 	private void populateTableModel(DefaultTableModel theModel) {
 
@@ -185,7 +207,7 @@ public class Main_RoomCleaning extends JPanel {
 		final List<Room> roomList = roomDaoImpl.getAllRooms();
 
 		for (Room room : roomList) {
-			final Object[] rowData = new Object[] { room.getNumber(), room.getType(), room.getCleaningStatus() };
+			Object[] rowData = { room.getNumber(), room.getType(), room.getCleaningStatus() };
 			model.addRow(rowData);
 		}
 	}
@@ -194,118 +216,6 @@ public class Main_RoomCleaning extends JPanel {
 		model.setRowCount(0);
 		populateTableModel(model);
 
-	}
-
-	private ActionListener cleanSelectedRoom() {
-		final ActionListener listener = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				final int rowIndex = table.getSelectedRow();
-				if(rowIndex < 0) {
-					JOptionPane.showMessageDialog(null, "You have to select a row at first!", 
-									JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-					return;
-				}else {
-					final String rowData = table.getValueAt(rowIndex, 0).toString();
-					roomDaoImpl.setSingleRoomAsCleanByRoomNumber(rowData);
-					refreshTable();
-				}
-				
-			}
-		};
-		return listener;
-	}
-
-	private ActionListener cleanAllListener() {
-		final ActionListener listener = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final DialogFrame diFrame = new DialogFrame();
-				diFrame.setMessage("Are you sure change all room status as clean?");
-				diFrame.btnYes.addActionListener(ActionListener ->{
-					roomDaoImpl.setAllRoomsAtClean("CLEAN");
-					refreshTable();
-					diFrame.dispose();
-				});
-				diFrame.btnNo.addActionListener(ActionListener->{
-					diFrame.dispose();
-					return;
-				});
-				diFrame.setVisible(true);
-				
-			}
-		};
-		return listener;
-	}
-	
-	private ActionListener putPolluteListener() {
-		final ActionListener listener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				final int rowIndex = table.getSelectedRow();
-				if(rowIndex < 0) {
-					JOptionPane.showMessageDialog(null, "You have to select a row at first!", 
-									JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-					return;
-				}else {
-						
-					final String rowData = table.getValueAt(rowIndex, 0).toString();
-					roomDaoImpl.setSingleRoomAsDirtyByRoomNumber(rowData);
-					refreshTable();
-				}
-			}
-		};
-		return listener;
-	}
-	
-	private ActionListener polluteAllListener() {
-		final ActionListener listener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				final DialogFrame dialog = new DialogFrame();
-				dialog.setMessage("Are you sure change all room status as dirty?");
-				dialog.btnYes.addActionListener(ActionListener ->{
-					roomDaoImpl.setAllRoomsAtDirty("DIRTY");
-					refreshTable();
-					dialog.dispose();
-				});
-				dialog.btnNo.addActionListener(ActionListener->{
-					dialog.dispose();
-					return;
-				});
-				dialog.setVisible(true);
-			}
-		};
-		return listener;
-	}
-	
-	private ActionListener putAtDndListener() {
-		final ActionListener listener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				final int rowIndex = table.getSelectedRow();
-				
-				if(rowIndex < 0) {
-					JOptionPane.showMessageDialog(null, "You have to select a row at first!", 
-									JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-					return;
-				}else {
-					final String rowData = table.getValueAt(rowIndex, 0).toString();
-					roomDaoImpl.setRoomAtDND(rowData);
-					refreshTable();
-				}
-			}
-		};
-		return listener;
 	}
 	
 	private KeyListener customKeyListener() {
@@ -323,4 +233,89 @@ public class Main_RoomCleaning extends JPanel {
 		};
 		return adapter;
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {	
+		
+		if(e.getSource() == btnCleanSelected) {
+			
+			int rowIndex = table.getSelectedRow();
+			
+			if(rowIndex < 0) {
+				JOptionPane.showMessageDialog(null, "You have to select a row at first!", 
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return;
+			}else {
+				
+				String rowData = table.getValueAt(rowIndex, 0).toString();
+				roomDaoImpl.setSingleRoomAsCleanByRoomNumber(rowData);
+				refreshTable();
+			}
+		}
+		
+		else if(e.getSource() == btnCleanAll){
+			
+			final DialogFrame diFrame = new DialogFrame();
+			diFrame.setMessage("Are you sure change all room status as clean?");
+			diFrame.btnYes.addActionListener(ActionListener ->{
+				roomDaoImpl.setAllRoomsAtClean("CLEAN");
+				refreshTable();
+				diFrame.dispose();
+			});
+			diFrame.btnNo.addActionListener(ActionListener->{
+				diFrame.dispose();
+				return;
+			});
+			diFrame.setVisible(true);
+		}
+		
+		else if(e.getSource() == btnPollute) {
+			
+			int rowIndex = table.getSelectedRow();
+			
+			if(rowIndex < 0) {
+				JOptionPane.showMessageDialog(null, "You have to select a row at first!", 
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return;
+			}else {
+					
+				String rowData = table.getValueAt(rowIndex, 0).toString();
+				roomDaoImpl.setSingleRoomAsDirtyByRoomNumber(rowData);
+				refreshTable();
+			}
+		}
+		
+		else if(e.getSource() == btnPolluteAll) {
+			
+			final DialogFrame dialog = new DialogFrame();
+			dialog.setMessage("Are you sure change all room status as dirty?");
+			dialog.btnYes.addActionListener(ActionListener ->{
+				roomDaoImpl.setAllRoomsAtDirty("DIRTY");
+				refreshTable();
+				dialog.dispose();
+			});
+			dialog.btnNo.addActionListener(ActionListener->{
+				dialog.dispose();
+				return;
+			});
+			dialog.setVisible(true);
+		}
+		
+		else if(e.getSource() == btnSetAsDnd) {
+			
+			int rowIndex = table.getSelectedRow();
+			
+			if(rowIndex < 0) {
+				JOptionPane.showMessageDialog(null, "You have to select a row at first!", 
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return;
+			}else {
+				String rowData = table.getValueAt(rowIndex, 0).toString();
+				roomDaoImpl.setRoomAtDND(rowData);
+				refreshTable();
+			}
+		}
+		
+	}
+	
 }

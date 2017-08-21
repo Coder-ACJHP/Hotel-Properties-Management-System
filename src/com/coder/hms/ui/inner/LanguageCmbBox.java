@@ -43,6 +43,7 @@ public class LanguageCmbBox extends JPanel {
 		
 		comboBox = new JComboBox<>(intArray);
 		comboBox.setActionCommand("languagesCmbBox");
+		comboBox.setSelectedIndex(3);
 		comboBox.setMaximumRowCount(4);
 		
 		renderer = new ComboBoxRenderer();

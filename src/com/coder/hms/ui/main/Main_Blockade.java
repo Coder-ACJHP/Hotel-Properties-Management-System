@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -47,6 +49,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import com.coder.hms.beans.Blockade;
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
@@ -58,6 +61,7 @@ import com.coder.hms.entities.Room;
 import com.coder.hms.utils.BlockadeTableCellRenderer;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
 
 public class Main_Blockade extends JPanel implements ActionListener {
@@ -65,15 +69,17 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
+	private JPanel panel;
+	private LocaleBean bean;
+	private JLabel lblSearch;
+	private ResourceBundle bundle;
+	private JTextField searchField;
 	
 	private List<Long> rezervationIdList;
-	
 	private RoomDaoImpl rImpl;
 	private List<Room> roomList;
-	
 	private ReservationDaoImpl resDaoImpl;
 	private List<Reservation> resList;
-	
 	private CustomerDaoImpl cImpl;
 	private List<Customer> customerList;
 	
@@ -107,16 +113,16 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private final String[] blokajCustomerColsName = {"FIRSTNAME", "LASTNAME"};
 	private DefaultTableModel blokajCustomerModel = new DefaultTableModel(blokajCustomerColsName, 0);
 	
-	private final BlockadeTableCellRenderer cellRenderer = new BlockadeTableCellRenderer();
 	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
 	private final BlockadeTableHeaderRenderer THRC = new BlockadeTableHeaderRenderer();
-	private JPanel panel;
-	private JTextField searchField;
+	private final BlockadeTableCellRenderer cellRenderer = new BlockadeTableCellRenderer();
 	/**
 	 * Create the frame.
 	 */
 	public Main_Blockade() {
 						
+		bean = LocaleBean.getInstance();
+		
 		setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 
 		this.setAutoscrolls(true);
@@ -300,7 +306,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		upperPanel.add(panel, BorderLayout.EAST);
 		panel.setLayout(null);
 		
-		JLabel lblSearch = new JLabel("Search : ");
+		lblSearch = new JLabel("Search : ");
 		lblSearch.setHorizontalTextPosition(SwingConstants.RIGHT);
 		lblSearch.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSearch.setForeground(new Color(255, 255, 51));
@@ -324,8 +330,18 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		getReadyForTables();
 		populateBlokajTable(blokajModel);
 		populateMainTable(model);
+		
+		changeLanguage(bean.getLocale());
 	}
 
+	private void changeLanguage(Locale locale) {
+
+		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		
+		this.lblSearch.setText(bundle.getString("Search"));
+		
+	}
+	
 	// before creating GUI make ready all dependencies
 	public synchronized void getReadyForTables() {
 		rImpl = new RoomDaoImpl();		

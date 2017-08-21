@@ -93,7 +93,7 @@ public class NewReservationWindow extends JDialog {
 	private final RoomNumberMaker roomNumberMaker = new RoomNumberMaker();
 	private ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private JLabel agencyLbl, creditTypeLbl, customerCountryLbl;
-	private JTextField rezIdField, nameSurnameField, totalDaysField;
+	private JTextField rezIdField, nameSurnameField, totalDaysField, agencyRefField, referanceNoField;
 	
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 	private final CustomerDaoImpl cImpl = new CustomerDaoImpl();
@@ -177,13 +177,13 @@ public class NewReservationWindow extends JDialog {
 		JLabel checkinLbl = new JLabel("Checkin : ");
 		checkinLbl.setForeground(new Color(255, 255, 255));
 		checkinLbl.setFont(new Font("Verdana", Font.BOLD, 12));
-		checkinLbl.setBounds(10, 75, 90, 23);
+		checkinLbl.setBounds(10, 73, 90, 23);
 		getContentPane().add(checkinLbl);
 		
 		checkinDate = new JDateChooser();
 		checkinDate.setCalendar(Calendar.getInstance());
 		checkinDate.setDateFormatString("yyyy-MM-dd");
-		checkinDate.setBounds(152, 75, 209, 20);
+		checkinDate.setBounds(152, 76, 209, 20);
 		checkinDate.addPropertyChangeListener(chechkDates());
 		getContentPane().add(checkinDate);
 		
@@ -217,39 +217,39 @@ public class NewReservationWindow extends JDialog {
 		agencyLbl = new JLabel("Agency : ");
 		agencyLbl.setForeground(new Color(255, 255, 255));
 		agencyLbl.setFont(new Font("Verdana", Font.BOLD, 12));
-		agencyLbl.setBounds(384, 11, 90, 23);
+		agencyLbl.setBounds(394, 11, 90, 23);
 		getContentPane().add(agencyLbl);
 		
 		agencyCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(AGENCY_LIST));
-		agencyCmbBox.setBounds(539, 11, 209, 20);
+		agencyCmbBox.setBounds(549, 11, 209, 20);
 		getContentPane().add(agencyCmbBox);
 		
 		JLabel hostTypeLbl = new JLabel("Host type : ");
 		hostTypeLbl.setForeground(new Color(255, 255, 255));
 		hostTypeLbl.setFont(new Font("Verdana", Font.BOLD, 12));
-		hostTypeLbl.setBounds(384, 44, 90, 23);
+		hostTypeLbl.setBounds(394, 44, 90, 23);
 		getContentPane().add(hostTypeLbl);
 		
 		hostCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(HOST_TYPES));
 		hostCmbBox.setSelectedIndex(0);
-		hostCmbBox.setBounds(539, 42, 209, 20);
+		hostCmbBox.setBounds(549, 42, 209, 20);
 		getContentPane().add(hostCmbBox);
 		
 		creditTypeLbl = new JLabel("Credit type : ");
 		creditTypeLbl.setForeground(new Color(255, 255, 255));
 		creditTypeLbl.setFont(new Font("Verdana", Font.BOLD, 12));
-		creditTypeLbl.setBounds(384, 73, 90, 23);
+		creditTypeLbl.setBounds(394, 73, 90, 23);
 		getContentPane().add(creditTypeLbl);
 		
 		creaditTypeCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(CREDIT_TYPES));
 		creaditTypeCmbBox.setSelectedIndex(2);
-		creaditTypeCmbBox.setBounds(539, 73, 209, 20);
+		creaditTypeCmbBox.setBounds(549, 73, 209, 20);
 		getContentPane().add(creaditTypeCmbBox);
 		
 		JLabel reservationNoteLbl = new JLabel("Reservation Note : ");
 		reservationNoteLbl.setForeground(new Color(255, 255, 255));
 		reservationNoteLbl.setFont(new Font("Verdana", Font.BOLD, 12));
-		reservationNoteLbl.setBounds(10, 191, 151, 23);
+		reservationNoteLbl.setBounds(50, 208, 129, 23);
 		getContentPane().add(reservationNoteLbl);
 		
 		noteTextArea = new JTextArea();
@@ -257,28 +257,28 @@ public class NewReservationWindow extends JDialog {
 		noteTextArea.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		noteTextArea.setBackground(SystemColor.info);
 		noteTextArea.setLineWrap(true);
-		noteTextArea.setBounds(162, 170, 491, 64);
+		noteTextArea.setBounds(191, 198, 509, 43);
 		getContentPane().add(noteTextArea);
 		
 		JLabel reservationStatusLbl = new JLabel("Reservation Status : ");
 		reservationStatusLbl.setForeground(new Color(255, 255, 255));
 		reservationStatusLbl.setFont(new Font("Verdana", Font.BOLD, 12));
-		reservationStatusLbl.setBounds(384, 106, 146, 23);
+		reservationStatusLbl.setBounds(394, 106, 146, 23);
 		getContentPane().add(reservationStatusLbl);
 		
 		rezervStatusCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(RESERV_STS));
 		rezervStatusCmbBox.setSelectedIndex(0);
-		rezervStatusCmbBox.setBounds(540, 107, 209, 20);
+		rezervStatusCmbBox.setBounds(550, 107, 209, 20);
 		getContentPane().add(rezervStatusCmbBox);
 		
 		customerCountryLbl = new JLabel("Customer Country : ");
 		customerCountryLbl.setForeground(new Color(255, 255, 255));
 		customerCountryLbl.setFont(new Font("Verdana", Font.BOLD, 12));
-		customerCountryLbl.setBounds(384, 136, 146, 23);
+		customerCountryLbl.setBounds(394, 136, 146, 23);
 		getContentPane().add(customerCountryLbl);
 		
 		customerCountryCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(COUNTRY_LIST));
-		customerCountryCmbBox.setBounds(539, 137, 209, 20);
+		customerCountryCmbBox.setBounds(549, 137, 209, 20);
 		customerCountryCmbBox.setSelectedIndex(0);
 		getContentPane().add(customerCountryCmbBox);
 		
@@ -334,7 +334,7 @@ public class NewReservationWindow extends JDialog {
 		buttonsPanel.add(SaveBtn);
 		
 		final JPanel panel = new JPanel();
-		panel.setBounds(10, 245, 754, 205);
+		panel.setBounds(10, 253, 754, 197);
 		getContentPane().add(panel);
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setBackground(SystemColor.activeCaption);
@@ -483,6 +483,28 @@ public class NewReservationWindow extends JDialog {
 		ePaymentScrollPane.setViewportView(ePaymentTable);
 		panel.add(tabbedPane, BorderLayout.CENTER);
 		
+		JLabel lblAgencyRefNo = new JLabel("Agency ref no : ");
+		lblAgencyRefNo.setForeground(Color.WHITE);
+		lblAgencyRefNo.setFont(new Font("Verdana", Font.BOLD, 12));
+		lblAgencyRefNo.setBounds(10, 165, 136, 23);
+		getContentPane().add(lblAgencyRefNo);
+		
+		agencyRefField = new JTextField();
+		agencyRefField.setColumns(10);
+		agencyRefField.setBounds(152, 168, 209, 20);
+		getContentPane().add(agencyRefField);
+		
+		JLabel lblReferanceNo = new JLabel("Referance no : ");
+		lblReferanceNo.setForeground(Color.WHITE);
+		lblReferanceNo.setFont(new Font("Verdana", Font.BOLD, 12));
+		lblReferanceNo.setBounds(394, 165, 136, 23);
+		getContentPane().add(lblReferanceNo);
+		
+		referanceNoField = new JTextField();
+		referanceNoField.setColumns(10);
+		referanceNoField.setBounds(553, 168, 204, 20);
+		getContentPane().add(referanceNoField);
+		
 		if(payWin.getTableRowData() != null) {
 			earlyPaymetModel.setRowCount(0);
 			earlyPaymetModel.addRow(payWin.getTableRowData());
@@ -563,6 +585,8 @@ public class NewReservationWindow extends JDialog {
 				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
 				reservation.setNote(noteTextArea.getText());
 				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
+				reservation.setAgencyRefNo(agencyRefField.getText());
+				reservation.setReferanceNo(referanceNoField.getText());
 				reservation.setIsCheckedIn("NO");				
 				
 				if(payWin.getPaymentStatus()) {
@@ -966,6 +990,22 @@ public class NewReservationWindow extends JDialog {
 
 	public void setCompletionStatus(boolean completionStatus) {
 		this.completionStatus = completionStatus;
+	}
+	
+	public String getAgencyRefNo() {
+		return this.agencyRefField.getText();
+	}
+	
+	public void setAgencyRefNo(String agencyRefNo) {
+		this.agencyRefField.setText(agencyRefNo);
+	}
+	
+	public String getReferanceNo() {
+		return this.referanceNoField.getText();
+	}
+	
+	public void setReferanceNo(String refNo) {
+		this.referanceNoField.setText(refNo);
 	}
 }
 

@@ -14,6 +14,8 @@ import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,6 +31,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
@@ -39,8 +42,9 @@ import com.coder.hms.ui.external.NewReservationWindow;
 import com.coder.hms.ui.inner.DialogFrame;
 import com.coder.hms.utils.AuditTableCellRenderer;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
+import com.coder.hms.utils.ResourceControl;
 
-public class Main_Audit extends JPanel {
+public class Main_Audit extends JPanel implements ActionListener {
 
 	/**
 	 * 
@@ -60,6 +64,7 @@ public class Main_Audit extends JPanel {
 	private List<Reservation> foundReservationlist;
 	private static final long serialVersionUID = 1L;
 	
+	private LocaleBean bean;
 	private HotelSystemStatus systemStatus;
 	private final HotelSystemStatusImpl systemStatusImpl = new HotelSystemStatusImpl();
 	
@@ -74,6 +79,7 @@ public class Main_Audit extends JPanel {
 	
 	public void initializeAuditPane() {
 		
+		bean = LocaleBean.getInstance();
 		setLayout(new BorderLayout(0, 0));
 
 		upperPanel = new JPanel();
@@ -97,8 +103,8 @@ public class Main_Audit extends JPanel {
 		btnUpdate.setAutoscrolls(true);
 		btnUpdate.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnUpdate.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnUpdate.addActionListener(updateReservation());
-		btnUpdate.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		btnUpdate.addActionListener(this);
+		btnUpdate.setFont(new Font("Dialog", Font.PLAIN, 14));
 		btnUpdate.setIcon(new ImageIcon(Main_Audit.class.getResource("/com/coder/hms/icons/cleaning-refresh.png")));
 		btnUpdate.setBounds(6, 77, 127, 40);
 		buttonPanel.add(btnUpdate);
@@ -109,8 +115,8 @@ public class Main_Audit extends JPanel {
 		btnCancel.setAutoscrolls(true);
 		btnCancel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnCancel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		btnCancel.addActionListener(cancelReservation());
+		btnCancel.setFont(new Font("Dialog", Font.PLAIN, 14));
+		btnCancel.addActionListener(this);
 		btnCancel.setIcon(new ImageIcon(Main_Audit.class.getResource("/com/coder/hms/icons/room_checkout.png")));
 		btnCancel.setBounds(6, 169, 127, 40);
 		buttonPanel.add(btnCancel);
@@ -121,8 +127,8 @@ public class Main_Audit extends JPanel {
 		btnAudit.setAutoscrolls(true);
 		btnAudit.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnAudit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnAudit.addActionListener(customAuditlistener());
-		btnAudit.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		btnAudit.addActionListener(this);
+		btnAudit.setFont(new Font("Dialog", Font.PLAIN, 14));
 		btnAudit.setIcon(new ImageIcon(Main_Audit.class.getResource("/com/coder/hms/icons/main_audit.png")));
 		btnAudit.setBounds(6, 11, 127, 40);
 		buttonPanel.add(btnAudit);
@@ -138,9 +144,9 @@ public class Main_Audit extends JPanel {
 		btnShowRes = new JButton("Show res.");
 		btnShowRes.setToolTipText("<html>Select a reservation from the table with <br>"
 				+ "single click and press this button to show it.</html>");
-		btnShowRes.addActionListener(showReservation());
+		btnShowRes.addActionListener(this);
 		btnShowRes.setIcon(new ImageIcon(Main_Audit.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
-		btnShowRes.setFont(new Font("Dialog", Font.PLAIN, 15));
+		btnShowRes.setFont(new Font("Dialog", Font.PLAIN, 14));
 		btnShowRes.setAutoscrolls(true);
 		btnShowRes.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnShowRes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -173,41 +179,20 @@ public class Main_Audit extends JPanel {
 
 		getReadyDependencies();
 		populateMainTable(model);
+		changeLanguage(bean.getLocale());
 		
 	}
 	
-	private ActionListener customAuditlistener() {
-		
-		final ActionListener listener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final DialogFrame dialog = new DialogFrame();
-				dialog.setMessage("Are you sure ?");
-				dialog.btnYes.addActionListener(ActionListener ->{
-					
-					if(systemStatus.getIsAuditted() == false) {
-						final LocalDate localDate = LocalDate.now();
-						systemStatus.setDateTime(localDate);
-						systemStatus.setIsAuditted(true);
-						systemStatusImpl.updateSystemStatus(systemStatus);
-						dialog.dispose();
-					}else {
-						JOptionPane.showMessageDialog(dialog, 
-								"Your system already 'Auditted' to night!", JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-						dialog.dispose();
-					}
-					
-				});
-				dialog.btnNo.addActionListener(ActionListener->{
-					dialog.dispose();
-					return;
-				});
-				dialog.setVisible(true);
-				
-			}
-		};
-		return listener;
+	private void changeLanguage(Locale locale) {
+
+		final ResourceBundle bundle = ResourceBundle
+				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		this.btnAudit.setText(bundle.getString("Audit"));
+		this.btnShowRes.setText(bundle.getString("ShowRes"));
+		this.btnUpdate.setText(bundle.getString("UpdateRes"));
+		this.btnCancel.setText(bundle.getString("CancelRes"));
+		this.revalidate();
+		this.repaint();
 	}
 
 	private synchronized void getReadyDependencies() {
@@ -257,110 +242,113 @@ public class Main_Audit extends JPanel {
 		return listener;
 	}
 
-	private ActionListener showReservation() {
-		final ActionListener listener = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				////////////////////////////////////////////////////////////////////
-				// iterate both already populated lists(roomlist & reservationList)//
-				// to find reservation and it's room when the reservation found //
-				// and the reservation room number equals listed room number //
-				// we need to populate reservationPane to show it //
-				////////////////////////////////////////////////////////////////////
-
-				System.out.println("SHOW RESERVATION WORKING...");
-				System.out.println("SELECTED ROW : 'rowId :'" + rowId);
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource() == btnAudit) {
+			
+			final DialogFrame dialog = new DialogFrame();
+			dialog.setMessage("Are you sure ?");
+			dialog.btnYes.addActionListener(ActionListener ->{
 				
-				for (Reservation foundRes : foundReservationlist) {
-					for (Room room : theRoomList) {
+				if(systemStatus.getIsAuditted() == false) {
+					final LocalDate localDate = LocalDate.now();
+					systemStatus.setDateTime(localDate);
+					systemStatus.setIsAuditted(true);
+					systemStatusImpl.updateSystemStatus(systemStatus);
+					dialog.dispose();
+				}else {
+					JOptionPane.showMessageDialog(dialog, 
+							"Your system already 'Auditted' to night!", JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					dialog.dispose();
+				}
+				
+			});
+			dialog.btnNo.addActionListener(ActionListener->{
+				dialog.dispose();
+				return;
+			});
+			dialog.setVisible(true);
+		}
+		
+		else if(e.getSource() == btnShowRes) {
+			
+			System.out.println("SHOW RESERVATION WORKING...");
+			System.out.println("SELECTED ROW : 'rowId :'" + rowId);
+			
+			for (Reservation foundRes : foundReservationlist) {
+				for (Room room : theRoomList) {
 
-						if (foundRes.getId() == rowId && foundRes.getTheNumber().equals(room.getNumber())) {
+					if (foundRes.getId() == rowId && foundRes.getTheNumber().equals(room.getNumber())) {
 
-							final NewReservationWindow nex = new NewReservationWindow();
+						final NewReservationWindow nex = new NewReservationWindow();
 
-							nex.setRezIdField(foundRes.getId());
-							nex.setNameSurnameField(foundRes.getGroupName());
-							nex.setCheckinDate(foundRes.getCheckinDate());
-							nex.setCheckoutDate(foundRes.getCheckoutDate());
-							nex.setTotalDaysField(foundRes.getTotalDays());
-							nex.setReservNote(foundRes.getNote());
-							nex.setAgency(foundRes.getAgency());
-							nex.setHostType(foundRes.getHostType());
-							nex.setCreditType(foundRes.getCreditType());
-							nex.setReservStatus(foundRes.getBookStatus());
-							nex.setRoomNumber(room.getNumber());
-							nex.setRoomType(room.getType());
-							nex.setPersonCountSpinner(room.getPersonCount());
-							nex.setPriceOfRoom(room.getPrice());
-							nex.setCurrency(room.getCurrency());
+						nex.setRezIdField(foundRes.getId());
+						nex.setNameSurnameField(foundRes.getGroupName());
+						nex.setCheckinDate(foundRes.getCheckinDate());
+						nex.setCheckoutDate(foundRes.getCheckoutDate());
+						nex.setTotalDaysField(foundRes.getTotalDays());
+						nex.setReservNote(foundRes.getNote());
+						nex.setAgency(foundRes.getAgency());
+						nex.setHostType(foundRes.getHostType());
+						nex.setCreditType(foundRes.getCreditType());
+						nex.setReservStatus(foundRes.getBookStatus());
+						nex.setRoomNumber(room.getNumber());
+						nex.setRoomType(room.getType());
+						nex.setPersonCountSpinner(room.getPersonCount());
+						nex.setPriceOfRoom(room.getPrice());
+						nex.setCurrency(room.getCurrency());
 
-							System.out.println("LIST OF RESERVATIONPANE POPULATED SUCCESSFULLY");
-							
-							/*
-							 * if the pane populated that's mean job completed thats why we need to use
-							 * break to quit from loop
-							 */
-							break;
-						}
+						System.out.println("LIST OF RESERVATIONPANE POPULATED SUCCESSFULLY");
+						
+						/*
+						 * if the pane populated that's mean job completed thats why we need to use
+						 * break to quit from loop
+						 */
+						break;
 					}
 				}
-
 			}
-		};
-		return listener;
-	}
-	
-	private ActionListener updateReservation() {
-		final ActionListener listener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				System.out.println("UPDATE RESERVATION WORKING...");
-				System.out.println("SELECTED ROW : 'rowId :'" + rowId);
-				
+		}
+		
+		else if(e.getSource() == btnCancel) {
+			
+			final DialogFrame dialog = new DialogFrame();
+			dialog.setMessage("Are you sure to cancel this reservation?");
+			dialog.btnYes.addActionListener(ActionListener ->{
 				for (Reservation foundRes : foundReservationlist) {
 					if(foundRes.getId() == rowId) {
 						
-						today = LocalDate.now();
-						today = today.plusDays(1);											
-						foundRes.setCheckinDate(today.toString());
+						foundRes.setBookStatus("CANCELLED");
 						resDaoImpl.saveReservation(foundRes);
+						
+						System.out.println("RESERVATION UPDATED SUCCESSFULLY.");
 					}
 				}
-				
+				dialog.dispose();
+			});
+			dialog.btnNo.addActionListener(ActionListener->{
+				dialog.dispose();
+				return;
+			});
+			dialog.setVisible(true);
+		}
+		
+		else if(e.getSource() == btnUpdate) {
+			
+			System.out.println("UPDATE RESERVATION WORKING...");
+			System.out.println("SELECTED ROW : 'rowId :'" + rowId);
+			
+			for (Reservation foundRes : foundReservationlist) {
+				if(foundRes.getId() == rowId) {
+					
+					today = LocalDate.now();
+					today = today.plusDays(1);											
+					foundRes.setCheckinDate(today.toString());
+					resDaoImpl.saveReservation(foundRes);
+				}
 			}
-		};
-		return listener;
-	}
-	
-	private ActionListener cancelReservation() {
-		final ActionListener listener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				final DialogFrame dialog = new DialogFrame();
-				dialog.setMessage("Are you sure to cancel this reservation?");
-				dialog.btnYes.addActionListener(ActionListener ->{
-					for (Reservation foundRes : foundReservationlist) {
-						if(foundRes.getId() == rowId) {
-							
-							foundRes.setBookStatus("CANCELLED");
-							resDaoImpl.saveReservation(foundRes);
-							
-							System.out.println("RESERVATION UPDATED SUCCESSFULLY.");
-						}
-					}
-					dialog.dispose();
-				});
-				dialog.btnNo.addActionListener(ActionListener->{
-					dialog.dispose();
-					return;
-				});
-				dialog.setVisible(true);
-				
-			}
-		};
-		return listener;
+		}
+		
 	}
 }

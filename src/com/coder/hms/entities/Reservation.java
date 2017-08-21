@@ -65,6 +65,12 @@ public class Reservation implements Serializable{
 	@Column(name="isCheckedIn")
 	private String isCheckedIn;
 	
+	@Column(name="agencyRefNo")
+	private String agencyRefNo;
+	
+	@Column(name="referanceNo")
+	private String referanceNo;
+	
 	public Reservation() {
 		// TODO Auto-generated constructor stub
 	}
@@ -173,10 +179,27 @@ public class Reservation implements Serializable{
 		this.isCheckedIn = isCheckedIn;
 	}
 
-	public Reservation(String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
-			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus,
-			String theNumber, String isCheckedIn) {
+	public String getAgencyRefNo() {
+		return agencyRefNo;
+	}
+
+	public void setAgencyRefNo(String agencyRefNo) {
+		this.agencyRefNo = agencyRefNo;
+	}
+
+	public String getReferanceNo() {
+		return referanceNo;
+	}
+
+	public void setReferanceNo(String referanceNo) {
+		this.referanceNo = referanceNo;
+	}
+
+	public Reservation(long id, String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
+			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus, String theNumber,
+			String isCheckedIn, String agencyRefNo, String referanceNo) {
 		super();
+		Id = id;
 		this.groupName = groupName;
 		this.checkinDate = checkinDate;
 		this.checkoutDate = checkoutDate;
@@ -189,6 +212,8 @@ public class Reservation implements Serializable{
 		this.paymentStatus = paymentStatus;
 		this.theNumber = theNumber;
 		this.isCheckedIn = isCheckedIn;
+		this.agencyRefNo = agencyRefNo;
+		this.referanceNo = referanceNo;
 	}
 
 	@Override
@@ -196,7 +221,108 @@ public class Reservation implements Serializable{
 		return "Reservation [Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate="
 				+ checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType
 				+ ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus="
-				+ paymentStatus + ", theNumber=" + theNumber + ", isCheckedIn=" + isCheckedIn +"]";
+				+ paymentStatus + ", theNumber=" + theNumber + ", isCheckedIn=" + isCheckedIn + ", agencyRefNo="
+				+ agencyRefNo + ", referanceNo=" + referanceNo + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (Id ^ (Id >>> 32));
+		result = prime * result + ((agency == null) ? 0 : agency.hashCode());
+		result = prime * result + ((agencyRefNo == null) ? 0 : agencyRefNo.hashCode());
+		result = prime * result + ((bookStatus == null) ? 0 : bookStatus.hashCode());
+		result = prime * result + ((checkinDate == null) ? 0 : checkinDate.hashCode());
+		result = prime * result + ((checkoutDate == null) ? 0 : checkoutDate.hashCode());
+		result = prime * result + ((creditType == null) ? 0 : creditType.hashCode());
+		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
+		result = prime * result + ((hostType == null) ? 0 : hostType.hashCode());
+		result = prime * result + ((isCheckedIn == null) ? 0 : isCheckedIn.hashCode());
+		result = prime * result + ((note == null) ? 0 : note.hashCode());
+		result = prime * result + (paymentStatus ? 1231 : 1237);
+		result = prime * result + ((referanceNo == null) ? 0 : referanceNo.hashCode());
+		result = prime * result + ((theNumber == null) ? 0 : theNumber.hashCode());
+		result = prime * result + totalDays;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reservation other = (Reservation) obj;
+		if (Id != other.Id)
+			return false;
+		if (agency == null) {
+			if (other.agency != null)
+				return false;
+		} else if (!agency.equals(other.agency))
+			return false;
+		if (agencyRefNo == null) {
+			if (other.agencyRefNo != null)
+				return false;
+		} else if (!agencyRefNo.equals(other.agencyRefNo))
+			return false;
+		if (bookStatus == null) {
+			if (other.bookStatus != null)
+				return false;
+		} else if (!bookStatus.equals(other.bookStatus))
+			return false;
+		if (checkinDate == null) {
+			if (other.checkinDate != null)
+				return false;
+		} else if (!checkinDate.equals(other.checkinDate))
+			return false;
+		if (checkoutDate == null) {
+			if (other.checkoutDate != null)
+				return false;
+		} else if (!checkoutDate.equals(other.checkoutDate))
+			return false;
+		if (creditType == null) {
+			if (other.creditType != null)
+				return false;
+		} else if (!creditType.equals(other.creditType))
+			return false;
+		if (groupName == null) {
+			if (other.groupName != null)
+				return false;
+		} else if (!groupName.equals(other.groupName))
+			return false;
+		if (hostType == null) {
+			if (other.hostType != null)
+				return false;
+		} else if (!hostType.equals(other.hostType))
+			return false;
+		if (isCheckedIn == null) {
+			if (other.isCheckedIn != null)
+				return false;
+		} else if (!isCheckedIn.equals(other.isCheckedIn))
+			return false;
+		if (note == null) {
+			if (other.note != null)
+				return false;
+		} else if (!note.equals(other.note))
+			return false;
+		if (paymentStatus != other.paymentStatus)
+			return false;
+		if (referanceNo == null) {
+			if (other.referanceNo != null)
+				return false;
+		} else if (!referanceNo.equals(other.referanceNo))
+			return false;
+		if (theNumber == null) {
+			if (other.theNumber != null)
+				return false;
+		} else if (!theNumber.equals(other.theNumber))
+			return false;
+		if (totalDays != other.totalDays)
+			return false;
+		return true;
 	}
 
 	

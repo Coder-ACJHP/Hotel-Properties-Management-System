@@ -5,7 +5,14 @@
  */
 package com.coder.hms.beans;
 
-public class SessionBean {
+import java.io.Serializable;
+
+public class SessionBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	////////////////////////////////////////////////////////////////////////////
 	// Created for transferring information between all classes.
@@ -74,7 +81,7 @@ public class SessionBean {
 	}
 	
 	public static void setRoomCount(int roomCount) {
-		// TODO Auto-generated method stub
+		SessionBean.roomCount = roomCount;
 		
 	}
 
