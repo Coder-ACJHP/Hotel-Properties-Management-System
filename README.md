@@ -60,6 +60,12 @@ search your reservation with date, referance number or agency referange number, 
 <h2>Audit window : </h2>
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/audit.png">
 <hr>
+<h2>Checkin window : </h2>
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/roomsAndCheckin.png">
+<hr>
+<h2>Interior of room window : </h2>
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/roomInner.png">
+<hr>
 and more...
 
 <h1>How to use?</h1>
