@@ -53,7 +53,7 @@ public class RoomNumberMaker {
 		
 		//get All reserved room numbers
 		final ReservationDaoImpl rImpl = new ReservationDaoImpl();
-		List<Reservation> reservList = rImpl.getReservsByDate(date);
+		List<Reservation> reservList = rImpl.getReservListByThisDate(date);
 		
 		//create a String array and add all numbers to in with loop
 		final String[] roomNumbers = new String[reservList.size()];

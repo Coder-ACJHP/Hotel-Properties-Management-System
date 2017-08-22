@@ -12,15 +12,19 @@ public interface PaymentDAO {
 	
 	public Payment getPaymentById(long Id);
 		
-	public List<Payment> getAllPaymentsByRoomNumber(String roomNumber);
+	public List<Payment> getAllPaymentsByRoomNumber(String roomNumber, String localDate);
 	
-	public String getTotalDollarForOneDay(String date);
+	public String getTotalCashDollarForOneDay(String date);
 	
-	public String getTotalLiraPaymentsForOneDay(String date);
+	public String getTotalCashLiraPaymentsForOneDay(String date);
 	
-	public String getTotalEuroPaymentsForOneDay(String date);
+	public String getTotalCashEuroPaymentsForOneDay(String date);
 	
-	public String getTotalPoundPaymentsForOneDay(String date);
+	public String getTotalCashPoundPaymentsForOneDay(String date);
 	
 	public String getTotalCreditPaymentsForOneDay(String date);
+	
+	public Payment getEarlyPaymentByRoomNumber(String number);
+	
+	public Payment getLastPayment();
 }

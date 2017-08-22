@@ -48,11 +48,13 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.coder.hms.daoImpl.CustomerDaoImpl;
+import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
+import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Reservation;
@@ -77,6 +79,7 @@ public class RoomWindow extends JDialog {
 	private static String roomNumber;
 	private Reservation reservation;
 	private JTable payPostTable, customerTable;
+	private HotelSystemStatus hotelSystemStatus;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
 	final DialogFrame dialogFrame = new DialogFrame();
@@ -86,6 +89,7 @@ public class RoomWindow extends JDialog {
 	final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
 	private final PaymentWindow payWin = new PaymentWindow();
 	private final PostingWindow postWin = new PostingWindow();
+	private final HotelSystemStatusImpl systemStatusImpl = new HotelSystemStatusImpl();
 	private final static CustomersTableRenderer customerTableRenderer = new CustomersTableRenderer();
 	private JButton postingBtn, paymentBtn, saveChangesBtn, checkoutBtn;
 	final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
@@ -115,6 +119,8 @@ public class RoomWindow extends JDialog {
 
 		RoomWindow.roomNumber = roomText;
 
+		hotelSystemStatus = systemStatusImpl.getSystemStatus();
+		
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		setMinimumSize(new Dimension(1000, 700));
@@ -638,7 +644,7 @@ public class RoomWindow extends JDialog {
 	private void populateReservationDetail() {
 
 		final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-		reservation = reservationDaoImpl.getReservationById(theRoom.getReservationId());
+		reservation = reservationDaoImpl.findReservationById(theRoom.getReservationId());
 
 		IdField.setText(reservation.getId() + "");
 
@@ -808,10 +814,10 @@ public class RoomWindow extends JDialog {
 
 		// import all customers from database
 		final PostingDaoImpl postingDaoImpl = new PostingDaoImpl();
-		List<Posting> postingList = postingDaoImpl.getAllPostingsByRoomNumber(roomNumber);
+		List<Posting> postingList = postingDaoImpl.getAllPostingsByRoomNumber(roomNumber, hotelSystemStatus.getDateTime().toString());
 
 		final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
-		List<Payment> paymentlist = paymentDaoImpl.getAllPaymentsByRoomNumber(roomNumber);
+		List<Payment> paymentlist = paymentDaoImpl.getAllPaymentsByRoomNumber(roomNumber, hotelSystemStatus.getDateTime().toString());
 
 		// clean table model
 		model.setRowCount(0);

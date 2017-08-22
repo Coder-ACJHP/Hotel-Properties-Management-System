@@ -94,10 +94,10 @@ public class Main_CashDesk extends JPanel {
 		date.set(Calendar.HOUR_OF_DAY, 0);
 		today = sdf.format(date.getTime());
 		
-		tlFormatter.setCurrency(Currency.getInstance(Locale.getDefault()));
-		dlFormatter.setCurrency(Currency.getInstance(Locale.US));
-		euFormatter.setCurrency(Currency.getInstance(Locale.FRANCE));
-		poFormatter.setCurrency(Currency.getInstance(Locale.UK));
+		tlFormatter.setCurrency(Currency.getInstance("TRY"));
+		dlFormatter.setCurrency(Currency.getInstance("USD"));
+		euFormatter.setCurrency(Currency.getInstance("EUR"));
+		poFormatter.setCurrency(Currency.getInstance("GBP"));
 		
 		final JPanel titlePanel = new JPanel();
 		titlePanel.setAutoscrolls(true);
@@ -407,37 +407,45 @@ public class Main_CashDesk extends JPanel {
 	/*Getters and setters for access this values from another classes*/
 	private void populateAllFields() {
 		
-		String val = paymentDaoImpl.getTotalLiraPaymentsForOneDay(today);
-		String postVal = postingDaoImpl.getTotalLiraPostingsForOneDay(today);
+		String val = paymentDaoImpl.getTotalCashLiraPaymentsForOneDay(today);
+		String postVal = postingDaoImpl.getTotalCashLiraPostingsForOneDay(today);
 		double postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		tlCashVal =  val == null ? 0.0 : Double.parseDouble(val);
 		tlCashField.setValue(tlCashVal - postValue);
 		tlCashField.revalidate();
 		tlCashField.repaint();
 		
-		val = paymentDaoImpl.getTotalDollarForOneDay(today);
-		postVal = postingDaoImpl.getTotalDollarPostingsForOneDay(today);
+		val = paymentDaoImpl.getTotalCashDollarForOneDay(today);
+		postVal = postingDaoImpl.getTotalCashDollarPostingsForOneDay(today);
 		postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		dlCashVal = val == null ? 0.0 : Double.parseDouble(val);
 		dollarCashField.setValue(dlCashVal - postValue);
 		dollarCashField.revalidate();
 		dollarCashField.repaint();
 
-		val = paymentDaoImpl.getTotalEuroPaymentsForOneDay(today);
-		postVal = postingDaoImpl.getTotalEuroPostingsForOneDay(today);
+		val = paymentDaoImpl.getTotalCashEuroPaymentsForOneDay(today);
+		postVal = postingDaoImpl.getTotalCashEuroPostingsForOneDay(today);
 		postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		euCashVal = val == null ? 0.0 : Double.parseDouble(val);
 		euroCashField.setValue(euCashVal - postValue);
 		euroCashField.revalidate();
 		euroCashField.repaint();
 		
-		val = paymentDaoImpl.getTotalPoundPaymentsForOneDay(today);
-		postVal = postingDaoImpl.getTotalPoundPostingsForOneDay(today);
+		val = paymentDaoImpl.getTotalCashPoundPaymentsForOneDay(today);
+		postVal = postingDaoImpl.getTotalCashPoundPostingsForOneDay(today);
 		postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
 		poCashVal =  val == null ? 0.0 : Double.parseDouble(val);
 		poundCashField.setValue(poCashVal - postValue);
 		poundCashField.revalidate();
 		poundCashField.repaint();
+		
+		val = paymentDaoImpl.getTotalCreditPaymentsForOneDay(today);
+		postVal = postingDaoImpl.getTotalCreditPostingsForOneDay(today);
+		postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
+		tlCreditVal =  val == null ? 0.0 : Double.parseDouble(val);
+		tlCredit.setValue(tlCreditVal - postValue);
+		tlCredit.revalidate();
+		tlCredit.repaint();
 	}
 	
 	public double getTlCashVal() {

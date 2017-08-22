@@ -16,13 +16,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -39,9 +39,13 @@ import javax.swing.text.DefaultEditorKit;
 import com.coder.hms.actionlisteners.RoomsAction;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.daoImpl.HotelSystemStatusImpl;
+import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
+import com.coder.hms.entities.HotelSystemStatus;
+import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.NewReservationWindow;
@@ -54,20 +58,22 @@ public class Main_AllRooms {
 	public int cleanCounter = 0;
 	public int dirtyCounter = 0;
 	private List<Room> roomList;
-	private final ZonedDateTime zdt;
 	private String currentRoomNumber;
+	private HotelSystemStatus systemStatus;
 	private JPanel contentPanel = new JPanel();
 	private final RoomsAction theAction = new RoomsAction();
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ReservationDaoImpl rImpl = new ReservationDaoImpl();
+	private final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
+	private final HotelSystemStatusImpl systemStatusImpl = new HotelSystemStatusImpl();
 
 	/**
 	 * Create the dialog.
 	 */
 	public Main_AllRooms() {
-
-		zdt = ZonedDateTime.now();
+		
+		systemStatus = systemStatusImpl.getSystemStatus();
 		
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setBackground(Color.decode("#066d95"));
@@ -144,15 +150,16 @@ public class Main_AllRooms {
 					final long reservId = room.getReservationId();
 					
 					if(reservId != 0) {
-						final Reservation theReservation = rImpl.getReservationById(room.getReservationId());
+						final Reservation theReservation = rImpl.findReservationById(room.getReservationId());
 						
 						///////////////////////////////////////////////////////////////////////////
 						//Convert check in, check out, today from String to date than compare all// 
 						LocalDate localDate = LocalDate.parse(theReservation.getCheckoutDate()); //
 						final Date checkoutDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());        
 						    
-						final Date defaultDate = Date.from(zdt.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-						                                                                         //
+						final Date defaultDate = Date.from(systemStatus.getDateTime().atStartOfDay(ZoneId.systemDefault()).toInstant());
+						          
+
 						localDate = LocalDate.parse(theReservation.getCheckinDate());            //
 						final Date checkinDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());           
 						///////////////////////////////////////////////////////////////////////////
@@ -373,7 +380,7 @@ public class Main_AllRooms {
 		getReservation.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
 		getReservation.addActionListener(ActionListener -> {
 			final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
-			final Reservation rr = rImpl.getReservationById(checkingRoom.getReservationId());
+			final Reservation rr = rImpl.findReservationById(checkingRoom.getReservationId());
 			
 			
 			if(rr != null) {
@@ -386,6 +393,7 @@ public class Main_AllRooms {
 						final CustomerDaoImpl cImpl = new CustomerDaoImpl();
 						final List<Customer> customerList = cImpl.getCustomerByReservId(rr.getId());
 						
+						Payment payment = null;
 						String customerCountry = "";
 						String customerName = "";
 						String customerSurName = "";
@@ -412,6 +420,8 @@ public class Main_AllRooms {
 						nex.setReservNote(rr.getNote());
 						nex.setCurrency(checkingRoom.getCurrency());
 						nex.setPriceOfRoom(checkingRoom.getPrice());
+						nex.setAgencyRefNo(rr.getAgencyRefNo());
+						nex.setReferanceNo(rr.getReferanceNo());
 						nex.setPersonCountSpinner(checkingRoom.getPersonCount());
 						
 						nex.setRoomCountTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
@@ -419,8 +429,20 @@ public class Main_AllRooms {
 						
 						nex.setRoomInfoTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
 								customerName, customerSurName});
+						
+						if(rr.getPaymentStatus()) {
+							
+							payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(checkingRoom.getNumber());
+							nex.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
+									payment.getPrice(), payment.getCurrency(), payment.getExplanation()});
+						}
+						
 						nex.setVisible(true);
 						
+						if(rr.getPaymentStatus()) {
+							JOptionPane.showMessageDialog(new JFrame(), "Early payment " + payment.getPrice() + payment.getCurrency(),
+									JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
+						}
 					}
 				});
 			}

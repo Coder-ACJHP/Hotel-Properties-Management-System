@@ -13,7 +13,7 @@ public interface ReservationDAO {
 
 	public Reservation findReservationById(long Id);
 	
-	public Reservation findReservationByDate(String Date);
+	public Reservation findSingleReservByThisDate(String Date);
 	
 	public void saveReservation(Reservation reservation);
 	
@@ -26,4 +26,10 @@ public interface ReservationDAO {
 	public Reservation findReservationByRefNo(String refNo);
 	
 	public List<Reservation> getAllReservations();
+	
+	public List<Reservation> getReservListByThisDate(String today);
+	
+	public List<Reservation> getReservsAsWaitlist(String reservDate);
+	
+	public Reservation getLastReservation();
 }

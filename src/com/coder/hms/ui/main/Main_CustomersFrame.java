@@ -157,6 +157,9 @@ public class Main_CustomersFrame extends JPanel {
 			
 			final Reservation reservation = reservationDaoImpl.findReservationById(cust.getReservationId());
 			
+			if(reservation == null)
+				return;
+			
 			final Object[] customerObject = new Object[] {reservation.getTheNumber(), reservation.getId(), 
 					cust.getFirstName(), cust.getLastName(), reservation.getAgency(), reservation.getGroupName(),
 					reservation.getCheckinDate(), reservation.getCheckoutDate(), cust.getCountry()};

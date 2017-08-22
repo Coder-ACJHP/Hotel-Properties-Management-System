@@ -7,16 +7,16 @@ package com.coder.hms.actionlisteners;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.Reserved_CheckinWindow;
@@ -33,12 +33,18 @@ public class RoomsAction {
 	private RoomDaoImpl roomDaoImpl;
 	private HotelDaoImpl hotelDaoImpl;
 	private MouseAdapter customMouseListener;
-
+	private HotelSystemStatus systemStatus;
+	private HotelSystemStatusImpl statusImpl;
+	
 	public RoomsAction() {
 
 		hotelDaoImpl = new HotelDaoImpl();
 		final Hotel hotel = hotelDaoImpl.getHotel();
-
+		
+		
+		statusImpl = new HotelSystemStatusImpl();
+		systemStatus = statusImpl.getSystemStatus();
+		
 		roomDaoImpl = new RoomDaoImpl();
 
 		customMouseListener = new MouseAdapter() {
@@ -62,7 +68,7 @@ public class RoomsAction {
 					String command = (String) e.getSource().toString();
 					
 					//get new date as String 
-					final String innerDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+					String innerDate = systemStatus.getDateTime().toString();
 					
 					//start loop to get all rooms as room capacity
 					for (int i = 1; i <= hotel.getRoomCapacity(); i++) {
@@ -87,7 +93,7 @@ public class RoomsAction {
 
 							final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
 							final ReservationDaoImpl rImpl = new ReservationDaoImpl();
-							final Reservation foundedReserv = rImpl.getReservationById(theRoom.getReservationId());
+							final Reservation foundedReserv = rImpl.findReservationById(theRoom.getReservationId());
 							
 							if (theRoom.getUsageStatus().equals("FULL")) {
 								SwingUtilities.invokeLater(new Runnable() {

@@ -52,13 +52,16 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
 import com.coder.hms.beans.RoomCountRow;
+import com.coder.hms.beans.RoomEarlyPaymentRow;
 import com.coder.hms.beans.RoomInfoRow;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
@@ -86,6 +89,8 @@ public class NewReservationWindow extends JDialog {
 	private JButton chancelBtn, SaveBtn, reportBtn;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
+
+	private PaymentDaoImpl paymentDaoImpl;
 	private final PaymentWindow payWin = new PaymentWindow();
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -112,7 +117,7 @@ public class NewReservationWindow extends JDialog {
 	private final String[] cmbList = { "TURKISH LIRA", "DOLLAR", "EURO", "POUND"};
 	private final String[] CREDIT_TYPES = {"BLACK LIST", "INFINITY CREDIT", "STANDART CUSTOMER CREDIT"};
 	
-	private final String[] EARLY_PAYMENT_LIST = {"TITLE", "NAME", "AMOUNT", "CURRENCY", "EXCHANGE", "NOTE"};
+	private final String[] EARLY_PAYMENT_LIST = {"TITLE", "NAME", "AMOUNT", "CURRENCY", "NOTE"};
 	private final DefaultTableModel earlyPaymetModel = new DefaultTableModel(EARLY_PAYMENT_LIST, 0);
 	
 	private final String[] AGENCY_LIST = {"WALKIN", "WEB", "OTHER"};
@@ -591,6 +596,11 @@ public class NewReservationWindow extends JDialog {
 				
 				if(payWin.getPaymentStatus()) {
 					reservation.setPaymentStatus(true);
+					Payment lastPayment = paymentDaoImpl.getLastPayment();
+					
+					Object[] rowData = {lastPayment.getTitle(),lastPayment.getPaymentType(),
+						lastPayment.getPrice(), lastPayment.getCurrency(), lastPayment.getExplanation()};
+					earlyPaymetModel.addRow(rowData);
 				}
 				rImpl.saveReservation(reservation);
 								
@@ -614,9 +624,7 @@ public class NewReservationWindow extends JDialog {
 				theRoom.setRemainingDebt(lastPrice);
 				
 				roomDaoImpl.saveRoom(theRoom);
-				
-				System.out.println("ROOM SAVED");
-				
+								
 				final int rowCount = model.getRowCount();
 					
 				Customer theCustomer = null;
@@ -982,7 +990,26 @@ public class NewReservationWindow extends JDialog {
 				rc.getCustomerName(), rc.getCustomerSurname()};
 	}
 	
-
+	public void setEarlyPaymetTableRows(Object[] tableRows) {
+		this.earlyPaymetModel.setRowCount(0);
+		this.earlyPaymetModel.addColumn(tableRows);
+	}
+	
+	public Object[] getEarlyPaymetTableRows() {
+		RoomEarlyPaymentRow repr = null;
+		for(int index=0; index < earlyPaymetModel.getRowCount(); index++) {
+			repr = new RoomEarlyPaymentRow();
+			for(int i=0; i < 5; i++) {
+				repr.setTitle(earlyPaymetModel.getValueAt(index, i));
+				repr.setType(earlyPaymetModel.getValueAt(index, i));
+				repr.setPrice(earlyPaymetModel.getValueAt(index, i));
+				repr.setCurrency(earlyPaymetModel.getValueAt(index, i));
+				repr.setExplanation(earlyPaymetModel.getValueAt(index, i));
+			}
+		}
+		return new Object[]{repr.getTitle(),repr.getType(),
+				repr.getPrice(), repr.getCurrency(), repr.getExplanation()};
+	}
 	
 	public boolean getCompletionStatus() {
 		return completionStatus;

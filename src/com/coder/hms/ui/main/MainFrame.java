@@ -65,31 +65,12 @@ public class MainFrame extends JFrame {
 		customToolbar = new Main_UpperToolbar(mainPanel);
 		customBottomToolbar = new Main_BottomToolbar();
 		
-		this.setTitle("Coder for HMS - [Main]");
+		this.setTitle("Coder HMS - [Main]");
 		
 
 		this.setMinimumSize(new Dimension(800, 600));
 		/*make it default size of frame maximized */
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		/*set exiting from the application when clicking on X button*/
-		this.addWindowListener(new WindowAdapter() {
-			
-			@Override
-			public void windowClosing(WindowEvent e) {
-				final int decision =JOptionPane.showConfirmDialog(null, exitMessage, 
-						titleMessage, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				
-				if(decision == JOptionPane.YES_OPTION) {
-					new DataSourceFactory().shutDown();
-					System.exit(0);
-				}
-				else {
-					setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-				}
-				
-				super.windowClosing(e);
-			}
-		});
 		
 		/*get the external menubar and initialize it*/
 		customMenuBar = new Main_MenuBar();
@@ -113,6 +94,27 @@ public class MainFrame extends JFrame {
 		getContentPane().add(customBottomToolbar.getToolBar(), BorderLayout.SOUTH);
 		setLocale(bean.getLocale());
 		changeLanguage(bean.getLocale());
+		
+		/*set exiting from the application when clicking on X button*/
+		this.addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				final int decision =JOptionPane.showConfirmDialog(null, exitMessage, 
+						titleMessage, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				
+				if(decision == JOptionPane.YES_OPTION) {
+					new DataSourceFactory().shutDown();
+					System.exit(0);
+				}
+				else {
+					setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				}
+				
+				super.windowClosing(e);
+			}
+		});
+		
 		this.setVisible(true);
 
 	}

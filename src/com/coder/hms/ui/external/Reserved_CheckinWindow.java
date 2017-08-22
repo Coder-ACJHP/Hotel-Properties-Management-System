@@ -225,7 +225,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 		/////////////////////////////////////////////////////////////////////////////////////
 		 
 		final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(ownRoomNumber);
-		final Reservation foundedReserv = reservDaoImpl.getReservationById(checkingRoom.getReservationId());
+		final Reservation foundedReserv = reservDaoImpl.findReservationById(checkingRoom.getReservationId());
 		final List<Customer> customerList = customerDaoImpl.getCustomerByReservId(foundedReserv.getId());
 		//Just for to be sure, check the reservation
 		if(foundedReserv != null) {

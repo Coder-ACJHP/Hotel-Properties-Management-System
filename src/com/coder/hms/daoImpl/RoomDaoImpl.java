@@ -8,6 +8,9 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -36,7 +39,11 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		query.setParameter("roomNumber", roomNumber);
 		Room room = query.getSingleResult();
 		session.close();
-				
+			if(room == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "There is no room found with this number!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return room;
 	}
 
@@ -56,7 +63,11 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		Query<Room> query = session.createQuery("from Room", Room.class);
 		List<Room> roomList = query.getResultList();
 		session.close();
-				
+			if(roomList == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "No rooms found!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return roomList;
 	}
 
@@ -67,10 +78,15 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		query.setParameter("id", id);
 		Room room = query.getSingleResult();
 		session.close();
-				
+			if(room == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "No rooms found with this reservation Id!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return room;
 	}
 
+	@Override
 	public void setAllRoomsAtClean(String clean) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -81,6 +97,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		
 	}
 
+	@Override
 	public void setSingleRoomAsCleanByRoomNumber(String rowData) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -91,6 +108,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		
 	}
 
+	@Override
 	public void setRoomCheckedOut(String num) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -103,6 +121,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		
 	}
 
+	@Override
 	public void setAllRoomsAtDirty(String dirty) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -113,6 +132,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		
 	}
 	
+	@Override
 	public void setSingleRoomAsDirtyByRoomNumber(String roomNumber) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -123,17 +143,8 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		
 	}
 
+	@Override
 	public void setSingleRoomAsDNDByRoomNumber(String roomNumber) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'DND' where number=:roomNumber");
-		query.setParameter("roomNumber", roomNumber);
-		query.executeUpdate();		
-		session.close();
-		
-	}
-
-	public void setRoomAtDND(String roomNumber) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
 		Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'DND' where number=:roomNumber");

@@ -7,6 +7,7 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.hibernate.HibernateException;
@@ -36,26 +37,49 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 		beginTransactionIfAllowed(session);
 		Query<Reservation> query = session.createQuery("from Reservation where id=:theId", Reservation.class);
 		query.setParameter("theId", theId);
+		query.setMaxResults(1);
 		Reservation reservation = query.getSingleResult();
-		
-		
 		session.close();
+			if(reservation == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "Reservation not found!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return reservation;
 	}
-
+	
 	@Override
-	public Reservation findReservationByDate(String Date) {
+	public Reservation findSingleReservByThisDate(String Date) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
 		Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:Date", Reservation.class);
 		query.setParameter("Date", Date);
 		Reservation reservation = query.getSingleResult();
-		
-		
 		session.close();
+			if(reservation == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "There is no reservation at this date!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return reservation;
 	}
 
+	@Override
+	public List<Reservation> getReservListByThisDate(String today) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:today", Reservation.class);
+		query.setParameter("today", today);
+		List<Reservation> reservList = query.getResultList();
+		session.close();
+			if(reservList == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "There is no reservation as today date!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
+		return reservList;
+	}
+	
 	@Override
 	public void saveReservation(Reservation reservation) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
@@ -78,23 +102,15 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 		beginTransactionIfAllowed(session);
 		Query<Reservation> query = session.createQuery("from Reservation", Reservation.class);
 		List<Reservation> reservList = query.getResultList();
-		session.close();
-		
-		
+		session.close();	
+			if(reservList == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "There is no reservation!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return reservList;
 	}
 
-	public List<Reservation> getReservsByDate(String today) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:today", Reservation.class);
-		query.setParameter("today", today);
-		List<Reservation> reservList = query.getResultList();
-		session.close();
-		
-		
-		return reservList;
-	}
 
 	public List<Reservation> getGaranteedReservs(String reservDate) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
@@ -104,10 +120,15 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 		query.setParameter("today", reservDate);
 		List<Reservation> guaranteedList = query.getResultList();
 		session.close();
-				
+			if(guaranteedList == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "There is no reservation at guaranteed list!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return guaranteedList;
 	}
 
+	@Override
 	public List<Reservation> getReservsAsWaitlist(String reservDate) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -116,10 +137,15 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 		query.setParameter("today", reservDate);
 		List<Reservation> waitedList = query.getResultList();
 		session.close();
-				
+			if(waitedList == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "There is no reservation at waitlist!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		return waitedList;
 	}
 
+	@Override
 	public Reservation getLastReservation() {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -127,20 +153,12 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 		query.setMaxResults(1);
 		Reservation lastRecord = query.getSingleResult();
 		session.close();
-				
+				if(lastRecord == null) {
+					JOptionPane.showMessageDialog(new JFrame(), "Last reservation not found!", 
+							JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					return null;
+				}
 		return lastRecord;
-	}
-
-	public Reservation getReservationById(long reservationId) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Reservation> query = session.createQuery("from Reservation where Id=:reservationId", Reservation.class);
-		query.setParameter("reservationId", reservationId);
-		query.setMaxResults(1);
-		Reservation reservationById = query.getSingleResult();
-		session.close();
-				
-		return reservationById;
 	}
 
 	@Override
@@ -154,7 +172,8 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 			session.close();
 			result = true;
 		} catch (HibernateException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(new JFrame(), e.getMessage(), 
+					JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 			result = false;
 		}
 		

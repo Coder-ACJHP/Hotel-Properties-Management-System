@@ -21,10 +21,10 @@ public class HibernateConnection {
 			date.set(Calendar.HOUR_OF_DAY, 0);
 			final String today = sdf.format(date.getTime());
 			
-			System.out.println(paymentDaoImpl.getTotalDollarForOneDay(today));
-			System.out.println(paymentDaoImpl.getTotalEuroPaymentsForOneDay(today));
-			System.out.println(paymentDaoImpl.getTotalPoundPaymentsForOneDay(today));
-			System.out.println(paymentDaoImpl.getTotalLiraPaymentsForOneDay(today));
+			System.out.println(paymentDaoImpl.getTotalCashDollarForOneDay(today));
+			System.out.println(paymentDaoImpl.getTotalCashEuroPaymentsForOneDay(today));
+			System.out.println(paymentDaoImpl.getTotalCashPoundPaymentsForOneDay(today));
+			System.out.println(paymentDaoImpl.getTotalCashLiraPaymentsForOneDay(today));
 
 		
 	}

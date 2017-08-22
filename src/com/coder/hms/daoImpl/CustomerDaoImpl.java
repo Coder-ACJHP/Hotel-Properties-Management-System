@@ -7,6 +7,9 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -83,7 +86,11 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 		query.setParameter("id", id);
 		List<Customer> customerList = query.getResultList();
 		session.close();
-				
+				if(customerList == null) {
+					JOptionPane.showMessageDialog(new JFrame(), "Customers not found!", 
+							JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					return null;
+				}
 		return customerList;
 	}
 	

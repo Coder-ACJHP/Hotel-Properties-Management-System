@@ -2,6 +2,9 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -64,11 +67,13 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	}
 
 	@Override
-	public List<Payment> getAllPaymentsByRoomNumber(String theRoomNumber) {
+	public List<Payment> getAllPaymentsByRoomNumber(String theRoomNumber, String string) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		Query<Payment> query = session.createQuery("from Payment where roomNumber = :theRoomNumber", Payment.class);
+		Query<Payment> query = session.createQuery("from Payment where "
+				+ "roomNumber = :theRoomNumber and dateTime >= :localDate", Payment.class);
 		query.setParameter("theRoomNumber", theRoomNumber);
+		query.setParameter("localDate", string);
 		List<Payment> paymentList = query.getResultList();
 		session.close();
 		
@@ -76,10 +81,11 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	}
 
 	@Override
-	public String getTotalDollarForOneDay(String date) {
+	public String getTotalCashDollarForOneDay(String date) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'DOLLAR' and dateTime >= :date", String.class);
+		Query<String> query = session.createQuery("select sum(price) from Payment where "
+				+ "paymentType = 'CASH PAYMENT' and currency = 'DOLLAR' and dateTime >= :date", String.class);
 		query.setParameter("date", date);
 		final String totalVal = query.getSingleResult();
 		session.close();
@@ -87,10 +93,11 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	}
 
 	@Override
-	public String getTotalLiraPaymentsForOneDay(String date) {
+	public String getTotalCashLiraPaymentsForOneDay(String date) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
+		Query<String> query = session.createQuery("select sum(price) from Payment where "
+				+ "paymentType = 'CASH PAYMENT' and currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
 		query.setParameter("date", date);
 		final String totalVal = query.getSingleResult();
 		session.close();
@@ -98,10 +105,11 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	}
 
 	@Override
-	public String getTotalEuroPaymentsForOneDay(String date) {
+	public String getTotalCashEuroPaymentsForOneDay(String date) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'EURO' and dateTime >= :date", String.class);
+		Query<String> query = session.createQuery("select sum(price) from Payment where "
+				+ "paymentType = 'CASH PAYMENT' and currency = 'EURO' and dateTime >= :date", String.class);
 		query.setParameter("date", date);
 		final String totalVal = query.getSingleResult();
 		session.close();
@@ -109,10 +117,11 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	}
 
 	@Override
-	public String getTotalPoundPaymentsForOneDay(String date) {
+	public String getTotalCashPoundPaymentsForOneDay(String date) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		Query<String> query = session.createQuery("select sum(price) from Payment where currency = 'POUND' and dateTime >= :date", String.class);
+		Query<String> query = session.createQuery("select sum(price) from Payment where "
+				+ " paymentType = 'CASH PAYMENT' and currency = 'POUND' and dateTime >= :date", String.class);
 		query.setParameter("date", date);
 		final String totalVal = query.getSingleResult();
 		session.close();
@@ -123,7 +132,8 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	public String getTotalCreditPaymentsForOneDay(String date) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		Query<String> query = session.createQuery("select sum(price) from Payment where paymentType = 'CASH PAYMENT', currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
+		Query<String> query = session.createQuery("select sum(price) from Payment where "
+				+ "paymentType = 'CREDIT CARD' and currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
 		query.setParameter("date", date);
 		final String totalVal = query.getSingleResult();
 		session.close();
@@ -143,6 +153,40 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	}
 
 	@Override
+	public Payment getLastPayment() {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Payment> query = session.createQuery("from Payment order by Id DESC", Payment.class);
+		query.setMaxResults(1);
+		Payment lastRecord = query.getSingleResult();
+		session.close();
+				if(lastRecord == null) {
+					JOptionPane.showMessageDialog(new JFrame(), "Last payment not found!", 
+							JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					return null;
+				}
+		return lastRecord;
+	}
+	
+	@Override
+	public Payment getEarlyPaymentByRoomNumber(String number) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Payment> query = session.createQuery("from Payment where roomNumber = :theRoomNumber", Payment.class);
+		query.setParameter("theRoomNumber", number);
+		query.setMaxResults(1);
+		Payment payment = query.getSingleResult();
+		session.close();
+			if(payment == null) {
+				JOptionPane.showMessageDialog(new JFrame(), "Early payment not found!", 
+						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
+		
+		return payment;
+	}
+	
+	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
 			theSession.beginTransaction();	
@@ -152,4 +196,5 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 		}
 		
 	}
+
 }

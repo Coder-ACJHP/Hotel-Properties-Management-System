@@ -311,7 +311,7 @@ public class Main_RoomCleaning extends JPanel implements ActionListener {
 				return;
 			}else {
 				String rowData = table.getValueAt(rowIndex, 0).toString();
-				roomDaoImpl.setRoomAtDND(rowData);
+				roomDaoImpl.setSingleRoomAsDNDByRoomNumber(rowData);
 				refreshTable();
 			}
 		}

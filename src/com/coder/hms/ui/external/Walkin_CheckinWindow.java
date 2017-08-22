@@ -64,9 +64,9 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	private double priceValue = 0.0;
 	private JSpinner personCountSpinner;
 	private JFormattedTextField priceField;
-	private JTextField groupNameField, totalDaysField;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	private JTextField groupNameField, totalDaysField;
 	private JDateChooser checkinDateChooser, checkoutDateChooser;
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
@@ -111,7 +111,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [Walkin Checkin]");
+		this.setTitle("Coder HMS - [Walkin Checkin]");
 		contentPanel.setAutoscrolls(true);
 		contentPanel.setPreferredSize(new Dimension(10, 415));
 

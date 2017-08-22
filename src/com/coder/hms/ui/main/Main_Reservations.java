@@ -235,7 +235,7 @@ public class Main_Reservations extends JPanel {
 			reservDate = reservDate.plusDays(1);
 			String today = reservDate.toString();
 			
-			List<Reservation> reservList = reservationDaoImpl.getReservsByDate(today); 
+			List<Reservation> reservList = reservationDaoImpl.getReservListByThisDate(today); 
 			List<Reservation> garanteedReservList = reservationDaoImpl.getGaranteedReservs(today);
 		 	List<Reservation> reservsAsWaitList = reservationDaoImpl.getReservsAsWaitlist(today);
 		 	
@@ -385,7 +385,7 @@ public class Main_Reservations extends JPanel {
 						else {
 														
 							
-							Reservation reservation = reservationDaoImpl.findReservationByDate(startDate.toString());
+							Reservation reservation = reservationDaoImpl.findSingleReservByThisDate(startDate.toString());
 							
 							List<Customer> customerList = customerDaoImpl.getCustomerByReservId(reservation.getId());
 							
