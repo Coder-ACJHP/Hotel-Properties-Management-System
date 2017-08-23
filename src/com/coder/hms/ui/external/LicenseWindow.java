@@ -42,7 +42,7 @@ public class LicenseWindow extends JDialog {
 	public LicenseWindow() {
 		
 		setTitle("Coder HMS - [License]");
-		setBounds(100, 100, 510, 550);
+		setBounds(100, 100, 550, 550);
 		setBackground(Color.decode("#066d95"));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -54,7 +54,7 @@ public class LicenseWindow extends JDialog {
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		editorPane = new JTextPane();
-		editorPane.setBackground(new Color(255, 255, 204));
+		editorPane.setBackground(new Color(255, 255, 240));
 		editorPane.setFont(new Font("Verdana", Font.PLAIN, 13));
 		editorPane.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		editorPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -64,14 +64,15 @@ public class LicenseWindow extends JDialog {
 		final StyledDocument doc = editorPane.getStyledDocument();
 		final SimpleAttributeSet center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		doc.setParagraphAttributes(0, doc.getLength()-1, center, false);
 		
 		fillEditorPane();
 		setVisible(true);
 	}
 
 	private void fillEditorPane() {
-		File file = new File("src/com/coder/hms/icons/LICENSE.txt");
+		
+		File file = new File("GNU GENERAL PUBLIC LICENSE");
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
 			editorPane.read(br, Charset.forName("UTF-8"));
