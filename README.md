@@ -5,7 +5,7 @@
 </div>    
                                                                                                                           
 
-Coder HMS is hotels managing system application, cross platform (Made by Java & Maven & Hibernate & Mysql) .Easy to use simple user<br> interface, understandable text with icons and every object colored.It's support 4 different languages [ENG, AR, ES, TR] and it <br> composed from seven main packs : <br>
+Coder HMS is hotels managing system application, cross platform (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b>) .Easy to use simple user interface, understandable text with icons and every object colored.It's support 4 different languages [ENG, AR, ES, TR] and it composed from seven main packs : <br>
 <h4>1- Main window <h4>[All windows will open on this scene, check your current user, date, EURO, DOLLAR, POUND exchange as live from <br> status bar, manage your application from menu bar {Exit, change user, update password, sen email, open calculator, exchange, <br>
 change user interface theme and etc.}]
 
