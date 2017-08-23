@@ -47,6 +47,7 @@ import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.NewReservationWindow;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ReservationTableRenderer;
 import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
@@ -69,6 +70,7 @@ public class Main_Reservations extends JPanel {
 	private JTextField agencyRefField;
 	private JButton newRezBtn, findBtn;
 	private HotelDaoImpl hotelDoaImpl;
+	private static LoggingEngine logging;
 	private CustomerDaoImpl customerDaoImpl;
 	private NewReservationWindow newReservationEx;
 	private ReservationDaoImpl reservationDaoImpl;
@@ -83,6 +85,8 @@ public class Main_Reservations extends JPanel {
 	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
 	
 	public Main_Reservations() {
+		
+		logging = LoggingEngine.getInstance();
 		
 		bean = LocaleBean.getInstance();
 		setLayout(new BorderLayout(0, 0));
@@ -265,10 +269,15 @@ public class Main_Reservations extends JPanel {
 				
 				
 				if(agencyRefField.getText().length() > 0) {
-										
+							
+					logging.setMessage("Searching reservation with AGENCY REFERANCE NUMBER : " + agencyRefField.getText());
+					
 					Reservation theReservation = reservationDaoImpl.findReservationByAgencyRefNo(agencyRefField.getText());
 										
 					if(theReservation != null) {
+						
+						logging.setMessage("Reservation found : " + theReservation.toString());
+						
 						List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReservation.getId());
 
 						Room room = roomDaoImpl.getRoomByReservId(theReservation.getId());
@@ -305,18 +314,25 @@ public class Main_Reservations extends JPanel {
 								customerName, customerSurName});
 						
 						reservationPane.setVisible(true);
+						
 					}
 					
 					else {
+						logging.setMessage("Reservation not found!");
 						return;
 					}
 				}
 				
 				else if(refNoField.getText().length() > 0) {
 					
+					logging.setMessage("Searching reservation by REFERANCE NO : " + refNoField.getText());
+					
 					Reservation theReserv = reservationDaoImpl.findReservationByRefNo(refNoField.getText());
 					
 					if(theReserv != null) {
+						
+						logging.setMessage("Reservation found : " + theReserv.toString());
+						
 						List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReserv.getId());
 						
 						Room room = roomDaoImpl.getRoomByReservId(theReserv.getId());
@@ -360,16 +376,19 @@ public class Main_Reservations extends JPanel {
 					}
 					
 					else {
+						logging.setMessage("Reservation not found!");
 						return;
 					}
 					
 				}
 				
 				else {
+					
 					//get dates from date pickers
 					final LocalDate startDate = startDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					final LocalDate endDate = endDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					
+					logging.setMessage("Searching reservation by DATE : " + startDate + ":" + endDate);
 					
 						//compare if start date greater than end date
 						if(startDate.isAfter(endDate)) {
@@ -426,6 +445,8 @@ public class Main_Reservations extends JPanel {
 									customerName, customerSurName});
 							
 							reservationPane.setVisible(true);
+							
+							logging.setMessage("Reservation found : " + reservation.toString());
 						}
 				}
 

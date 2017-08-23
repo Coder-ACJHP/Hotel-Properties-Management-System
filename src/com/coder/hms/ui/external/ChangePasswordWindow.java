@@ -34,6 +34,7 @@ import javax.swing.border.SoftBevelBorder;
 
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.UserDaoImpl;
+import com.coder.hms.utils.LoggingEngine;
 
 public class ChangePasswordWindow extends JDialog {
 
@@ -46,6 +47,7 @@ public class ChangePasswordWindow extends JDialog {
 	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
 	private final UserDaoImpl userDaoImpl;
+	private static LoggingEngine loggingEngine;
 	private JPasswordField oldPasswordField, newPasswordField;
 	private final JButton btnClear, btnUpdate, setPasswordVisible, capslockBtn;
 
@@ -54,8 +56,13 @@ public class ChangePasswordWindow extends JDialog {
 	 */
 	public ChangePasswordWindow() {
 
+		loggingEngine = LoggingEngine.getInstance();
+		
 		sessionBean = SessionBean.getSESSION_BEAN();
 		userDaoImpl = new UserDaoImpl();
+		
+		loggingEngine.setMessage("Change password window is started....");
+		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
 		
 		this.getContentPane().setForeground(new Color(255, 99, 71));
 		this.getContentPane().setFocusCycleRoot(true);
@@ -216,6 +223,8 @@ public class ChangePasswordWindow extends JDialog {
 
 					final String oldPassword = new String(oldPwd);
 					
+					loggingEngine.setMessage("User : " + sessionBean.getNickName() + "old password is : " + oldPassword);
+					
 					if (checkPassword(oldPassword)) {
 						
 						final String newPassword = new String(newPwd);
@@ -223,8 +232,12 @@ public class ChangePasswordWindow extends JDialog {
 						
 						if (newPassword.equals(confirmPassword)) {
 							
+							loggingEngine.setMessage("User : " + sessionBean.getNickName() + "new password is : " + newPassword);
+							
 							changePasswordWithNew(sessionBean.getNickName(), newPassword);
 							infoLabel.setText("Your password changed successfully.");
+							
+							loggingEngine.setMessage("Password changed successfully.");
 						}
 
 						else {

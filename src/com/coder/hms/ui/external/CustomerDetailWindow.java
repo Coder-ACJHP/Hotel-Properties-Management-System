@@ -31,7 +31,7 @@ public class CustomerDetailWindow extends JDialog {
 	/**
 	 * 
 	 */
-	JButton chancelBtn, saveBtn;
+	private JButton chancelBtn, saveBtn;
 	private JDateChooser dateOfBirthChooser;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel, titlePanel;
@@ -58,7 +58,7 @@ public class CustomerDetailWindow extends JDialog {
 	 * Create the dialog.
 	 */
 	public CustomerDetailWindow() {
-		
+				
 		setBounds(100, 100, 710, 460);
 		getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

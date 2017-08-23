@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" 
+							"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hotel_managment_system?autoReconnect=true&amp;useSSL=true</property>
+		<property name="hibernate.connection.username">Coder</property>
+		<property name="hibernate.connection.password">CoderDb958</property>
+		<property name="hibernate.connection.characterEncoding">utf8</property>
+		<property name="hibernate.connection.useUnicode">true</property>
+		<property name="hibernate.connection.pool_size">20</property>
+		<property name="current_session_context_class">thread</property>
+		<property name="hbmdl.auto">update</property>
+		<property name="show_sql">true</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<mapping class="com.coder.hms.entities.Customer" />
+		<mapping class="com.coder.hms.entities.Hotel" />
+		<mapping class="com.coder.hms.entities.Reservation" />
+		<mapping class="com.coder.hms.entities.Room" />
+		<mapping class="com.coder.hms.entities.User" />
+		<mapping class="com.coder.hms.entities.Payment" />
+		<mapping class="com.coder.hms.entities.Posting" />
+		<mapping class="com.coder.hms.entities.HotelSystemStatus" />
+	</session-factory>
+</hibernate-configuration>

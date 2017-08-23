@@ -38,6 +38,7 @@ import com.coder.hms.ui.external.ChangePasswordWindow;
 import com.coder.hms.ui.external.ExchangeWindow;
 import com.coder.hms.ui.external.HotelPropertiesWindow;
 import com.coder.hms.ui.external.LicenseWindow;
+import com.coder.hms.ui.external.ReadLogsWindow;
 import com.coder.hms.ui.external.LoginWindow;
 import com.coder.hms.utils.ApplicaitonThemeChanger;
 import com.coder.hms.utils.ResourceControl;
@@ -52,7 +53,7 @@ public class Main_MenuBar {
 	private final String command = System.getProperty("os.name");
 	public final ApplicaitonThemeChanger themeChanger = new ApplicaitonThemeChanger();
 	private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
-	private JMenuItem hoteProps, restart, refresh, menuInnerItemExit, calculator, sendMail, exchange, 
+	private JMenuItem hoteProps, restart, refresh, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
 	defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, chngPassword, aboutDeveloper,
 	sourceCode, shareYourOpinion, license;
 	
@@ -224,9 +225,30 @@ public class Main_MenuBar {
 		exchange = new JMenuItem("Exchange");
 		exchange.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_exchange.png")));
 		exchange.addActionListener(ActionListener ->{
-			new ExchangeWindow();
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					new ExchangeWindow();
+				}
+				
+			});
 		});
 		mnTools.add(exchange);
+		
+		systemLogs = new JMenuItem("System logs");
+		systemLogs.setIcon(new ImageIcon(Main_MenuBar.class.getResource("/com/coder/hms/icons/logging.png")));
+		systemLogs.addActionListener(ActionListener ->{
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					new ReadLogsWindow();
+				}
+				
+			});
+		});
+		mnTools.add(systemLogs);
 		
 		/*Add new menu into Tools menu*/	
 		themes = new JMenu("Themes");

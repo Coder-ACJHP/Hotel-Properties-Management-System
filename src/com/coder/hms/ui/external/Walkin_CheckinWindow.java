@@ -40,6 +40,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
@@ -48,6 +49,7 @@ import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.inner.CustomerForm;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.LoggingEngine;
 import com.toedter.calendar.JDateChooser;
 
 public class Walkin_CheckinWindow extends JDialog implements ActionListener {
@@ -64,6 +66,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	private double priceValue = 0.0;
 	private JSpinner personCountSpinner;
 	private JFormattedTextField priceField;
+	private static LoggingEngine loggingEngine;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField groupNameField, totalDaysField;
@@ -73,6 +76,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	public final CustomerForm customerFormOne = new CustomerForm();
 	public final CustomerForm customerFormTwo = new CustomerForm();
 	public final CustomerForm customerFormThree = new CustomerForm();
+	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
 	private JComboBox<String> agencyCmbBox, customerCnrtyCmbBox, creditTypeCmbBox, hostTypeCmbBox, currencyCmbBox;
 	private final String[] AGENCY_LIST = {"WALKIN"};
 	private final String[] HOST_TYPES = {"B.B", "F.B", "H.B", "O.B"};
@@ -95,6 +99,9 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	public Walkin_CheckinWindow(String roomNumber) {
 
 		this.ownRoomNumber = roomNumber;
+		
+		loggingEngine = LoggingEngine.getInstance();
+		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
 		
 		setMinimumSize(new Dimension(750, 600));
 		setPreferredSize(new Dimension(750, 600));
@@ -467,8 +474,8 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		newReservation.setIsCheckedIn("YES");
 		reservDaoImpl.saveReservation(newReservation);
 		
-		System.out.println("New Reservation : " + newReservation.getId() + "saved successfully.");
-		
+		loggingEngine.setMessage("New walkin reservation detail : " + newReservation.toString());
+				
 		//3- Get last saved reservation, because we need it Id for customers.
 		Reservation lastReservation = reservDaoImpl.getLastReservation();
 		
@@ -507,7 +514,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 				customerOne.setReservationId(lastReservation.getId());
 				
 				customerDaoImpl.save(customerOne);
-				
+				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
 			}
 			
 			else if((int)personCountSpinner.getValue() == 2) {
@@ -526,7 +533,8 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 				customerOne.setReservationId(lastReservation.getId());
 				
 				customerDaoImpl.save(customerOne);
-				
+				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
+
 				customerTwo = new Customer();
 				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
 				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
@@ -540,6 +548,9 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 				
 				customerDaoImpl.save(customerOne);
 				customerDaoImpl.save(customerTwo);
+				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
+				loggingEngine.setMessage("Check in for customer(s) : " + customerTwo.toString());
+
 
 			}
 			
@@ -557,9 +568,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 				customerOne.setGender(customerFormOne.getGenderComboxValue());
 				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
 				customerOne.setReservationId(lastReservation.getId());
-				
-				customerDaoImpl.save(customerOne);
-				
+								
 				customerTwo = new Customer();
 				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
 				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
@@ -586,11 +595,15 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 				customerDaoImpl.save(customerOne);
 				customerDaoImpl.save(customerTwo);
 				customerDaoImpl.save(customerThree);
+				
+				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
+				loggingEngine.setMessage("Check in for customer(s) : " + customerTwo.toString());
+				loggingEngine.setMessage("Check in for customer(s) : " + customerThree.toString());
 		
 		}
 			//All thing id OK and all fields populated, just save it.
 			roomDaoImpl.saveRoom(checkingRoom);
-			System.out.println("WALKIN reservation saved successfully\nNow loading room frame...");
+			loggingEngine.setMessage("Check in for room : " + checkingRoom.toString());
 			
 			this.dispose();
 			

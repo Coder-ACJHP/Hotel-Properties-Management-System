@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -15,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.coder.hms.ui.inner.DialogFrame;
+import com.coder.hms.utils.LoggingEngine;
 
 public class DialogTest extends JDialog {
 
@@ -23,19 +25,31 @@ public class DialogTest extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel lblKj;
+	private static LoggingEngine branch;
 	private final JPanel contentPanel = new JPanel();
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
+		branch = LoggingEngine.getInstance();
+		branch.setReady(DialogTest.class.getName());
+		branch.changeLoggingLevel(Level.FINE);
+		branch.setConsoleLogging(false);
+		
+		
 		try {
 			DialogTest dialog = new DialogTest();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
+			branch.setMessage("I'mjkahskdjhajksdh");
 		} catch (Exception e) {
 			e.printStackTrace();
+			branch.changeLoggingLevel(Level.WARNING);
+			branch.setMessage(e.getMessage());
 		}
+		branch.setMessage("I'm 27638476ng...");
 	}
 
 	/**

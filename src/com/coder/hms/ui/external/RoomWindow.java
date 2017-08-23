@@ -47,6 +47,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
@@ -63,6 +64,7 @@ import com.coder.hms.ui.inner.DialogFrame;
 import com.coder.hms.ui.main.Main_AllRooms;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.CustomersTableRenderer;
+import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.PayPostTableCellRenderer;
 import com.coder.hms.utils.RoomExternalTableHeaderRenderer;
 import com.toedter.calendar.JDateChooser;
@@ -78,6 +80,7 @@ public class RoomWindow extends JDialog {
 	private NumberFormat formatter;
 	private static String roomNumber;
 	private Reservation reservation;
+	private static LoggingEngine loggingEngine;
 	private JTable payPostTable, customerTable;
 	private HotelSystemStatus hotelSystemStatus;
 	private JDateChooser checkinDate, checkoutDate;
@@ -87,6 +90,7 @@ public class RoomWindow extends JDialog {
 	private JScrollPane postableScrollPane, cstTableScrollPane;
 	private final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
 	final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
+	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
 	private final PaymentWindow payWin = new PaymentWindow();
 	private final PostingWindow postWin = new PostingWindow();
 	private final HotelSystemStatusImpl systemStatusImpl = new HotelSystemStatusImpl();
@@ -119,6 +123,7 @@ public class RoomWindow extends JDialog {
 
 		RoomWindow.roomNumber = roomText;
 
+		loggingEngine = LoggingEngine.getInstance();
 		hotelSystemStatus = systemStatusImpl.getSystemStatus();
 		
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -498,6 +503,8 @@ public class RoomWindow extends JDialog {
 		payPostTable.setComponentPopupMenu(popupMenu);
 		populateReservationDetail();
 
+		loggingEngine.setMessage("User is : " +sessionBean.getNickName());
+		
 		custWindow.setActionListener(saveChanges());
 		this.setVisible(true);
 	}
@@ -513,6 +520,7 @@ public class RoomWindow extends JDialog {
 					public void run() {
 						payWin.setReadyPaymentWindow(RoomWindow.roomNumber);
 						if (payWin.getPaymentStatus()) {
+							loggingEngine.setMessage("Adding payment to room : " + roomNumber);
 							populateReservationDetail();
 						}
 						populatePostPayTable(postPayModel);
@@ -535,6 +543,7 @@ public class RoomWindow extends JDialog {
 					public void run() {
 						postWin.setReadyPaymentWindow(RoomWindow.roomNumber);
 						if (postWin.getPostingStatus()) {
+							loggingEngine.setMessage("Posting to room : " + roomNumber);
 							populateReservationDetail();
 						}
 						populatePostPayTable(postPayModel);
@@ -575,10 +584,12 @@ public class RoomWindow extends JDialog {
 						dialogFrame.dispose();
 						return;
 					}
-
+					
+					loggingEngine.setMessage("The room checkedout is : " + roomNumber);
 				});
 				
 				dialogFrame.btnNo.addActionListener(ActionListener -> {
+					loggingEngine.setMessage("Checkedout is cancelled : ");
 					dialogFrame.dispose();
 					return;
 				});
@@ -597,6 +608,9 @@ public class RoomWindow extends JDialog {
 
 		final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
 
+		loggingEngine.setMessage("Deleting posting or payment from room : " + roomNumber);
+		loggingEngine.setMessage("Selected object details : " + "Id : " + theId + "Type : " + type + "Amount : " + amount);
+		
 		double finalBalance = 0.0;
 
 		if (type.equalsIgnoreCase("System")) {
@@ -611,6 +625,8 @@ public class RoomWindow extends JDialog {
 				totalPriceField.setValue(finalBalance);
 				totalPriceField.revalidate();
 				totalPriceField.repaint();
+				
+				loggingEngine.setMessage("Posting is deleted.");
 			}
 		}
 
@@ -626,6 +642,8 @@ public class RoomWindow extends JDialog {
 				balanceField.setValue(finalBalance);
 				balanceField.revalidate();
 				balanceField.repaint();
+				
+				loggingEngine.setMessage("Payment is deleted.");
 			}
 		}
 
@@ -691,6 +709,8 @@ public class RoomWindow extends JDialog {
 
 	private void changeReservationDate() {
 
+		loggingEngine.setMessage("Updating reservation...");
+		
 		LocalDate lic = LocalDate.parse(reservation.getCheckinDate());
 		Date oldDate = java.sql.Date.valueOf(lic);
 
@@ -713,6 +733,8 @@ public class RoomWindow extends JDialog {
 			reservation.setNote(roomNote.getText());
 
 		reservationDaoImpl.updateReservation(reservation);
+		
+		loggingEngine.setMessage("Updated reservation details : " + reservation.toString());
 	}
 
 	public void populateCustomerTable(String roomText, DefaultTableModel model) {
@@ -764,6 +786,9 @@ public class RoomWindow extends JDialog {
 					custWindow.setReservationId(theCustomer.getReservationId() + "");
 
 					custWindow.setVisible(true);
+					
+					loggingEngine.setMessage("Displaying customer...");
+					loggingEngine.setMessage("Displayed customer details : " + theCustomer.toString());
 				}
 
 				super.mousePressed(e);
@@ -797,9 +822,11 @@ public class RoomWindow extends JDialog {
 				boolean success = customerDaoImpl.save(theCustomer);
 
 				if (success) {
-
+					
 					custWindow.setInfoMessage("<html>SUCCESSFULLY ACCOMPLISHED</html>");
 					custWindow.setInfoLabelColor(Color.decode("#00FF00"));
+					loggingEngine.setMessage("Customer details updated : " + theCustomer.toString());
+					
 				} else {
 					custWindow.setInfoMessage("<html>OPERTION IS FAILED!</html>");
 					custWindow.setInfoLabelColor(Color.decode("#cd2626"));

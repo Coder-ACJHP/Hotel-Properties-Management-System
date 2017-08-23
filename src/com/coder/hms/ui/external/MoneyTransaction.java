@@ -40,11 +40,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.LoggingEngine;
 
 public class MoneyTransaction extends JDialog {
 
@@ -61,8 +63,10 @@ public class MoneyTransaction extends JDialog {
 	private JButton btnClear, btnSave;
 	private String roomNumber = "HOTEL";
 	private JFormattedTextField priceField;
+	private static LoggingEngine loggingEngine;
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> comboBox, currencyCmbBox, titleCmbBox;
+	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] PAYMENT_TYPE = { "CASH PAYMENT", "CREDIT CARD", "CITY LEDGER" };
@@ -77,6 +81,10 @@ public class MoneyTransaction extends JDialog {
 	 */
 	public MoneyTransaction() {
 
+		loggingEngine = LoggingEngine.getInstance();
+		loggingEngine.setMessage("Money Transaction started.");
+		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
+		
 		// set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
 
@@ -294,6 +302,9 @@ public class MoneyTransaction extends JDialog {
 					// after adding the payment in the table save it in database
 					final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
 					paymentDaoImpl.savePayment(payment);
+					
+					loggingEngine.setMessage("Type of transaction : " + typeOfTransaction);
+					loggingEngine.setMessage("Transaction detail : " + payment.toString());
 					break;
 
 				case "OUT":
@@ -314,6 +325,9 @@ public class MoneyTransaction extends JDialog {
 					// after adding the payment in the table save it in database
 					final PostingDaoImpl postingDaoImpl = new PostingDaoImpl();
 					postingDaoImpl.savePosting(posting);
+					
+					loggingEngine.setMessage("Type of transaction : " + typeOfTransaction);
+					loggingEngine.setMessage("Transaction detail : " + posting.toString());
 					break;
 
 				default:

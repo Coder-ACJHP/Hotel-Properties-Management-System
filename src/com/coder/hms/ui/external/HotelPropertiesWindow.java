@@ -47,8 +47,10 @@ import javax.swing.text.MaskFormatter;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.entities.Hotel;
+import com.coder.hms.utils.LoggingEngine;
 
 public class HotelPropertiesWindow extends JDialog {
 
@@ -62,6 +64,7 @@ public class HotelPropertiesWindow extends JDialog {
 	private JTextPane fullAdressField;
 	int starValue, typeValue, capacityVal;
 	private JLabel hotelNameTitle, pictlabel;
+	private static LoggingEngine loggingEngine;
 	private MaskFormatter maskFormatter = null;
 	private JFormattedTextField phoneFrmtField;
 	private JLabel[] starlabels = new JLabel[5];
@@ -72,6 +75,7 @@ public class HotelPropertiesWindow extends JDialog {
 	private JTextField nameField, ownerNameField, cityField, roomTypes;
 	private JComboBox<String> hotelTypeCmbBox, countryCmbBox;
 	private JSpinner starsSpinner, roomTypeSpinner, capacitySpinner;
+	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
 	private JPanel upperPanel, picturePanel, bottomPanel, panel, buttonsPanel, starHolder;
 	private final String[] HOTEL_TYPES = {"Airport Hotel", "Extended Stay Hote", "Serviced Apartment", "Suite Hotel", 
 			"Standart Hotel", "Resort Hotel", "Casino Hotel", "Boutique"};
@@ -87,6 +91,9 @@ public class HotelPropertiesWindow extends JDialog {
 	 * Create the dialog.
 	 */
 	public HotelPropertiesWindow() {
+		
+		loggingEngine = LoggingEngine.getInstance();
+		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
 		
 		setResizable(false);
 		setBounds(100, 100, 637, 684);
@@ -609,6 +616,7 @@ public class HotelPropertiesWindow extends JDialog {
 	private void saveHotelDetails() {
 		
 		if(checkAllFields()) {
+			loggingEngine.setMessage("Hotel detail is before changing : " + theHotel.toString());
 			
 			theHotel.setName(hotelNameTitle.getText());
 			theHotel.setStarCount(starValue);
@@ -626,6 +634,7 @@ public class HotelPropertiesWindow extends JDialog {
 			hotelDaoImpl.saveHotel(theHotel);
 			JOptionPane.showMessageDialog(null, "Well done.\nYour hotel informations saved successfully!",
         		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
+			loggingEngine.setMessage("Hotel detail is after changing : " + theHotel.toString());
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Please fill all the blanks as well!",

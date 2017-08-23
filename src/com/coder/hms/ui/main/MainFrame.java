@@ -23,6 +23,7 @@ import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
+import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 
 
@@ -36,6 +37,7 @@ public class MainFrame extends JFrame {
 	private String exitMessage = "";
 	private String titleMessage = "";
 	private Main_MenuBar customMenuBar;
+	private static LoggingEngine logging;
 	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
@@ -51,7 +53,10 @@ public class MainFrame extends JFrame {
 	// Set basic properties for main frame.
 	public MainFrame() {
 
-		 bean = LocaleBean.getInstance();
+	
+		logging = LoggingEngine.getInstance();
+		
+		bean = LocaleBean.getInstance();
 		sessionBean = SessionBean.getSESSION_BEAN();		
 		
 		// get operation system name to add icon (if windows to taskbar else for dock)
@@ -115,6 +120,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
+		logging.setMessage("MainFrame created successfully.");
 		this.setVisible(true);
 
 	}

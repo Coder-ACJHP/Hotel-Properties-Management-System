@@ -24,6 +24,7 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
@@ -32,6 +33,7 @@ import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.inner.CustomerForm;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.LoggingEngine;
 
 public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 
@@ -42,6 +44,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 	private JPanel upperPanel;
 	private String ownRoomNumber;
 	private Room prepareRoom;
+	private static LoggingEngine loggingEngine;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
@@ -50,6 +53,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 	public CustomerForm customerFormOne = new CustomerForm();
 	public CustomerForm customerFormTwo = new CustomerForm();
 	public CustomerForm customerFormThree = new CustomerForm();
+	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
@@ -61,6 +65,9 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 	public Reserved_CheckinWindow(String roomNumber) {
 
 		this.ownRoomNumber = roomNumber;
+		
+		loggingEngine = LoggingEngine.getInstance();
+		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
 		
 		setMinimumSize(new Dimension(750, 495));
 		setPreferredSize(new Dimension(750, 495));
@@ -247,6 +254,8 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 				customerList.get(0).setReservationId(foundedReserv.getId());
 				
 				customerDaoImpl.save(customerList.get(0));
+				
+				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(0).toString());
 			}
 			
 			else if((int)spinner.getValue() == 2) {
@@ -275,6 +284,9 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 				
 				customerDaoImpl.save(customerList.get(0));
 				customerDaoImpl.save(customerList.get(1));
+				
+				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(0).toString());
+				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(1).toString());
 			}
 			
 			else if((int)spinner.getValue() == 3) {
@@ -314,12 +326,21 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 				customerDaoImpl.save(customerList.get(0));
 				customerDaoImpl.save(customerList.get(1));
 				customerDaoImpl.save(customerList.get(2));
+				
+				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(0).toString());
+				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(1).toString());
+				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(2).toString());
 			}
 			
 			
 			roomDaoImpl.saveRoom(checkingRoom);
+			loggingEngine.setMessage("Check in room is : " + checkingRoom.toString());
+			
 			foundedReserv.setIsCheckedIn("YES");
 			reservDaoImpl.saveReservation(foundedReserv);
+			
+			loggingEngine.setMessage("Check in reservation is : " + foundedReserv.toString());
+			
 			this.dispose();
 			
 			SwingUtilities.invokeLater(new Runnable() {

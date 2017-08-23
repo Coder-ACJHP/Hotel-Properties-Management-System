@@ -54,6 +54,7 @@ import javax.swing.text.NumberFormatter;
 import com.coder.hms.beans.RoomCountRow;
 import com.coder.hms.beans.RoomEarlyPaymentRow;
 import com.coder.hms.beans.RoomInfoRow;
+import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
@@ -65,6 +66,7 @@ import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;
 
@@ -83,6 +85,7 @@ public class NewReservationWindow extends JDialog {
 	private double priceValue = 0.0;
 	private NumberFormat formatter;
 	private JSpinner personCountSpinner; 
+	private static LoggingEngine logging;
 	private final JTextArea noteTextArea;
 	private JFormattedTextField priceField;
 	private boolean completionStatus = false;
@@ -98,6 +101,7 @@ public class NewReservationWindow extends JDialog {
 	private final RoomNumberMaker roomNumberMaker = new RoomNumberMaker();
 	private ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private JLabel agencyLbl, creditTypeLbl, customerCountryLbl;
+	private static final SessionBean S_BEAN = SessionBean.getSESSION_BEAN();
 	private JTextField rezIdField, nameSurnameField, totalDaysField, agencyRefField, referanceNoField;
 	
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
@@ -136,6 +140,10 @@ public class NewReservationWindow extends JDialog {
 	 * Create the dialog.
 	 */
 	public NewReservationWindow() {
+		
+		logging = LoggingEngine.getInstance();
+		logging.setMessage("User is : " + S_BEAN.getNickName());
+		
 		// set upper icon for dialog frame
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
 
@@ -299,6 +307,7 @@ public class NewReservationWindow extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 				setCompletionStatus(false);
+				logging.setMessage("New reservation creating cancelled.");
 			}
 		});
 		chancelBtn.setIcon(new ImageIcon(NewReservationWindow.class.getResource("/com/coder/hms/icons/login_clear.png")));
@@ -319,7 +328,7 @@ public class NewReservationWindow extends JDialog {
 		reportBtn.setFont(new Font("Verdana", Font.BOLD, 15));
 		reportBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				logging.setMessage("Reservation is reporting.");
 			}
 		});
 		buttonsPanel.add(reportBtn);
@@ -465,6 +474,8 @@ public class NewReservationWindow extends JDialog {
 					public void run() {
 						payWin.setReadyPaymentWindow(roomNumCmbBox.getSelectedItem().toString());
 						
+						logging.setMessage("Adding payment in reservation.");
+						
 					}
 				}); 
 			}
@@ -601,7 +612,11 @@ public class NewReservationWindow extends JDialog {
 					Object[] rowData = {lastPayment.getTitle(),lastPayment.getPaymentType(),
 						lastPayment.getPrice(), lastPayment.getCurrency(), lastPayment.getExplanation()};
 					earlyPaymetModel.addRow(rowData);
+					
+					logging.setMessage("Payment status is True : " + lastPayment.toString());
 				}
+				
+				logging.setMessage("Reservation details : " + reservation.toString());
 				rImpl.saveReservation(reservation);
 								
 				
@@ -623,6 +638,7 @@ public class NewReservationWindow extends JDialog {
 				lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
 				theRoom.setRemainingDebt(lastPrice);
 				
+				logging.setMessage("Reservation room details : " + theRoom.toString());
 				roomDaoImpl.saveRoom(theRoom);
 								
 				final int rowCount = model.getRowCount();
@@ -640,7 +656,11 @@ public class NewReservationWindow extends JDialog {
 					cImpl.save(theCustomer);
 					completionStatus = true;
 				
+					logging.setMessage("Reservation customer(s) : " + theCustomer.toString());
 				}
+				
+				
+				logging.setMessage("New reservation saved successfully.");
 				dispose();
 			}
 		};

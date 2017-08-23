@@ -1,0 +1,32 @@
+03:44:02 23/08/2017
+INFO:User is : admin
+03:44:04 23/08/2017
+INFO:MainFrame created successfully.
+03:44:04 23/08/2017
+INFO:Login frame created successfully.
+03:44:53 23/08/2017
+INFO:User is : admin
+03:44:55 23/08/2017
+INFO:New reservation creating cancelled.
+03:44:59 23/08/2017
+INFO:Money Transaction started.
+03:44:59 23/08/2017
+INFO:User is : admin
+03:50:08 23/08/2017
+INFO:User is : admin
+03:50:10 23/08/2017
+INFO:MainFrame created successfully.
+03:50:10 23/08/2017
+INFO:Login frame created successfully.
+04:19:40 23/08/2017
+INFO:User is : admin
+04:21:02 23/08/2017
+INFO:Reservation details : Reservation [Id=0, groupName=JADE VOLUNTEER, checkinDate=2017-08-23, checkoutDate=2017-08-27, totalDays=4, agency=WEB, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=4005, isCheckedIn=NO, agencyRefNo=, referanceNo=00001-IR]
+04:21:02 23/08/2017
+INFO:Reservation room details : Room [theRoomId=32, number=4005, type=TWIN, price=250.0, totalPrice=1000.0, balance=0.0, remaining debt=1000.0, currency=DOLLAR, cleaningStatus=CLEAN, usageStatus=BLOCKED, personCount=2, customerGrupName=JADE VOLUNTEER, ReservationId=4]
+04:21:02 23/08/2017
+INFO:Reservation customer(s) : Customer [CustomerId=5, FirstName=JADE, LastName=VOLUNTEER, Country=Afghanistan, Document=null, DocumentNo=null, DateOfBirth=null, Gender=null, MaritalStatus=null, FatherName=null, MotherName=null, Email=null, Phone=null, ReservationId=4]
+04:21:02 23/08/2017
+INFO:Reservation customer(s) : Customer [CustomerId=6, FirstName=MALIKA, LastName=NINOS, Country=Afghanistan, Document=null, DocumentNo=null, DateOfBirth=null, Gender=null, MaritalStatus=null, FatherName=null, MotherName=null, Email=null, Phone=null, ReservationId=4]
+04:21:02 23/08/2017
+INFO:New reservation saved successfully.

@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,6 +46,7 @@ import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.ui.inner.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
 import com.coder.hms.utils.ApplicationLogoSetter;
+import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 
 /**
@@ -63,6 +65,7 @@ public class LoginWindow extends JDialog {
 	private JTextField userNameField;
 	private JButton btnClear, btnLogin;
 	private JPasswordField passwordField;
+	private static LoggingEngine logging;
 	private LanguageCmbBox languagesCmbBox;
 	private static SessionBean sessionBean;
 	private JButton setPasswordVisible, capslockBtn;
@@ -75,6 +78,12 @@ public class LoginWindow extends JDialog {
 
 	// Set some basic properties
 	public LoginWindow() {
+		
+		logging = LoggingEngine.getInstance();
+		logging.setReady(MainFrame.class.getName());
+		logging.changeLoggingLevel(Level.FINE);
+		logging.setConsoleLogging(false);
+		
 		
 		bean = LocaleBean.getInstance();
 		bean.setLocale(getLocale());
@@ -284,6 +293,8 @@ public class LoginWindow extends JDialog {
 		changeLanguage(getLocale());
 		setAlwaysOnTop(false);
 		setVisible(true);
+		
+		logging.setMessage("Login frame created successfully.");
 	}
 
 	private void changeLanguage(Locale locale) {
@@ -334,6 +345,7 @@ public class LoginWindow extends JDialog {
 				}
 				
 				changeLanguage(bean.getLocale());
+				logging.setMessage("Language changed.");
 			}
 		};
 		return listener;
@@ -407,6 +419,7 @@ public class LoginWindow extends JDialog {
 								sessionBean.setNickName(userName);
 								sessionBean.setPassword(userPswrd);
 								
+								logging.setMessage("User is : " + sessionBean.getNickName());
 								//close this frame
 								dispose();
 								//open main application frame
