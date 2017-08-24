@@ -31,7 +31,7 @@ import javax.swing.table.TableRowSorter;
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Room;
-import com.coder.hms.ui.inner.DialogFrame;
+import com.coder.hms.ui.external.DialogFrame;
 import com.coder.hms.utils.CleaningRoomTableColumnsMaker;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
 import com.coder.hms.utils.ResourceControl;

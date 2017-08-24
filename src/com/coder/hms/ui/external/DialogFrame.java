@@ -1,4 +1,4 @@
-package com.coder.hms.ui.inner;
+package com.coder.hms.ui.external;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog.ModalExclusionType;

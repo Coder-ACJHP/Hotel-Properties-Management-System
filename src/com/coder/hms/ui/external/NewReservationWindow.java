@@ -304,6 +304,7 @@ public class NewReservationWindow extends JDialog {
 
 		chancelBtn = new JButton("CANCEL");
 		chancelBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 				setCompletionStatus(false);
@@ -327,6 +328,7 @@ public class NewReservationWindow extends JDialog {
 		reportBtn.setPreferredSize(new Dimension(110, 40));
 		reportBtn.setFont(new Font("Verdana", Font.BOLD, 15));
 		reportBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				logging.setMessage("Reservation is reporting.");
 			}
@@ -467,6 +469,7 @@ public class NewReservationWindow extends JDialog {
 		
 		JButton btnNewButton = new JButton("Add new Payment");
 		btnNewButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				SwingUtilities.invokeLater(new Runnable() {
 					
@@ -1053,6 +1056,10 @@ public class NewReservationWindow extends JDialog {
 	
 	public void setReferanceNo(String refNo) {
 		this.referanceNoField.setText(refNo);
+	}
+	
+	public void addActionListenerToUpdateBtn(ActionListener listener) {
+		this.SaveBtn.addActionListener(listener);
 	}
 }
 

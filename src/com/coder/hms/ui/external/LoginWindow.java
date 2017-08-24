@@ -21,6 +21,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -42,6 +44,7 @@ import javax.swing.border.SoftBevelBorder;
 
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
+import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.ui.inner.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
@@ -71,10 +74,10 @@ public class LoginWindow extends JDialog {
 	private JButton setPasswordVisible, capslockBtn;
 	private static final long serialVersionUID = 1L;
 	final UserDaoImpl userDaoImpl = new UserDaoImpl();
-	private JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel;
 	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
-	
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
+	private JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel, lblResetYourPassword;
+	
 
 	// Set some basic properties
 	public LoginWindow() {
@@ -214,7 +217,7 @@ public class LoginWindow extends JDialog {
 		//header label
 		jumbotronLabel = new JLabel("HOTEL MANAGEMENT SYSTEM");
 		jumbotronLabel.setForeground(new Color(255, 255, 255));
-		jumbotronLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(70, 130, 180)));
+		jumbotronLabel.setBorder(new MatteBorder(1, 1, 1, 1, new Color(70, 130, 180)));
 		jumbotronLabel.setBackground(new Color(135, 206, 235));
 		jumbotronLabel.setFont(new Font("Verdana", Font.PLAIN, 20));
 		jumbotronLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -233,7 +236,7 @@ public class LoginWindow extends JDialog {
 		infoLabel.setBounds(1, 213, 428, 24);
 		getContentPane().add(infoLabel);
 		
-		JLabel lblResetYourPassword = new JLabel("reset your password");
+		lblResetYourPassword = new JLabel("reset your password");
 		lblResetYourPassword.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -289,7 +292,15 @@ public class LoginWindow extends JDialog {
 		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(new CustomKeyDispatcher());
      
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				new DataSourceFactory().shutDown();
+				System.exit(0);
+				super.windowClosing(e);
+			}
+		});
 		changeLanguage(getLocale());
 		setAlwaysOnTop(false);
 		setVisible(true);
@@ -304,6 +315,7 @@ public class LoginWindow extends JDialog {
 		this.setTitle(bundle.getString("MainTitle") +" (" + newDate +")");
 		this.btnClear.setText(bundle.getString("Clear"));
 		this.btnLogin.setText(bundle.getString("Login"));
+		this.lblResetYourPassword.setText(bundle.getString("ResetPwd"));
 		this.userNameLabel.setText(bundle.getString("UserName"));
 		this.passwordLabel.setText(bundle.getString("Password"));
 		this.revalidate();

@@ -1,0 +1,255 @@
+01:29:06 24/08/2017
+INFO:User is : coder acjhp
+01:29:09 24/08/2017
+INFO:MainFrame created successfully.
+01:29:09 24/08/2017
+INFO:Login frame created successfully.
+01:49:03 24/08/2017
+INFO:User is : admin
+01:49:05 24/08/2017
+INFO:MainFrame created successfully.
+01:49:05 24/08/2017
+INFO:Login frame created successfully.
+01:54:45 24/08/2017
+INFO:User is : admin
+01:54:47 24/08/2017
+INFO:MainFrame created successfully.
+01:54:47 24/08/2017
+INFO:Login frame created successfully.
+01:54:53 24/08/2017
+INFO:User is : admin
+02:02:23 24/08/2017
+INFO:User is : admin
+02:02:25 24/08/2017
+INFO:MainFrame created successfully.
+02:02:25 24/08/2017
+INFO:Login frame created successfully.
+02:02:33 24/08/2017
+INFO:User is : admin
+02:08:28 24/08/2017
+INFO:User is : admin
+02:08:30 24/08/2017
+INFO:MainFrame created successfully.
+02:08:30 24/08/2017
+INFO:Login frame created successfully.
+02:08:39 24/08/2017
+INFO:Reservation id founded2
+02:08:39 24/08/2017
+INFO:User is : admin
+02:14:55 24/08/2017
+INFO:User is : admin
+02:14:57 24/08/2017
+INFO:MainFrame created successfully.
+02:14:57 24/08/2017
+INFO:Login frame created successfully.
+02:15:04 24/08/2017
+INFO:Reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:15:04 24/08/2017
+INFO:Rooma and Customers found : Room [theRoomId=25, number=1004, type=TWIN, price=375.0, totalPrice=1125.0, balance=350.0, remaining debt=775.0, currency=TURKISH LIRA, cleaningStatus=CLEAN, usageStatus=BLOCKED, personCount=2, customerGrupName=OMAR HUSSEIN ABDALLA, ReservationId=2]
+02:15:04 24/08/2017
+INFO:User is : admin
+02:15:05 24/08/2017
+INFO:First part of reservation window is populated.
+02:15:05 24/08/2017
+INFO:Room count table and Room info table are populated successfully.
+02:19:42 24/08/2017
+INFO:User is : admin
+02:19:44 24/08/2017
+INFO:MainFrame created successfully.
+02:19:44 24/08/2017
+INFO:Login frame created successfully.
+02:19:51 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:19:51 24/08/2017
+INFO:User is : admin
+02:19:51 24/08/2017
+INFO:Reservation window is populated successfully.
+02:20:13 24/08/2017
+INFO:Reservation details : Reservation [Id=0, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=false, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:20:13 24/08/2017
+INFO:Reservation room details : Room [theRoomId=25, number=1004, type=TWIN, price=0.0, totalPrice=0.0, balance=350.0, remaining debt=-350.0, currency=TURKISH LIRA, cleaningStatus=CLEAN, usageStatus=BLOCKED, personCount=2, customerGrupName=OMAR HUSSEIN ABDALLA, ReservationId=5]
+02:20:14 24/08/2017
+INFO:Reservation customer(s) : Customer [CustomerId=7, FirstName=, LastName=, Country=Poland, Document=null, DocumentNo=null, DateOfBirth=null, Gender=null, MaritalStatus=null, FatherName=null, MotherName=null, Email=null, Phone=null, ReservationId=5]
+02:20:14 24/08/2017
+INFO:New reservation saved successfully.
+02:35:06 24/08/2017
+INFO:Login frame created successfully.
+02:39:17 24/08/2017
+INFO:User is : admin
+02:39:19 24/08/2017
+INFO:MainFrame created successfully.
+02:39:19 24/08/2017
+INFO:Login frame created successfully.
+02:39:30 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:39:30 24/08/2017
+INFO:User is : admin
+02:40:12 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:40:12 24/08/2017
+INFO:User is : admin
+02:42:23 24/08/2017
+INFO:User is : admin
+02:42:25 24/08/2017
+INFO:MainFrame created successfully.
+02:42:25 24/08/2017
+INFO:Login frame created successfully.
+02:46:23 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:46:23 24/08/2017
+INFO:User is : admin
+02:46:23 24/08/2017
+INFO:Reservation window is populated successfully.
+02:47:36 24/08/2017
+INFO:User is : admin
+02:47:37 24/08/2017
+INFO:MainFrame created successfully.
+02:47:37 24/08/2017
+INFO:Login frame created successfully.
+02:47:44 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:47:44 24/08/2017
+INFO:User is : admin
+02:47:45 24/08/2017
+INFO:Reservation window is populated successfully.
+02:48:10 24/08/2017
+INFO:New reservation creating cancelled.
+02:56:20 24/08/2017
+INFO:User is : admin
+02:56:22 24/08/2017
+INFO:MainFrame created successfully.
+02:56:22 24/08/2017
+INFO:Login frame created successfully.
+02:56:30 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+02:56:30 24/08/2017
+INFO:User is : admin
+02:56:31 24/08/2017
+INFO:Reservation window is populated successfully.
+03:02:41 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+03:02:41 24/08/2017
+INFO:User is : admin
+03:02:41 24/08/2017
+INFO:Reservation window is populated successfully.
+03:02:50 24/08/2017
+INFO:Reservation details : Reservation [Id=0, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=CANCEL, note=TWIN, NON SMOKING ROOM
+, paymentStatus=false, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+03:02:50 24/08/2017
+INFO:Reservation room details : Room [theRoomId=25, number=1004, type=TWIN, price=0.0, totalPrice=0.0, balance=350.0, remaining debt=-350.0, currency=TURKISH LIRA, cleaningStatus=CLEAN, usageStatus=BLOCKED, personCount=2, customerGrupName=OMAR HUSSEIN ABDALLA, ReservationId=6]
+03:02:50 24/08/2017
+INFO:Reservation customer(s) : Customer [CustomerId=8, FirstName=, LastName=, Country=Afghanistan, Document=null, DocumentNo=null, DateOfBirth=null, Gender=null, MaritalStatus=null, FatherName=null, MotherName=null, Email=null, Phone=null, ReservationId=6]
+03:02:50 24/08/2017
+INFO:New reservation saved successfully.
+03:03:02 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+03:03:02 24/08/2017
+INFO:User is : admin
+03:03:02 24/08/2017
+INFO:Reservation window is populated successfully.
+03:03:31 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=6, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=CANCEL, note=TWIN, NON SMOKING ROOM
+, paymentStatus=false, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+03:03:31 24/08/2017
+INFO:User is : admin
+03:03:31 24/08/2017
+INFO:Reservation window is populated successfully.
+03:03:34 24/08/2017
+INFO:User is : admin
+03:03:34 24/08/2017
+INFO:Reservation window is populated successfully.
+03:03:36 24/08/2017
+INFO:User is : admin
+03:03:36 24/08/2017
+INFO:Reservation window is populated successfully.
+03:03:37 24/08/2017
+INFO:User is : admin
+03:03:37 24/08/2017
+INFO:Reservation window is populated successfully.
+03:03:39 24/08/2017
+INFO:New reservation creating cancelled.
+03:03:39 24/08/2017
+INFO:User is : admin
+03:03:39 24/08/2017
+INFO:Reservation window is populated successfully.
+03:03:40 24/08/2017
+INFO:New reservation creating cancelled.
+03:03:40 24/08/2017
+INFO:User is : admin
+03:03:40 24/08/2017
+INFO:Reservation window is populated successfully.
+03:03:42 24/08/2017
+INFO:New reservation creating cancelled.
+03:03:42 24/08/2017
+INFO:User is : admin
+03:03:42 24/08/2017
+INFO:Reservation window is populated successfully.
+03:04:06 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=6, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=CANCEL, note=TWIN, NON SMOKING ROOM
+, paymentStatus=false, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+03:04:06 24/08/2017
+INFO:User is : admin
+03:04:06 24/08/2017
+INFO:Reservation window is populated successfully.
+03:04:12 24/08/2017
+INFO:User is : admin
+03:04:12 24/08/2017
+INFO:Reservation window is populated successfully.
+03:04:13 24/08/2017
+INFO:User is : admin
+03:04:13 24/08/2017
+INFO:Reservation window is populated successfully.
+03:04:14 24/08/2017
+INFO:User is : admin
+03:04:14 24/08/2017
+INFO:Reservation window is populated successfully.
+03:04:15 24/08/2017
+INFO:User is : admin
+03:04:15 24/08/2017
+INFO:Reservation window is populated successfully.
+03:04:15 24/08/2017
+INFO:User is : admin
+03:04:15 24/08/2017
+INFO:Reservation window is populated successfully.
+03:04:16 24/08/2017
+INFO:User is : admin
+03:04:16 24/08/2017
+INFO:Reservation window is populated successfully.
+03:32:08 24/08/2017
+INFO:User is : admin
+03:32:11 24/08/2017
+INFO:MainFrame created successfully.
+03:32:11 24/08/2017
+INFO:Login frame created successfully.
+03:34:59 24/08/2017
+INFO:User is : admin
+03:35:02 24/08/2017
+INFO:MainFrame created successfully.
+03:35:02 24/08/2017
+INFO:Login frame created successfully.
+03:35:08 24/08/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=true, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+03:35:08 24/08/2017
+INFO:User is : admin
+03:35:08 24/08/2017
+INFO:Reservation window is populated successfully.
+03:35:27 24/08/2017
+INFO:Reservation details : Reservation [Id=0, groupName=OMAR HUSSEIN ABDALLA, checkinDate=2017-08-22, checkoutDate=2017-08-25, totalDays=3, agency=OTHER, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=TWIN, NON SMOKING ROOM
+, paymentStatus=false, theNumber=1004, isCheckedIn=NO, agencyRefNo=8812, referanceNo=]
+03:35:27 24/08/2017
+INFO:Reservation room details : Room [theRoomId=25, number=1004, type=TWIN, price=0.0, totalPrice=0.0, balance=350.0, remaining debt=-350.0, currency=TURKISH LIRA, cleaningStatus=CLEAN, usageStatus=BLOCKED, personCount=2, customerGrupName=OMAR HUSSEIN ABDALLA, ReservationId=7]
+03:35:27 24/08/2017
+INFO:Reservation customer(s) : Customer [CustomerId=9, FirstName=ABDALLA , LastName=OMAR HUSSEIN, Country=United Arab Emirates, Document=null, DocumentNo=null, DateOfBirth=null, Gender=null, MaritalStatus=null, FatherName=null, MotherName=null, Email=null, Phone=null, ReservationId=7]
+03:35:27 24/08/2017
+INFO:New reservation saved successfully.

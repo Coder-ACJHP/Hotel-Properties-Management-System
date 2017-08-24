@@ -60,7 +60,6 @@ import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.ui.inner.DialogFrame;
 import com.coder.hms.ui.main.Main_AllRooms;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.CustomersTableRenderer;

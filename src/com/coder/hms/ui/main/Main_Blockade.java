@@ -8,6 +8,7 @@ package com.coder.hms.ui.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -52,15 +54,20 @@ import com.coder.hms.beans.Blockade;
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
+import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.HotelSystemStatus;
+import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
+import com.coder.hms.ui.external.InformationFrame;
+import com.coder.hms.ui.external.NewReservationWindow;
 import com.coder.hms.utils.BlockadeTableCellRenderer;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
 
@@ -74,6 +81,8 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private JLabel lblSearch;
 	private ResourceBundle bundle;
 	private JTextField searchField;
+	private String reservIdFromRow;
+	private static LoggingEngine loggingEngine;
 	
 	private List<Long> rezervationIdList;
 	private RoomDaoImpl rImpl;
@@ -82,14 +91,15 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private List<Reservation> resList;
 	private CustomerDaoImpl cImpl;
 	private List<Customer> customerList;
+	private PaymentDaoImpl paymentDaoImpl;
 	
 	private String today = "";
 	private final Calendar masterDate = Calendar.getInstance();
 	private String[] weekDates = new String[10];
 	
 	private JDateChooser dateChooser;
-	private JButton previousBtn, nextBtn;
 	private JPanel leftSidePanel, buttonPanel;
+	private JButton previousBtn, nextBtn, btnShowRes;
 	private static final long serialVersionUID = 1L;
 	private TableRowSorter<DefaultTableModel> tableRowShorter;
 	
@@ -120,7 +130,9 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	 * Create the frame.
 	 */
 	public Main_Blockade() {
-						
+			
+		loggingEngine = LoggingEngine.getInstance();
+		
 		bean = LocaleBean.getInstance();
 		
 		setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -252,7 +264,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(null);
 		buttonPanel.setAutoscrolls(true);
-		buttonPanel.setPreferredSize(new Dimension(300, 40));
+		buttonPanel.setPreferredSize(new Dimension(420, 40));
 		buttonPanel.setBackground(Color.decode("#066d95"));
 		buttonPanel.setLayout(null);
 		upperPanel.add(buttonPanel, BorderLayout.WEST);
@@ -283,6 +295,18 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		nextBtn.setIcon(new ImageIcon(Main_Blockade.class.getResource("/com/coder/hms/icons/blockade_next.png.png")));
 		nextBtn.setBounds(219, 6, 49, 26);
 		buttonPanel.add(nextBtn);
+		
+		btnShowRes = new JButton("Show reservation");
+		btnShowRes.setToolTipText("<html>Select a reservation from the table with <br>"
+				+ "single click and press this button to show it.</html>");
+		btnShowRes.addActionListener(this);
+		btnShowRes.setIcon(new ImageIcon(Main_Audit.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
+		btnShowRes.setFont(new Font("Dialog", Font.PLAIN, 14));
+		btnShowRes.setAutoscrolls(true);
+		btnShowRes.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		btnShowRes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnShowRes.setBounds(280, 1, 133, 32);
+		buttonPanel.add(btnShowRes);
 		
 		//add this label to upperPanel(main) to be centered.
 		final JLabel lblBlockade = new JLabel("BLOCKADE");
@@ -337,7 +361,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	private void changeLanguage(Locale locale) {
 
 		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
-		
+		this.btnShowRes.setText(bundle.getString("ShowRes"));
 		this.lblSearch.setText(bundle.getString("Search"));
 		
 	}
@@ -352,6 +376,8 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		
 		cImpl = new CustomerDaoImpl();
 		customerList = cImpl.getAllCustomers();
+		
+		paymentDaoImpl = new PaymentDaoImpl();
 	}
 	
 	public void populateTableHeaders() {
@@ -483,9 +509,9 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		final MouseAdapter adapter = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				final int index = blokajTable.getSelectedRow();
+			    int  selectedIndex = blokajTable.getSelectedRow();
 
-				final String reservIdFromRow = blokajTable.getValueAt(index, 0).toString();
+				reservIdFromRow = blokajTable.getValueAt(selectedIndex, 0).toString();
 				blokajRoomsModel.setRowCount(0);
 				populateBlokajRoomsModel(blokajRoomsModel, reservIdFromRow);
 				blokajCustomerModel.setRowCount(0);
@@ -499,27 +525,92 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	//this listener for changing table headers when date chosen from two rows.
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		masterDate.setTime(dateChooser.getDate());
-		
-		if(e.getSource() == nextBtn) {
+
+		if (e.getSource() == nextBtn) {
 			masterDate.add(Calendar.DATE, 1);
 
-		}
-		else if(e.getSource() == previousBtn){
+		} else if (e.getSource() == previousBtn) {
 			masterDate.add(Calendar.DATE, -1);
-			
-		}
-		
+
+		} else if (e.getSource() == btnShowRes) {
+
+			String customerCountry = "";
+			String customerName = "";
+			String customerSurName = "";
+
+			Payment payment = null;
+			Room room = null;
+
+			Optional<String> resIdOptional = Optional.ofNullable(reservIdFromRow);
+			Reservation foundRes = resDaoImpl.findReservationById(Long.valueOf(resIdOptional.get()));
+
+			loggingEngine.setMessage("[Blockade window] Required reservation found : " + foundRes.toString());
+
+			for (Room searchedRoom : roomList)
+				if (searchedRoom.getReservationId() == foundRes.getId())
+					room = searchedRoom;
+
+			for (Customer cst : customerList) {
+				if (cst.getReservationId() == foundRes.getId()) {
+					customerCountry = cst.getCountry();
+					customerName = cst.getFirstName();
+					customerSurName = cst.getLastName();
+					break;
+				}
+			}
+				final NewReservationWindow nex = new NewReservationWindow();
+
+				nex.setRezIdField(foundRes.getId());
+				nex.setNameSurnameField(foundRes.getGroupName());
+				nex.setCheckinDate(foundRes.getCheckinDate());
+				nex.setCheckoutDate(foundRes.getCheckoutDate());
+				nex.setTotalDaysField(foundRes.getTotalDays());
+				nex.setReservNote(foundRes.getNote());
+				nex.setAgency(foundRes.getAgency());
+				nex.setHostType(foundRes.getHostType());
+				nex.setCreditType(foundRes.getCreditType());
+				nex.setReservStatus(foundRes.getBookStatus());
+				nex.setRoomNumber(room.getNumber());
+				nex.setRoomType(room.getType());
+				nex.setPersonCountSpinner(room.getPersonCount());
+				nex.setPriceOfRoom(room.getPrice());
+				nex.setCurrency(room.getCurrency());
+				nex.setAgencyRefNo(foundRes.getAgencyRefNo());
+				nex.setReferanceNo(foundRes.getReferanceNo());
+				nex.setCustomerCountry(customerCountry);
+
+				nex.setRoomCountTableRows(new Object[] { room.getNumber(), room.getType(), room.getPersonCount(),
+						room.getPrice(), room.getCurrency() });
+
+				nex.setRoomInfoTableRows(
+						new Object[] { room.getNumber(), room.getType(), customerName, customerSurName });
+
+				if (foundRes.getPaymentStatus()) {
+
+					payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
+					nex.setEarlyPaymetTableRows(new Object[] { payment.getTitle(), payment.getPaymentType(),
+							payment.getPrice(), payment.getCurrency(), payment.getExplanation() });
+					final InformationFrame infoFrame = new InformationFrame();
+					infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
+					infoFrame.setVisible(true);
+				}
+
+				loggingEngine.setMessage("Reservation window is populated successfully.");
+				nex.setVisible(true);
+				
+			}
+
 		dateChooser.setDate(masterDate.getTime());
 		dateChooser.revalidate();
 		dateChooser.repaint();
-		
-		//refresh all tables to getting new informations
+
+		// refresh all tables to getting new informations
 		populateTableHeaders();
 		populateBlokajTable(blokajModel);
 		populateMainTable(model);
-		
+
 	}
 	
 	//this listener for changing table headers when date chosen from date component.

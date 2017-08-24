@@ -92,7 +92,13 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 
 	@Override
 	public void cancelReservation(long reservationId) {
-		// TODO Auto-generated method stub
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query<Reservation> query = session.createQuery("update Reservation "
+				+ "set bookStatus = 'CANCELLED' where where id=:theId",Reservation.class);
+		query.setParameter("theId", reservationId);
+		session.getTransaction().commit();
+		session.close();
 		
 	}
 

@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.coder.hms.ui.inner.DialogFrame;
+import com.coder.hms.ui.external.DialogFrame;
 import com.coder.hms.utils.LoggingEngine;
 
 public class DialogTest extends JDialog {
