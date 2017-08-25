@@ -19,9 +19,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.coder.hms.ui.external.InformationFrame;
 
 public class GetLiveCurrencyRates {
 
+	private static LoggingEngine loggingEngine;
+	
+	public GetLiveCurrencyRates() {
+		loggingEngine = LoggingEngine.getInstance();
+	}
+	
 	public String getUSDToTRYLiveCurrency() {
 
 		String UsdRate = "";
@@ -29,9 +36,12 @@ public class GetLiveCurrencyRates {
 		try {
 			yahooUSDCurrency = new URL("https://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20yahoo.finance."
 					+ "xchange%20WHERE%20pair%3D%22USDTRY%22&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
-		} catch (MalformedURLException e) {e.printStackTrace();}
-		UsdRate =  getXMLParser(yahooUSDCurrency);
-		
+			UsdRate =  getXMLParser(yahooUSDCurrency);
+		} catch (MalformedURLException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage(e.getMessage());
+			frame.setVisible(true);
+		}
 		return UsdRate;
 	}
 	
@@ -42,9 +52,12 @@ public class GetLiveCurrencyRates {
 		try {
 			yahooEURCurrency = new URL("https://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20yahoo.finance."
 					+ "xchange%20WHERE%20pair%3D%22EURTRY%22&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
-		} catch (MalformedURLException e) {e.printStackTrace();}
-		EurRate =  getXMLParser(yahooEURCurrency);
-		
+			EurRate =  getXMLParser(yahooEURCurrency);
+		} catch (MalformedURLException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage(e.getMessage());
+			frame.setVisible(true);
+		}
 		return EurRate;
 	}
 	
@@ -55,9 +68,12 @@ public class GetLiveCurrencyRates {
 		try {
 			yahooEURCurrency = new URL("https://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20yahoo.finance."
 					+ "xchange%20WHERE%20pair%3D%22GBPTRY%22&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
-		} catch (MalformedURLException e) {e.printStackTrace();}
-		GbpRate =  getXMLParser(yahooEURCurrency);
-		
+			GbpRate =  getXMLParser(yahooEURCurrency);
+		} catch (MalformedURLException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage(e.getMessage());
+			frame.setVisible(true);
+		}
 		return GbpRate;
 	}
 	
@@ -83,26 +99,16 @@ public class GetLiveCurrencyRates {
 				}
 				
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				loggingEngine.setMessage(e.getMessage());
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				loggingEngine.setMessage(e.getMessage());
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				loggingEngine.setMessage(e.getMessage());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				loggingEngine.setMessage(e.getMessage());
 			}
 			
 			return results;
 	}
-	
-//	public static void main(String[] args) {	
-//		GetLiveCurrencyRates currency =  new GetLiveCurrencyRates();
-//		System.out.println(currency.getEURToTRYLiveCurrency());
-//		System.out.println(currency.getUSDToTRYLiveCurrency());
-//	}
 	
 }

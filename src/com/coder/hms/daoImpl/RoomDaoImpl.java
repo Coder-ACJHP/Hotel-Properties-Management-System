@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -49,14 +50,20 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
 	@Override
 	public void saveRoom(Room room) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		session.saveOrUpdate(room);
-		session.getTransaction().commit();
-		session.close();
-		
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			session.save(room);
+			session.getTransaction().commit();
+
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
 	}
 
+	@Override
 	public List<Room> getAllRooms() {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -71,6 +78,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		return roomList;
 	}
 
+	@Override
 	public Room getRoomByReservId(long id) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -155,6 +163,22 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 	}
 
 	@Override
+	public void updateRoom(Room theRoom) {
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			session.update(theRoom);
+			session.getTransaction().commit();
+			
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		}finally {
+			session.close();
+		}
+		
+	}
+	
+	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
 			theSession.beginTransaction();	
@@ -164,6 +188,5 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		}
 		
 	}
-
 
 }

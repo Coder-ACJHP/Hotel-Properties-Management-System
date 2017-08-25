@@ -29,11 +29,16 @@ import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
@@ -41,12 +46,6 @@ import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 
 public class PaymentWindow extends JDialog {
 
@@ -70,7 +69,7 @@ public class PaymentWindow extends JDialog {
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] PAYMENT_TYPE = {"CASH PAYMENT", "CREDIT CARD", "CITY LEDGER"};
 	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "DOLLAR", "EURO", "POUND"};
-	private final String[] TITLE_LIST = { "BALANCE", "ROOM RATES", "RESTAURANT", "MINIBAR", "TELEPHONE", "MISCELLANEOUS"};
+	private final String[] TITLE_LIST = { "EARLY PAYMENT" ,"BALANCE", "ROOM RATES", "RESTAURANT", "MINIBAR", "TELEPHONE", "MISCELLANEOUS"};
 	private final String[] columnNames = {"DOCUMENT NO", "TYPE", "TITLE", "PRICE", "CURRENCY", "EXPLANATION, DATE TIME"};
 	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
@@ -276,6 +275,7 @@ public class PaymentWindow extends JDialog {
 	
 	private ActionListener payActionListener() {
 		ActionListener listener = new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				final Payment payment = new Payment();

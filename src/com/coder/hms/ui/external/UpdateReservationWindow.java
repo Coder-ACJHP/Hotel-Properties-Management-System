@@ -55,11 +55,9 @@ import com.coder.hms.beans.RoomCountRow;
 import com.coder.hms.beans.RoomEarlyPaymentRow;
 import com.coder.hms.beans.RoomInfoRow;
 import com.coder.hms.beans.SessionBean;
-import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
-import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
@@ -68,7 +66,7 @@ import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;
 
-public class NewReservationWindow extends JDialog {
+public class UpdateReservationWindow extends JDialog {
 
 	/**
 	 * 
@@ -102,7 +100,6 @@ public class NewReservationWindow extends JDialog {
 	private JTextField rezIdField, nameSurnameField, totalDaysField, agencyRefField, referanceNoField;
 	
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
-	private final CustomerDaoImpl cImpl = new CustomerDaoImpl();
 	private final ReservationDaoImpl rImpl = new ReservationDaoImpl();
 	
 	private final JTable roomCountTable;
@@ -136,7 +133,7 @@ public class NewReservationWindow extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public NewReservationWindow() {
+	public UpdateReservationWindow() {
 		
 		logging = LoggingEngine.getInstance();
 		logging.setMessage("User is : " + S_BEAN.getNickName());
@@ -308,7 +305,7 @@ public class NewReservationWindow extends JDialog {
 				logging.setMessage("New reservation creating cancelled.");
 			}
 		});
-		chancelBtn.setIcon(new ImageIcon(NewReservationWindow.class.getResource("/com/coder/hms/icons/login_clear.png")));
+		chancelBtn.setIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/login_clear.png")));
 		chancelBtn.setForeground(new Color(220, 20, 60));
 		chancelBtn.setOpaque(true);
 		chancelBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -318,7 +315,7 @@ public class NewReservationWindow extends JDialog {
 
 		
 		reportBtn = new JButton("REPORT");
-		reportBtn.setIcon(new ImageIcon(NewReservationWindow.class.getResource("/com/coder/hms/icons/rezaerv_report.png")));
+		reportBtn.setIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/rezaerv_report.png")));
 		reportBtn.setForeground(new Color(0, 128, 128));
 		reportBtn.setOpaque(true);
 		reportBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -332,12 +329,12 @@ public class NewReservationWindow extends JDialog {
 		});
 		buttonsPanel.add(reportBtn);
 		
-		SaveBtn = new JButton("SAVE");
+		SaveBtn = new JButton("UPDATE");
 		SaveBtn.setMaximumSize(new Dimension(120, 23));
 		SaveBtn.setMinimumSize(new Dimension(120, 23));
 		SaveBtn.setMnemonic(KeyEvent.VK_ENTER);
 		SaveBtn.setToolTipText("Press ALT + ENTER keys for shortcut");
-		SaveBtn.setIcon(new ImageIcon(NewReservationWindow.class.getResource("/com/coder/hms/icons/reserv_save.png")));
+		SaveBtn.setIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/info_ok.png")));
 		SaveBtn.setForeground(new Color(0, 191, 255));
 		SaveBtn.setOpaque(true);
 		SaveBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -481,8 +478,8 @@ public class NewReservationWindow extends JDialog {
 				}); 
 			}
 		});
-		btnNewButton.setIcon(new ImageIcon(NewReservationWindow.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
-		btnNewButton.setSelectedIcon(new ImageIcon(NewReservationWindow.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
+		btnNewButton.setIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
+		btnNewButton.setSelectedIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
 		btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
 		btnNewButton.setBounds(10, 11, 150, 35);
 		earlyPanel.add(btnNewButton);
@@ -586,7 +583,7 @@ public class NewReservationWindow extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final Reservation reservation = new Reservation();
+				final Reservation reservation = rImpl.findReservationById(Long.valueOf(rezIdField.getText()));
 				
 				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
 				reservation.setGroupName(nameSurnameField.getText());
@@ -603,47 +600,31 @@ public class NewReservationWindow extends JDialog {
 				reservation.setIsCheckedIn("NO");				
 				
 				logging.setMessage("Reservation details : " + reservation.toString());
-				rImpl.saveReservation(reservation);
-									
-				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
-				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
-				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
-				theRoom.setPersonCount((int)personCountSpinner.getValue());
-				theRoom.setPrice(priceValue);
-				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
-				theRoom.setCustomerGrupName(nameSurnameField.getText());
-				theRoom.setUsageStatus("BLOCKED");
-				
-				final Reservation lastReserv = rImpl.getLastReservation();
-				theRoom.setReservationId(lastReserv.getId());
-				
-				double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
-				theRoom.setTotalPrice(String.valueOf(lastPrice));
-				
-				lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
-				theRoom.setRemainingDebt(lastPrice);
-				
-				logging.setMessage("Reservation room details : " + theRoom.toString());
-				roomDaoImpl.saveRoom(theRoom);
-								
-				final int rowCount = model.getRowCount();
+				if(rezervStatusCmbBox.getSelectedItem().toString().equals("CANCEL")) {
+					rImpl.deleteReservation(reservation.getId());
+				}else {
+					rImpl.updateReservation(reservation);
 					
-				Customer theCustomer = null;
-				
-				for(int i=0; i < rowCount; i++) {
-		
-					theCustomer = new Customer();
+					final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
+					theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
+					theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+					theRoom.setPersonCount((int)personCountSpinner.getValue());
+					theRoom.setPrice(Double.valueOf(priceField.getValue().toString()));
+					theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
+					theRoom.setCustomerGrupName(nameSurnameField.getText());
+					theRoom.setUsageStatus("BLOCKED");
 					
-					theCustomer.setFirstName(model.getValueAt(i, 2).toString());
-					theCustomer.setLastName(model.getValueAt(i, 3).toString());
-					theCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-					theCustomer.setReservationId(lastReserv.getId());
-					cImpl.save(theCustomer);
-					completionStatus = true;
+					double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
+					theRoom.setTotalPrice(String.valueOf(lastPrice));
+					
+					lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
+					theRoom.setRemainingDebt(lastPrice);
+					
+					logging.setMessage("Reservation room details : " + theRoom.toString());
+					roomDaoImpl.updateRoom(theRoom);
+				}			
 				
-					logging.setMessage("Reservation customer(s) : " + theCustomer.toString());
-				}
-				logging.setMessage("New reservation saved successfully.");
+			
 				dispose();
 			}
 		};

@@ -172,7 +172,7 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 	public Payment getEarlyPaymentByRoomNumber(String number) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
-		Query<Payment> query = session.createQuery("from Payment where roomNumber = :theRoomNumber", Payment.class);
+		Query<Payment> query = session.createQuery("from Payment where roomNumber = :theRoomNumber and title = 'EARLY PAYMENT'", Payment.class);
 		query.setParameter("theRoomNumber", number);
 		query.setMaxResults(1);
 		Payment payment = query.getSingleResult();

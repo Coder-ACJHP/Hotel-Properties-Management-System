@@ -63,7 +63,7 @@ import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.InformationFrame;
-import com.coder.hms.ui.external.NewReservationWindow;
+import com.coder.hms.ui.external.UpdateReservationWindow;
 import com.coder.hms.utils.BlockadeTableCellRenderer;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
@@ -255,7 +255,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		final JPanel upperPanel = new JPanel();
 		upperPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		upperPanel.setAutoscrolls(true);
-		upperPanel.setPreferredSize(new Dimension(300, 40));
+		upperPanel.setPreferredSize(new Dimension(300, 45));
 		upperPanel.setBackground(Color.decode("#066d95"));
 		upperPanel.setLayout(new BorderLayout());
 		add(upperPanel, BorderLayout.NORTH);
@@ -264,7 +264,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(null);
 		buttonPanel.setAutoscrolls(true);
-		buttonPanel.setPreferredSize(new Dimension(420, 40));
+		buttonPanel.setPreferredSize(new Dimension(440, 40));
 		buttonPanel.setBackground(Color.decode("#066d95"));
 		buttonPanel.setLayout(null);
 		upperPanel.add(buttonPanel, BorderLayout.WEST);
@@ -305,7 +305,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		btnShowRes.setAutoscrolls(true);
 		btnShowRes.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnShowRes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnShowRes.setBounds(280, 1, 133, 32);
+		btnShowRes.setBounds(280, 1, 154, 37);
 		buttonPanel.add(btnShowRes);
 		
 		//add this label to upperPanel(main) to be centered.
@@ -537,8 +537,6 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		} else if (e.getSource() == btnShowRes) {
 
 			String customerCountry = "";
-			String customerName = "";
-			String customerSurName = "";
 
 			Payment payment = null;
 			Room room = null;
@@ -547,7 +545,8 @@ public class Main_Blockade extends JPanel implements ActionListener {
 			Reservation foundRes = resDaoImpl.findReservationById(Long.valueOf(resIdOptional.get()));
 
 			loggingEngine.setMessage("[Blockade window] Required reservation found : " + foundRes.toString());
-
+			final UpdateReservationWindow nex = new UpdateReservationWindow();
+			
 			for (Room searchedRoom : roomList)
 				if (searchedRoom.getReservationId() == foundRes.getId())
 					room = searchedRoom;
@@ -555,13 +554,11 @@ public class Main_Blockade extends JPanel implements ActionListener {
 			for (Customer cst : customerList) {
 				if (cst.getReservationId() == foundRes.getId()) {
 					customerCountry = cst.getCountry();
-					customerName = cst.getFirstName();
-					customerSurName = cst.getLastName();
-					break;
+					nex.setRoomInfoTableRows(
+							new Object[] { room.getNumber(), room.getType(), cst.getFirstName(), cst.getLastName() });
 				}
 			}
-				final NewReservationWindow nex = new NewReservationWindow();
-
+				
 				nex.setRezIdField(foundRes.getId());
 				nex.setNameSurnameField(foundRes.getGroupName());
 				nex.setCheckinDate(foundRes.getCheckinDate());
@@ -584,14 +581,11 @@ public class Main_Blockade extends JPanel implements ActionListener {
 				nex.setRoomCountTableRows(new Object[] { room.getNumber(), room.getType(), room.getPersonCount(),
 						room.getPrice(), room.getCurrency() });
 
-				nex.setRoomInfoTableRows(
-						new Object[] { room.getNumber(), room.getType(), customerName, customerSurName });
-
 				if (foundRes.getPaymentStatus()) {
 
 					payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
 					nex.setEarlyPaymetTableRows(new Object[] { payment.getTitle(), payment.getPaymentType(),
-							payment.getPrice(), payment.getCurrency(), payment.getExplanation() });
+							payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime() });
 					final InformationFrame infoFrame = new InformationFrame();
 					infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
 					infoFrame.setVisible(true);

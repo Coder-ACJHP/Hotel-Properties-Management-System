@@ -7,8 +7,7 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.persistence.NoResultException;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -18,6 +17,7 @@ import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.CustomerDAO;
 import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.entities.Customer;
+import com.coder.hms.ui.external.InformationFrame;
 
 public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 
@@ -33,15 +33,22 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 	
 	@Override
 	public Customer findCustomerByName(String name, String lastName) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Customer> query = session.createQuery("from Customer where FirstName=:name and LastName=:lastName", Customer.class);
-		query.setParameter("name", name);
-		query.setParameter("lastName", lastName);
-		
-		final Customer customer = query.getSingleResult();
+		Customer customer = null;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			Query<Customer> query = session.createQuery("from Customer where FirstName=:name and LastName=:lastName", Customer.class);
+			query.setParameter("name", name);
+			query.setParameter("lastName", lastName);
+			
+			customer = query.getSingleResult();
+			
+		} catch (NoResultException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage("Customers not found!");
+			frame.setVisible(true);
+		}
 		session.close();
-		
 		return customer;
 	}
 
@@ -62,38 +69,61 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 		return customerList;
 	}
 
+	@Override
 	public boolean save(Customer theCustomer) {
 		 boolean success = false;
 		try {
 			session = dataSourceFactory.getSessionFactory().getCurrentSession();
 			beginTransactionIfAllowed(session);
-			session.saveOrUpdate(theCustomer);
+			session.save(theCustomer);
+			session.getTransaction().commit();
+		
+			success = true;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+			success = false;
+		}
+		session.close();
+		return success;
+	}
+
+	@Override
+	public boolean update(Customer theCustomer) {
+		 boolean success = false;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			session.update(theCustomer);
 			session.getTransaction().commit();
 			session.close();
 			
 			success = true;
 		} catch (HibernateException e) {
-			e.printStackTrace();
+			session.getTransaction().rollback();
 			success = false;
 		}
 		return success;
 	}
-
+	
 	public List<Customer> getCustomerByReservId(long id) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Customer> query = session.createQuery("from Customer where ReservationId=:id", Customer.class);
-		query.setParameter("id", id);
-		List<Customer> customerList = query.getResultList();
+		List<Customer> customerList = null;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			Query<Customer> query = session.createQuery("from Customer where ReservationId=:id", Customer.class);
+			query.setParameter("id", id);
+			customerList = query.getResultList();
+			
+		} catch (NoResultException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage("Customers not found!");
+			frame.setVisible(true);
+		}
 		session.close();
-				if(customerList == null) {
-					JOptionPane.showMessageDialog(new JFrame(), "Customers not found!", 
-							JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-					return null;
-				}
 		return customerList;
 	}
 	
+	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
 			theSession.beginTransaction();	

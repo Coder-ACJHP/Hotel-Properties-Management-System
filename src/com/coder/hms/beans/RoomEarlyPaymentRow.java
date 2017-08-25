@@ -14,6 +14,7 @@ public class RoomEarlyPaymentRow implements Serializable {
 	private Object price;
 	private Object currency;
 	private Object explanation;
+	private Object dateTime;
 	
 	public RoomEarlyPaymentRow() {
 		// TODO Auto-generated constructor stub
@@ -59,19 +60,30 @@ public class RoomEarlyPaymentRow implements Serializable {
 		this.explanation = explanation;
 	}
 
-	public RoomEarlyPaymentRow(Object title, Object type, Object price, Object currency, Object explanation) {
+	public Object getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(Object dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public RoomEarlyPaymentRow(Object title, Object type, Object price, Object currency, Object explanation,
+			Object dateTime) {
 		super();
 		this.title = title;
 		this.type = type;
 		this.price = price;
 		this.currency = currency;
 		this.explanation = explanation;
+		this.dateTime = dateTime;
 	}
 
 	@Override
 	public String toString() {
 		return "RoomEarlyPaymentRow [title=" + title + ", type=" + type + ", price=" + price + ", currency=" + currency
-				+ ", explanation=" + explanation + "]";
-	}	
+				+ ", explanation=" + explanation + ", dateTime=" + dateTime + "]";
+	}
 
+	
 }

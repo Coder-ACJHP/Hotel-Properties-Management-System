@@ -15,6 +15,8 @@ public interface RoomDAO {
 	
 	public void saveRoom(Room room);
 	
+	public void updateRoom(Room room);
+	
 	public List<Room> getAllRooms();
 	
 	public Room getRoomByReservId(long id);
