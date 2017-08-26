@@ -313,6 +313,7 @@ public class RoomWindow extends JDialog {
 		saveChangesBtn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		saveChangesBtn.setBounds(16, 288, 218, 29);
 		saveChangesBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				changeReservationDate();
@@ -652,7 +653,7 @@ public class RoomWindow extends JDialog {
 		remainDebtField.repaint();
 
 		theRoom.setRemainingDebt(debtVal);
-		roomDaoImpl.saveRoom(theRoom);
+		roomDaoImpl.updateRoom(theRoom);
 
 		populatePostPayTable(postPayModel);
 
@@ -703,7 +704,7 @@ public class RoomWindow extends JDialog {
 		theRoom.setRemainingDebt(totalPrice - roombalance);
 		
 		roomNote.setText(reservation.getNote());
-		roomDaoImpl.saveRoom(theRoom);
+		roomDaoImpl.updateRoom(theRoom);
 	}
 
 	private void changeReservationDate() {
@@ -726,7 +727,7 @@ public class RoomWindow extends JDialog {
 
 		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(reservation.getTheNumber());
 		foundedRoom.setPrice(priceVal);
-		roomDaoImpl.saveRoom(foundedRoom);
+		roomDaoImpl.updateRoom(foundedRoom);
 
 		if (!roomNote.getText().isEmpty())
 			reservation.setNote(roomNote.getText());
@@ -818,7 +819,7 @@ public class RoomWindow extends JDialog {
 				theCustomer.setMaritalStatus(custWindow.getMariageStatus());
 				theCustomer.setReservationId(Long.parseLong(custWindow.getReservationId()));
 
-				boolean success = customerDaoImpl.save(theCustomer);
+				boolean success = customerDaoImpl.update(theCustomer);
 
 				if (success) {
 					

@@ -16,26 +16,35 @@ import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
+import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.entities.Hotel;
+import com.coder.hms.utils.GetLiveWeather;
+
 public class Main_BottomToolbar {
 
 	private JToolBar toolBar;
-	private JLabel userIconLabel, userLabel, dateIconLabel, dateLabel,currencyUsdIcon, currencyUsdLabel,
-	currencyEuroIcon, currencyEuroLabel, currencyPoundIcon, currencyPoundLabel, hotelIconLabel, hotelNameLabel;
+	private JLabel userIconLabel, userLabel, dateIconLabel, dateLabel,currencyUsdIcon, 
+	currencyUsdLabel, weatherLabel, currencyEuroIcon, currencyEuroLabel, currencyPoundIcon,
+	currencyPoundLabel, hotelIconLabel, hotelNameLabel, weatherIconLabel;
+	final GetLiveWeather liveWeather = new GetLiveWeather();
+	final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	
 	public Main_BottomToolbar() {
 		
 		toolBar = new JToolBar();
 		toolBar.setAlignmentX(Component.LEFT_ALIGNMENT);
 		toolBar.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		toolBar.setPreferredSize(new Dimension(1200, 25));
+		toolBar.setMinimumSize(new Dimension(800, 25));
 		toolBar.setAutoscrolls(true);
-		toolBar.setPreferredSize(new Dimension(13, 25));
-		toolBar.setMinimumSize(new Dimension(0, 25));
+		toolBar.setFloatable(false);
+	    toolBar.setRollover(true);
 		
 		userIconLabel = new JLabel(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_user.png")));
 		toolBar.add(userIconLabel);
 		
 		userLabel = new JLabel();
-		userLabel.setMaximumSize(new Dimension(135, 19));
+		userLabel.setMaximumSize(new Dimension(160, 19));
 		userLabel.setFont(new Font("Arial", Font.BOLD, 13));
 		userLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		userLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -46,7 +55,7 @@ public class Main_BottomToolbar {
 		toolBar.add(dateIconLabel);
 		
 		dateLabel = new JLabel("");
-		dateLabel.setMaximumSize(new Dimension(140, 19));
+		dateLabel.setMaximumSize(new Dimension(160, 19));
 		dateLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		dateLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		dateLabel.setFont(new Font("Arial", Font.BOLD, 13));
@@ -57,7 +66,7 @@ public class Main_BottomToolbar {
 		toolBar.add(currencyUsdIcon);
 		
 		currencyUsdLabel = new JLabel("");
-		currencyUsdLabel.setMaximumSize(new Dimension(140, 19));
+		currencyUsdLabel.setMaximumSize(new Dimension(160, 19));
 		currencyUsdLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		currencyUsdLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		currencyUsdLabel.setFont(new Font("Arial", Font.BOLD, 13));
@@ -68,7 +77,7 @@ public class Main_BottomToolbar {
 		toolBar.add(currencyEuroIcon);
 		
 		currencyEuroLabel = new JLabel("");
-		currencyEuroLabel.setMaximumSize(new Dimension(140, 19));
+		currencyEuroLabel.setMaximumSize(new Dimension(160, 19));
 		currencyEuroLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		currencyEuroLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		currencyEuroLabel.setFont(new Font("Arial", Font.BOLD, 13));
@@ -79,7 +88,7 @@ public class Main_BottomToolbar {
 		toolBar.add(currencyPoundIcon);
 		
 		currencyPoundLabel = new JLabel("");
-		currencyPoundLabel.setMaximumSize(new Dimension(140, 19));
+		currencyPoundLabel.setMaximumSize(new Dimension(160, 19));
 		currencyPoundLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		currencyPoundLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		currencyPoundLabel.setFont(new Font("Arial", Font.BOLD, 13));
@@ -97,6 +106,18 @@ public class Main_BottomToolbar {
 		toolBar.add(hotelNameLabel);
 		toolBar.addSeparator();
 		
+		weatherIconLabel = new JLabel(new ImageIcon(getClass().getResource("/com/coder/hms/icons/toolbar_weather.png")));
+		toolBar.add(weatherIconLabel);
+		
+		final Hotel hotel = hotelDaoImpl.getHotel();
+		final String city = liveWeather.getCurrentLocationWeather(hotel.getCity());
+		weatherLabel = new JLabel(city);
+		weatherLabel.setPreferredSize(new Dimension(160, 19));
+		weatherLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+		weatherLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		weatherLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		toolBar.add(weatherLabel);
+
 	}
 	
 	protected JToolBar getToolBar() {

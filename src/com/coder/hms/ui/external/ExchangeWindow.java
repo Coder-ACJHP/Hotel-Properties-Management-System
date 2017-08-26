@@ -78,6 +78,7 @@ public class ExchangeWindow extends JDialog {
 
 		btnClear = new JButton("CLEAR");
 		btnClear.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				clearFields();
 			}
@@ -92,6 +93,7 @@ public class ExchangeWindow extends JDialog {
 
 		btnUpdate = new JButton("CALCULATE");
 		btnUpdate.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				calculate();
 			}
@@ -165,6 +167,7 @@ public class ExchangeWindow extends JDialog {
 	
 	private KeyListener getKeyListener() {
 		KeyAdapter listener = new KeyAdapter() {
+			@Override
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
 				if(Character.isLetter(c) && !e.isAltDown()) {
@@ -177,6 +180,7 @@ public class ExchangeWindow extends JDialog {
 
 	private PropertyChangeListener getPropListener() {
 		PropertyChangeListener theListener = new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				Object source = e.getSource();
 				if(source == formattedTextField) {
@@ -203,16 +207,15 @@ public class ExchangeWindow extends JDialog {
 		double result = 0.0;
 		double parsedVal = 0.0;
 		String currency  = "";
-		String trimmed = "";
 		String choosen = comboBox.getSelectedItem().toString();
 		
 		model.setRowCount(0);
 		
 		if(choosen.contains("DOLLAR")) {
 			
-			currency = rates.getUSDToTRYLiveCurrency();
-			trimmed  = currency.substring(currency.length() -6, currency.length());
-			parsedVal = Double.parseDouble(trimmed);
+			currency = rates.getUSDToTRYLiveCurrency().substring(rates.
+					getUSDToTRYLiveCurrency().length() -5, rates.getUSDToTRYLiveCurrency().length());
+			parsedVal = Double.parseDouble(currency);
 			result = parsedVal * value;
 			model.addRow(new String[] {"TL",""+result});
 			model.fireTableRowsInserted(1, 1);
@@ -220,9 +223,9 @@ public class ExchangeWindow extends JDialog {
 		}
 		else if(choosen.contains("EURO")) {
 			
-			currency = rates.getEURToTRYLiveCurrency();
-			trimmed  = currency.substring(currency.length() -6, currency.length());
-			parsedVal = Double.parseDouble(trimmed);
+			currency = rates.getEURToTRYLiveCurrency().substring(rates.
+					getEURToTRYLiveCurrency().length() -5, rates.getEURToTRYLiveCurrency().length());
+			parsedVal = Double.parseDouble(currency);
 			result = parsedVal * value;
 			model.addRow(new String[] {"TL",""+result});
 			model.fireTableRowsInserted(1, 1);
@@ -230,9 +233,9 @@ public class ExchangeWindow extends JDialog {
 		}
 		else if(choosen.contains("POUND")) {
 			
-			currency = rates.getGBPToTRYLiveCurrency();
-			trimmed  = currency.substring(currency.length() -6, currency.length());
-			parsedVal = Double.parseDouble(trimmed);
+			currency = rates.getGBPToTRYLiveCurrency().substring(rates.
+					getGBPToTRYLiveCurrency().length() -5, rates.getGBPToTRYLiveCurrency().length());
+			parsedVal = Double.parseDouble(currency);
 			result = parsedVal * value;
 			model.addRow(new String[] {"TL",""+result});
 			model.fireTableRowsInserted(1, 1);
@@ -240,21 +243,21 @@ public class ExchangeWindow extends JDialog {
 		}
 		else {
 			
-			currency = rates.getUSDToTRYLiveCurrency();
-			trimmed = currency.substring(currency.length() -6, currency.length());
-			parsedVal = Double.parseDouble(trimmed);
+			currency = rates.getUSDToTRYLiveCurrency().substring(rates.
+					getUSDToTRYLiveCurrency().length() -5, rates.getUSDToTRYLiveCurrency().length());
+			parsedVal = Double.parseDouble(currency);
 			result = value / parsedVal;
 			model.addRow(new String[] {"USD",""+result});
 			
-			currency = rates.getEURToTRYLiveCurrency();
-			trimmed = currency.substring(currency.length() -6, currency.length());
-			parsedVal = Double.parseDouble(trimmed);
+			currency = rates.getEURToTRYLiveCurrency().substring(rates.
+					getEURToTRYLiveCurrency().length() -5, rates.getEURToTRYLiveCurrency().length());
+			parsedVal = Double.parseDouble(currency);
 			result = value / parsedVal;
 			model.addRow(new String[] {"EURO",""+result});
 			
-			currency = rates.getGBPToTRYLiveCurrency();
-			trimmed = currency.substring(currency.length() -6, currency.length());
-			parsedVal = Double.parseDouble(trimmed);
+			currency = rates.getGBPToTRYLiveCurrency().substring(rates.
+					getGBPToTRYLiveCurrency().length() -5, rates.getGBPToTRYLiveCurrency().length());
+			parsedVal = Double.parseDouble(currency);
 			result = value / parsedVal;
 			model.addRow(new String[] {"POUND",""+result});
 			

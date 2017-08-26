@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -596,7 +597,7 @@ public class NewReservationWindow extends JDialog {
 				reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
 				reservation.setHostType(hostCmbBox.getSelectedItem().toString());
 				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
-				reservation.setNote(noteTextArea.getText());
+				reservation.setNote(Optional.ofNullable(noteTextArea.getText()).orElse(" "));
 				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
 				reservation.setAgencyRefNo(agencyRefField.getText());
 				reservation.setReferanceNo(referanceNoField.getText());
@@ -624,7 +625,7 @@ public class NewReservationWindow extends JDialog {
 				theRoom.setRemainingDebt(lastPrice);
 				
 				logging.setMessage("Reservation room details : " + theRoom.toString());
-				roomDaoImpl.saveRoom(theRoom);
+				roomDaoImpl.updateRoom(theRoom);
 								
 				final int rowCount = model.getRowCount();
 					

@@ -20,4 +20,8 @@ public interface CustomerDAO {
 	public boolean save(Customer customer);
 
 	public boolean update(Customer customer);
+	
+	public void deleteCustomerByReservationId(long id);
+	
+	public Customer getSinlgeCustomerByReservId(long id);
 }

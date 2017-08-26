@@ -42,17 +42,16 @@ public class PaymentDaoImpl implements PaymentDAO, TransactionManagement {
 		try {
 			session = dataSourceFactory.getSessionFactory().getCurrentSession();
 			beginTransactionIfAllowed(session);
-			Query<?> query = session.createQuery("delete Payment where id = :theId");
-			query.setParameter("theId", theId);
-			query.executeUpdate();
-			session.close();
+			Payment payment = session.get(Payment.class, theId);
+			session.delete(payment);
+			session.getTransaction().commit();
 			
 			result = true;
 		} catch (HibernateException e) {
-			e.printStackTrace();
+			session.getTransaction().rollback();
 			result = false;
 		}
-		
+		session.close();
 		return result;
 	}
 

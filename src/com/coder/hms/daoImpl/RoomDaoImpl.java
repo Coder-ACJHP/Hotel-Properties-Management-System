@@ -178,6 +178,21 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public void setRoomAsDefaultByRoomNumber(String theNumber) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		
+		Query query = session.createQuery("update room set price=0, totalPrice=0, balance=0, cleaningStatus='CLEAN',"
+				+ " usageStatus='EMPTY', personCount=0, customerGroupName=' ', ReservationId=0, currency=' ', remainingDebt=0 "
+				+ "where number=:theNumber");
+		query.setParameter("theNumber", theNumber);
+		query.executeUpdate();
+		session.getTransaction().commit();
+		session.close();
+		
+	}
+	
 	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {

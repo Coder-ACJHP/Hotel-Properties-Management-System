@@ -124,6 +124,38 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 	}
 	
 	@Override
+	@SuppressWarnings("rawtypes")
+	public void deleteCustomerByReservationId(long id) {
+		session = dataSourceFactory.getSessionFactory().getCurrentSession();
+		beginTransactionIfAllowed(session);
+		Query query = session.createQuery("delete from Customers where ReservationId=:id");
+		query.setParameter("id", id);
+		session.getTransaction().commit();
+		session.close();
+		
+	}
+	
+	@Override
+	public Customer getSinlgeCustomerByReservId(long id) {
+		Customer customer = null;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			Query<Customer> query = session.createQuery("from Customer where ReservationId=:theId", Customer.class);
+			query.setParameter("theId", id);
+			
+			customer = query.getSingleResult();
+			
+		} catch (NoResultException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage("Customers not found!");
+			frame.setVisible(true);
+		}
+		session.close();
+		return customer;
+	}
+	
+	@Override
 	public void beginTransactionIfAllowed(Session theSession) {
 		if(!theSession.getTransaction().isActive()) {
 			theSession.beginTransaction();	
@@ -132,5 +164,7 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 			theSession.beginTransaction();
 		}
 	}
+
+	
 
 }

@@ -339,7 +339,7 @@ public class PaymentWindow extends JDialog {
 				
 				final double totalBalance = Double.parseDouble(theRoom.getBalance()) + balance;
 				theRoom.setBalance(totalBalance + "");
-				roomDaoImpl.saveRoom(theRoom);
+				roomDaoImpl.updateRoom(theRoom);
 			}
 		};
 		

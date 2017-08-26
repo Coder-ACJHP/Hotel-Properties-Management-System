@@ -126,8 +126,6 @@ public class HotelPropertiesWindow extends JDialog {
 		upperPanel.add(picturePanel);
 		picturePanel.setLayout(new BorderLayout(0, 0));
 		
-		final Dimension dm = new Dimension(556, 218);
-		
 		JScrollPane picHolderScroll = new JScrollPane();
 		picHolderScroll.setBorder(null);
 		picHolderScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -136,9 +134,6 @@ public class HotelPropertiesWindow extends JDialog {
 		
 		pictlabel = new JLabel("");
 		pictlabel.setAutoscrolls(true);
-		pictlabel.setPreferredSize(dm);
-		pictlabel.setMaximumSize(dm);
-		pictlabel.setMinimumSize(dm);
 		pictlabel.setBorder(new EtchedBorder(EtchedBorder.RAISED, Color.LIGHT_GRAY, null));
 		pictlabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		pictlabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -333,6 +328,7 @@ public class HotelPropertiesWindow extends JDialog {
 
 		btnClear = new JButton("CLEAR");
 		btnClear.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				cleanAllFields();
 			}
@@ -347,6 +343,7 @@ public class HotelPropertiesWindow extends JDialog {
 
 		btnLogin = new JButton("SAVE");
 		btnLogin.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				saveHotelDetails();
 			}
@@ -418,6 +415,7 @@ public class HotelPropertiesWindow extends JDialog {
 	
 	private ChangeListener setTypeFields() {
 		ChangeListener changeListener = new ChangeListener() {
+		@Override
 		public void stateChanged(ChangeEvent e) {
 			int count = (int)roomTypeSpinner.getValue();
 	        if(count > typeValue) {
@@ -457,6 +455,7 @@ public class HotelPropertiesWindow extends JDialog {
 	
 	private ChangeListener starsChangedListner() {
 		ChangeListener changeListener = new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				int count = (int)starsSpinner.getValue();
 		        if(count > starValue) {
@@ -648,10 +647,10 @@ public class HotelPropertiesWindow extends JDialog {
 		
 		nameField.setText(" ");
 		hotelNameTitle.setText(" ");
-		starsSpinner.setValue((int)0);
+		starsSpinner.setValue(0);
 		pictlabel.setIcon(null);
 		ownerNameField.setText(" ");
-		phoneFrmtField.setValue((int)0);
+		phoneFrmtField.setValue(0);
 		countryCmbBox.setSelectedIndex(0);
 		for(int i=0; i < roomTypeFields.length; i++) {
 			roomTypeFields[i].setText(" ");
@@ -659,8 +658,8 @@ public class HotelPropertiesWindow extends JDialog {
 		for(int j=0; j < starlabels.length; j++ ) {
 			starlabels[j].setVisible(false);
 		}
-		roomTypeSpinner.setValue((int)0);
-		capacitySpinner.setValue((int)0);
+		roomTypeSpinner.setValue(0);
+		capacitySpinner.setValue(0);
 		cityField.setText(" ");
 		fullAdressField.setText(" ");
 		

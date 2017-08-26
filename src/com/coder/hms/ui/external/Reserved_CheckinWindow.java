@@ -185,6 +185,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 	private ChangeListener customerCounterListener() {
 
 		final ChangeListener spinnerListener = new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				
 				switch ((int) spinner.getValue()) {
@@ -253,7 +254,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 				customerList.get(0).setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
 				customerList.get(0).setReservationId(foundedReserv.getId());
 				
-				customerDaoImpl.save(customerList.get(0));
+				customerDaoImpl.update(customerList.get(0));
 				
 				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(0).toString());
 			}
@@ -323,7 +324,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 				customerList.get(2).setMaritalStatus(customerFormThree.getMarriageComboBoxValue());
 				customerList.get(2).setReservationId(foundedReserv.getId());
 				
-				customerDaoImpl.save(customerList.get(0));
+				customerDaoImpl.update(customerList.get(0));
 				customerDaoImpl.save(customerList.get(1));
 				customerDaoImpl.save(customerList.get(2));
 				
@@ -333,11 +334,11 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 			}
 			
 			
-			roomDaoImpl.saveRoom(checkingRoom);
+			roomDaoImpl.updateRoom(checkingRoom);
 			loggingEngine.setMessage("Check in room is : " + checkingRoom.toString());
 			
 			foundedReserv.setIsCheckedIn("YES");
-			reservDaoImpl.saveReservation(foundedReserv);
+			reservDaoImpl.updateReservation(foundedReserv);
 			
 			loggingEngine.setMessage("Check in reservation is : " + foundedReserv.toString());
 			

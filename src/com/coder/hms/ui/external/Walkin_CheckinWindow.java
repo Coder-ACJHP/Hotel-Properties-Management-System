@@ -300,6 +300,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	private ChangeListener customerCounterListener() {
 
 		final ChangeListener spinnerListener = new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 
 				switch ((int) personCountSpinner.getValue()) {
@@ -602,7 +603,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		
 		}
 			//All thing id OK and all fields populated, just save it.
-			roomDaoImpl.saveRoom(checkingRoom);
+			roomDaoImpl.updateRoom(checkingRoom);
 			loggingEngine.setMessage("Check in for room : " + checkingRoom.toString());
 			
 			this.dispose();
