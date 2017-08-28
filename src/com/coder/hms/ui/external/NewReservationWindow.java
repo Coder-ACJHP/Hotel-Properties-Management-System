@@ -328,7 +328,10 @@ public class NewReservationWindow extends JDialog {
 		reportBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				logging.setMessage("Reservation is reporting.");
+
+//				final Report report = new Report("ReservationForm", reportDataMap);
+//				report.showReport();
+//				logging.setMessage("Reservation is reporting.");
 			}
 		});
 		buttonsPanel.add(reportBtn);
@@ -589,17 +592,28 @@ public class NewReservationWindow extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				final Reservation reservation = new Reservation();
 				
+				
 				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
+				
 				reservation.setGroupName(nameSurnameField.getText());
+				
+				
 				reservation.setCheckinDate(sdf.format(startDate));
+				
 				reservation.setCheckoutDate(sdf.format(endDate));
+				
 				reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
+				
 				reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
+				
 				reservation.setHostType(hostCmbBox.getSelectedItem().toString());
+				
 				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
 				reservation.setNote(Optional.ofNullable(noteTextArea.getText()).orElse(" "));
 				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
+				
 				reservation.setAgencyRefNo(agencyRefField.getText());
+				
 				reservation.setReferanceNo(referanceNoField.getText());
 				reservation.setIsCheckedIn("NO");				
 				
@@ -610,14 +624,17 @@ public class NewReservationWindow extends JDialog {
 				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
 				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
 				theRoom.setPersonCount((int)personCountSpinner.getValue());
+				
 				theRoom.setPrice(priceValue);
+				
 				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
+				
 				theRoom.setCustomerGrupName(nameSurnameField.getText());
 				theRoom.setUsageStatus("BLOCKED");
 				
 				final Reservation lastReserv = rImpl.getLastReservation();
 				theRoom.setReservationId(lastReserv.getId());
-				
+
 				double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
 				theRoom.setTotalPrice(String.valueOf(lastPrice));
 				

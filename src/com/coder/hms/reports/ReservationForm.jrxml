@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReservationForm" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c52710f7-7f2f-41e4-921f-3343b8b1c3a0">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="New Dataset 1" uuid="f5a0704d-4852-4472-a964-18033873a8aa"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="Id" class="java.lang.Long"/>
+	<field name="groupName" class="java.lang.String"/>
+	<field name="checkoutDate" class="java.lang.String"/>
+	<field name="checkinDate" class="java.lang.String"/>
+	<field name="agency" class="java.lang.String"/>
+	<field name="agencyRefNo" class="java.lang.String"/>
+	<field name="totalDays" class="java.lang.Integer"/>
+	<field name="hostType" class="java.lang.String"/>
+	<field name="theNumber" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
+	<field name="price" class="java.lang.Double"/>
+	<field name="paymentStatus" class="java.lang.Boolean"/>
+	<field name="currency" class="java.lang.String"/>
+	<field name="balance" class="java.lang.String"/>
+	<field name="paymentType" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="81" height="81" uuid="58934833-56c2-4e7d-83e5-bbbe8d74004e"/>
+				<imageExpression><![CDATA["src/com/coder/hms/icons/main_logo(128X12).png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="79" y="0" width="398" height="81" uuid="f38a0faa-a35e-4b2e-9bac-f11d56265348"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESERVATION FORM]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="460" y="20" width="116" height="21" uuid="a7bd28da-f091-4cb9-a544-ffb4e30b989b"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="460" y="40" width="116" height="21" uuid="96ef2a99-c4a5-48cb-8e3b-3c971f00fa0b"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="19" width="90" height="21" uuid="72176a0f-3a3f-4282-ba44-20f434f3d228"/>
+				<text><![CDATA[Reservation Id : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="19" width="90" height="21" uuid="e06d77c6-fba5-4444-bd24-1c0ef6d01c3f"/>
+				<textFieldExpression><![CDATA[$F{Id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="59" width="151" height="21" uuid="497736a9-25e7-4df8-83ef-ea72ccb88a0f"/>
+				<text><![CDATA[Arrival Date : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="59" width="131" height="21" uuid="4bf66e5e-d018-4005-9014-d39d2d21a283"/>
+				<textFieldExpression><![CDATA[$F{checkinDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="190" y="19" width="101" height="21" uuid="7ecd8eb7-ee85-4b68-8c9e-b750ce8e967c"/>
+				<text><![CDATA[Group Name : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="291" y="20" width="259" height="21" uuid="bd257593-f6c9-4c63-9b4d-2ed4e0272c83"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{groupName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="449" y="60" width="121" height="21" uuid="b293683c-0fea-4083-879e-42439b710e17"/>
+				<textFieldExpression><![CDATA[$F{agency}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="310" y="60" width="141" height="21" uuid="301b2dba-b139-468b-9d27-a756d4a9f246"/>
+				<text><![CDATA[Agency : ]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="82" splitType="Stretch">
+			<textField>
+				<reportElement x="151" y="0" width="130" height="21" uuid="293f5bb8-9168-486f-9b9c-eb5782ffd0dd"/>
+				<textFieldExpression><![CDATA[$F{checkoutDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="151" height="21" uuid="49c2e735-ebeb-4d5d-a22a-a71da132b8b5"/>
+				<text><![CDATA[Departure Date : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="29" width="151" height="21" uuid="4a6a8883-2a2d-489f-9050-af46c4e0c908"/>
+				<text><![CDATA[Total Nights : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="30" width="131" height="21" uuid="06a8d153-33a3-43f8-9047-251094023d72"/>
+				<textFieldExpression><![CDATA[$F{totalDays}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="310" y="28" width="141" height="21" uuid="287ce514-ef14-40aa-bd34-9539e7e311ac"/>
+				<text><![CDATA[Host Type : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="29" width="121" height="21" uuid="0d26a1f1-4530-4318-b36b-100b77c75f51"/>
+				<textFieldExpression><![CDATA[$F{hostType}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="310" y="0" width="141" height="21" uuid="91119b40-4558-4b4a-ae30-fb0b891116b3"/>
+				<text><![CDATA[Agency Ref No : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="0" width="121" height="21" uuid="8df0824d-d098-469c-9f20-bd226f1c9f75"/>
+				<textFieldExpression><![CDATA[$F{agencyRefNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="61" width="131" height="21" uuid="a5f1b6a2-5a35-4896-ac3e-81aa22c95935"/>
+				<textFieldExpression><![CDATA[$F{theNumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="61" width="151" height="21" uuid="f6323e73-398b-4e63-93af-ec068e266eb9"/>
+				<text><![CDATA[Room Number : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="59" width="141" height="21" uuid="39b74ac1-d82f-49d6-bf3f-4a1672560ddd"/>
+				<text><![CDATA[Room Price : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="451" y="59" width="120" height="21" uuid="abd0a1e0-61d1-40bb-ab56-10e438b529a5"/>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="231" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="7" width="151" height="21" uuid="7ef00ef8-0eb9-404c-8428-6caaafebc19d"/>
+				<text><![CDATA[Room Type : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="7" width="131" height="21" uuid="0c04af0e-a65c-4ac8-9894-6d0516909003"/>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="452" y="92" width="119" height="19" uuid="1367a784-3ab2-4311-acbf-0cf4eaac7b5c"/>
+				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="150" y="50" width="251" height="31" forecolor="#F7022B" uuid="5446c750-5ecc-4aa8-9248-c0721675c750"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAYMENT STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="92" width="100" height="21" uuid="88250807-11af-4707-bfd6-f17d4f200057"/>
+				<text><![CDATA[Early Payment :  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="92" width="131" height="21" uuid="366717e5-bd81-49bb-bec9-2dee601ae399"/>
+				<textFieldExpression><![CDATA[$F{paymentStatus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="92" width="109" height="19" uuid="9de12aa9-3caa-45ac-b295-c16a8b4b3db3"/>
+				<text><![CDATA[Amount : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="380" y="92" width="72" height="20" uuid="c55f9730-6366-41c7-817e-a3de28ae3bd5"/>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="122" width="131" height="21" uuid="03e6e089-b03d-427e-8ee9-15252bb3d8b8"/>
+				<textFieldExpression><![CDATA[$F{paymentType}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="122" width="101" height="21" uuid="c84efe52-9485-4345-bf90-5d35c678bb6f"/>
+				<text><![CDATA[Payment Type :  ]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="170" width="560" height="1" uuid="50045d85-5e09-4a2e-b318-0f30e3302911"/>
+			</break>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="28" width="81" height="21" uuid="79d55e6c-3b40-4fb0-8643-70b8279b3e22"/>
+				<text><![CDATA[Phone Number : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="28" width="100" height="21" uuid="a9b87ef5-f1aa-422c-ac7c-60207987f44f"/>
+				<text><![CDATA[0212 3457053]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="28" width="60" height="21" uuid="1fdc7dfb-6314-4edc-9ca6-65d66fda6988"/>
+				<text><![CDATA[Address : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="28" width="311" height="26" uuid="a13b6e4b-3e96-4a48-9475-bed67b26c83f"/>
+				<text><![CDATA[Kocatepe Mahallesi Lamartin Caddesi No: 21 Taksim 
+Beyoğlu / Istanbul]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

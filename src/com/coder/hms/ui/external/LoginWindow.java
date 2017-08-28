@@ -83,7 +83,7 @@ public class LoginWindow extends JDialog {
 	public LoginWindow() {
 		
 		logging = LoggingEngine.getInstance();
-		logging.setReady(MainFrame.class.getName());
+		logging.setReady(DataSourceFactory.class.getName());
 		logging.changeLoggingLevel(Level.FINE);
 		logging.setConsoleLogging(false);
 		

@@ -6,25 +6,24 @@
 package com.coder.hms.connection;
 
 import java.awt.Toolkit;
-import java.util.logging.Logger;
-
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 
 import com.coder.hms.entities.Reservation;
+import com.coder.hms.ui.external.InformationFrame;
 
 public class DataSourceFactory {
 
-	final static JDialog dialog = new JDialog();
+	private static InformationFrame INFORMATION_FRAME;
 	private static SessionFactory sessionFactory = null;
-	private static final Logger LOGGER = Logger.getLogger(DataSourceFactory.class.getName());
 
 	public DataSourceFactory() {
 
-		dialog.setAlwaysOnTop(true);
+		INFORMATION_FRAME = new InformationFrame();
 	}
 
 	public static synchronized void createConnection() {
@@ -33,14 +32,12 @@ public class DataSourceFactory {
 			if (sessionFactory == null) {
 				sessionFactory = new Configuration().configure("com/coder/hms/connection/hibernate.cfg.xml")
 						.addAnnotatedClass(Reservation.class).buildSessionFactory();
-				LOGGER.info("Session created successfully.");
 			}
 
 		} catch (Exception e) {
 			Toolkit.getDefaultToolkit().beep();
-			JOptionPane.showMessageDialog(dialog, "\tFatal error!\nCannot connect to the database,"
-					+ "\nplease check your internet or datasource connection.\n(Close the *LOGIN* window at first.)",
-					JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+			INFORMATION_FRAME.setMessage("Database connection error!");
+			INFORMATION_FRAME.setVisible(true);
 			System.exit(1);
 		}
 	}
@@ -49,8 +46,20 @@ public class DataSourceFactory {
 		return sessionFactory;
 	}
 
+	public Connection getSqlConnection() {
+		Connection connection = null;
+		try {
+			connection = getSessionFactory().
+					getSessionFactoryOptions().getServiceRegistry().
+					getService(ConnectionProvider.class).getConnection();
+		} catch (SQLException e) {
+			INFORMATION_FRAME.setMessage("Converting connection error!");
+			INFORMATION_FRAME.setVisible(true);
+		}
+		return connection;
+	}
+	
 	public void shutDown() {
-		LOGGER.info("Closing SessionFactory...");
 		if(sessionFactory.isOpen())
 			DataSourceFactory.sessionFactory.close();
 	}

@@ -67,12 +67,13 @@
 			<version>1.10</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+		<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>javax.mail-api</artifactId>
-			<version>1.6.0</version>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.6.0</version>
 		</dependency>
+
 		  <!--  Gson: Java to Json conversion -->
 	    <dependency>
 	      <groupId>com.google.code.gson</groupId>
@@ -80,6 +81,12 @@
 	      <version>2.8.0</version>
 	      <scope>compile</scope>
 	    </dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports</artifactId>
+		    <version>6.4.1</version>
+		</dependency>
 		
 
 	</dependencies>
