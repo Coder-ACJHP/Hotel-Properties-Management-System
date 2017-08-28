@@ -67,6 +67,9 @@ search your reservation with date, referance number or agency referange number, 
 <h2>System log interior window : </h2>
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/systemLog.png">
 <hr>
+<h2>Reporting Section</h2>
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/reportWindow.png">
+<hr>
 and more...
 
 <h1>How to use?</h1>
