@@ -62,10 +62,12 @@ import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.ReportObject;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.LoggingEngine;
+import com.coder.hms.utils.Report;
 import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;
 
@@ -80,9 +82,10 @@ public class NewReservationWindow extends JDialog {
 	private JButton btnAddRoom;
 	private Object[] ROOM_NUMS;
 	private String[] ROOM_TYPES;
-	private JTable table, ePaymentTable;
 	private double priceValue = 0.0;
 	private NumberFormat formatter;
+	private boolean isShowed = false;
+	private JTable table, ePaymentTable;
 	private JSpinner personCountSpinner; 
 	private static LoggingEngine logging;
 	private final JTextArea noteTextArea;
@@ -93,6 +96,7 @@ public class NewReservationWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	private final PaymentWindow payWin = new PaymentWindow();
+	private final ReportObject reportBean = new ReportObject();
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -325,15 +329,7 @@ public class NewReservationWindow extends JDialog {
 		reportBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reportBtn.setPreferredSize(new Dimension(110, 40));
 		reportBtn.setFont(new Font("Verdana", Font.BOLD, 15));
-		reportBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-//				final Report report = new Report("ReservationForm", reportDataMap);
-//				report.showReport();
-//				logging.setMessage("Reservation is reporting.");
-			}
-		});
+		reportBtn.addActionListener(prepareReportListener());
 		buttonsPanel.add(reportBtn);
 		
 		SaveBtn = new JButton("SAVE");
@@ -477,8 +473,15 @@ public class NewReservationWindow extends JDialog {
 					@Override
 					public void run() {
 						payWin.setReadyPaymentWindow(roomNumCmbBox.getSelectedItem().toString());
-						if(payWin.getPaymentStatus())
+						if(payWin.getPaymentStatus()) {
 							earlyPaymetModel.addRow(payWin.rowCol);
+						}
+						reportBean.setUserName(S_BEAN.getNickName());
+						reportBean.setPaymentStatus(true);
+						reportBean.setPaymentType(payWin.rowCol[1].toString());
+						reportBean.setBalance(payWin.rowCol[2].toString());
+						reportBean.setCurrency(payWin.rowCol[3].toString());
+
 						logging.setMessage("Adding payment in reservation.");
 						
 					}
@@ -594,43 +597,61 @@ public class NewReservationWindow extends JDialog {
 				
 				
 				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
+				reportBean.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
 				
 				reservation.setGroupName(nameSurnameField.getText());
-				
+				reportBean.setGroupName(nameSurnameField.getText());
 				
 				reservation.setCheckinDate(sdf.format(startDate));
+				reportBean.setCheckinDate(sdf.format(startDate));
 				
 				reservation.setCheckoutDate(sdf.format(endDate));
+				reportBean.setCheckoutDate(sdf.format(endDate));
 				
 				reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
+				reportBean.setTotalDays(Integer.parseInt(totalDaysField.getText()));
 				
 				reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
+				reportBean.setAgency(agencyCmbBox.getSelectedItem().toString());
 				
 				reservation.setHostType(hostCmbBox.getSelectedItem().toString());
+				reportBean.setHostType(hostCmbBox.getSelectedItem().toString());
 				
 				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
+				
 				reservation.setNote(Optional.ofNullable(noteTextArea.getText()).orElse(" "));
 				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
 				
 				reservation.setAgencyRefNo(agencyRefField.getText());
+				reportBean.setAgencyRefNo(agencyRefField.getText());
 				
 				reservation.setReferanceNo(referanceNoField.getText());
 				reservation.setIsCheckedIn("NO");				
+				
+				if(earlyPaymetModel.getRowCount() > 0) {
+					reservation.setPaymentStatus(true);
+				}
 				
 				logging.setMessage("Reservation details : " + reservation.toString());
 				rImpl.saveReservation(reservation);
 									
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
 				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
+				
 				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+				reportBean.setType(currencyCmbBox.getSelectedItem().toString());
+				
 				theRoom.setPersonCount((int)personCountSpinner.getValue());
 				
 				theRoom.setPrice(priceValue);
+				reportBean.setPrice(priceValue);
 				
 				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
+				reportBean.setRoomType(roomTypeCmbBox.getSelectedItem().toString());
 				
 				theRoom.setCustomerGrupName(nameSurnameField.getText());
 				theRoom.setUsageStatus("BLOCKED");
+				theRoom.setBalance(earlyPaymetModel.getValueAt(0, 2).toString());
 				
 				final Reservation lastReserv = rImpl.getLastReservation();
 				theRoom.setReservationId(lastReserv.getId());
@@ -661,8 +682,13 @@ public class NewReservationWindow extends JDialog {
 				
 					logging.setMessage("Reservation customer(s) : " + theCustomer.toString());
 				}
+				
 				logging.setMessage("New reservation saved successfully.");
-				dispose();
+				final InformationFrame dialog = new InformationFrame();
+				dialog.setMessage("Your reservation save successfully.");
+				dialog.setVisible(true);
+				
+				isShowed = true;
 			}
 		};
 		return theListener;
@@ -788,6 +814,30 @@ public class NewReservationWindow extends JDialog {
 				}
 				repaint();
 				
+			}
+		};
+		return listener;
+	}
+	
+	private ActionListener prepareReportListener() {
+		final ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(isShowed) {
+					final  Report report = new Report();
+					report.loadReport("ReservationForm", reportBean);
+					report.showReport();
+					logging.setMessage("Reservation is reporting.");
+				}
+				else {
+					final InformationFrame dialog = new InformationFrame();
+					dialog.setMessage("You must save your reservation at first!");
+					dialog.setVisible(true);
+					return;
+				}
+
 			}
 		};
 		return listener;

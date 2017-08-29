@@ -38,8 +38,8 @@ import com.coder.hms.ui.external.ChangePasswordWindow;
 import com.coder.hms.ui.external.ExchangeWindow;
 import com.coder.hms.ui.external.HotelPropertiesWindow;
 import com.coder.hms.ui.external.LicenseWindow;
-import com.coder.hms.ui.external.ReadLogsWindow;
 import com.coder.hms.ui.external.LoginWindow;
+import com.coder.hms.ui.external.ReadLogsWindow;
 import com.coder.hms.utils.ApplicaitonThemeChanger;
 import com.coder.hms.utils.ResourceControl;
 
@@ -47,13 +47,15 @@ public class Main_MenuBar {
 
 	private JMenuBar menuBar;
 	private JFrame mainFrame;
+	private String exitMessage = "";
+	private String titleMessage = "";
 	private final Runtime run = Runtime.getRuntime();
 	private final LocaleBean bean = LocaleBean.getInstance();
 	private final static Desktop desktop = Desktop.getDesktop();
 	private final String command = System.getProperty("os.name");
 	public final ApplicaitonThemeChanger themeChanger = new ApplicaitonThemeChanger();
 	private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
-	private JMenuItem hoteProps, restart, refresh, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
+	private JMenuItem hoteProps, restart, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
 	defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, chngPassword, aboutDeveloper,
 	sourceCode, shareYourOpinion, license;
 	
@@ -111,31 +113,22 @@ public class Main_MenuBar {
 		restart = new JMenuItem("Restart");
 		restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
 		restart.addActionListener(ActionListener ->{
-			mainFrame.dispose();
-
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					new MainFrame();
-					
-				}
-			});
+			
+//			ScheduledExecutorService schedulerExecutor = Executors.newScheduledThreadPool(2);
+//			Callable<Process> callable = new Callable<Process>() {
+//
+//			    @Override
+//			    public Process call() throws Exception {
+//			        Process p = Runtime.getRuntime().exec("cmd /c start /b java -jar D:\\MovieLibrary.jar");
+//			        return p;
+//			    }
+//			};
+//			FutureTask<Process> futureTask = new FutureTask<Process>(callable);
+//			schedulerExecutor.submit(futureTask);           
+//
+//			System.exit(0);
 		});
 		frontDesk.add(restart);
-		
-		
-		refresh = new JMenuItem("Refresh");
-		refresh.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5,
-				(InputEvent.SHIFT_MASK) | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
-		refresh.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/cleaning-refresh.png")));
-		refresh.addActionListener(ActionListener ->{
-			
-			mainFrame.revalidate();
-			mainFrame.repaint();
-
-		});
-		frontDesk.add(refresh);
 		
 		menuInnerItemExit = new JMenuItem("Exit");
 		menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
@@ -146,13 +139,14 @@ public class Main_MenuBar {
 		//add listener for exiting when CTRL+SHIFT+Q pressed
 		menuInnerItemExit.addActionListener(ActionEvent -> {
 
-			final int decision = JOptionPane.showConfirmDialog(null, "Do you really want to exit?", "Confirm",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-			if (decision == JOptionPane.YES_OPTION) {
+			final int decision =JOptionPane.showConfirmDialog(null, exitMessage, 
+					titleMessage, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			
+			if(decision == JOptionPane.YES_OPTION) {
 				new DataSourceFactory().shutDown();
 				System.exit(0);
-			} else {
+			}
+			else {
 				mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			}
 
@@ -400,7 +394,6 @@ public class Main_MenuBar {
 		frontDesk.setText(bundle.getString("FrontDesk"));
 		hoteProps.setText(bundle.getString("HotelProperties"));
 		restart.setText(bundle.getString("Restart"));
-		refresh.setText(bundle.getString("Refresh"));
 		menuInnerItemExit.setText(bundle.getString("Exit"));
 		mnTools.setText(bundle.getString("Tools"));
 		calculator.setText(bundle.getString("Calculator"));
@@ -415,6 +408,8 @@ public class Main_MenuBar {
 		sourceCode.setText(bundle.getString("SourceCode"));
 		shareYourOpinion.setText(bundle.getString("Feedback"));
 		license.setText(bundle.getString("License"));
+		exitMessage = bundle.getString("ExitMessage");
+		titleMessage = bundle.getString("Confirmation");
 		
 		menuBar.revalidate();
 		menuBar.repaint();

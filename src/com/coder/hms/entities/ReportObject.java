@@ -3,12 +3,14 @@ package com.coder.hms.entities;
 public class ReportObject {
 
 	private long Id;
+	private String userName;
 	private String groupName;
 	private String checkoutDate;
 	private String checkinDate;
 	private String agency;
 	private String agencyRefNo;
 	private int totalDays;
+	private String roomType;
 	private String hostType;
 	private String theNumber;
 	private String type;
@@ -28,6 +30,14 @@ public class ReportObject {
 
 	public void setId(long id) {
 		Id = id;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getGroupName() {
@@ -76,6 +86,14 @@ public class ReportObject {
 
 	public void setTotalDays(int totalDays) {
 		this.totalDays = totalDays;
+	}
+
+	public String getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
 	}
 
 	public String getHostType() {
@@ -142,17 +160,19 @@ public class ReportObject {
 		this.paymentType = paymentType;
 	}
 
-	public ReportObject(long id, String groupName, String checkoutDate, String checkinDate, String agency,
-			String agencyRefNo, int totalDays, String hostType, String theNumber, String type, double price,
-			boolean paymentStatus, String currency, String balance, String paymentType) {
+	public ReportObject(long id, String userName, String groupName, String checkoutDate, String checkinDate,
+			String agency, String agencyRefNo, int totalDays, String roomType, String hostType, String theNumber,
+			String type, double price, boolean paymentStatus, String currency, String balance, String paymentType) {
 		super();
 		Id = id;
+		this.userName = userName;
 		this.groupName = groupName;
 		this.checkoutDate = checkoutDate;
 		this.checkinDate = checkinDate;
 		this.agency = agency;
 		this.agencyRefNo = agencyRefNo;
 		this.totalDays = totalDays;
+		this.roomType = roomType;
 		this.hostType = hostType;
 		this.theNumber = theNumber;
 		this.type = type;
@@ -165,11 +185,11 @@ public class ReportObject {
 
 	@Override
 	public String toString() {
-		return "ReportObject [Id=" + Id + ", groupName=" + groupName + ", checkoutDate=" + checkoutDate
-				+ ", checkinDate=" + checkinDate + ", agency=" + agency + ", agencyRefNo=" + agencyRefNo
-				+ ", totalDays=" + totalDays + ", hostType=" + hostType + ", theNumber=" + theNumber + ", type=" + type
-				+ ", price=" + price + ", paymentStatus=" + paymentStatus + ", currency=" + currency + ", balance="
-				+ balance + ", paymentType=" + paymentType + "]";
+		return "ReportObject [Id=" + Id + ", userName=" + userName + ", groupName=" + groupName + ", checkoutDate="
+				+ checkoutDate + ", checkinDate=" + checkinDate + ", agency=" + agency + ", agencyRefNo=" + agencyRefNo
+				+ ", totalDays=" + totalDays + ", roomType=" + roomType + ", hostType=" + hostType + ", theNumber="
+				+ theNumber + ", type=" + type + ", price=" + price + ", paymentStatus=" + paymentStatus + ", currency="
+				+ currency + ", balance=" + balance + ", paymentType=" + paymentType + "]";
 	}
 	
 	

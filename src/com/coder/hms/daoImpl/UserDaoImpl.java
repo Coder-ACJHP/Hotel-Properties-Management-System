@@ -7,6 +7,8 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -71,20 +73,22 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
 	}
 
 	public boolean authentication(String userName, String userPswrd) {
-		boolean isUser = false;
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<User> query = session.createQuery("from User where NickName=:userName and Password=:userPswrd", User.class);
-		query.setParameter("userName", userName);
-		query.setParameter("userPswrd", userPswrd);
-		User user = query.getSingleResult();
-		
-		session.close();
-		
-		if(user != null) {
+		boolean isUser;
+
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			Query<User> query = session.createQuery("from User where NickName=:userName and Password=:userPswrd", User.class);
+			query.setParameter("userName", userName);
+			query.setParameter("userPswrd", userPswrd);
+			query.getSingleResult();
 			isUser = true;
+			
+		} catch (NoResultException e) {
+			isUser = false;
 		}
 		
+		session.close();		
 		return isUser;
 	}
 

@@ -487,20 +487,31 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	}
 
 	public void populateBlokajRoomsModel(DefaultTableModel blokajRoomsModel, String reservId) {
-		for (int index = 0; index < roomList.size(); index++) {
-			if (roomList.get(index).getReservationId() == Long.parseLong(reservId)) {
-				blokajRoomsModel.addRow(new Object[] { roomList.get(index).getNumber(), roomList.get(index).getType(),
-						roomList.get(index).getPersonCount() });
-				break;
+		if(blokajModel.getRowCount() == 0) {
+			
+			blokajRoomsModel.setRowCount(0);
+		}else {
+		
+			for (int index = 0; index < roomList.size(); index++) {
+				if (roomList.get(index).getReservationId() == Long.parseLong(reservId)) {
+					blokajRoomsModel.addRow(new Object[] { roomList.get(index).getNumber(), roomList.get(index).getType(),
+							roomList.get(index).getPersonCount() });
+					break;
+				}
 			}
 		}
 	}
 
 	public void populateBlokajCustomerModel(DefaultTableModel blokajCustomerModel, String reservId) {
-		for (int k = 0; k < customerList.size(); k++) {
-			if (customerList.get(k).getReservationId() == Long.parseLong(reservId)) {
-				blokajCustomerModel.addRow(new Object[] { 
-						customerList.get(k).getFirstName(), customerList.get(k).getLastName()});
+		if(blokajRoomsModel.getRowCount() == 0) {
+			
+			blokajCustomerModel.setRowCount(0);
+		}else {
+			for (int k = 0; k < customerList.size(); k++) {
+				if (customerList.get(k).getReservationId() == Long.parseLong(reservId)) {
+					blokajCustomerModel.addRow(new Object[] { 
+							customerList.get(k).getFirstName(), customerList.get(k).getLastName()});
+				}
 			}
 		}
 	}
@@ -511,6 +522,13 @@ public class Main_Blockade extends JPanel implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 			    int  selectedIndex = blokajTable.getSelectedRow();
 
+			    if(selectedIndex < 0) {
+			    	blokajRoomsTable.revalidate();
+			    	blokajRoomsTable.repaint();
+			    	blokajCustomerTable.revalidate();
+			    	blokajCustomerTable.repaint();
+			    }
+			    
 				reservIdFromRow = blokajTable.getValueAt(selectedIndex, 0).toString();
 				blokajRoomsModel.setRowCount(0);
 				populateBlokajRoomsModel(blokajRoomsModel, reservIdFromRow);

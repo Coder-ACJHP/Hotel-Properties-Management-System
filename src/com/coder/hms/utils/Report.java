@@ -1,7 +1,9 @@
 package com.coder.hms.utils;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalExclusionType;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,16 +19,22 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
 
-public class Report {
+public class Report extends JFrame {
 
-	private JFrame frame;
-	private LoggingEngine logging;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private static LoggingEngine logging;
+	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
+	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
 	public Report() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Report(String reportName, List<ReportObject> list) {
+	public void loadReport(String reportName, ReportObject reportObject) {
 
 		logging = LoggingEngine.getInstance();
 		
@@ -37,14 +45,23 @@ public class Report {
 			JasperReport report = JasperCompileManager.compileReport(inputStream);
 
 			HashMap<String, Object> parameters = new HashMap<String, Object>();	
+			List<ReportObject> list = new ArrayList<ReportObject>();
+			list.add(reportObject);
 			JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(list);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, beanColDataSource);
 			final JRViewer viewer = new JRViewer(jasperPrint);
 
-			frame = new JFrame();
-			frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.add(viewer, BorderLayout.CENTER);
+			setType(Type.POPUP);
+			setResizable(false);
+			setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
+			this.setTitle("Reservation [Report]");
+			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			this.setAlwaysOnTop(isAlwaysOnTopSupported());
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			getContentPane().setLayout(new BorderLayout());
+			logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
+			this.setResizable(false);
+			getContentPane().add(viewer, BorderLayout.CENTER);
 
 		} catch (JRException e) {
 			logging.setMessage("JRException report error!");
@@ -53,6 +70,6 @@ public class Report {
 	}
 
 	public void showReport() {
-		frame.setVisible(true);
+		this.setVisible(true);
 	}
 }

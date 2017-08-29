@@ -97,7 +97,6 @@ public class MainFrame extends JFrame {
 		getContentPane().add(customToolbar.getJPanel(), BorderLayout.NORTH);
 		
 		getContentPane().add(customBottomToolbar.getToolBar(), BorderLayout.SOUTH);
-		setLocale(bean.getLocale());
 		changeLanguage(bean.getLocale());
 		
 		/*set exiting from the application when clicking on X button*/

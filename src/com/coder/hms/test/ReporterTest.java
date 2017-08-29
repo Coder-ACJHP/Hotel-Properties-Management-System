@@ -1,33 +1,18 @@
 package com.coder.hms.test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.coder.hms.entities.ReportObject;
+import com.coder.hms.utils.Report;
 
 public class ReporterTest {
 
 	public static void main(String[] args) {
 		
-		ReportObject reportObject = new ReportObject();
-		reportObject.setId(1L);
-		reportObject.setAgency("AJAX");
-		reportObject.setAgencyRefNo("asd0000");
-		reportObject.setBalance("1000");
-		reportObject.setCheckinDate("2017-09-8");
-		reportObject.setCheckoutDate("2017-09-10");
-		reportObject.setCurrency("EURO");
-		reportObject.setGroupName("ONUR IŞIK");
-		reportObject.setHostType("B.B");
-		reportObject.setTheNumber("1001");
-		reportObject.setPaymentStatus(true);
-		reportObject.setPaymentType("CASH PAYMENT");
-		reportObject.setTotalDays(1);
-		reportObject.setPrice(300.0);
-		reportObject.setType("WEN");
-		List<ReportObject> reportDataMap = new ArrayList<ReportObject>();
-		reportDataMap.add(reportObject);
-		final ReportTest report = new ReportTest("ReservationForm", reportDataMap);
+		final ReportObject reportBean = new ReportObject(1, "Onur", 
+				"TAYFUN ARSLANHAN 1 TRIPLE", "2017-08-29", "2017-08-31",
+				"WEB", "0001-XX", 2, "DOUBLE", "B.B", "5004", "DOLLAR",
+				300.0, true, "DOLLAR", "250.0","CASH PAYMENT");
+		final  Report report = new Report();
+		report.loadReport("ReservationForm", reportBean);
 		report.showReport();
 		
 	}

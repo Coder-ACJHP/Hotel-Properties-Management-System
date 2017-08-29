@@ -38,13 +38,16 @@ import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
+import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.HotelSystemStatus;
+import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
+import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.NewReservationWindow;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
 import com.coder.hms.utils.LoggingEngine;
@@ -71,10 +74,10 @@ public class Main_Reservations extends JPanel {
 	private JButton newRezBtn, findBtn;
 	private HotelDaoImpl hotelDoaImpl;
 	private static LoggingEngine logging;
+	private PaymentDaoImpl paymentDaoImpl;
 	private CustomerDaoImpl customerDaoImpl;
 	private NewReservationWindow newReservationEx;
 	private ReservationDaoImpl reservationDaoImpl;
-	
 	private final HotelSystemStatus systemStatus;
 	private final HotelSystemStatusImpl statusImpl = new HotelSystemStatusImpl();
 	private static final long serialVersionUID = 1L;
@@ -220,6 +223,7 @@ public class Main_Reservations extends JPanel {
 		
 		roomDaoImpl = new RoomDaoImpl();
 		hotelDoaImpl = new HotelDaoImpl();
+		paymentDaoImpl = new PaymentDaoImpl();
 		customerDaoImpl = new CustomerDaoImpl();
 		reservationDaoImpl = new ReservationDaoImpl();
 	}
@@ -313,6 +317,16 @@ public class Main_Reservations extends JPanel {
 						reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
 								customerName, customerSurName});
 						
+						if(theReservation.getPaymentStatus()) {
+
+							Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
+							reservationPane.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
+									payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
+							final InformationFrame infoFrame = new InformationFrame();
+							infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
+							infoFrame.setVisible(true);
+						}
+						
 						reservationPane.setVisible(true);
 						
 					}
@@ -371,6 +385,16 @@ public class Main_Reservations extends JPanel {
 						
 						reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
 								customerName, customerSurName});
+						
+						if(theReserv.getPaymentStatus()) {
+
+							Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
+							reservationPane.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
+									payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
+							final InformationFrame infoFrame = new InformationFrame();
+							infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
+							infoFrame.setVisible(true);
+						}
 						
 						reservationPane.setVisible(true);
 					}
@@ -444,6 +468,16 @@ public class Main_Reservations extends JPanel {
 							reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
 									customerName, customerSurName});
 							
+							if(reservation.getPaymentStatus()) {
+
+								Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
+								reservationPane.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
+										payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
+								final InformationFrame infoFrame = new InformationFrame();
+								infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
+								infoFrame.setVisible(true);
+							}
+
 							reservationPane.setVisible(true);
 							
 							logging.setMessage("Reservation found : " + reservation.toString());

@@ -784,7 +784,8 @@ public class RoomWindow extends JDialog {
 					custWindow.setPhone(theCustomer.getPhone());
 					custWindow.setMariaggeStaus(theCustomer.getMaritalStatus());
 					custWindow.setReservationId(theCustomer.getReservationId() + "");
-
+					custWindow.setInfoMessage(" ");
+					
 					custWindow.setVisible(true);
 					
 					loggingEngine.setMessage("Displaying customer...");
@@ -826,12 +827,13 @@ public class RoomWindow extends JDialog {
 					custWindow.setInfoMessage("<html>SUCCESSFULLY ACCOMPLISHED</html>");
 					custWindow.setInfoLabelColor(Color.decode("#00FF00"));
 					loggingEngine.setMessage("Customer details updated : " + theCustomer.toString());
-					
+					success = false;
 				} else {
 					custWindow.setInfoMessage("<html>OPERTION IS FAILED!</html>");
 					custWindow.setInfoLabelColor(Color.decode("#cd2626"));
 				}
-
+				
+				theCustomer = null;
 			}
 		};
 		return listener;
