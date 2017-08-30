@@ -5,6 +5,7 @@
  */
 package com.coder.hms.ui.external;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -12,6 +13,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -27,11 +30,17 @@ import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
@@ -39,16 +48,6 @@ import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
-
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-import javax.swing.JTextField;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 public class PostingWindow extends JDialog {
 
@@ -296,6 +295,7 @@ public class PostingWindow extends JDialog {
 	
 	private ActionListener payActionListener() {
 		ActionListener listener = new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				final Posting posting = new Posting();
@@ -360,7 +360,7 @@ public class PostingWindow extends JDialog {
 				
 				final double totalPrice = Double.parseDouble(theRoom.getTotalPrice()) + balance;
 				theRoom.setTotalPrice(totalPrice + "");
-				roomDaoImpl.saveRoom(theRoom);
+				roomDaoImpl.updateRoom(theRoom);
 			}
 		};
 		isPosted = true;

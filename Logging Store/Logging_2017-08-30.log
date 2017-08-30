@@ -1,0 +1,30 @@
+12:43:40 30/08/2017
+INFO:User is : admin
+12:43:43 30/08/2017
+INFO:MainFrame created successfully.
+12:43:43 30/08/2017
+INFO:Login frame created successfully.
+12:45:19 30/08/2017
+INFO:User is : admin
+12:45:25 30/08/2017
+INFO:The room checkedout is : 2001
+12:45:27 30/08/2017
+INFO:User is : admin
+12:46:27 30/08/2017
+INFO:Posting to room : 3002
+12:51:17 30/08/2017
+INFO:User is : admin
+12:51:19 30/08/2017
+INFO:MainFrame created successfully.
+12:51:19 30/08/2017
+INFO:Login frame created successfully.
+12:51:25 30/08/2017
+INFO:User is : admin
+12:51:50 30/08/2017
+INFO:Deleting posting or payment from room : 3002
+12:51:50 30/08/2017
+INFO:Selected object details : Id : 1Type : SYSTEMAmount : 1040
+12:51:50 30/08/2017
+INFO:Posting is deleted.
+12:52:43 30/08/2017
+INFO:Posting to room : 3002

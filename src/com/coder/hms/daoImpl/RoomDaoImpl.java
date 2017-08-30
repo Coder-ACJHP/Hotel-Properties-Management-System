@@ -8,10 +8,8 @@ package com.coder.hms.daoImpl;
 
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import org.hibernate.HibernateException;
+import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -19,6 +17,7 @@ import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.RoomDAO;
 import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.entities.Room;
+import com.coder.hms.ui.external.InformationFrame;
 
 public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
@@ -34,17 +33,21 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 	
 	@Override
 	public Room getRoomByRoomNumber(String roomNumber) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Room> query = session.createQuery("from Room where number=:roomNumber", Room.class);
-		query.setParameter("roomNumber", roomNumber);
-		Room room = query.getSingleResult();
+		Room room = null;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			Query<Room> query = session.createQuery("from Room where number=:roomNumber", Room.class);
+			query.setParameter("roomNumber", roomNumber);
+			room = query.getSingleResult();
+			
+		} catch (NonUniqueResultException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage("There is more than one room with this number!");
+			frame.setVisible(true);
+		}
+		
 		session.close();
-			if(room == null) {
-				JOptionPane.showMessageDialog(new JFrame(), "There is no room found with this number!", 
-						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-				return null;
-			}
 		return room;
 	}
 
@@ -70,27 +73,26 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 		Query<Room> query = session.createQuery("from Room", Room.class);
 		List<Room> roomList = query.getResultList();
 		session.close();
-			if(roomList == null) {
-				JOptionPane.showMessageDialog(new JFrame(), "No rooms found!", 
-						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-				return null;
-			}
 		return roomList;
 	}
 
 	@Override
 	public Room getRoomByReservId(long id) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Room> query = session.createQuery("from Room where ReservationId=:id", Room.class);
-		query.setParameter("id", id);
-		Room room = query.getSingleResult();
+		Room room = null;
+		try {
+			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			beginTransactionIfAllowed(session);
+			Query<Room> query = session.createQuery("from Room where ReservationId=:id", Room.class);
+			query.setParameter("id", id);
+			room = query.getSingleResult();
+			
+		} catch (NonUniqueResultException e) {
+			final InformationFrame frame = new InformationFrame();
+			frame.setMessage("No rooms found with this reservation Id!");
+			frame.setVisible(true);
+		}
+		
 		session.close();
-			if(room == null) {
-				JOptionPane.showMessageDialog(new JFrame(), "No rooms found with this reservation Id!", 
-						JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-				return null;
-			}
 		return room;
 	}
 
