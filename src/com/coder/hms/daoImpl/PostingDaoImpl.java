@@ -88,17 +88,6 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
 	}
 
 	@Override
-	public void beginTransactionIfAllowed(Session theSession) {
-		if(!theSession.getTransaction().isActive()) {
-			theSession.beginTransaction();	
-		}else {
-			theSession.getTransaction().rollback();
-			theSession.beginTransaction();
-		}
-		
-	}
-
-	@Override
 	public String getTotalCashLiraPostingsForOneDay(String today) {
 		session = dataSourceFactory.getSessionFactory().getCurrentSession();
 		beginTransactionIfAllowed(session);
@@ -155,4 +144,14 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
 		return totalVal;
 	}
 
+	@Override
+	public void beginTransactionIfAllowed(Session theSession) {
+		if(!theSession.getTransaction().isActive()) {
+			theSession.beginTransaction();	
+		}else {
+			theSession.getTransaction().rollback();
+			theSession.beginTransaction();
+		}
+		
+	}
 }

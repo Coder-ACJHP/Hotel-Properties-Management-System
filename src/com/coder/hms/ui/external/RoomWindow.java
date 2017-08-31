@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -700,8 +701,9 @@ public class RoomWindow extends JDialog {
 		final double roombalance = Double.parseDouble(theRoom.getBalance());
 		balanceField.setValue(roombalance);
 
+		final DecimalFormat decimalFormat = new DecimalFormat("#.####");
 		remainDebtField.setValue(totalPrice - roombalance);
-		theRoom.setRemainingDebt(totalPrice - roombalance);
+		theRoom.setRemainingDebt(Double.valueOf(decimalFormat.format(totalPrice - roombalance)));
 		
 		roomNote.setText(reservation.getNote());
 		roomDaoImpl.updateRoom(theRoom);

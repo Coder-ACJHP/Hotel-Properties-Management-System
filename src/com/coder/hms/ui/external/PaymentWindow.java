@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Currency;
@@ -303,6 +304,7 @@ public class PaymentWindow extends JDialog {
 				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
 				
 				//here we have to check payment currency if other than TL thats mean to exchange.
+				DecimalFormat decimalFormat = new DecimalFormat("#.####");
 				double inputVal = Double.valueOf(payment.getPrice().toString());
 				
 				double balance = 0.0;
@@ -338,7 +340,7 @@ public class PaymentWindow extends JDialog {
 				}
 				
 				final double totalBalance = Double.parseDouble(theRoom.getBalance()) + balance;
-				theRoom.setBalance(totalBalance + "");
+				theRoom.setBalance(Double.valueOf(decimalFormat.format(totalBalance))+"");
 				roomDaoImpl.updateRoom(theRoom);
 			}
 		};

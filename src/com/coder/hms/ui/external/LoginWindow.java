@@ -95,7 +95,7 @@ public class LoginWindow extends JDialog {
 		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
 		
 		final LocalDate today = LocalDate.now();
-		final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE");
+		final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE", getLocale());
 		newDate = sdf.format(today);
 		
 		getContentPane().setForeground(new Color(255, 99, 71));
