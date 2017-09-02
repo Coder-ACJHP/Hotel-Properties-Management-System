@@ -11,6 +11,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -47,7 +48,6 @@ import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Room;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 
 public class PostingWindow extends JDialog {
@@ -68,7 +68,6 @@ public class PostingWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> currencyCmbBox, titleCmbBox, typeCmbBox;
 	private final GetLiveCurrencyRates rates = new GetLiveCurrencyRates();
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] POST_COLMNS = {"DOCUMENT NO", "TYPE", "TITLE", "PRICE", "CURRENCY", "EXPLANATION, DATE TIME"};
 	private final DefaultTableModel model = new DefaultTableModel(POST_COLMNS, 0);
@@ -90,7 +89,8 @@ public class PostingWindow extends JDialog {
 		setPreferredSize(new Dimension(400, 500));
 		
 		// set upper icon for dialog frame
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);

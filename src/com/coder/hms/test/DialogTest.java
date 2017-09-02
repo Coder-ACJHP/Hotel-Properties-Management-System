@@ -13,6 +13,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.coder.hms.ui.external.DialogFrame;
@@ -41,7 +42,7 @@ public class DialogTest extends JDialog {
 		
 		try {
 			DialogTest dialog = new DialogTest();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 			branch.setMessage("I'mjkahskdjhajksdh");
 		} catch (Exception e) {
@@ -76,6 +77,7 @@ public class DialogTest extends JDialog {
 			{
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						DialogFrame dialog = new DialogFrame();
 						dialog.setMessage("Are you sure?");

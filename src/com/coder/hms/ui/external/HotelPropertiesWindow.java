@@ -35,8 +35,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -100,7 +102,7 @@ public class HotelPropertiesWindow extends JDialog {
 		getContentPane().setBackground(Color.decode("#066d95"));
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
 		
 		upperPanel = new JPanel();
@@ -128,8 +130,8 @@ public class HotelPropertiesWindow extends JDialog {
 		
 		JScrollPane picHolderScroll = new JScrollPane();
 		picHolderScroll.setBorder(null);
-		picHolderScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		picHolderScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		picHolderScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		picHolderScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		picturePanel.add(picHolderScroll, BorderLayout.CENTER);
 		
 		pictlabel = new JLabel("");

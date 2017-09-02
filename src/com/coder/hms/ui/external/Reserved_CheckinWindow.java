@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -32,7 +33,6 @@ import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.inner.CustomerForm;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.LoggingEngine;
 
 public class Reserved_CheckinWindow extends JDialog implements ActionListener {
@@ -54,7 +54,6 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 	public CustomerForm customerFormTwo = new CustomerForm();
 	public CustomerForm customerFormThree = new CustomerForm();
 	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
 
@@ -73,7 +72,8 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 		setPreferredSize(new Dimension(750, 495));
 		setLocationRelativeTo(null);
 
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);

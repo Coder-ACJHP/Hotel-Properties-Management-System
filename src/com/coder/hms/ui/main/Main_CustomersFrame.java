@@ -84,7 +84,7 @@ public class Main_CustomersFrame extends JPanel {
 		searchFilterField.setIgnoreRepaint(true);
 		searchFilterField.setColumns(10);
 		searchFilterField.setFont(new Font("Dialog", Font.BOLD, 13));
-		searchFilterField.setHorizontalAlignment(JTextField.LEFT);
+		searchFilterField.setHorizontalAlignment(SwingConstants.LEFT);
 		GroupLayout gl_searchPanel = new GroupLayout(searchPanel);
 		gl_searchPanel.setHorizontalGroup(
 			gl_searchPanel.createParallelGroup(Alignment.LEADING)

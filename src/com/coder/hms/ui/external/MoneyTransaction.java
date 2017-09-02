@@ -10,6 +10,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -45,7 +46,6 @@ import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.LoggingEngine;
 
 public class MoneyTransaction extends JDialog {
@@ -67,7 +67,6 @@ public class MoneyTransaction extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> comboBox, currencyCmbBox, titleCmbBox;
 	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private final String[] PAYMENT_TYPE = { "CASH PAYMENT", "CREDIT CARD", "CITY LEDGER" };
 	private final String[] CURRENCY_LIST = { "TURKISH LIRA", "DOLLAR", "EURO", "POUND" };
@@ -86,7 +85,8 @@ public class MoneyTransaction extends JDialog {
 		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
 		
 		// set upper icon for dialog frame
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);
@@ -276,6 +276,7 @@ public class MoneyTransaction extends JDialog {
 
 	private ActionListener payActionListener() {
 		ActionListener listener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				String typeOfTransaction = titleCmbBox.getItemAt(titleCmbBox.getSelectedIndex());

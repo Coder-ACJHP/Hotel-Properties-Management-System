@@ -2,6 +2,8 @@ package com.coder.hms.utils;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog.ModalExclusionType;
+import java.awt.Frame;
+import java.awt.Toolkit;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import com.coder.hms.entities.ReportObject;
+import com.coder.hms.ui.external.LoginWindow;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -27,7 +30,6 @@ public class Report extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private static LoggingEngine logging;
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
 	public Report() {
@@ -55,11 +57,12 @@ public class Report extends JFrame {
 			setResizable(false);
 			setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 			this.setTitle("Reservation [Report]");
-			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			this.setExtendedState(Frame.MAXIMIZED_BOTH);
 			this.setAlwaysOnTop(isAlwaysOnTopSupported());
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			getContentPane().setLayout(new BorderLayout());
-			logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
+			this.setIconImage(Toolkit.getDefaultToolkit().
+					getImage(LoginWindow.class.getResource(LOGOPATH)));
 			this.setResizable(false);
 			getContentPane().add(viewer, BorderLayout.CENTER);
 

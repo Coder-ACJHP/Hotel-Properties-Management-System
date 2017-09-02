@@ -17,8 +17,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import com.coder.hms.utils.ApplicationLogoSetter;
-
 public class InformationFrame extends JFrame {
 
 	/**
@@ -27,7 +25,6 @@ public class InformationFrame extends JFrame {
 	public JButton okBtn;
 	private JLabel lblMessage, lblIcon;
 	private static final long serialVersionUID = 1L;
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
 	public InformationFrame() {
@@ -46,7 +43,7 @@ public class InformationFrame extends JFrame {
 		
 		this.setLocation(screenSize.width / 2 - 150, screenSize.height / 2 - 75);
 		
-		logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(InformationFrame.class.getResource(LOGOPATH)));
 		
 		final JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);

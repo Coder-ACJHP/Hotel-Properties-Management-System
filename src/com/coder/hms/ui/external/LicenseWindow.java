@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,14 +18,13 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-
-import com.coder.hms.utils.ApplicationLogoSetter;
 
 public class LicenseWindow extends JDialog {
 
@@ -33,7 +33,6 @@ public class LicenseWindow extends JDialog {
 	 */
 	private JTextPane editorPane;
 	private static final long serialVersionUID = 1L;
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
 	/**
@@ -45,9 +44,10 @@ public class LicenseWindow extends JDialog {
 		setBounds(100, 100, 550, 550);
 		setBackground(Color.decode("#066d95"));
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 		
 		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));

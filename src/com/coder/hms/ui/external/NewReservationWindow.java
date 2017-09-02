@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -65,7 +66,6 @@ import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.ReportObject;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.Report;
 import com.coder.hms.utils.RoomNumberMaker;
@@ -101,7 +101,6 @@ public class NewReservationWindow extends JDialog {
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private final RoomNumberMaker roomNumberMaker = new RoomNumberMaker();
-	private ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private JLabel agencyLbl, creditTypeLbl, customerCountryLbl;
 	private static final SessionBean S_BEAN = SessionBean.getSESSION_BEAN();
 	private JTextField rezIdField, nameSurnameField, totalDaysField, agencyRefField, referanceNoField;
@@ -147,7 +146,8 @@ public class NewReservationWindow extends JDialog {
 		logging.setMessage("User is : " + S_BEAN.getNickName());
 		
 		// set upper icon for dialog frame
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);
@@ -359,7 +359,7 @@ public class NewReservationWindow extends JDialog {
 		final JPanel infoPanel = new JPanel();
 		final JPanel earlyPanel = new JPanel();
 		
-		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		final JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		tabbedPane.addTab("RoomEx Type", roomPanel);
 		
 		final JPanel roomTypePanel = new JPanel();

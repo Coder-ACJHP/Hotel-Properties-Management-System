@@ -42,13 +42,13 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.apple.eawt.Application;
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.ui.inner.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 
@@ -74,7 +74,6 @@ public class LoginWindow extends JDialog {
 	private JButton setPasswordVisible, capslockBtn;
 	private static final long serialVersionUID = 1L;
 	final UserDaoImpl userDaoImpl = new UserDaoImpl();
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel, lblResetYourPassword;
 	
@@ -92,7 +91,16 @@ public class LoginWindow extends JDialog {
 		bean.setLocale(getLocale());
 		sessionBean = SessionBean.getSESSION_BEAN();
 		//set upper icon for dialog frame
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		String opSystem = System.getProperty("os.name").toLowerCase();
+
+		if (opSystem.contains("windows") || opSystem.contains("nux")) {
+			
+			this.setIconImage(Toolkit.getDefaultToolkit().
+					getImage(LoginWindow.class.getResource(LOGOPATH)));
+		}else {
+			Application.getApplication().setDockIconImage(new ImageIcon(getClass().getResource(LOGOPATH)).getImage());
+		}
+
 		
 		final LocalDate today = LocalDate.now();
 		final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE", getLocale());
@@ -305,7 +313,6 @@ public class LoginWindow extends JDialog {
 		setAlwaysOnTop(false);
 		setVisible(true);
 		
-		logging.setMessage("Login frame created successfully.");
 	}
 
 	private void changeLanguage(Locale locale) {

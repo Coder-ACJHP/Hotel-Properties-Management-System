@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
@@ -36,7 +37,6 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.text.DefaultEditorKit;
 
-import com.coder.hms.actionlisteners.RoomsAction;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
@@ -48,6 +48,7 @@ import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
+import com.coder.hms.roomsControl.RoomsControllAction;
 import com.coder.hms.ui.external.NewReservationWindow;
 
 public class Main_AllRooms {
@@ -61,7 +62,7 @@ public class Main_AllRooms {
 	private String currentRoomNumber;
 	private HotelSystemStatus systemStatus;
 	private JPanel contentPanel = new JPanel();
-	private final RoomsAction theAction = new RoomsAction();
+	private final RoomsControllAction theAction = new RoomsControllAction();
 	private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
 	private final ReservationDaoImpl rImpl = new ReservationDaoImpl();
@@ -198,8 +199,8 @@ public class Main_AllRooms {
 				lastNum = 0;
 			}
 
-			roomBtn.setHorizontalTextPosition(SwingUtilities.LEFT);
-			roomBtn.setVerticalAlignment(SwingUtilities.BOTTOM);
+			roomBtn.setHorizontalTextPosition(SwingConstants.LEFT);
+			roomBtn.setVerticalAlignment(SwingConstants.BOTTOM);
 			roomBtn.setPreferredSize(new Dimension(100, 65));
 			roomBtn.setMaximumSize(new Dimension(100, 65));
 			roomBtn.addMouseListener(theAction.getActionListener());
@@ -224,6 +225,7 @@ public class Main_AllRooms {
 				}
 			}
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 
 				if (e.isPopupTrigger()) {
@@ -232,6 +234,7 @@ public class Main_AllRooms {
 				}
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());

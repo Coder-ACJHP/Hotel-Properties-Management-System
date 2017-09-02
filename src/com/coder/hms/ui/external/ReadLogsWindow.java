@@ -6,6 +6,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -27,6 +28,7 @@ import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -34,7 +36,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.LogRecordsListRenderer;
 
 public class ReadLogsWindow extends JDialog {
@@ -46,7 +47,6 @@ public class ReadLogsWindow extends JDialog {
 	private JTextPane editorPane;
 	private String selectedItem = "";
 	private static final long serialVersionUID = 1L;
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
 	/**
@@ -58,9 +58,10 @@ public class ReadLogsWindow extends JDialog {
 		setBounds(100, 100, 660, 550);
 		setBackground(Color.decode("#066d95"));
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 		
 		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -125,6 +126,7 @@ public class ReadLogsWindow extends JDialog {
 		list.setSelectedIndex(0);
 		list.setFixedCellHeight(18);
 		list.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					selectedItem = list.getSelectedValue();

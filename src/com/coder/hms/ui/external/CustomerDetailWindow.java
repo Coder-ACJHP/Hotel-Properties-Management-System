@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -19,11 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.toedter.calendar.JDateChooser;
 
 public class CustomerDetailWindow extends JDialog {
@@ -35,7 +36,6 @@ public class CustomerDetailWindow extends JDialog {
 	private JDateChooser dateOfBirthChooser;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel, titlePanel;
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	private JComboBox<String> countryCmbBox, documentCmbBox, genderCmbBox, marriageStatusCmbBox;
 	private JLabel lblName, lblSurname, lblDateOfBirth, lblCountry, lblFatherName, lblNewLabel, infoLabel,
@@ -61,12 +61,13 @@ public class CustomerDetailWindow extends JDialog {
 				
 		setBounds(100, 100, 710, 460);
 		getContentPane().setLayout(new BorderLayout());
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		getContentPane().setFont(new Font("Verdana", Font.BOLD, 12));
 		setTitle("Coder for HMS - [Customer detail]");
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 		
 		titlePanel = new JPanel();
 		titlePanel.setBackground(new Color(173, 216, 230));
@@ -231,6 +232,7 @@ public class CustomerDetailWindow extends JDialog {
 		chancelBtn = new JButton("CANCEL");
 		chancelBtn.setBounds(430, 5, 110, 40);
 		chancelBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 		
@@ -294,10 +296,12 @@ public class CustomerDetailWindow extends JDialog {
 		this.docNoField.setText(DocumentNo);
 	}
 	
+	@Override
 	public String getName() {
 		return this.nameField.getText();
 	}
 	
+	@Override
 	public void setName(String Name) {
 		this.nameField.setText(Name);
 	}

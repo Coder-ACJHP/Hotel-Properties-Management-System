@@ -8,6 +8,8 @@ package com.coder.hms.ui.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Locale;
@@ -16,12 +18,12 @@ import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
@@ -41,7 +43,6 @@ public class MainFrame extends JFrame {
 	private static SessionBean sessionBean;
 	private static final long serialVersionUID = 1L;
 	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
 	
 	/*get the external toolbar and initialize it*/
@@ -66,7 +67,9 @@ public class MainFrame extends JFrame {
 		
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
-		logoSetter.setApplicationLogoJFrame(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
+		
 		customToolbar = new Main_UpperToolbar(mainPanel);
 		customBottomToolbar = new Main_BottomToolbar();
 		
@@ -75,7 +78,7 @@ public class MainFrame extends JFrame {
 
 		this.setMinimumSize(new Dimension(800, 600));
 		/*make it default size of frame maximized */
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		
 		/*get the external menubar and initialize it*/
 		customMenuBar = new Main_MenuBar();
@@ -112,7 +115,7 @@ public class MainFrame extends JFrame {
 					System.exit(0);
 				}
 				else {
-					setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+					setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 				}
 				
 				super.windowClosing(e);

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -48,7 +49,6 @@ import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.inner.CustomerForm;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.LoggingEngine;
 import com.toedter.calendar.JDateChooser;
 
@@ -72,7 +72,6 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	private JTextField groupNameField, totalDaysField;
 	private JDateChooser checkinDateChooser, checkoutDateChooser;
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	public final CustomerForm customerFormOne = new CustomerForm();
 	public final CustomerForm customerFormTwo = new CustomerForm();
 	public final CustomerForm customerFormThree = new CustomerForm();
@@ -107,7 +106,8 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		setPreferredSize(new Dimension(750, 600));
 		setLocationRelativeTo(null);
 
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);

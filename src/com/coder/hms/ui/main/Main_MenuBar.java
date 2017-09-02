@@ -27,6 +27,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 
 import com.coder.hms.beans.LocaleBean;
@@ -147,7 +148,7 @@ public class Main_MenuBar {
 				System.exit(0);
 			}
 			else {
-				mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			}
 
 		});

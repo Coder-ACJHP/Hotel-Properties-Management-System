@@ -43,6 +43,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -62,7 +63,6 @@ import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.main.Main_AllRooms;
-import com.coder.hms.utils.ApplicationLogoSetter;
 import com.coder.hms.utils.CustomersTableRenderer;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.PayPostTableCellRenderer;
@@ -98,7 +98,6 @@ public class RoomWindow extends JDialog {
 	private JButton postingBtn, paymentBtn, saveChangesBtn, checkoutBtn;
 	final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
-	private final ApplicationLogoSetter logoSetter = new ApplicationLogoSetter();
 	private final PayPostTableCellRenderer payPostRenderer = new PayPostTableCellRenderer();
 	private JFormattedTextField priceField, totalPriceField, balanceField, remainDebtField;
 	private final RoomExternalTableHeaderRenderer THR = new RoomExternalTableHeaderRenderer();
@@ -126,13 +125,14 @@ public class RoomWindow extends JDialog {
 		loggingEngine = LoggingEngine.getInstance();
 		hotelSystemStatus = systemStatusImpl.getSystemStatus();
 		
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		setMinimumSize(new Dimension(1000, 700));
 		setSize(new Dimension(1184, 700));
 		setPreferredSize(new Dimension(1000, 700));
 		// set upper icon for dialog frame
-		logoSetter.setApplicationLogoJDialog(this, LOGOPATH);
+		this.setIconImage(Toolkit.getDefaultToolkit().
+				getImage(getClass().getResource(LOGOPATH)));
 
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);

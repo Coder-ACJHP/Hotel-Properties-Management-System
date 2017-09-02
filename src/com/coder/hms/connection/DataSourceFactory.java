@@ -18,12 +18,11 @@ import com.coder.hms.ui.external.InformationFrame;
 
 public class DataSourceFactory {
 
-	private static InformationFrame INFORMATION_FRAME;
 	private static SessionFactory sessionFactory = null;
 
 	public DataSourceFactory() {
 
-		INFORMATION_FRAME = new InformationFrame();
+		
 	}
 
 	public static synchronized void createConnection() {
@@ -36,9 +35,13 @@ public class DataSourceFactory {
 
 		} catch (Exception e) {
 			Toolkit.getDefaultToolkit().beep();
-			INFORMATION_FRAME.setMessage("Database connection error!");
+			InformationFrame INFORMATION_FRAME = new InformationFrame();
+			INFORMATION_FRAME.setMessage("Sorry we can't connect to database right now, without "
+					+ "connection the application will not work properly.");
+			INFORMATION_FRAME.okBtn.addActionListener(ActionListener->{
+				System.exit(1);
+			});
 			INFORMATION_FRAME.setVisible(true);
-			System.exit(1);
 		}
 	}
 
@@ -53,7 +56,8 @@ public class DataSourceFactory {
 					getSessionFactoryOptions().getServiceRegistry().
 					getService(ConnectionProvider.class).getConnection();
 		} catch (SQLException e) {
-			INFORMATION_FRAME.setMessage("Converting connection error!");
+			InformationFrame INFORMATION_FRAME = new InformationFrame();
+			INFORMATION_FRAME.setMessage("Connection converting error!");
 			INFORMATION_FRAME.setVisible(true);
 		}
 		return connection;
@@ -61,6 +65,6 @@ public class DataSourceFactory {
 	
 	public void shutDown() {
 		if(sessionFactory.isOpen())
-			DataSourceFactory.sessionFactory.close();
+				sessionFactory.close();
 	}
 }
