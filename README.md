@@ -82,7 +82,7 @@ and more...
 <br>
 <h2>About database : </h2>
 This project using MySQL database, with hibernate framework.All tables added to ./../../connection package as (.sql)
-file.For creating the database just import the .sql file into MySQL workbench or from terminal lines.
+file.
 
 <h2>Another questions ?</h2> 
 For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
