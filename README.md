@@ -77,8 +77,8 @@ and more...
 2- Download 'hotel_managenet_system_db.sql' file and create database with same name and import it to your database server.
 3- Clone or download the project and open it in any IDE then built it.
 4- Congrats enjoy with your day :)
-<h3>Still not working?? Watch the video </h3>
-<a href="https://youtu.be/BPbTwpZIuDE">Click and look at video</a>
+<h3>Still not working?? Watch the video</h3>
+<a href="https://youtu.be/BPbTwpZIuDE">Click and watch the video with ENG subtitle</a>
 <br>
 <h2>About database : </h2>
 This project using MySQL database, with hibernate framework.All tables added to ./../../connection package as (.sql)
