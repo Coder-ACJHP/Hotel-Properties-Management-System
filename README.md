@@ -74,12 +74,12 @@ and more...
 
 <h1>How to use?</h1>
 1- Install Mysql server(PhpMyAdmin or Mysql Workbench etc..).
-2- Download 'hotel_managenet_system_db.sql' file and import it to your database server.
-3- Clone or download the project and open it in any IDE then export it with executable jar.
+2- Download 'hotel_managenet_system_db.sql' file and create database with same name and import it to your database server.
+3- Clone or download the project and open it in any IDE then built it.
 4- Congrats enjoy with your day :)
-
-Not : Also you can download Executable jar from Code page. No need to install just double click and play :)
-
+<h3>Still not working??</h3>
+[![Watch the video](https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/login.png)](https://youtu.be/BPbTwpZIuDE)
+<br>
 <h2>About database : </h2>
 This project using MySQL database, with hibernate framework.All tables added to ./../../connection package as (.sql)
 file.For creating the database just import the .sql file into MySQL workbench or from terminal lines.
