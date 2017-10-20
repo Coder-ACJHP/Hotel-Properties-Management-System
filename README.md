@@ -73,11 +73,13 @@ search your reservation with date, referance number or agency referange number, 
 and more...
 
 <h1>How to use?</h1>
-1- Install Mysql server(PhpMyAdmin or Mysql Workbench etc..).
-2- Download 'hotel_managenet_system_db.sql' file and create database with same name and import it to your database server.
-3- Clone or download the project and open it in any IDE then built it.
-4- Congrats enjoy with your day :)
-<h3>Still not working?? Watch the video</h3>
+<ul>
+  <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..).</li>
+  <li> Download 'hotel_managenet_system_db.sql' file and create database with same name and import it to your database server.</li> 
+  <li> Clone or download the project and open it in any IDE then built it.</li> 
+  <li> Congrats enjoy with your day :)</li> 
+</ul>
+<h3>Still not working? Just click and watch the video</h3>
 <a href="https://youtu.be/BPbTwpZIuDE">Click and watch the video with ENG subtitle</a>
 <br>
 <h2>About database : </h2>
