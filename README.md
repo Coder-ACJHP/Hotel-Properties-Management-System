@@ -80,7 +80,7 @@ and more...
   <li> Congrats enjoy with your day :)</li> 
 </ul>
 <h3>Still not working? Just click and watch the video</h3>
-<a href="https://youtu.be/BPbTwpZIuDE">Click and watch the video with ENG subtitle</a>
+<a href="https://youtu.be/BPbTwpZIuDE">watch the video with English subtitle</a>
 <br>
 <h2>About database : </h2>
 This project using MySQL database, with hibernate framework.All tables added to ./../../connection package as (.sql)
