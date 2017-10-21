@@ -1,11 +1,12 @@
 <div align="center">
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png">
   <h1>Hotel-Management-System Application </h1><br>
-  <h4>This project is being carried out by Coder ACJHP.</h4>
+  <h4>This project is designed and developed by Coder ACJHP.</h4>
 </div>    
                                                                                                                           
 
-Coder HMS is hotels managing system application, cross platform (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b>) Easy to use simple user interface, understandable text with icons and every object colored.It's support 4 different languages [ENG, AR, ES, TR] and it composed from seven main packs : <br>
+Coder HMS is hotels properties managing system application, cross platform (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b>) Easy to use simple user interface, understandable text with icons and every object colored.
+It's support 4 different languages ENGLISH, ARABIC, ESPANIOL, TURKISH and it composed from seven main packs : <br>
 <h4>1- Main window </h4> All windows will open on this scene, check your current user, date, €, $, £ exchange as live from status bar, manage your application from menu bar exit, change user, update password, send email, open calculator, exchange, change user interface theme and etc..
 
 <h4>2- Rooms interface </h4>You can manage your all rooms in one page, just focus on the room you can read all information from tooltip text <br> and there is some shortcuts for quick checkin, set as clean, dirty, dnd and etc. show reservation, do checkout etc. */* for
