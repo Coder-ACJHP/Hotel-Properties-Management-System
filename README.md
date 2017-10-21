@@ -76,14 +76,13 @@ and more...
 <ul>
   <li> Clone or download the project and open it in any IDE.</li>
   <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..) if you don't have.</li>
-  <li>Get under <code>com.coder.hms.connection</code> 'hotel_management_system.sql' file and import it to your database server .</li> 
-
-<li> Congrats enjoy with your day :)</li> 
+  <li> Get dump file that located under <code>com.coder.hms.connection</code> with name <code>'hotel_management_system.sql'</code> and import it to your database server.</li> 
+  <li> Congrats enjoy with your day :)</li> 
 </ul>
 <h3>Still not working? Just click and watch the video</h3>
 <a href="https://youtu.be/BPbTwpZIuDE">watch the video with English subtitle</a>
 <br>
-<h2>About database : </h2>
+<h2>Important<small>About database :</small></h2>
 This project using MySQL database, with hibernate framework.All tables added to ./../../connection package as (.sql)
 file.
 <h4>About audit : </h4> if you want to use Audit you should never stop your database server because it's working with
@@ -95,8 +94,9 @@ Add this line in your database to create event : <code>create event dailyAudit o
 For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
 <hr>
 <h2>INFO : </h2>Please read the license carefully.
-
-<h1>New Features 21/10/2017</h1>
+<hr>
+<h1>UPDATES AND NEWS</h1>
+<h2>New Features <b>21/10/2017</b></h2>
 <ul>
   <li>New add user window (as admin)</li>
   <li>New change rooms properties window (as admin)</li>
