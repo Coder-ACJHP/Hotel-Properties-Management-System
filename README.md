@@ -74,11 +74,11 @@ and more...
 
 <h1>How to use?</h1>
 <ul>
-  <li> Clone or download the project and open it in any IDE then built it.</li>
+  <li> Clone or download the project and open it in any IDE.</li>
   <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..) if you don't have.</li>
-  <li> Download 'hotel_managenet_system_db.sql' file and import it to your database server.</li> 
+  <li>Get under <code>com.coder.hms.connection</code> 'hotel_management_system.sql' file and import it to your database server .</li> 
 
-  <li> Congrats enjoy with your day :)</li> 
+<li> Congrats enjoy with your day :)</li> 
 </ul>
 <h3>Still not working? Just click and watch the video</h3>
 <a href="https://youtu.be/BPbTwpZIuDE">watch the video with English subtitle</a>
