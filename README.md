@@ -80,7 +80,7 @@ and more...
   <li> Congrats enjoy with your day :)</li> 
 </ul>
 <h3>Still not working? Just click and watch the video</h3>
-<a href="https://youtu.be/BPbTwpZIuDE">watch the video with English subtitle</a>
+<a href="https://youtu.be/BPbTwpZIuDE">Video with English subtitle</a>
 <br>
 <h2>Important : </h2>
 <h4>About audit : </h4> If you want to use Audit property you should never stop your database server because it's working with
@@ -93,7 +93,7 @@ For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">he
 <hr>
 <h2>INFO : </h2>Please read the license carefully.
 <hr>
-<h1 style="color:yellow;">*** UPDATES AND NEWS ***</h1>
+<h1>*** UPDATES AND NEWS ***</h1>
 <h2>New Features <b>21/10/2017</b></h2>
 <ul>
   <li>New add user window (as admin)</li>
