@@ -97,6 +97,7 @@ For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">he
 <h1>*** UPDATES AND NEWS ***</h1>
 <h2>New Features <b>21/10/2017</b></h2>
 <ul>
+  <li>Download it as cross platform executable .jar <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.0/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">Coder Hotel Managemet System.jar</a></li>
   <li>New add user window (as admin)</li>
   <li>New change rooms properties window (as admin)</li>
   <li>No need to create schema just import the <code>.sql</code> file to your database server.</li>
