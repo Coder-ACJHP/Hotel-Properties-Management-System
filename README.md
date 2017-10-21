@@ -75,7 +75,7 @@ and more...
 <h1>How to use?</h1>
 <ul>
   <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..).</li>
-  <li> Download 'hotel_managenet_system_db.sql' file and create database with same name and import it to your database server.</li> 
+  <li> Download 'hotel_managenet_system_db.sql' file and import it to your database server.</li> 
   <li> Clone or download the project and open it in any IDE then built it.</li> 
   <li> Congrats enjoy with your day :)</li> 
 </ul>
