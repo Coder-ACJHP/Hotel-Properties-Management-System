@@ -53,6 +53,8 @@ import javax.swing.table.TableRowSorter;
 
 import com.coder.hms.beans.Blockade;
 import com.coder.hms.beans.LocaleBean;
+import com.coder.hms.beans.SessionBean;
+import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
@@ -61,6 +63,7 @@ import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Payment;
+import com.coder.hms.entities.ReportObject;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.InformationFrame;
@@ -106,6 +109,8 @@ public class Main_Blockade extends JPanel implements ActionListener {
 	
 	private final HotelSystemStatus systemStatus;
 	private final HotelSystemStatusImpl statusImpl = new HotelSystemStatusImpl();
+	
+	private static final SessionBean S_BEAN = SessionBean.getSESSION_BEAN();
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private JTable table, blokajTable, blokajRoomsTable, blokajCustomerTable;
@@ -271,6 +276,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		upperPanel.add(buttonPanel, BorderLayout.WEST);
 		
 		systemStatus = statusImpl.getSystemStatus();
+		//fetch the date from audit table
 		final Date convertedDate = Date.from(systemStatus.getDateTime().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		
 		dateChooser = new JDateChooser();
@@ -418,7 +424,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		
 	}
 
-	//Bottom main tabel that include all reservations
+	//Bottom main table that include all reservations
 	public void populateMainTable(DefaultTableModel model) {
 		
 		model.setRowCount(0);
@@ -561,39 +567,69 @@ public class Main_Blockade extends JPanel implements ActionListener {
 			Room room = null;
 
 			Optional<String> resIdOptional = Optional.ofNullable(reservIdFromRow);
-			Reservation foundRes = resDaoImpl.findReservationById(Long.valueOf(resIdOptional.get()));
+			try {
+				final ReportObject reportBean = new ReportObject();
+				Reservation foundRes = resDaoImpl.findReservationById(Long.valueOf(resIdOptional.get()));
 
-			loggingEngine.setMessage("[Blockade window] Required reservation found : " + foundRes.toString());
-			final UpdateReservationWindow nex = new UpdateReservationWindow();
-			
-			for (Room searchedRoom : roomList)
-				if (searchedRoom.getReservationId() == foundRes.getId())
-					room = searchedRoom;
+				loggingEngine.setMessage("[Blockade window] Required reservation found : " + foundRes.toString());
+				final UpdateReservationWindow nex = new UpdateReservationWindow();
 
-			for (Customer cst : customerList) {
-				if (cst.getReservationId() == foundRes.getId()) {
-					customerCountry = cst.getCountry();
-					nex.setRoomInfoTableRows(
-							new Object[] { room.getNumber(), room.getType(), cst.getFirstName(), cst.getLastName() });
+				for (Room searchedRoom : roomList)
+					if (searchedRoom.getReservationId() == foundRes.getId())
+						room = searchedRoom;
+
+				for (Customer cst : customerList) {
+					if (cst.getReservationId() == foundRes.getId()) {
+						customerCountry = cst.getCountry();
+						nex.setRoomInfoTableRows(new Object[] { room.getNumber(), room.getType(), cst.getFirstName(),
+								cst.getLastName() });
+					}
 				}
-			}
-				
+				reportBean.setUserName(S_BEAN.getNickName());
+
 				nex.setRezIdField(foundRes.getId());
+				reportBean.setId(foundRes.getId());
+
 				nex.setNameSurnameField(foundRes.getGroupName());
+				reportBean.setGroupName(foundRes.getGroupName());
+
 				nex.setCheckinDate(foundRes.getCheckinDate());
+				reportBean.setCheckinDate(foundRes.getCheckinDate());
+
 				nex.setCheckoutDate(foundRes.getCheckoutDate());
+				reportBean.setCheckoutDate(foundRes.getCheckoutDate());
+
 				nex.setTotalDaysField(foundRes.getTotalDays());
+				reportBean.setTotalDays(foundRes.getTotalDays());
+
 				nex.setReservNote(foundRes.getNote());
+
 				nex.setAgency(foundRes.getAgency());
+				reportBean.setAgency(foundRes.getAgency());
+
 				nex.setHostType(foundRes.getHostType());
+				reportBean.setHostType(foundRes.getHostType());
+
 				nex.setCreditType(foundRes.getCreditType());
 				nex.setReservStatus(foundRes.getBookStatus());
+
 				nex.setRoomNumber(room.getNumber());
+				reportBean.setTheNumber(room.getNumber());
+
 				nex.setRoomType(room.getType());
+				reportBean.setRoomType(room.getType());
+
 				nex.setPersonCountSpinner(room.getPersonCount());
+
 				nex.setPriceOfRoom(room.getPrice());
+				reportBean.setPrice(room.getPrice());
+
 				nex.setCurrency(room.getCurrency());
+				reportBean.setType(room.getCurrency());
+
 				nex.setAgencyRefNo(foundRes.getAgencyRefNo());
+				reportBean.setAgencyRefNo(foundRes.getAgencyRefNo());
+
 				nex.setReferanceNo(foundRes.getReferanceNo());
 				nex.setCustomerCountry(customerCountry);
 
@@ -603,17 +639,39 @@ public class Main_Blockade extends JPanel implements ActionListener {
 				if (foundRes.getPaymentStatus()) {
 
 					payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
-					nex.setEarlyPaymetTableRows(new Object[] { payment.getTitle(), payment.getPaymentType(),
-							payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime() });
+					nex.setEarlyPaymetTableRows(
+							new Object[] { payment.getTitle(), payment.getPaymentType(), payment.getPrice(),
+									payment.getCurrency(), payment.getExplanation(), payment.getDateTime() });
 					final InformationFrame infoFrame = new InformationFrame();
 					infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
+
+					reportBean.setPaymentStatus(true);
+					reportBean.setPaymentType(payment.getPaymentType());
+					reportBean.setBalance(payment.getPrice().toString());
+					reportBean.setCurrency(payment.getCurrency());
 					infoFrame.setVisible(true);
+				} else {
+					
+					reportBean.setPaymentStatus(false);
+					reportBean.setPaymentType("No payment");
+					reportBean.setBalance("0");
+					reportBean.setCurrency(room.getCurrency());
 				}
 
 				loggingEngine.setMessage("Reservation window is populated successfully.");
+				nex.setReportBean(reportBean);
 				nex.setVisible(true);
-				
+
+			} catch (RuntimeException ex) {
+
+				final InformationFrame INFORMATION_FRAME = new InformationFrame();
+				INFORMATION_FRAME.setMessage("Encountered a problem!" + ex.getMessage());
+				INFORMATION_FRAME.setVisible(true);
+				new DataSourceFactory().getTransaction().rollback();
+				return;
 			}
+
+		}
 
 		dateChooser.setDate(masterDate.getTime());
 		dateChooser.revalidate();

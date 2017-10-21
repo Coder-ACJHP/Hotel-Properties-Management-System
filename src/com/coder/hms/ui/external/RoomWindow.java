@@ -49,6 +49,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.apple.eawt.Application;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
@@ -131,8 +132,15 @@ public class RoomWindow extends JDialog {
 		setSize(new Dimension(1184, 700));
 		setPreferredSize(new Dimension(1000, 700));
 		// set upper icon for dialog frame
-		this.setIconImage(Toolkit.getDefaultToolkit().
-				getImage(getClass().getResource(LOGOPATH)));
+		String opSystem = System.getProperty("os.name").toLowerCase();
+
+		if (opSystem.contains("windows") || opSystem.contains("nux")) {
+			
+			this.setIconImage(Toolkit.getDefaultToolkit().
+					getImage(LoginWindow.class.getResource(LOGOPATH)));
+		}else {
+			Application.getApplication().setDockIconImage(new ImageIcon(getClass().getResource(LOGOPATH)).getImage());
+		}
 
 		getContentPane().setForeground(new Color(255, 99, 71));
 		getContentPane().setFocusCycleRoot(true);
@@ -146,7 +154,6 @@ public class RoomWindow extends JDialog {
 
 		/* Set default size of frame */
 		final Dimension computerScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		String opSystem = System.getProperty("os.name").toLowerCase();
 
 		if (opSystem.contains("windows") || opSystem.contains("nux")) {
 

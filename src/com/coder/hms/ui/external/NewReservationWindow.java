@@ -57,6 +57,7 @@ import com.coder.hms.beans.RoomCountRow;
 import com.coder.hms.beans.RoomEarlyPaymentRow;
 import com.coder.hms.beans.RoomInfoRow;
 import com.coder.hms.beans.SessionBean;
+import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
@@ -80,7 +81,6 @@ public class NewReservationWindow extends JDialog {
 	private Date startDate;
 	private Date endDate;
 	private JButton btnAddRoom;
-	private Object[] ROOM_NUMS;
 	private String[] ROOM_TYPES;
 	private double priceValue = 0.0;
 	private NumberFormat formatter;
@@ -91,6 +91,7 @@ public class NewReservationWindow extends JDialog {
 	private final JTextArea noteTextArea;
 	private JFormattedTextField priceField;
 	private boolean completionStatus = false;
+	private Object[] ROOM_NUMS = new String[]{};
 	private JButton chancelBtn, SaveBtn, reportBtn;
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
@@ -418,7 +419,7 @@ public class NewReservationWindow extends JDialog {
 		lblPrice.setBounds(408, 12, 46, 14);
 		roomTypePanel.add(lblPrice);
 		
-		formatter = NumberFormat.getCurrencyInstance();
+		formatter = NumberFormat.getInstance();
 		formatter.setMinimumFractionDigits(2);
 		
 		priceField = new JFormattedTextField(formatter);
@@ -438,7 +439,6 @@ public class NewReservationWindow extends JDialog {
 		//when we create a new reservation we will see all rooms this//
 		//is a big mistake, we have to choose rooms that not blocked //
 		//or not full                                                //
-		ROOM_NUMS = new String[]{};
 		ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
 		
 		roomNumCmbBox = new JComboBox<Object>(new DefaultComboBoxModel<>(ROOM_NUMS));
@@ -596,99 +596,119 @@ public class NewReservationWindow extends JDialog {
 				final Reservation reservation = new Reservation();
 				
 				
-				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
-				reportBean.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
-				
-				reservation.setGroupName(nameSurnameField.getText());
-				reportBean.setGroupName(nameSurnameField.getText());
-				
-				reservation.setCheckinDate(sdf.format(startDate));
-				reportBean.setCheckinDate(sdf.format(startDate));
-				
-				reservation.setCheckoutDate(sdf.format(endDate));
-				reportBean.setCheckoutDate(sdf.format(endDate));
-				
-				reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
-				reportBean.setTotalDays(Integer.parseInt(totalDaysField.getText()));
-				
-				reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
-				reportBean.setAgency(agencyCmbBox.getSelectedItem().toString());
-				
-				reservation.setHostType(hostCmbBox.getSelectedItem().toString());
-				reportBean.setHostType(hostCmbBox.getSelectedItem().toString());
-				
-				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
-				
-				reservation.setNote(Optional.ofNullable(noteTextArea.getText()).orElse(" "));
-				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
-				
-				reservation.setAgencyRefNo(agencyRefField.getText());
-				reportBean.setAgencyRefNo(agencyRefField.getText());
-				
-				reservation.setReferanceNo(referanceNoField.getText());
-				reservation.setIsCheckedIn("NO");				
-				
-				if(earlyPaymetModel.getRowCount() > 0) {
-					reservation.setPaymentStatus(true);
-				}
-				
-				logging.setMessage("Reservation details : " + reservation.toString());
-				rImpl.saveReservation(reservation);
+				try {
+					
+					reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
+					reportBean.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
+					
+					reservation.setGroupName(nameSurnameField.getText());
+					reportBean.setGroupName(nameSurnameField.getText());
+					
+					reservation.setCheckinDate(sdf.format(startDate));
+					reportBean.setCheckinDate(sdf.format(startDate));
+					
+					reservation.setCheckoutDate(sdf.format(endDate));
+					reportBean.setCheckoutDate(sdf.format(endDate));
+					
+					reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
+					reportBean.setTotalDays(Integer.parseInt(totalDaysField.getText()));
+					
+					reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
+					reportBean.setAgency(agencyCmbBox.getSelectedItem().toString());
+					
+					reservation.setHostType(hostCmbBox.getSelectedItem().toString());
+					reportBean.setHostType(hostCmbBox.getSelectedItem().toString());
+					
+					reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
+					
+					reservation.setNote(Optional.ofNullable(noteTextArea.getText()).orElse(" "));
+					reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
+					
+					reservation.setAgencyRefNo(agencyRefField.getText());
+					reportBean.setAgencyRefNo(agencyRefField.getText());
+					
+					reservation.setReferanceNo(referanceNoField.getText());
+					reservation.setIsCheckedIn("NO");		
+					
+					boolean isPayed = false;
+					if(earlyPaymetModel.getRowCount() > 0) {
+						reservation.setPaymentStatus(true);
+						isPayed = true;
+					}
+					
+					logging.setMessage("Reservation details : " + reservation.toString());
+					rImpl.saveReservation(reservation);
+										
+					final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
+					theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
+					
+					theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+					reportBean.setType(currencyCmbBox.getSelectedItem().toString());
+					
+					theRoom.setPersonCount((int)personCountSpinner.getValue());
+					
+					theRoom.setPrice(priceValue);
+					reportBean.setPrice(priceValue);
+					
+					theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
+					reportBean.setRoomType(roomTypeCmbBox.getSelectedItem().toString());
+					
+					theRoom.setCustomerGrupName(nameSurnameField.getText());
+					theRoom.setUsageStatus("BLOCKED");
+					
+					if(isPayed) {
+						
+						theRoom.setBalance(earlyPaymetModel.getValueAt(0, 2).toString());
+					} else {
+						theRoom.setBalance("0");
+					}
+					
+					final Reservation lastReserv = rImpl.getLastReservation();
+					theRoom.setReservationId(lastReserv.getId());
+					reportBean.setId(lastReserv.getId());
+					
+					double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
+					theRoom.setTotalPrice(String.valueOf(lastPrice));
+					reportBean.setPrice(lastPrice);
+					
+					lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
+					theRoom.setRemainingDebt(lastPrice);
+					
+					logging.setMessage("Reservation room details : " + theRoom.toString());
+					roomDaoImpl.updateRoom(theRoom);
 									
-				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
-				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
-				
-				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
-				reportBean.setType(currencyCmbBox.getSelectedItem().toString());
-				
-				theRoom.setPersonCount((int)personCountSpinner.getValue());
-				
-				theRoom.setPrice(priceValue);
-				reportBean.setPrice(priceValue);
-				
-				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
-				reportBean.setRoomType(roomTypeCmbBox.getSelectedItem().toString());
-				
-				theRoom.setCustomerGrupName(nameSurnameField.getText());
-				theRoom.setUsageStatus("BLOCKED");
-				theRoom.setBalance(earlyPaymetModel.getValueAt(0, 2).toString());
-				
-				final Reservation lastReserv = rImpl.getLastReservation();
-				theRoom.setReservationId(lastReserv.getId());
+					final int rowCount = model.getRowCount();
+						
+					Customer theCustomer = null;
+					
+					for(int i= 0; i < rowCount; i++) {
+						
+						theCustomer = new Customer();
+						
+						theCustomer.setFirstName(model.getValueAt(i, 2).toString());
+						theCustomer.setLastName(model.getValueAt(i, 3).toString());
+						theCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
+						theCustomer.setReservationId(lastReserv.getId());
+						cImpl.save(theCustomer);
+						completionStatus = true;
 
-				double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
-				theRoom.setTotalPrice(String.valueOf(lastPrice));
-				
-				lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
-				theRoom.setRemainingDebt(lastPrice);
-				
-				logging.setMessage("Reservation room details : " + theRoom.toString());
-				roomDaoImpl.updateRoom(theRoom);
-								
-				final int rowCount = model.getRowCount();
+						logging.setMessage("Reservation customer(s) : " + theCustomer.toString());
+					}
 					
-				Customer theCustomer = null;
-				
-				for(int i=0; i < rowCount; i++) {
-		
-					theCustomer = new Customer();
+					logging.setMessage("New reservation saved successfully.");
+					final InformationFrame dialog = new InformationFrame();
+					dialog.setMessage("Your reservation save successfully.");
+					dialog.setVisible(true);
 					
-					theCustomer.setFirstName(model.getValueAt(i, 2).toString());
-					theCustomer.setLastName(model.getValueAt(i, 3).toString());
-					theCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
-					theCustomer.setReservationId(lastReserv.getId());
-					cImpl.save(theCustomer);
-					completionStatus = true;
-				
-					logging.setMessage("Reservation customer(s) : " + theCustomer.toString());
+					isShowed = true;
+					
+				} catch (RuntimeException ex) {
+					final InformationFrame INFORMATION_FRAME = new InformationFrame();
+					INFORMATION_FRAME.setMessage("Encountered a problem!Please fill all blanks.");
+					INFORMATION_FRAME.setVisible(true);
+					new DataSourceFactory().getTransaction().rollback();
+					return;
 				}
-				
-				logging.setMessage("New reservation saved successfully.");
-				final InformationFrame dialog = new InformationFrame();
-				dialog.setMessage("Your reservation save successfully.");
-				dialog.setVisible(true);
-				
-				isShowed = true;
 			}
 		};
 		return theListener;
@@ -799,6 +819,9 @@ public class NewReservationWindow extends JDialog {
 				}
 			}
 		};
+		ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
+		roomNumCmbBox.revalidate();
+		roomNumCmbBox.repaint();
 		return acl;
 	}
 	
@@ -811,6 +834,8 @@ public class NewReservationWindow extends JDialog {
 				if(!roomNumber.isEmpty()) {
 					Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
 					roomTypeCmbBox.setSelectedItem(theRoom.getType());
+					priceField.setValue(theRoom.getPrice());
+					currencyCmbBox.setSelectedItem(theRoom.getCurrency());
 				}
 				repaint();
 				

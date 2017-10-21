@@ -82,7 +82,7 @@ public class InformationFrame extends JFrame {
 				
 				sb.append(arr[i]);
 				
-				if(i >= 34) {
+				if(i % 34 == 0) {
 					if(arr[i] == ' ' && flag != 1) {
 						sb.append("<br>");
 						flag++;

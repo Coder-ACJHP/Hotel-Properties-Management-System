@@ -19,7 +19,7 @@ import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.ui.external.Reserved_CheckinWindow;
+import com.coder.hms.ui.external.ReservedCheckinWindow;
 import com.coder.hms.ui.external.RoomWindow;
 import com.coder.hms.ui.external.Walkin_CheckinWindow;
 
@@ -113,7 +113,7 @@ public class RoomsControllAction {
 									@Override
 									public void run() {
 
-										new Reserved_CheckinWindow(theRoom.getNumber()).setVisible(true);
+										new ReservedCheckinWindow(theRoom.getNumber()).setVisible(true);
 
 									}
 								});

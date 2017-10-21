@@ -243,8 +243,9 @@ public class HotelPropertiesWindow extends JDialog {
 			maskFormatter = new MaskFormatter("(###) ###-####");
 			maskFormatter.setValidCharacters("()1234567890 ");
 		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this, "Couldn't set phone "
-					+ "formatter right now,\nPlease restart the current page.");
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Couldn't set phone formatter right now,Please restart the current page.");
+			dialog.setVisible(true);
 		}
 		phoneFrmtField = new JFormattedTextField(maskFormatter);
 		phoneFrmtField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -617,6 +618,7 @@ public class HotelPropertiesWindow extends JDialog {
 	private void saveHotelDetails() {
 		
 		if(checkAllFields()) {
+			
 			loggingEngine.setMessage("Hotel detail is before changing : " + theHotel.toString());
 			
 			theHotel.setName(hotelNameTitle.getText());

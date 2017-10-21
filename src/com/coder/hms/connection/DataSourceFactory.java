@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 
@@ -61,6 +62,10 @@ public class DataSourceFactory {
 			INFORMATION_FRAME.setVisible(true);
 		}
 		return connection;
+	}
+	
+	public Transaction getTransaction() {
+		return getSessionFactory().getCurrentSession().beginTransaction();
 	}
 	
 	public void shutDown() {

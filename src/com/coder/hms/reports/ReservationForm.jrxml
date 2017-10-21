@@ -272,21 +272,21 @@
 				<text><![CDATA[Room Type : ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="240" y="260" width="40" height="21" uuid="eb5ad91e-4436-446f-8a59-2f1173fb3011"/>
+				<reportElement x="270" y="260" width="40" height="21" uuid="eb5ad91e-4436-446f-8a59-2f1173fb3011"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="260" width="68" height="21" uuid="aecc7892-08ec-44e3-9581-5a376e117026"/>
+				<reportElement x="310" y="260" width="68" height="21" uuid="aecc7892-08ec-44e3-9581-5a376e117026"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="180" y="260" width="60" height="21" uuid="36654d0f-7f14-4fe4-98a5-e0b075aa726e"/>
+				<reportElement x="210" y="260" width="60" height="21" uuid="36654d0f-7f14-4fe4-98a5-e0b075aa726e"/>
 				<textElement verticalAlignment="Top">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -305,28 +305,28 @@
 				<text><![CDATA[PAYMENT STATUS]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="110" y="260" width="50" height="21" uuid="59b2be17-e8bf-4031-80ff-4c3dd236dd0d"/>
-				<textElement verticalAlignment="Top">
+				<reportElement x="121" y="260" width="59" height="21" uuid="59b2be17-e8bf-4031-80ff-4c3dd236dd0d"/>
+				<textElement>
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paymentStatus}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="260" width="100" height="21" uuid="88801086-9608-41de-b946-5327c5fb2054"/>
+				<reportElement x="10" y="260" width="111" height="21" uuid="88801086-9608-41de-b946-5327c5fb2054"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Early Payment : ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="470" y="260" width="80" height="21" uuid="068c274d-12a0-4d5c-8304-184d90febf27"/>
-				<textElement verticalAlignment="Top">
+				<reportElement x="496" y="260" width="80" height="21" uuid="068c274d-12a0-4d5c-8304-184d90febf27"/>
+				<textElement>
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paymentType}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="374" y="260" width="96" height="21" uuid="01efb919-a200-40e6-98a2-c876127547f1"/>
+				<reportElement x="400" y="260" width="96" height="21" uuid="01efb919-a200-40e6-98a2-c876127547f1"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>

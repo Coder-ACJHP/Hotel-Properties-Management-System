@@ -64,9 +64,11 @@ import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.entities.Payment;
+import com.coder.hms.entities.ReportObject;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.LoggingEngine;
+import com.coder.hms.utils.Report;
 import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;
 
@@ -75,6 +77,7 @@ public class UpdateReservationWindow extends JDialog {
 	/**
 	 * 
 	 */
+	
 	private int value = 0;
 	private Date startDate;
 	private Date endDate;
@@ -93,6 +96,7 @@ public class UpdateReservationWindow extends JDialog {
 	private JDateChooser checkinDate, checkoutDate;
 	private static final long serialVersionUID = 1L;
 
+	private ReportObject reportBean;
 	private final PaymentWindow payWin = new PaymentWindow();
 	
 	final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -327,12 +331,7 @@ public class UpdateReservationWindow extends JDialog {
 		reportBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		reportBtn.setPreferredSize(new Dimension(110, 40));
 		reportBtn.setFont(new Font("Verdana", Font.BOLD, 15));
-		reportBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				logging.setMessage("Reservation is reporting.");
-			}
-		});
+		reportBtn.addActionListener(prepareReportListener());
 		buttonsPanel.add(reportBtn);
 		
 		SaveBtn = new JButton("UPDATE");
@@ -421,7 +420,7 @@ public class UpdateReservationWindow extends JDialog {
 		lblPrice.setBounds(408, 12, 46, 14);
 		roomTypePanel.add(lblPrice);
 		
-		formatter = NumberFormat.getCurrencyInstance();
+		formatter = NumberFormat.getInstance();
 		formatter.setMinimumFractionDigits(2);
 		
 		priceField = new JFormattedTextField(formatter);
@@ -476,8 +475,10 @@ public class UpdateReservationWindow extends JDialog {
 					@Override
 					public void run() {
 						payWin.setReadyPaymentWindow(roomNumCmbBox.getSelectedItem().toString());
-						if(payWin.getPaymentStatus())
+						if(payWin.getPaymentStatus()) {
 							earlyPaymetModel.addRow(payWin.rowCol);
+						}						
+						
 						logging.setMessage("Adding payment in reservation.");
 						
 					}
@@ -619,8 +620,7 @@ public class UpdateReservationWindow extends JDialog {
 				
 				lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
 				theRoom.setRemainingDebt(lastPrice);
-				
-				
+								
 				if(reservation.getPaymentStatus()) {
 					Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(theRoom.getNumber());
 					earlyPaymetModel.addRow(new Object[]{payment.getTitle(), payment.getPaymentType(), payment.getPrice(),
@@ -634,6 +634,7 @@ public class UpdateReservationWindow extends JDialog {
 					logging.setMessage("Reservation details : " + reservation.toString());
 					
 					rImpl.updateReservation(reservation);
+					
 					roomDaoImpl.updateRoom(theRoom);
 					
 					for(int i=0; i < model.getRowCount(); i++) {
@@ -746,7 +747,7 @@ public class UpdateReservationWindow extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
 				final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
 				final String roomType = roomTypeCmbBox.getSelectedItem().toString();
 				final String currency = currencyCmbBox.getSelectedItem().toString();
@@ -770,6 +771,8 @@ public class UpdateReservationWindow extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//again populate the list with not blocked rooms
+				ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
 				final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
 				if(!roomNumber.isEmpty()) {
 					Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
@@ -777,6 +780,23 @@ public class UpdateReservationWindow extends JDialog {
 				}
 				repaint();
 				
+			}
+		};
+		return listener;
+	}
+	
+	private ActionListener prepareReportListener() {
+		final ActionListener listener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				final Report report = new Report();
+	
+				report.loadReport("ReservationForm", getReportBean());
+				report.showReport();
+				logging.setMessage("Reservation is reporting.");
+
 			}
 		};
 		return listener;
@@ -1044,6 +1064,14 @@ public class UpdateReservationWindow extends JDialog {
 	
 	public void setReferanceNo(String refNo) {
 		this.referanceNoField.setText(refNo);
+	}
+	
+	public ReportObject getReportBean() {
+		return reportBean;
+	}
+
+	public void setReportBean(ReportObject reportObject) {
+		this.reportBean = reportObject;
 	}
 	
 	public void addActionListenerToUpdateBtn(ActionListener listener) {

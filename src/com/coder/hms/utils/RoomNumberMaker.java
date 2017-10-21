@@ -60,6 +60,7 @@ public class RoomNumberMaker {
 		for(int index=0; index < reservList.size(); index++) {
 			
 			roomNumbers[index] = reservList.get(index).getTheNumber();
+
 		}
 		
 		//get all rooms and check them if it status is 'FULL' add to list
@@ -71,6 +72,7 @@ public class RoomNumberMaker {
 		for (int i=0; i < roomList.size(); i++) {
 			if(roomList.get(i).getUsageStatus().equals("FULL")) {
 				appendBusys[i] = roomList.get(i).getNumber();
+
 			}
 		}
 		

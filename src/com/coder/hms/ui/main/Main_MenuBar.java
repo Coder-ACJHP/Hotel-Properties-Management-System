@@ -35,12 +35,15 @@ import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.entities.User;
+import com.coder.hms.ui.external.AddUserWindow;
 import com.coder.hms.ui.external.ChangePasswordWindow;
 import com.coder.hms.ui.external.ExchangeWindow;
 import com.coder.hms.ui.external.HotelPropertiesWindow;
+import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.LicenseWindow;
 import com.coder.hms.ui.external.LoginWindow;
 import com.coder.hms.ui.external.ReadLogsWindow;
+import com.coder.hms.ui.external.RoomsPropertiesWindow;
 import com.coder.hms.utils.ApplicaitonThemeChanger;
 import com.coder.hms.utils.ResourceControl;
 
@@ -56,8 +59,8 @@ public class Main_MenuBar {
 	private final String command = System.getProperty("os.name");
 	public final ApplicaitonThemeChanger themeChanger = new ApplicaitonThemeChanger();
 	private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
-	private JMenuItem hoteProps, restart, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
-	defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, chngPassword, aboutDeveloper,
+	private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
+	defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, addUser, chngPassword, aboutDeveloper,
 	sourceCode, shareYourOpinion, license;
 	
 	//getter method for getting the modified menubar from another class
@@ -86,19 +89,8 @@ public class Main_MenuBar {
 		hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
 		hoteProps.addActionListener(ActionListener ->{
 
-			
-			SessionBean sessionBean = SessionBean.getSESSION_BEAN();
-			
-			UserDaoImpl userDaoImpl = new UserDaoImpl();
-			User currentUser = userDaoImpl.getUserByName(sessionBean.getNickName());
-			
-			if(currentUser.getRole().equals("USER")) {
-				Toolkit.getDefaultToolkit().beep();
-				JOptionPane.showMessageDialog(new JFrame(), "Access denied!\nYou don't have permission to access!",
-						JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
-			}
-			
-			else {
+			boolean control = checkRole();
+			if(! control) {
 				SwingUtilities.invokeLater(new Runnable() {
 					
 					@Override
@@ -110,6 +102,24 @@ public class Main_MenuBar {
 			}
 		});
 		frontDesk.add(hoteProps);
+		
+		roomProps = new JMenuItem("Rooms Properties");
+		roomProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_room.png")));
+		roomProps.addActionListener(ActionListener ->{
+
+			boolean control = checkRole();
+			if(! control) {
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						new RoomsPropertiesWindow();
+						
+					}
+				});
+			}
+		});
+		frontDesk.add(roomProps);
 		
 		restart = new JMenuItem("Restart");
 		restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
@@ -298,6 +308,24 @@ public class Main_MenuBar {
 		});
 		usersMenu.add(changeUser);
 		
+		addUser = new JMenuItem("Add user");
+		addUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_user.png")));
+		addUser.addActionListener(ActionListener ->{
+
+			boolean control = checkRole();
+			if(! control) {
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						new AddUserWindow();
+						
+					}
+				});
+			}
+		});
+		usersMenu.add(addUser);
+		
 		chngPassword = new JMenuItem("Change password");
 		chngPassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
 		chngPassword.addActionListener(ActionListener ->{
@@ -385,6 +413,25 @@ public class Main_MenuBar {
 		mnAbout.add(license);
 		
 		changeLanguage(bean.getLocale());
+	}
+	
+	private boolean checkRole() {
+		boolean isUser = false;
+		SessionBean sessionBean = SessionBean.getSESSION_BEAN();
+		
+		UserDaoImpl userDaoImpl = new UserDaoImpl();
+		User currentUser = userDaoImpl.getUserByName(sessionBean.getNickName());
+		
+		if(currentUser.getRole().equals("USER")) {
+			
+			Toolkit.getDefaultToolkit().beep();
+			final InformationFrame INFORMATION_FRAME = new InformationFrame();
+			INFORMATION_FRAME.setMessage("Access denied! You don't have permission to access!");
+			INFORMATION_FRAME.setVisible(true);
+
+			isUser = true;
+		}
+		return isUser;
 	}
 	
 	private void changeLanguage(Locale locale) {

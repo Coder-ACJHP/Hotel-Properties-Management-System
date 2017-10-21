@@ -35,7 +35,7 @@ import com.coder.hms.entities.Room;
 import com.coder.hms.ui.inner.CustomerForm;
 import com.coder.hms.utils.LoggingEngine;
 
-public class Reserved_CheckinWindow extends JDialog implements ActionListener {
+public class ReservedCheckinWindow extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -61,7 +61,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 	/**
 	 * Create the dialog.
 	 */
-	public Reserved_CheckinWindow(String roomNumber) {
+	public ReservedCheckinWindow(String roomNumber) {
 
 		this.ownRoomNumber = roomNumber;
 		
@@ -117,7 +117,7 @@ public class Reserved_CheckinWindow extends JDialog implements ActionListener {
 
 		JButton roomCheckinBtn = new JButton("Room checkin");
 		roomCheckinBtn.addActionListener(this);
-		roomCheckinBtn.setIcon(new ImageIcon(Reserved_CheckinWindow.class
+		roomCheckinBtn.setIcon(new ImageIcon(ReservedCheckinWindow.class
 						.getResource("/com/coder/hms/icons/extra_checkin.png")));
 		roomCheckinBtn.setBounds(7, 4, 130, 42);
 		buttonPanel.add(roomCheckinBtn);

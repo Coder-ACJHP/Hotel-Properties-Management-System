@@ -1,0 +1,350 @@
+00:07:03 21/10/2017
+INFO:User is : coder acjhp
+00:07:06 21/10/2017
+INFO:MainFrame created successfully.
+00:07:15 21/10/2017
+INFO:User is : coder acjhp
+00:08:59 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Henry Ausertin 1 DOUBLE, checkinDate=2017-10-21, checkoutDate=2017-10-22, totalDays=1, agency=WEB, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1003, isCheckedIn=NO, agencyRefNo=, referanceNo=454588]
+00:09:08 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Henry Ausertin 1 DOUBLE, checkinDate=2017-10-21, checkoutDate=2017-10-22, totalDays=1, agency=WEB, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1003, isCheckedIn=NO, agencyRefNo=, referanceNo=454588]
+00:09:36 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Henry Ausertin 1 DOUBLE, checkinDate=2017-10-21, checkoutDate=2017-10-22, totalDays=1, agency=WEB, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1003, isCheckedIn=NO, agencyRefNo=, referanceNo=454588]
+00:10:30 21/10/2017
+INFO:New reservation creating cancelled.
+00:11:17 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=9, groupName=Henry Ausertin 1 DOUBLE, checkinDate=2017-10-21, checkoutDate=2017-10-22, totalDays=1, agency=WEB, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1003, isCheckedIn=NO, agencyRefNo=, referanceNo=454588]
+00:11:17 21/10/2017
+INFO:User is : coder acjhp
+00:13:15 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=7, groupName=Henry Ausertin 1 DOUBLE, checkinDate=2017-10-21, checkoutDate=2017-10-22, totalDays=1, agency=WEB, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1003, isCheckedIn=NO, agencyRefNo=, referanceNo=454588]
+00:13:15 21/10/2017
+INFO:User is : coder acjhp
+00:15:49 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=7, groupName=Henry Ausertin 1 DOUBLE, checkinDate=2017-10-21, checkoutDate=2017-10-22, totalDays=1, agency=WEB, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1003, isCheckedIn=NO, agencyRefNo=, referanceNo=454588]
+00:15:49 21/10/2017
+INFO:User is : coder acjhp
+00:20:49 21/10/2017
+INFO:User is : coder acjhp
+00:20:51 21/10/2017
+INFO:MainFrame created successfully.
+00:21:12 21/10/2017
+INFO:User is : coder acjhp
+00:22:15 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Henry Ausert, checkinDate=2017-10-21, checkoutDate=2017-10-24, totalDays=3, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1004, isCheckedIn=NO, agencyRefNo=, referanceNo=454588]
+00:27:35 21/10/2017
+INFO:New reservation creating cancelled.
+00:28:03 21/10/2017
+INFO:User is : coder acjhp
+00:28:05 21/10/2017
+INFO:MainFrame created successfully.
+00:28:29 21/10/2017
+INFO:User is : coder acjhp
+00:29:51 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Henry Austin, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=3002, isCheckedIn=NO, agencyRefNo=, referanceNo=121212]
+00:31:32 21/10/2017
+INFO:New reservation creating cancelled.
+00:34:15 21/10/2017
+INFO:User is : admin
+00:34:17 21/10/2017
+INFO:MainFrame created successfully.
+00:34:51 21/10/2017
+INFO:User is : admin
+00:36:12 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Chad Darby, checkinDate=2017-10-22, checkoutDate=2017-10-23, totalDays=1, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=2004, isCheckedIn=NO, agencyRefNo=, referanceNo=121212]
+00:39:38 21/10/2017
+INFO:User is : coder acjhp
+00:39:40 21/10/2017
+INFO:MainFrame created successfully.
+00:39:42 21/10/2017
+INFO:User is : coder acjhp
+00:40:38 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Asala Nasry, checkinDate=2017-10-22, checkoutDate=2017-10-23, totalDays=1, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1001, isCheckedIn=NO, agencyRefNo=, referanceNo=]
+00:40:38 21/10/2017
+INFO:Reservation room details : Room [theRoomId=1, number=1001, type=DOUBLE, price=350.0, totalPrice=350.0, balance=0.0, remaining debt=350.0, currency=TURKISH LIRA, cleaningStatus=DIRTY, usageStatus=BLOCKED, personCount=1, customerGrupName=Asala Nasry, ReservationId=1]
+00:41:44 21/10/2017
+INFO:New reservation creating cancelled.
+00:56:06 21/10/2017
+INFO:User is : admin
+00:56:07 21/10/2017
+INFO:MainFrame created successfully.
+00:56:12 21/10/2017
+INFO:User is : admin
+00:57:20 21/10/2017
+INFO:Reservation details : Reservation [Id=0, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+00:57:20 21/10/2017
+INFO:Reservation room details : Room [theRoomId=2, number=1002, type=DOUBLE, price=300.0, totalPrice=600.0, balance=0, remaining debt=600.0, currency=TURKISH LIRA, cleaningStatus=DIRTY, usageStatus=BLOCKED, personCount=1, customerGrupName=Asala Nasry, ReservationId=2]
+00:57:20 21/10/2017
+INFO:Reservation customer(s) : Customer [CustomerId=1, FirstName=Asala, LastName=Nasry, Country=Egypt, Document=null, DocumentNo=null, DateOfBirth=null, Gender=null, MaritalStatus=null, FatherName=null, MotherName=null, Email=null, Phone=null, ReservationId=2]
+00:57:20 21/10/2017
+INFO:New reservation saved successfully.
+00:57:26 21/10/2017
+INFO:Reservation is reporting.
+01:09:46 21/10/2017
+INFO:User is : admin
+01:09:48 21/10/2017
+INFO:MainFrame created successfully.
+01:10:10 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+01:10:10 21/10/2017
+INFO:User is : admin
+01:10:11 21/10/2017
+INFO:Reservation window is populated successfully.
+01:10:13 21/10/2017
+INFO:Reservation is reporting.
+01:10:28 21/10/2017
+INFO:Reservation is reporting.
+01:10:51 21/10/2017
+INFO:Reservation is reporting.
+01:11:02 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=1, groupName=Asala Nasry, checkinDate=2017-10-22, checkoutDate=2017-10-23, totalDays=1, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1001, isCheckedIn=NO, agencyRefNo=, referanceNo=]
+01:11:02 21/10/2017
+INFO:User is : admin
+01:11:02 21/10/2017
+INFO:Reservation window is populated successfully.
+01:11:46 21/10/2017
+INFO:Reservation room details : Room [theRoomId=1, number=1001, type=DOUBLE, price=350.0, totalPrice=350.0, balance=0.0, remaining debt=350.0, currency=TURKISH LIRA, cleaningStatus=DIRTY, usageStatus=BLOCKED, personCount=1, customerGrupName=Asala Nasry, ReservationId=1]
+01:11:46 21/10/2017
+INFO:Reservation details : Reservation [Id=1, groupName=Asala Nasry, checkinDate=2017-10-22, checkoutDate=2017-10-23, totalDays=1, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1001, isCheckedIn=NO, agencyRefNo=, referanceNo=]
+01:17:30 21/10/2017
+INFO:User is : admin
+01:17:32 21/10/2017
+INFO:MainFrame created successfully.
+01:19:09 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=1, groupName=Asala Nasry, checkinDate=2017-10-22, checkoutDate=2017-10-23, totalDays=1, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1001, isCheckedIn=NO, agencyRefNo=, referanceNo=]
+01:19:09 21/10/2017
+INFO:User is : admin
+01:19:10 21/10/2017
+INFO:Reservation window is populated successfully.
+01:19:23 21/10/2017
+INFO:Reservation is reporting.
+01:19:24 21/10/2017
+INFO:New reservation creating cancelled.
+01:19:29 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+01:19:29 21/10/2017
+INFO:User is : admin
+01:19:29 21/10/2017
+INFO:Reservation window is populated successfully.
+01:20:00 21/10/2017
+INFO:Adding payment in reservation.
+01:20:05 21/10/2017
+INFO:Reservation room details : Room [theRoomId=1, number=1001, type=DOUBLE, price=300.0, totalPrice=600.0, balance=100.0, remaining debt=500.0, currency=TURKISH LIRA, cleaningStatus=DIRTY, usageStatus=BLOCKED, personCount=1, customerGrupName=Asala Nasry, ReservationId=1]
+01:20:05 21/10/2017
+INFO:Reservation details : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1001, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+01:22:35 21/10/2017
+INFO:User is : admin
+01:22:37 21/10/2017
+INFO:MainFrame created successfully.
+01:37:14 21/10/2017
+INFO:User is : admin
+01:37:16 21/10/2017
+INFO:MainFrame created successfully.
+01:37:24 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+01:37:25 21/10/2017
+INFO:User is : admin
+01:37:25 21/10/2017
+INFO:Reservation window is populated successfully.
+01:37:30 21/10/2017
+INFO:Reservation is reporting.
+01:45:39 21/10/2017
+INFO:User is : admin
+01:45:41 21/10/2017
+INFO:MainFrame created successfully.
+01:45:48 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+01:45:48 21/10/2017
+INFO:User is : admin
+01:45:48 21/10/2017
+INFO:Reservation window is populated successfully.
+01:54:54 21/10/2017
+INFO:New reservation creating cancelled.
+02:07:05 21/10/2017
+INFO:User is : admin
+02:07:07 21/10/2017
+INFO:MainFrame created successfully.
+02:07:14 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+02:07:14 21/10/2017
+INFO:User is : admin
+02:07:14 21/10/2017
+INFO:Reservation window is populated successfully.
+02:07:22 21/10/2017
+INFO:Reservation is reporting.
+02:10:16 21/10/2017
+INFO:User is : admin
+02:10:19 21/10/2017
+INFO:MainFrame created successfully.
+02:10:23 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+02:10:23 21/10/2017
+INFO:User is : admin
+02:10:23 21/10/2017
+INFO:Reservation window is populated successfully.
+02:10:26 21/10/2017
+INFO:Reservation is reporting.
+02:12:21 21/10/2017
+INFO:User is : admin
+02:12:23 21/10/2017
+INFO:MainFrame created successfully.
+02:12:31 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=2, groupName=Asala Nasry, checkinDate=2017-10-21, checkoutDate=2017-10-23, totalDays=2, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=false, theNumber=1002, isCheckedIn=NO, agencyRefNo=454545, referanceNo=]
+02:12:31 21/10/2017
+INFO:User is : admin
+02:12:32 21/10/2017
+INFO:Reservation window is populated successfully.
+02:12:37 21/10/2017
+INFO:Reservation is reporting.
+02:17:30 21/10/2017
+INFO:User is : admin
+02:17:32 21/10/2017
+INFO:MainFrame created successfully.
+02:19:10 21/10/2017
+INFO:[Blockade window] Required reservation found : Reservation [Id=1, groupName=Asala Nasry, checkinDate=2017-10-22, checkoutDate=2017-10-23, totalDays=1, agency=WALKIN, hostType=B.B, creditType=STANDART CUSTOMER CREDIT, bookStatus=GUARANTEE, note=, paymentStatus=true, theNumber=1001, isCheckedIn=NO, agencyRefNo=, referanceNo=]
+02:19:10 21/10/2017
+INFO:User is : admin
+02:19:10 21/10/2017
+INFO:Reservation window is populated successfully.
+02:19:20 21/10/2017
+INFO:Reservation is reporting.
+04:42:02 21/10/2017
+INFO:User is : admin
+04:42:04 21/10/2017
+INFO:MainFrame created successfully.
+04:42:53 21/10/2017
+INFO:User is : admin
+04:43:21 21/10/2017
+INFO:User is : coder acjhp
+04:43:22 21/10/2017
+INFO:MainFrame created successfully.
+04:49:17 21/10/2017
+INFO:User is : admin
+04:49:18 21/10/2017
+INFO:MainFrame created successfully.
+04:49:30 21/10/2017
+INFO:User is : admin
+04:50:33 21/10/2017
+INFO:New reservation creating cancelled.
+04:52:10 21/10/2017
+INFO:User is : admin
+04:52:12 21/10/2017
+INFO:MainFrame created successfully.
+04:52:15 21/10/2017
+INFO:User is : admin
+04:52:54 21/10/2017
+INFO:New reservation creating cancelled.
+04:57:16 21/10/2017
+INFO:User is : admin
+04:57:18 21/10/2017
+INFO:MainFrame created successfully.
+04:58:00 21/10/2017
+INFO:User is : admin
+04:58:45 21/10/2017
+INFO:New reservation creating cancelled.
+05:01:39 21/10/2017
+INFO:User is : admin
+05:02:00 21/10/2017
+INFO:New reservation creating cancelled.
+05:04:34 21/10/2017
+INFO:User is : coder acjhp
+05:04:36 21/10/2017
+INFO:MainFrame created successfully.
+05:04:53 21/10/2017
+INFO:User is : coder acjhp
+05:05:06 21/10/2017
+INFO:New reservation creating cancelled.
+05:09:36 21/10/2017
+INFO:User is : admin
+05:09:38 21/10/2017
+INFO:MainFrame created successfully.
+05:09:42 21/10/2017
+INFO:User is : admin
+05:13:28 21/10/2017
+INFO:New reservation creating cancelled.
+05:13:30 21/10/2017
+INFO:User is : admin
+06:22:52 21/10/2017
+INFO:User is : coder acjhp
+06:23:51 21/10/2017
+INFO:User is : coder acjhp
+06:25:01 21/10/2017
+INFO:User is : coder acjhp
+06:25:03 21/10/2017
+INFO:MainFrame created successfully.
+06:25:22 21/10/2017
+INFO:User is : admin
+06:25:23 21/10/2017
+INFO:MainFrame created successfully.
+06:37:36 21/10/2017
+INFO:User is : admin
+06:37:38 21/10/2017
+INFO:MainFrame created successfully.
+06:45:49 21/10/2017
+INFO:User is : admin
+06:45:51 21/10/2017
+INFO:MainFrame created successfully.
+06:48:02 21/10/2017
+INFO:User is : admin
+06:48:04 21/10/2017
+INFO:MainFrame created successfully.
+06:53:45 21/10/2017
+INFO:User is : admin
+06:53:47 21/10/2017
+INFO:MainFrame created successfully.
+06:57:10 21/10/2017
+INFO:User is : admin
+06:57:12 21/10/2017
+INFO:MainFrame created successfully.
+06:57:48 21/10/2017
+INFO:Change password window is started....
+06:57:48 21/10/2017
+INFO:User is : admin
+06:58:01 21/10/2017
+INFO:User is : onur_899
+06:58:03 21/10/2017
+INFO:MainFrame created successfully.
+06:58:10 21/10/2017
+INFO:Change password window is started....
+06:58:10 21/10/2017
+INFO:User is : onur_899
+06:58:27 21/10/2017
+INFO:User : onur_899old password is : 123
+06:58:27 21/10/2017
+INFO:User : onur_899new password is : onur958
+06:58:27 21/10/2017
+INFO:Password changed successfully.
+06:58:46 21/10/2017
+INFO:User is : onur_899
+06:58:47 21/10/2017
+INFO:MainFrame created successfully.
+06:58:50 21/10/2017
+INFO:User is : onur_899
+07:00:56 21/10/2017
+INFO:User is : onur_899
+07:00:58 21/10/2017
+INFO:MainFrame created successfully.
+07:01:03 21/10/2017
+INFO:User is : onur_899
+07:01:09 21/10/2017
+INFO:User is : onur_899
+07:01:17 21/10/2017
+INFO:User is : onur_899
+07:07:56 21/10/2017
+INFO:User is : admin
+07:07:57 21/10/2017
+INFO:MainFrame created successfully.
+07:08:02 21/10/2017
+INFO:User is : admin
+07:15:07 21/10/2017
+INFO:User is : admin
+07:15:09 21/10/2017
+INFO:MainFrame created successfully.
+07:15:11 21/10/2017
+INFO:User is : admin
+07:19:06 21/10/2017
+INFO:User is : admin
+07:19:08 21/10/2017
+INFO:MainFrame created successfully.
+07:19:11 21/10/2017
+INFO:User is : admin
