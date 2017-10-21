@@ -82,10 +82,8 @@ and more...
 <h3>Still not working? Just click and watch the video</h3>
 <a href="https://youtu.be/BPbTwpZIuDE">watch the video with English subtitle</a>
 <br>
-<h2>Important<small>About database :</small></h2>
-This project using MySQL database, with hibernate framework.All tables added to ./../../connection package as (.sql)
-file.
-<h4>About audit : </h4> if you want to use Audit you should never stop your database server because it's working with
+<h2>Important : </h2>
+<h4>About audit : </h4> If you want to use Audit property you should never stop your database server because it's working with
 Event schedular in the database server. In every 18 hours event will update value of Audit from true to false than we can use Audit.
 Do not forget Audit is can only be done once in a day.
 Add this line in your database to create event : <code>create event dailyAudit on schedule every 18 hour do update HotelSystemStatus set isAuditted = 0</code>
@@ -95,7 +93,7 @@ For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">he
 <hr>
 <h2>INFO : </h2>Please read the license carefully.
 <hr>
-<h1>UPDATES AND NEWS</h1>
+<h1 style="color:yellow;">*** UPDATES AND NEWS ***</h1>
 <h2>New Features <b>21/10/2017</b></h2>
 <ul>
   <li>New add user window (as admin)</li>
