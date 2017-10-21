@@ -94,3 +94,12 @@ Add this line in your database to create event : <code>create event dailyAudit o
 For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
 <hr>
 <h2>INFO : </h2>Please read the license carefully.
+
+<h1>New Features 21/10/2017</h1>
+<ul>
+  <li>New add user window (as admin)</li>
+  <li>New change rooms properties window (as admin)</li>
+  <li>No need to create schema just import the <code>.sql</code> file to your database server.</li>
+  <li>Fixed all reservation errors, added new security codes.</li>
+  <li>Added generating report at update reservation window also.</li>
+</ul>
