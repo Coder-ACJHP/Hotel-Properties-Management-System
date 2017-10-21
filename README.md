@@ -74,9 +74,10 @@ and more...
 
 <h1>How to use?</h1>
 <ul>
-  <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..).</li>
+  <li> Clone or download the project and open it in any IDE then built it.</li>
+  <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..) if you don't have.</li>
   <li> Download 'hotel_managenet_system_db.sql' file and import it to your database server.</li> 
-  <li> Clone or download the project and open it in any IDE then built it.</li> 
+
   <li> Congrats enjoy with your day :)</li> 
 </ul>
 <h3>Still not working? Just click and watch the video</h3>
