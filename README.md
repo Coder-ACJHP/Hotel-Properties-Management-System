@@ -3,7 +3,7 @@
   <h1>Hotel-Management-System Application </h1><br>
   <h4>This project is designed and developed by Coder ACJHP.</h4>
 </div>    
-https://travis-ci.org/Coder-ACJHP/Hotel-Management-System.svg?branch=master                                                                                                              
+<img src="https://travis-ci.org/Coder-ACJHP/Hotel-Management-System.svg?branch=master">                                                                                                             
 
 Coder HMS is hotels properties managing system application, cross platform (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b>) Easy to use simple user interface, understandable text with icons and every object colored.
 It's support 4 different languages ENGLISH, ARABIC, ESPANIOL, TURKISH and it composed from seven main packs : <br>
