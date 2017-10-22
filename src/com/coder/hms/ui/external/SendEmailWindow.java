@@ -27,6 +27,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.entities.User;
 import com.coder.hms.utils.EmailValidator;
@@ -162,12 +163,23 @@ public class SendEmailWindow extends JDialog {
 					final User user = userDaoImpl.getUserByEmail(theEmail);
 					
 					if(user.getId() > 0) {
-						System.out.println(user.toString());
-						final SendEmailToUser sendEmail = new SendEmailToUser();
-						sendEmail.setReadyForEmail("java.arabic.community@gmail.com", "community");
-						sendEmail.setFrom("java.arabic.community@gmail.com", user.getEmail());
-						sendEmail.setEmailBody("Remind of password", "Your password is : " + user.getPassword());
-						sendEmail.sendTheEmail();
+
+						try {
+							
+							final SendEmailToUser sendEmail = new SendEmailToUser();
+							sendEmail.setReadyForEmail("java.arabic.community@gmail.com", "community");
+							sendEmail.setFrom("java.arabic.community@gmail.com", user.getEmail());
+							sendEmail.setEmailBody("Remind of password", "Your password is : " + user.getPassword());
+							sendEmail.sendTheEmail();
+							
+						} catch (RuntimeException ex) {
+							final InformationFrame dialog = new InformationFrame();
+							dialog.setMessage("Email sending error!Please again later.");
+							dialog.setVisible(true);
+							new DataSourceFactory().getTransaction().rollback();
+						}
+						
+						cleanFields();
 						infoLabel.setForeground(Color.GREEN);
 						infoLabel.setText("Your password has been sent to your e-mail address, please check your mail box.");
 					}
@@ -188,4 +200,7 @@ public class SendEmailWindow extends JDialog {
 		return listener;
 	}
 
+	private void cleanFields() {
+		textField.setText(" ");
+	}
 }
