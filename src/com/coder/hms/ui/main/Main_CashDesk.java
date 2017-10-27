@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -41,6 +42,7 @@ import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
+import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.MoneyTransaction;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
 import com.coder.hms.utils.ResourceControl;
@@ -369,14 +371,27 @@ public class Main_CashDesk extends JPanel {
 		buttonPanel.add(btnNewOperation);
 		
 		populateAllFields();
-		changeLanguage(bean.getLocale());
+		
+		try {
+			
+			changeLanguage(bean.getLocale());
+			
+		}catch(MissingResourceException ex) {
+			
+			changeLanguage(getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 	}
 
-	private void changeLanguage(Locale locale) {
+	private void changeLanguage(Locale locale) throws MissingResourceException {
 
-		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		bundle = ResourceBundle.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 		
 		this.btnNewOperation.setText(bundle.getString("NewTransaction"));
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private void populateMainTable(DefaultTableModel theModel) {

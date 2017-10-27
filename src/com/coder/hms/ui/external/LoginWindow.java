@@ -26,6 +26,7 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -309,7 +310,9 @@ public class LoginWindow extends JDialog {
 				super.windowClosing(e);
 			}
 		});
-		changeLanguage(getLocale());
+        
+        changeLanguage(getLocale());
+        	
 		setAlwaysOnTop(false);
 		setVisible(true);
 		
@@ -317,16 +320,27 @@ public class LoginWindow extends JDialog {
 
 	private void changeLanguage(Locale locale) {
 
-		bundle = ResourceBundle
-				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
-		this.setTitle(bundle.getString("MainTitle") +" (" + newDate +")");
-		this.btnClear.setText(bundle.getString("Clear"));
-		this.btnLogin.setText(bundle.getString("Login"));
-		this.lblResetYourPassword.setText(bundle.getString("ResetPwd"));
-		this.userNameLabel.setText(bundle.getString("UserName"));
-		this.passwordLabel.setText(bundle.getString("Password"));
-		this.revalidate();
-		this.repaint();
+		try {
+			
+			bundle = ResourceBundle
+					.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
+			this.setTitle(bundle.getString("MainTitle") +" (" + newDate +")");
+			this.btnClear.setText(bundle.getString("Clear"));
+			this.btnLogin.setText(bundle.getString("Login"));
+			this.lblResetYourPassword.setText(bundle.getString("ResetPwd"));
+			this.userNameLabel.setText(bundle.getString("UserName"));
+			this.passwordLabel.setText(bundle.getString("Password"));
+			this.revalidate();
+			this.repaint();
+		
+		}catch (MissingResourceException ex) {
+
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+			
+			logging.setMessage(ex.getMessage());
+		}
 	}
 	
 	private ActionListener getActionOfLangBox() {
@@ -363,7 +377,19 @@ public class LoginWindow extends JDialog {
 					break;
 				}
 				
-				changeLanguage(bean.getLocale());
+				try {
+					
+					changeLanguage(bean.getLocale());
+				
+				}catch (MissingResourceException ex) {
+
+					final InformationFrame dialog = new InformationFrame();
+					dialog.setMessage("Cannot find translation files, application will continue with default language.");
+					dialog.setVisible(true);
+					
+					logging.setMessage(ex.getMessage());
+				}
+				
 				logging.setMessage("Language changed.");
 			}
 		};

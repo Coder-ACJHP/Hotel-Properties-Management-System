@@ -1,7 +1,7 @@
 package com.coder.hms.test;
 
 import com.coder.hms.entities.ReportObject;
-import com.coder.hms.utils.Report;
+import com.coder.hms.utils.ShowReport;
 
 public class ReporterTest {
 
@@ -11,7 +11,7 @@ public class ReporterTest {
 				"TAYFUN ARSLANHAN 1 TRIPLE", "2017-08-29", "2017-08-31",
 				"WEB", "0001-XX", 2, "DOUBLE", "B.B", "5004", "DOLLAR",
 				300.0, true, "DOLLAR", "250.0","CASH PAYMENT");
-		final  Report report = new Report();
+		final  ShowReport report = new ShowReport();
 		report.loadReport("ReservationForm", reportBean);
 		report.showReport();
 		

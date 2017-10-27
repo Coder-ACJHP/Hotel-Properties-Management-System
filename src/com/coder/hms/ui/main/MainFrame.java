@@ -13,6 +13,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
@@ -24,6 +25,7 @@ import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
@@ -100,7 +102,18 @@ public class MainFrame extends JFrame {
 		getContentPane().add(customToolbar.getJPanel(), BorderLayout.NORTH);
 		
 		getContentPane().add(customBottomToolbar.getToolBar(), BorderLayout.SOUTH);
-		changeLanguage(bean.getLocale());
+		
+		try {
+			
+			changeLanguage(bean.getLocale());
+			
+		}catch(MissingResourceException ex) {
+			
+			changeLanguage(getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 		
 		/*set exiting from the application when clicking on X button*/
 		this.addWindowListener(new WindowAdapter() {
@@ -127,10 +140,10 @@ public class MainFrame extends JFrame {
 
 	}
 	
-	private void changeLanguage(Locale locale) {
+	private void changeLanguage(Locale locale) throws MissingResourceException {
 
 		final ResourceBundle bundle = ResourceBundle
-				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+				.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 		this.setTitle(bundle.getString("MainTitle"));
 		this.exitMessage = bundle.getString("ExitMessage");
 		this.titleMessage = bundle.getString("Confirmation");

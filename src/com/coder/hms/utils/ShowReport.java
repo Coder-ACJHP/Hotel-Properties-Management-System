@@ -22,7 +22,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
 
-public class Report extends JFrame {
+public class ShowReport extends JFrame {
 
 	/**
 	 * 
@@ -32,7 +32,7 @@ public class Report extends JFrame {
 	private static LoggingEngine logging;
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
-	public Report() {
+	public ShowReport() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -42,8 +42,8 @@ public class Report extends JFrame {
 		
 		try {
 			
-			final InputStream inputStream = Report.class
-					.getResourceAsStream("/com/coder/hms/reports/" + reportName + ".jrxml");
+			final InputStream inputStream = ShowReport.class
+					.getResourceAsStream("/com/coder/hms/reportTemplates/" + reportName + ".jrxml");
 			JasperReport report = JasperCompileManager.compileReport(inputStream);
 
 			HashMap<String, Object> parameters = new HashMap<String, Object>();	

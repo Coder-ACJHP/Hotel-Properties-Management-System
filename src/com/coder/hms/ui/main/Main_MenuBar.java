@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -412,7 +413,17 @@ public class Main_MenuBar {
 		
 		mnAbout.add(license);
 		
-		changeLanguage(bean.getLocale());
+		try {
+			
+			changeLanguage(bean.getLocale());
+			
+		}catch(MissingResourceException ex) {
+			
+			changeLanguage(bean.getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 	}
 	
 	private boolean checkRole() {
@@ -434,10 +445,10 @@ public class Main_MenuBar {
 		return isUser;
 	}
 	
-	private void changeLanguage(Locale locale) {
+	private void changeLanguage(Locale locale) throws MissingResourceException {
 
 		final ResourceBundle bundle = ResourceBundle
-				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+				.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 
 		frontDesk.setText(bundle.getString("FrontDesk"));
 		hoteProps.setText(bundle.getString("HotelProperties"));

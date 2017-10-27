@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -32,6 +33,7 @@ import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.DialogFrame;
+import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.utils.CleaningRoomTableColumnsMaker;
 import com.coder.hms.utils.CustomTableHeaderRenderer;
 import com.coder.hms.utils.ResourceControl;
@@ -146,12 +148,12 @@ public class Main_RoomCleaning extends JPanel implements ActionListener {
 		lblSearch.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblSearch.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSearch.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		lblSearch.setBounds(32, 12, 46, 23);
+		lblSearch.setBounds(6, 12, 84, 23);
 		panel.add(lblSearch);
 		
 		searchField = new JTextField();
 		searchField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		searchField.setBounds(79, 10, 165, 26);
+		searchField.setBounds(95, 10, 149, 26);
 		searchField.setColumns(10);
 		searchField.addKeyListener(customKeyListener());
 		panel.add(searchField);
@@ -185,12 +187,22 @@ public class Main_RoomCleaning extends JPanel implements ActionListener {
 		table.setDefaultRenderer(Object.class, renderer);
 		scrollPane.setViewportView(table);
 		
-		changeLanguage(bean.getLocale());
+		try {
+			
+			changeLanguage(bean.getLocale());
+			
+		}catch(MissingResourceException ex) {
+			
+			changeLanguage(getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 	}
 
-	private void changeLanguage(Locale locale) {
-
-		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+	private void changeLanguage(Locale locale) throws MissingResourceException {
+		
+		bundle = ResourceBundle.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 		
 		this.btnCleanSelected.setText(bundle.getString("CleanSelected"));
 		this.btnCleanAll.setText(bundle.getString("CleanAll"));
@@ -198,7 +210,8 @@ public class Main_RoomCleaning extends JPanel implements ActionListener {
 		this.btnPolluteAll.setText(bundle.getString("PolluteAll"));
 		this.btnSetAsDnd.setText(bundle.getString("SetAsDnd"));
 		this.lblSearch.setText(bundle.getString("Search"));
-		
+		this.revalidate();
+		this.repaint();
 	}
 
 	private void populateTableModel(DefaultTableModel theModel) {

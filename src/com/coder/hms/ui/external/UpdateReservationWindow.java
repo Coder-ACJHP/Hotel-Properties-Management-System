@@ -68,7 +68,7 @@ import com.coder.hms.entities.ReportObject;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.LoggingEngine;
-import com.coder.hms.utils.Report;
+import com.coder.hms.utils.ShowReport;
 import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;
 
@@ -791,7 +791,7 @@ public class UpdateReservationWindow extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				final Report report = new Report();
+				final ShowReport report = new ShowReport();
 	
 				report.loadReport("ReservationForm", getReportBean());
 				report.showReport();

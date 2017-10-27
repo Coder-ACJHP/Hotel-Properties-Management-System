@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -45,6 +46,7 @@ import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.DialogFrame;
+import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.NewReservationWindow;
 import com.coder.hms.utils.AuditTableCellRenderer;
 import com.coder.hms.utils.BlockadeTableHeaderRenderer;
@@ -187,20 +189,31 @@ public class Main_Audit extends JPanel implements ActionListener {
 
 		getReadyDependencies();
 		populateMainTable(model);
-		changeLanguage(bean.getLocale());
 		
+		try {
+			
+			changeLanguage(bean.getLocale());
+			
+		}catch(MissingResourceException ex) {
+			
+			changeLanguage(getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 	}
 	
-	private void changeLanguage(Locale locale) {
+	private void changeLanguage(Locale locale) throws MissingResourceException {
 
-		final ResourceBundle bundle = ResourceBundle
-				.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
-		this.btnAudit.setText(bundle.getString("Audit"));
-		this.btnShowRes.setText(bundle.getString("ShowRes"));
-		this.btnUpdate.setText(bundle.getString("UpdateRes"));
-		this.btnCancel.setText(bundle.getString("CancelRes"));
-		this.revalidate();
-		this.repaint();
+			final ResourceBundle bundle = ResourceBundle
+					.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
+			this.btnAudit.setText(bundle.getString("Audit"));
+			this.btnShowRes.setText(bundle.getString("ShowRes"));
+			this.btnUpdate.setText(bundle.getString("UpdateRes"));
+			this.btnCancel.setText(bundle.getString("CancelRes"));
+			this.revalidate();
+			this.repaint();
+
 	}
 
 	private synchronized void getReadyDependencies() {

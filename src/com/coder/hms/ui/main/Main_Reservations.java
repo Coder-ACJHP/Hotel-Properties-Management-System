@@ -16,6 +16,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -202,16 +203,28 @@ public class Main_Reservations extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		getReadyForDataFlow();
-		changeLanguage(bean.getLocale());
+		
+		try {
+			
+			changeLanguage(bean.getLocale());
+			
+		}catch(MissingResourceException ex) {
+			
+			changeLanguage(getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 	}
 	
-	private void changeLanguage(Locale locale) {
+	private void changeLanguage(Locale locale) throws MissingResourceException {
 
-		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		bundle = ResourceBundle.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 		
 		this.newRezBtn.setText(bundle.getString("NewReservation"));
 		this.findBtn.setText(bundle.getString("Search"));
-		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private float calcFullnessPersentage(int count, int capasite) {

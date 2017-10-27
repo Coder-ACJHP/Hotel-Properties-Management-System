@@ -3,7 +3,7 @@
  * @Email hexa.octabin@gmail.com
  * @Date 15/07/2017
  */
-package com.coder.hms.utils;
+package com.coder.hms.connection;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-public class ReadPropFiles {
+public class ReadConnectionPropertyFiles {
 
 	private String JDBC_URL;
 	private String USERNAME;
@@ -23,7 +23,7 @@ public class ReadPropFiles {
 
 	private final Logger logger;
 	
-	public ReadPropFiles() {
+	public ReadConnectionPropertyFiles() {
 		logger = Logger.getLogger(getClass().getName());
 	}
 	

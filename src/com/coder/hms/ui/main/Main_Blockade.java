@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -362,15 +363,26 @@ public class Main_Blockade extends JPanel implements ActionListener {
 		populateBlokajTable(blokajModel);
 		populateMainTable(model);
 		
-		changeLanguage(bean.getLocale());
+		try {
+
+			changeLanguage(bean.getLocale());
+
+		} catch (MissingResourceException ex) {
+
+			changeLanguage(getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 	}
 
-	private void changeLanguage(Locale locale) {
+	private void changeLanguage(Locale locale) throws MissingResourceException {
 
-		bundle = ResourceBundle.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		bundle = ResourceBundle.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 		this.btnShowRes.setText(bundle.getString("ShowRes"));
 		this.lblSearch.setText(bundle.getString("Search"));
-		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	// before creating GUI make ready all dependencies

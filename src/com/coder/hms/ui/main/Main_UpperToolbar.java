@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -27,6 +28,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import com.coder.hms.beans.LocaleBean;
+import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.inner.AllRooms_ColorInfoTable;
 import com.coder.hms.utils.ResourceControl;
 
@@ -166,14 +168,24 @@ public class Main_UpperToolbar {
 		refreshBtn.addActionListener(UpperToolbarActionListener(mainPanel));
 		panel.add(refreshBtn);
 		
-		changeLanguage(bean.getLocale());
+		try {
+			
+			changeLanguage(bean.getLocale());
+			
+		}catch(MissingResourceException ex) {
+			
+			changeLanguage(bean.getLocale());
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Cannot find translation files, application will continue with default language.");
+			dialog.setVisible(true);
+		}
 
 	}
 
-	private void changeLanguage(Locale locale) {
+	private void changeLanguage(Locale locale) throws MissingResourceException {
 
 		final ResourceBundle bundle = ResourceBundle
-		.getBundle("com/coder/hms/languages/LocalizationBundle", locale, new ResourceControl());
+		.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 		this.roomsBtn.setText(bundle.getString("RoomsPlan"));
 		this.guestsBtn.setText(bundle.getString("Guests"));
 		this.auditBtn.setText(bundle.getString("Audit"));
@@ -181,7 +193,6 @@ public class Main_UpperToolbar {
 		this.rezervationBtn.setText(bundle.getString("Reservations"));
 		this.roomCleaningBtn.setText(bundle.getString("RoomCleaning"));
 		this.cashBtn.setText(bundle.getString("CashDesk"));
-
 		panel.revalidate();
 		panel.repaint();
 	}
