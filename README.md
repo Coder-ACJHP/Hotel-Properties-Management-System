@@ -1,10 +1,10 @@
 <div align="center">
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png">
-  <h1>Hotel-Management-System Application </h1><br>
+  <h1>Hotel-Properties-Management-System Application </h1><br>
   <h4>This project is designed and developed by Coder ACJHP.</h4>
 </div>                                                                                                                
 
-Coder HMS is hotels properties managing system application, operates independently of the operating system (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b>) Easy to use simple user interface, understandable text with icons and every object colored.
+Coder HPMS is hotels properties managing system application, operates independently of the operating system (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b>) Easy to use simple user interface, understandable text with icons and every object colored.
 For now it's support 4 different languages ENGLISH, العربية, ESPANOL, TÜRKÇE and it composed from seven main and many side windows : <br>
 <h4>1- Main window </h4> All windows will open on this scene, check your current user, date, €, $, £ exchange as live from status bar, manage your application from menu bar exit, change user, update password, send email, open calculator, exchange, change user interface theme and etc..
 
@@ -88,11 +88,6 @@ Event schedular in the database server. In every 18 hours event will update valu
 Do not forget Audit is can only be done once in a day.
 Add this line in your database to create event : <code>create event dailyAudit on schedule every 18 hour do update HotelSystemStatus set isAuditted = 0</code>
 
-<h2>Another questions ?</h2> 
-For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
-<hr>
-<h2>INFO : </h2>Please read the license carefully.
-<hr>
 <h1>*** UPDATES AND NEWS ***</h1>
 <h2>New Features <b>21/10/2017</b></h2>
 <ul>
@@ -103,3 +98,8 @@ For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">he
   <li>Fixed all reservation errors, added new security codes.</li>
   <li>Added generating report at update reservation window also.</li>
 </ul>
+
+<h2>Another questions ?</h2> 
+For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
+<hr>
+<h2>INFO : </h2>Please read the license carefully.
