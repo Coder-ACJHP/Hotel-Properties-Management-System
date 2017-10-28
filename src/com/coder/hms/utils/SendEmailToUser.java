@@ -14,8 +14,10 @@ public class SendEmailToUser {
 
 	private Message message;
 	private Properties props;
+	private static LoggingEngine loggingEngine;
+	
 	public SendEmailToUser() {
-		
+		loggingEngine = LoggingEngine.getInstance();
 	}
 	
 	public void setReadyForEmail(String username, String password) {
@@ -44,7 +46,7 @@ public class SendEmailToUser {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			loggingEngine.setMessage("Email sending error : " + e.getMessage());
 		}
 	}
 	
@@ -52,8 +54,9 @@ public class SendEmailToUser {
 		try {
 			message.setSubject(subject);
 			message.setText(messageBody);
+			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			loggingEngine.setMessage("Email sending error : " + e.getMessage());
 		}
 	}
 	
@@ -62,7 +65,7 @@ public class SendEmailToUser {
 			Transport.send(message);
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			loggingEngine.setMessage("Cannot send email! : " + e.getMessage());
 		}
 	}
 	

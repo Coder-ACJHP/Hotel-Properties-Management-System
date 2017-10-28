@@ -46,7 +46,7 @@ public class CustomerForm {
 
 
 	public CustomerForm() {
-
+		
 	}
 
 	public JPanel setCustomerDetailPanel() {

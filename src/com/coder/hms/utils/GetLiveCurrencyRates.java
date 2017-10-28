@@ -12,14 +12,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.coder.hms.entities.Currency;
+import com.coder.hms.ui.external.InformationFrame;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 public class GetLiveCurrencyRates {
 
+	private InformationFrame infoFrame;
 	private static LoggingEngine loggingEngine;
 	
 	public GetLiveCurrencyRates() {
+		infoFrame = new InformationFrame();
 		loggingEngine = LoggingEngine.getInstance();
 	}
 	
@@ -43,7 +46,9 @@ public class GetLiveCurrencyRates {
 	
 	public String getGsonParser(String currency) {
 		
+		String trimmedRate = "";
 		Currency theCurrency = null;
+		
 		try {
 			final URL queryUrl = new URL("http://api.fixer.io/latest?base="+currency);
 			final BufferedReader in = new BufferedReader(new InputStreamReader(queryUrl.openStream()));
@@ -54,21 +59,28 @@ public class GetLiveCurrencyRates {
 
 				theCurrency = new Gson().fromJson(line, Currency.class);
 			}
+			
+			String rate = theCurrency.getRates().toString();
+			if(theCurrency.getRates().toString().indexOf("TRY") != -1) {
+				trimmedRate = rate.substring(rate.indexOf("TRY"), rate.indexOf("TRY") + 9);
+			}
+			return theCurrency.getBase() +"/"+ trimmedRate;
+			
 		} catch (JsonSyntaxException e) {
-			loggingEngine.setMessage("JsonSyntaxException : " + e.getMessage());
+			loggingEngine.setMessage("Error (JsonSyntaxException) : " + e.getMessage());
+			infoFrame.setMessage(e.getMessage());
+			infoFrame.setVisible(true);
 		} catch (MalformedURLException e) {
-			loggingEngine.setMessage("MalformedURLException : " + e.getMessage());
+			loggingEngine.setMessage("Error (MalformedURLException) : " + e.getMessage());
+			infoFrame.setMessage(e.getMessage());
+			infoFrame.setVisible(true);
 		} catch (IOException e) {
-			loggingEngine.setMessage("IOException : " + e.getMessage());
+			loggingEngine.setMessage("Yahoo currency api error code : " + e.getMessage());
+			infoFrame.setMessage("Cannot fetch currency! Please check your internet connection.\nError code : " + e.getMessage());
+			infoFrame.setVisible(true);
 		}
-		
-		String trimmedRate = "";
-		String rate = theCurrency.getRates().toString();
-		if(theCurrency.getRates().toString().indexOf("TRY") != -1) {
-			trimmedRate = rate.substring(rate.indexOf("TRY"), rate.indexOf("TRY") + 9);
-		}
-		
-		return theCurrency.getBase() +"/"+ trimmedRate;
+
+		return "OUT OF SERVICE";
 	}
 	
 }
