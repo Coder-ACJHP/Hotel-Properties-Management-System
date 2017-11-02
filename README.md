@@ -25,7 +25,7 @@ search your reservation with date, referance number or agency referange number, 
 <hr>
 <h2>Login : </h2>
 
-<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/login.png">
+<img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/New_Login.png">
 <hr>
 <h2>Main window : </h2>
 
@@ -74,12 +74,12 @@ and more...
 
 <h1>How to use?</h1>
 <ul>
-  <li> Clone or download the project and open it in any IDE.</li>
+  <li> Clone or download the project and open it in any IDE or download as Execuatble .jar(All os) & .app(for Mac) & .exe(for Windows)</li>
   <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..) if you don't have.</li>
-  <li> Get dump file that located under <code>com.coder.hms.connection</code> with name <code>'hotel_management_system.sql'</code> and import it to your database server.</li> 
+  <li><del> Get dump file that located under <code>com.coder.hms.connection</code> with name <code>'hotel_management_system.sql'</code> and import it to your database server.</del><i>It will do it automatically for you :)</i></li> 
   <li> Congrats enjoy with your day :)</li> 
 </ul>
-<h3>Still not working? Just click and watch the video</h3>
+<h3><i>Old version!</i>Still not working? Just click and watch the video</h3>
 <a href="https://youtu.be/BPbTwpZIuDE">Video with English subtitle</a>
 <br>
 <h2>Important : </h2>
@@ -97,6 +97,15 @@ Add this line in your database to create event : <code>create event dailyAudit o
   <li>No need to create schema just import the <code>.sql</code> file to your database server.</li>
   <li>Fixed all reservation errors, added new security codes.</li>
   <li>Added generating report at update reservation window also.</li>
+</ul>
+
+<h2>New Features <b>02/11/2017</b></h2>
+<ul>
+  <li>New release platform independed with MacOS verison</li>
+  <li>Added new feature for auto detecting and fetching database [No need to import .sql file by hand app will do it for you]</li> 
+  <li>Added new button in Login window for truncate databse and tables with importing all from scratch</li>
+  <li>Fixed login delay and information labels</li>
+  <li>
 </ul>
 
 <h2>Another questions ?</h2> 
