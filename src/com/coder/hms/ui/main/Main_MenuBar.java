@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -406,7 +407,7 @@ public class Main_MenuBar {
 				
 				@Override
 				public void run() {
-					new LicenseWindow();	
+					new LicenseWindow(new File("GNU GENERAL PUBLIC LICENSE"));	
 				}
 			});
 		});

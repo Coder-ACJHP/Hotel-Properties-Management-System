@@ -38,7 +38,7 @@ public class LicenseWindow extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public LicenseWindow() {
+	public LicenseWindow(final File file) {
 		
 		setTitle("Coder HMS - [License]");
 		setBounds(100, 100, 550, 550);
@@ -66,13 +66,12 @@ public class LicenseWindow extends JDialog {
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		doc.setParagraphAttributes(0, doc.getLength()-1, center, false);
 		
-		fillEditorPane();
+		fillEditorPane(file);
 		setVisible(true);
 	}
 
-	private void fillEditorPane() {
+	private void fillEditorPane(final File file) {
 		
-		File file = new File("GNU GENERAL PUBLIC LICENSE");
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
 			editorPane.read(br, Charset.forName("UTF-8"));

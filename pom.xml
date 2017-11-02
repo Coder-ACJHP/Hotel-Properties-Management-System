@@ -109,6 +109,12 @@
 			<version>6.4.1</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.ibatis/ibatis2-common -->
+		<dependency>
+		    <groupId>com.ibatis</groupId>
+		    <artifactId>ibatis2-common</artifactId>
+		    <version>2.1.7.597</version>
+		</dependency>
 
 	</dependencies>
 </project>

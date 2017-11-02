@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
@@ -21,10 +22,7 @@ public class DataSourceFactory {
 
 	private static SessionFactory sessionFactory = null;
 
-	public DataSourceFactory() {
-
-		
-	}
+	public DataSourceFactory() {}
 
 	public static synchronized void createConnection() {
 		try {
@@ -34,15 +32,15 @@ public class DataSourceFactory {
 						.addAnnotatedClass(Reservation.class).buildSessionFactory();
 			}
 
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			Toolkit.getDefaultToolkit().beep();
-			InformationFrame INFORMATION_FRAME = new InformationFrame();
-			INFORMATION_FRAME.setMessage("Sorry we can't connect to database right now, without "
+			final InformationFrame dialog = new InformationFrame();
+			dialog.setMessage("Sorry we can't connect to database right now, without "
 					+ "connection the application will not work properly.");
-			INFORMATION_FRAME.okBtn.addActionListener(ActionListener->{
+			dialog.okBtn.addActionListener(ActionListener->{
 				System.exit(1);
 			});
-			INFORMATION_FRAME.setVisible(true);
+			dialog.setVisible(true);
 		}
 	}
 
@@ -57,7 +55,7 @@ public class DataSourceFactory {
 					getSessionFactoryOptions().getServiceRegistry().
 					getService(ConnectionProvider.class).getConnection();
 		} catch (SQLException e) {
-			InformationFrame INFORMATION_FRAME = new InformationFrame();
+			final InformationFrame INFORMATION_FRAME = new InformationFrame();
 			INFORMATION_FRAME.setMessage("Connection converting error!");
 			INFORMATION_FRAME.setVisible(true);
 		}
@@ -69,7 +67,7 @@ public class DataSourceFactory {
 	}
 	
 	public void shutDown() {
-		if(sessionFactory.isOpen())
+		if(sessionFactory != null && sessionFactory.isOpen())
 				sessionFactory.close();
 	}
 }

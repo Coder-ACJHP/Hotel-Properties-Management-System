@@ -34,7 +34,7 @@ public class InformationFrame extends JFrame {
 		
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		this.setTitle("Approving question");
-		this.setPreferredSize(new Dimension(340, 150));
+		this.setPreferredSize(new Dimension(350, 170));
 		this.setAlwaysOnTop(isAlwaysOnTopSupported());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
@@ -53,19 +53,19 @@ public class InformationFrame extends JFrame {
 		okBtn.setIcon(new ImageIcon(InformationFrame.class.getResource("/com/coder/hms/icons/info_ok.png")));
 		okBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		okBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		okBtn.setBounds(121, 82, 132, 35);
+		okBtn.setBounds(119, 102, 132, 35);
 		okBtn.addActionListener(getAction());
 		panel.add(okBtn);
 		
 		lblMessage = new JLabel("");
 		lblMessage.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblMessage.setHorizontalAlignment(SwingConstants.LEFT);
-		lblMessage.setBounds(95, 21, 227, 49);
+		lblMessage.setBounds(87, 21, 246, 74);
 		panel.add(lblMessage);
 		
 		lblIcon = new JLabel("");
 		lblIcon.setIcon(new ImageIcon(InformationFrame.class.getResource("/com/coder/hms/icons/dialogPane_question.png")));
-		lblIcon.setBounds(14, 21, 69, 70);
+		lblIcon.setBounds(6, 36, 69, 70);
 		panel.add(lblIcon);
 		
 		this.pack();

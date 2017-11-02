@@ -1,8 +1,11 @@
 package com.coder.hms.ui.external;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -10,7 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
@@ -20,7 +24,8 @@ public class DialogFrame extends JFrame {
 	 * 
 	 */
 	public JButton btnYes, btnNo;
-	private JLabel lblMessage, lblIcon;
+	private JLabel lblIcon;
+	private JTextArea textArea;
 	private static final long serialVersionUID = 1L;
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 
@@ -31,7 +36,7 @@ public class DialogFrame extends JFrame {
 		
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		this.setTitle("Approving question");
-		this.setPreferredSize(new Dimension(340, 150));
+		this.setPreferredSize(new Dimension(400, 190));
 		this.setAlwaysOnTop(isAlwaysOnTopSupported());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
@@ -44,59 +49,42 @@ public class DialogFrame extends JFrame {
 				getImage(getClass().getResource(LOGOPATH)));
 		
 		final JPanel panel = new JPanel();
+		panel.setAutoscrolls(true);
 		getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
 		btnYes = new JButton("YES");
 		btnYes.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		btnYes.setBounds(219, 82, 91, 29);
+		btnYes.setBounds(291, 129, 91, 29);
 		panel.add(btnYes);
 		
 		btnNo = new JButton("NO");
 		btnNo.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		btnNo.setBounds(127, 82, 91, 29);
+		btnNo.setBounds(199, 129, 91, 29);
 		panel.add(btnNo);
-		
-		lblMessage = new JLabel("");
-		lblMessage.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblMessage.setHorizontalAlignment(SwingConstants.LEFT);
-		lblMessage.setBounds(95, 21, 227, 49);
-		panel.add(lblMessage);
 		
 		lblIcon = new JLabel("");
 		lblIcon.setIcon(new ImageIcon(DialogFrame.class.getResource("/com/coder/hms/icons/dialogPane_question.png")));
-		lblIcon.setBounds(14, 21, 69, 70);
+		lblIcon.setBounds(14, 40, 69, 70);
 		panel.add(lblIcon);
+		
+		
+		textArea = new JTextArea();
+		textArea.setDisabledTextColor(new Color(153, 204, 255));
+		textArea.setBounds(95, 32, 287, 85);
+		textArea.setBackground(UIManager.getColor("ComboBox.background"));
+		textArea.setBorder(null);
+		textArea.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		textArea.setEditable(false);
+		textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+		textArea.setLineWrap(true);
+		panel.add(textArea);
 		
 		this.pack();
 	}
 	
 	public void setMessage(String message) {
 		
-		if(message.length() > 34) {
-			int flag = 0;
-			final StringBuilder sb = new StringBuilder();
-			char[] arr = message.toCharArray();
-			
-			for (int i = 0; i < arr.length; i++) {
-				
-				sb.append(arr[i]);
-				
-				if(i >= 34) {
-					if(arr[i] == ' ' && flag != 1) {
-						sb.append("<br>");
-						flag++;
-					}else {
-						continue;
-					}
-				}
-			}
-			message = sb.toString();
-			lblMessage.setText("<html>" + message + "</html>");
-		}
-		
-		else {
-			lblMessage.setText(message);
-		}
+		textArea.setText(message);
 	}
 }
