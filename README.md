@@ -76,11 +76,12 @@ and more...
 <ul>
   <li> Clone or download the project and open it in any IDE or download as Execuatble .jar(All os) & .app(for Mac) & .exe(for Windows)</li>
   <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..) if you don't have.</li>
-  <li><del> Get dump file that located under <code>com.coder.hms.connection</code> with name <code>'hotel_management_system.sql'</code> and import it to your database server.</del><i>It will do it automatically for you :)</i></li> 
+  <li><del> Get dump file that located under <code>com.coder.hms.connection</code> with name <code>'hotel_management_system.sql'</code> and import it to your database server.</del><i> It will do it automatically for you.</i></li> 
   <li> Congrats enjoy with your day :)</li> 
 </ul>
-<h3><i>Old version!</i>Still not working? Just click and watch the video</h3>
-<a href="https://youtu.be/BPbTwpZIuDE">Video with English subtitle</a>
+
+<h3>Still not working? Just click and watch the video</h3>
+<i>For old versions!</i><a href="https://youtu.be/BPbTwpZIuDE">Video with English subtitle</a>
 <br>
 <h2>Important : </h2>
 <h4>About audit : </h4> If you want to use Audit property you should never stop your database server because it's working with
@@ -101,11 +102,10 @@ Add this line in your database to create event : <code>create event dailyAudit o
 
 <h2>New Features <b>02/11/2017</b></h2>
 <ul>
-  <li>New release platform independed with MacOS verison</li>
+  <li>New release platform independed and MacOS verison</li>
   <li>Added new feature for auto detecting and fetching database [No need to import .sql file by hand app will do it for you]</li> 
   <li>Added new button in Login window for truncate databse and tables with importing all from scratch</li>
   <li>Fixed login delay and information labels</li>
-  <li>
 </ul>
 
 <h2>Another questions ?</h2> 
