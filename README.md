@@ -91,8 +91,8 @@ Add this line in your database to create event : <code>create event dailyAudit o
 
 <h2>New Features <b>28/10/2017</b></h2>
 <ul>
-  <li>Download it as cross platform executable one <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMSA.jar">here</a></li>
-  <li>Download it as MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMSA.app.zip">here</a></li>
+  <li>Download it as cross platform executable one <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
+  <li>Download it as MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.app.zip">here</a></li>
   <li>New add user window (as admin)</li>
   <li>New change rooms properties window (as admin)</li>
   <li>No need to create schema just import the <code>.sql</code> file to your database server.</li>
