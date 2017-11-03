@@ -91,8 +91,9 @@ Add this line in your database to create event : <code>create event dailyAudit o
 
 <h2>New Features <b>28/10/2017</b></h2>
 <ul>
-  <li>Download it as cross platform executable one <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
-  <li>Download it as MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.app.zip">here</a></li>
+  <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
+  <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.app.zip">here</a></li>
+   <li>Download it for Windows application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.exe">here</a></li>
   <li>New add user window (as admin)</li>
   <li>New change rooms properties window (as admin)</li>
   <li>No need to create schema just import the <code>.sql</code> file to your database server.</li>
@@ -100,7 +101,7 @@ Add this line in your database to create event : <code>create event dailyAudit o
   <li>Added generating report at update reservation window also.</li>
 </ul>
 
-<h2>New Features <b>02/11/2017</b></h2>
+<h2>New Features v1.2.1  <b>02/11/2017</b></h2>
 <ul>
   <li>New release platform independed and MacOS verison</li>
   <li>Added new feature for auto detecting and fetching database [No need to import .sql file by hand app will do it for you]</li> 
