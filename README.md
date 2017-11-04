@@ -96,7 +96,7 @@ Add this line in your database to create event : <code>create event dailyAudit o
    <li>Download it for Windows application <b><i>.exe</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.exe">here</a></li>
   <li>New add user window (as admin)</li>
   <li>New change rooms properties window (as admin)</li>
-  <li>No need to create schema just import the <code>.sql</code> file to your database server.</li>
+  <li><del>No need to create schema just import the <code>.sql</code> file to your database server.</del></li>
   <li>Fixed all reservation errors, added new security codes.</li>
   <li>Added generating report at update reservation window also.</li>
 </ul>
