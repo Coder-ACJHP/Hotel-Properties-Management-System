@@ -89,10 +89,10 @@ Event schedular in the database server. In every 18 hours event will update valu
 Do not forget Audit is can only be done once in a day.
 Add this line in your database to create event : <code>create event dailyAudit on schedule every 18 hour do update HotelSystemStatus set isAuditted = 0</code>
 
-<h2>New Features <b>28/10/2017</b></h2>
+<h2>New Features <b>28/10/2017</b> Download newest version : </h2>
 <ul>
-  <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
-  <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.app.zip">here</a></li>
+  <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.3.1/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
+  <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.3.1/CoderHPMS.app.zip">here</a></li>
    <li>Download it for Windows application <b><i>.exe</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.exe">here</a></li>
   <li>New add user window (as admin)</li>
   <li>New change rooms properties window (as admin)</li>
@@ -109,6 +109,13 @@ Add this line in your database to create event : <code>create event dailyAudit o
   <li>Fixed login delay and information labels</li>
 </ul>
 
+<h2>New Features v1.3.1  <b>21/11/2017</b></h2>
+<ul>
+  <li>New release platform independed and MacOS v1.3.1</li>
+  <li>Hotel properties window renewed and fixed issues</li> 
+  <li>Prepare database button moved to menubar</li>
+  <li>Fixed Hibernate transaction & session errors</li>
+</ul>
 <h2>Another questions ?</h2> 
 For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
 <hr>
