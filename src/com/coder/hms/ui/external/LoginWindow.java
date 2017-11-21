@@ -54,6 +54,8 @@ import com.coder.hms.ui.main.MainFrame;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.PropertiesReader;
 import com.coder.hms.utils.ResourceControl;
+import java.time.ZoneId;
+import java.time.format.FormatStyle;
 
 /**
  * @author Coder ACJHP
@@ -64,20 +66,23 @@ public class LoginWindow extends JDialog {
     /**
      *
      */
-    private String newDate;
+    private final String newDate;
     private int clicked = 0;
+    private final LocalDate today;
+    private final DateTimeFormatter sdf;
     private ResourceBundle bundle;
     private static LocaleBean bean;
-    private JTextField userNameField;
-    private JPasswordField passwordField;
+    private final JTextField userNameField;
+    private final JPasswordField passwordField;
     private static LoggingEngine logging;
-    private LanguageCmbBox languagesCmbBox;
+    private final LanguageCmbBox languagesCmbBox;
     private static SessionBean sessionBean;
-    private JButton btnClear, btnLogin;
-    private JButton setPasswordVisible, capslockBtn;
+    private final JButton btnClear;
+    private final JButton btnLogin;
+    private final JButton setPasswordVisible, capslockBtn;
     private static final long serialVersionUID = 1L;
     private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
-    private JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel, lblResetYourPassword;
+    private final JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel, lblResetYourPassword;
 
     // Set some basic properties
     public LoginWindow() {
@@ -102,8 +107,8 @@ public class LoginWindow extends JDialog {
             Application.getApplication().setDockIconImage(new ImageIcon(getClass().getResource(LOGOPATH)).getImage());
         }
 
-        final LocalDate today = LocalDate.now();
-        final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/YYYY EEEE", getLocale());
+        today = LocalDate.now();
+        sdf = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(bean.getLocale());
         newDate = sdf.format(today);
 
         getContentPane().setForeground(new Color(255, 99, 71));
@@ -322,8 +327,7 @@ public class LoginWindow extends JDialog {
 
         try {
 
-            bundle = ResourceBundle
-                    .getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
+            bundle = ResourceBundle.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
             this.setTitle(bundle.getString("MainTitle") + " (" + newDate + ")");
             this.btnClear.setText(bundle.getString("Clear"));
             this.btnLogin.setText(bundle.getString("Login"));
@@ -452,7 +456,6 @@ public class LoginWindow extends JDialog {
                     boolean check = false;
                     
                     if (userName.equalsIgnoreCase("System")) {
-                        System.out.println("HOLAAAAAAAAAAAA");
                         final PropertiesReader checker = new PropertiesReader();
                         check = checker.checkIsAdministrator(userName, userPswrd);
                         sessionBean.setHotelName(checker.getHotelName());

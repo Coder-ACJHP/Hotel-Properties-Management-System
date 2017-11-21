@@ -495,7 +495,8 @@ public class Main_MenuBar {
 		license.setText(bundle.getString("License"));
 		exitMessage = bundle.getString("ExitMessage");
 		titleMessage = bundle.getString("Confirmation");
-		
+		roomProps.setText(bundle.getString("RoomsProperty"));
+                addUser.setText(bundle.getString("AddUser"));
 		menuBar.revalidate();
 		menuBar.repaint();
 	}

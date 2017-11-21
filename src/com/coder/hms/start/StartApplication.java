@@ -5,6 +5,7 @@
  */
 package com.coder.hms.start;
 
+import com.coder.hms.ui.external.InformationFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -20,7 +21,9 @@ public class StartApplication {
 
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
+			final InformationFrame frame = new InformationFrame();
+                        frame.setMessage(e.getLocalizedMessage());
+                        frame.setVisible(true);
 		}
 
 		new LoginWindow();
