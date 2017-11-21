@@ -101,7 +101,7 @@ public class PostingWindow extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [Posting]");
+		this.setTitle("Coder HPMSA - [Posting]");
 
 		/* Set default size of frame */
 		this.setSize(400, 500);

@@ -97,7 +97,7 @@ public class PaymentWindow extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [Payment]");
+		this.setTitle("Coder HPMSA - [Payment]");
 
 		/* Set default size of frame */
 		this.setSize(400, 500);

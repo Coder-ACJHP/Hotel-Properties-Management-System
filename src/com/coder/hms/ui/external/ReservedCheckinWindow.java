@@ -84,7 +84,7 @@ public class ReservedCheckinWindow extends JDialog implements ActionListener {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [Checkin]");
+		this.setTitle("Coder HPMSA - [Checkin]");
 		contentPanel.setAutoscrolls(true);
 		contentPanel.setPreferredSize(new Dimension(10, 415));
 

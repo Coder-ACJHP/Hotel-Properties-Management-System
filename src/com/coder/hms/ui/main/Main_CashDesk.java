@@ -44,7 +44,7 @@ import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.MoneyTransaction;
-import com.coder.hms.utils.BlockadeTableHeaderRenderer;
+import com.coder.hms.ui.extras.BlockadeTableHeaderRenderer;
 import com.coder.hms.utils.ResourceControl;
 
 public class Main_CashDesk extends JPanel {

@@ -46,7 +46,7 @@ import com.coder.hms.ui.external.LicenseWindow;
 import com.coder.hms.ui.external.LoginWindow;
 import com.coder.hms.ui.external.ReadLogsWindow;
 import com.coder.hms.ui.external.RoomsPropertiesWindow;
-import com.coder.hms.utils.ApplicationThemeChanger;
+import com.coder.hms.ui.extras.ApplicationThemeChanger;
 import com.coder.hms.utils.ResourceControl;
 
 public class Main_MenuBar {
@@ -423,13 +423,9 @@ public class Main_MenuBar {
 		license.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		license.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_license.png")));
 		license.addActionListener(ActionListener ->{
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					new LicenseWindow(new File("GNU GENERAL PUBLIC LICENSE"));	
-				}
-			});
+			SwingUtilities.invokeLater(() -> {
+                            new LicenseWindow(new File("LICENSE"));
+                        });
 		});
 		
 		mnAbout.add(license);

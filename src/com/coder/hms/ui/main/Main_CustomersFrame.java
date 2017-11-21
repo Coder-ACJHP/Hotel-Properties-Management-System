@@ -34,8 +34,9 @@ import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
-import com.coder.hms.utils.CustomTableHeaderRenderer;
-import com.coder.hms.utils.CustomersTableRenderer;
+import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
+import com.coder.hms.ui.extras.CustomersTableRenderer;
+
 
 
 public class Main_CustomersFrame extends JPanel {

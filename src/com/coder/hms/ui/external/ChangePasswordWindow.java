@@ -73,7 +73,7 @@ public class ChangePasswordWindow extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 
-		this.setTitle("Coder HMS - [Change Password]");
+		this.setTitle("Coder HPMSA - [Change Password]");
 
 		this.setSize(410, 250);
 		this.setLocationRelativeTo(null);

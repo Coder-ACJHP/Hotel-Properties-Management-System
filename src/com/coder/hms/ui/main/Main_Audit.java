@@ -48,8 +48,8 @@ import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.DialogFrame;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.NewReservationWindow;
-import com.coder.hms.utils.AuditTableCellRenderer;
-import com.coder.hms.utils.BlockadeTableHeaderRenderer;
+import com.coder.hms.ui.extras.AuditTableCellRenderer;
+import com.coder.hms.ui.extras.BlockadeTableHeaderRenderer;
 import com.coder.hms.utils.ResourceControl;
 
 public class Main_Audit extends JPanel implements ActionListener {

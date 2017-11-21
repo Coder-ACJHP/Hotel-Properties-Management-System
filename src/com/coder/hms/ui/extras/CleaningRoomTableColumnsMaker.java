@@ -1,4 +1,4 @@
-package com.coder.hms.utils;
+package com.coder.hms.ui.extras;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;

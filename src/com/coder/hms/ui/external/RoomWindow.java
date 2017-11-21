@@ -64,10 +64,10 @@ import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.main.Main_AllRooms;
-import com.coder.hms.utils.CustomersTableRenderer;
+import com.coder.hms.ui.extras.CustomersTableRenderer;
 import com.coder.hms.utils.LoggingEngine;
-import com.coder.hms.utils.PayPostTableCellRenderer;
-import com.coder.hms.utils.RoomExternalTableHeaderRenderer;
+import com.coder.hms.ui.extras.PayPostTableCellRenderer;
+import com.coder.hms.ui.extras.RoomExternalTableHeaderRenderer;
 import com.toedter.calendar.JDateChooser;
 
 public class RoomWindow extends JDialog {
@@ -150,7 +150,7 @@ public class RoomWindow extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [RoomEx] : " + roomText);
+		this.setTitle("Coder HPMSA - [RoomEx] : " + roomText);
 
 		/* Set default size of frame */
 		final Dimension computerScreenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -41,7 +41,7 @@ public class SendEmailWindow extends JDialog {
 	private boolean isValid = false;
 	private JLabel infoLabel, markerLbl;
 	private static final long serialVersionUID = 1L;
-	private final UserDaoImpl userDaoImpl;
+	private UserDaoImpl userDaoImpl;
 	private final JButton btnCancel, sendeEmail;
 	private JTextField textField;
 
@@ -49,8 +49,6 @@ public class SendEmailWindow extends JDialog {
 	 * Create the dialog.
 	 */
 	public SendEmailWindow() {
-
-		userDaoImpl = new UserDaoImpl();
 		
 		this.getContentPane().setForeground(new Color(255, 99, 71));
 		this.getContentPane().setFocusCycleRoot(true);
@@ -60,7 +58,7 @@ public class SendEmailWindow extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 
-		this.setTitle("Coder HMS - [Send Email For Password]");
+		this.setTitle("Coder HPMSA - [Send Email For Password]");
 
 		this.setSize(410, 173);
 		this.setLocationRelativeTo(null);
@@ -151,52 +149,47 @@ public class SendEmailWindow extends JDialog {
 	}
 
 	private ActionListener sendEmailListener() {
-		ActionListener listener = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				final String theEmail = textField.getText();
-				
-				if(theEmail.length() > 0 && isValid) {
-					
-					final User user = userDaoImpl.getUserByEmail(theEmail);
-					
-					if(user.getId() > 0) {
-
-						try {
-							
-							final SendEmailToUser sendEmail = new SendEmailToUser();
-							sendEmail.setReadyForEmail("java.arabic.community@gmail.com", "community");
-							sendEmail.setFrom("java.arabic.community@gmail.com", user.getEmail());
-							sendEmail.setEmailBody("Remind of password", "Your password is : " + user.getPassword());
-							sendEmail.sendTheEmail();
-							
-						} catch (RuntimeException ex) {
-							final InformationFrame dialog = new InformationFrame();
-							dialog.setMessage("Email sending error!Please again later.");
-							dialog.setVisible(true);
-							new DataSourceFactory().getTransaction().rollback();
-						}
-						
-						cleanFields();
-						infoLabel.setForeground(Color.GREEN);
-						infoLabel.setText("Your password has been sent to your e-mail address, please check your mail box.");
-					}
-					else {
-						
-						infoLabel.setText("Email address does not match your account!");
-						return;
-					}
-				}
-				
-				else {
-					infoLabel.setText("Email address field must be filled!");
-					return;
-				}
-
-			}
-		};
+		ActionListener listener = (ActionEvent e) -> {
+                    final String theEmail = textField.getText();
+                    
+                    if(theEmail.length() > 0 && isValid) {
+                        
+                        userDaoImpl = new UserDaoImpl();
+                        final User user = userDaoImpl.getUserByEmail(theEmail);
+                        
+                        if(user.getId() > 0) {
+                            
+                            try {
+                                
+                                final SendEmailToUser sendEmail = new SendEmailToUser();
+                                sendEmail.setReadyForEmail("java.arabic.community@gmail.com", "community");
+                                sendEmail.setFrom("java.arabic.community@gmail.com", user.getEmail());
+                                sendEmail.setEmailBody("Remind of password", "Your password is : " + user.getPassword());
+                                sendEmail.sendTheEmail();
+                                
+                            } catch (RuntimeException ex) {
+                                final InformationFrame dialog = new InformationFrame();
+                                dialog.setMessage("Email sending error!Please again later.");
+                                dialog.setVisible(true);
+                                new DataSourceFactory().getTransaction().rollback();
+                            }
+                            
+                            cleanFields();
+                            infoLabel.setForeground(Color.GREEN);
+                            infoLabel.setText("Your password has been sent to your e-mail address, please check your mail box.");
+                        }
+                        else {
+                            
+                            infoLabel.setText("Email address does not match your account!");
+                            return;
+                        }
+                    }
+                    
+                    else {
+                        infoLabel.setText("Email address field must be filled!");
+                        return;
+                    }
+                };
 		return listener;
 	}
 

@@ -73,7 +73,7 @@ public class MainFrame extends JFrame {
 		customToolbar = new Main_UpperToolbar(mainPanel);
 		customBottomToolbar = new Main_BottomToolbar();
 		
-		this.setTitle("Coder HMS - [Main]");
+		this.setTitle("Coder HPMSA - [Main]");
 		
 
 		this.setMinimumSize(new Dimension(800, 600));

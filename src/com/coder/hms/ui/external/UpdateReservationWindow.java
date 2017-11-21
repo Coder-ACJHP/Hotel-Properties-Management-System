@@ -159,7 +159,7 @@ public class UpdateReservationWindow extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [New Reservation]");
+		this.setTitle("Coder HPMSA - [New Reservation]");
 
 		/* Set default size of frame */
 		this.setSize(780, 550);

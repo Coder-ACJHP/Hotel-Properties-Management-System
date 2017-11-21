@@ -34,10 +34,10 @@ import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.DialogFrame;
 import com.coder.hms.ui.external.InformationFrame;
-import com.coder.hms.utils.CleaningRoomTableColumnsMaker;
-import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.ui.extras.CleaningRoomTableColumnsMaker;
+import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
+import com.coder.hms.ui.extras.RoomCleaningTableRenderer;
 import com.coder.hms.utils.ResourceControl;
-import com.coder.hms.utils.RoomCleaningTableRenderer;
 
 public class Main_RoomCleaning extends JPanel implements ActionListener {
 

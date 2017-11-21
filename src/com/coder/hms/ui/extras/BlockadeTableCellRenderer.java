@@ -3,7 +3,7 @@
  * @Email hexa.octabin@gmail.com
  * @Date 15/07/2017
  */
-package com.coder.hms.utils;
+package com.coder.hms.ui.extras;
 
 import java.awt.Color;
 import java.awt.Component;

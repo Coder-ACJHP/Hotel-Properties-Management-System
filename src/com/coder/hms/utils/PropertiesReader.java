@@ -1,49 +1,45 @@
 package com.coder.hms.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import com.coder.hms.ui.external.InformationFrame;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PropertiesReader {
 
-	private String userName;
-	private String password;
-	private String hotelName;
-	final static String filePath = "src/com/coder/hms/languageFiles/Credentials.properties";
-	
-	
-	public PropertiesReader() {
-		
-		final Properties properties = new Properties();
-		try {
-			
-			final InputStream inputStream = new FileInputStream(filePath);
-			properties.load(inputStream);
-			userName = properties.getProperty("system.username");
-			password = properties.getProperty("system.password");
-			hotelName = properties.getProperty("system.hotelname");
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public boolean checkIsAdministrator(String inputName, String inputPwd) {
-		
-		if (inputName.equals(userName) || inputPwd.equals(password))
-			return true;
-		else 
-			return false;
-	}
-	
-	public String getHotelName() {
-		return hotelName;
-	}
-	
+    private String userName;
+    private String password;
+    private String hotelName;
+    final InputStream inputStream;
+    final static String FILE_PATH = "/com/coder/hms/languageFiles/Credentials.properties";
+
+    public PropertiesReader() {
+
+        final Properties properties = new Properties();
+
+        inputStream = PropertiesReader.class.getResourceAsStream(FILE_PATH);
+        try {
+            properties.load(inputStream);
+        } catch (IOException ex) {
+            final InformationFrame frame = new InformationFrame();
+            frame.setMessage("Cannot access to system file!");
+            frame.setVisible(true);
+        }
+        
+        userName = properties.getProperty("system.username");
+        password = properties.getProperty("system.password");
+        hotelName = properties.getProperty("system.hotelname");
+    }
+
+    public boolean checkIsAdministrator(String inputName, String inputPwd) {
+
+        return inputName.equals(userName) || inputPwd.equals(password);
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
 }

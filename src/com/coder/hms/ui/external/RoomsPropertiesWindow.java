@@ -35,7 +35,7 @@ import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Room;
-import com.coder.hms.utils.BlockadeTableHeaderRenderer;
+import com.coder.hms.ui.extras.BlockadeTableHeaderRenderer;
 import com.coder.hms.utils.LoggingEngine;
 
 public class RoomsPropertiesWindow {
@@ -69,7 +69,7 @@ public class RoomsPropertiesWindow {
 		
 		jFrame = new JFrame();
 		jFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
-		jFrame.setTitle("Coder HMS - [Change Room Properties]");
+		jFrame.setTitle("Coder HPMSA - [Change Room Properties]");
 		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jFrame.setBounds(100, 100, 801, 522);
 		jFrame.setLocationRelativeTo(null);

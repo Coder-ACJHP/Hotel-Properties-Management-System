@@ -118,7 +118,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder HMS - [Walkin Checkin]");
+		this.setTitle("Coder HPMSA - [Walkin Checkin]");
 		contentPanel.setAutoscrolls(true);
 		contentPanel.setPreferredSize(new Dimension(10, 415));
 

@@ -65,7 +65,7 @@ public class CustomerDetailWindow extends JDialog {
 		setModal(true);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		getContentPane().setFont(new Font("Verdana", Font.BOLD, 12));
-		setTitle("Coder for HMS - [Customer detail]");
+		setTitle("Coder HPMSA - [Customer detail]");
 		this.setIconImage(Toolkit.getDefaultToolkit().
 				getImage(getClass().getResource(LOGOPATH)));
 		

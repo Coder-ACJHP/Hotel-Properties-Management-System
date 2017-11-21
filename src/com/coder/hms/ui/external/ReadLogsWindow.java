@@ -54,7 +54,7 @@ public class ReadLogsWindow extends JDialog {
 	 */
 	public ReadLogsWindow() {
 		
-		setTitle("Coder HMS - [Read Logs]");
+		setTitle("Coder HPMSA - [Read Logs]");
 		setBounds(100, 100, 660, 550);
 		setBackground(Color.decode("#066d95"));
 		setLocationRelativeTo(null);

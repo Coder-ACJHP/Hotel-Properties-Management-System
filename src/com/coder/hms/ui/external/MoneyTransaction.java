@@ -97,7 +97,7 @@ public class MoneyTransaction extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder HMS - [Cash desk Accounting]");
+		this.setTitle("Coder HPMSA - [Cash desk Accounting]");
 
 		/* Set default size of frame */
 		this.setSize(400, 500);

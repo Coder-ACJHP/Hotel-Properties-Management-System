@@ -62,7 +62,7 @@ public class ExchangeWindow extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 		
-		this.setTitle("Coder HMS - [Exchange]");
+		this.setTitle("Coder HPMSA - [Exchange]");
 		
 		this.setSize(410, 340);
 		this.setLocationRelativeTo(null);

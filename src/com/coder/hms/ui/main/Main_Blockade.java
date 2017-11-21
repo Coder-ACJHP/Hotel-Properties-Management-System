@@ -69,9 +69,10 @@ import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.UpdateReservationWindow;
-import com.coder.hms.utils.BlockadeTableCellRenderer;
-import com.coder.hms.utils.BlockadeTableHeaderRenderer;
-import com.coder.hms.utils.CustomTableHeaderRenderer;
+import com.coder.hms.ui.extras.BlockadeTableCellRenderer;
+import com.coder.hms.ui.extras.BlockadeTableHeaderRenderer;
+import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
+
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;

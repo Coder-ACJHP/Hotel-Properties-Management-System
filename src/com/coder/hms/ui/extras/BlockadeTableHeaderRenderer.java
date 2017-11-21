@@ -1,4 +1,4 @@
-package com.coder.hms.utils;
+package com.coder.hms.ui.extras;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -9,19 +9,19 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-public class RoomExternalTableHeaderRenderer extends JLabel implements TableCellRenderer {
+public class BlockadeTableHeaderRenderer extends JLabel implements TableCellRenderer {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public RoomExternalTableHeaderRenderer() {
+	public BlockadeTableHeaderRenderer() {
 		
-		setFont(new Font("Verdana", Font.BOLD, 15));
+		setFont(new Font("Verdana", Font.PLAIN, 15));
         setForeground(Color.WHITE);
         setOpaque(true);
-        setBackground(Color.decode("#533963"));
+        setBackground(Color.decode("#f03546"));
         setBorder(BorderFactory.createEtchedBorder());
 	}
 

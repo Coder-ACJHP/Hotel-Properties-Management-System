@@ -112,7 +112,7 @@ public class HotelPropertiesWindow extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.setTitle("Coder HMS - [Hotel Properties]");
+		this.setTitle("Coder HPMSA - [Hotel Properties]");
 
 		
 		upperMenuBar = new JMenuBar();

@@ -40,7 +40,7 @@ public class LicenseWindow extends JDialog {
 	 */
 	public LicenseWindow(final File file) {
 		
-		setTitle("Coder HMS - [License]");
+		setTitle("Coder HPMSA - [License]");
 		setBounds(100, 100, 550, 550);
 		setBackground(Color.decode("#066d95"));
 		setLocationRelativeTo(null);

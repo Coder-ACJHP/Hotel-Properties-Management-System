@@ -74,7 +74,7 @@ public class AddUserWindow extends JDialog {
 		setModal(true);
 		setResizable(false);
 
-		this.setTitle("Coder for HMS - [Add new user]");
+		this.setTitle("Coder HPMSA - [Add new user]");
 
 		/* Set default size of frame */
 		this.setSize(400, 448);
