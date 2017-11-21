@@ -89,16 +89,11 @@ Event schedular in the database server. In every 18 hours event will update valu
 Do not forget Audit is can only be done once in a day.
 Add this line in your database to create event : <code>create event dailyAudit on schedule every 18 hour do update HotelSystemStatus set isAuditted = 0</code>
 
-<h2>New Features <b>28/10/2017</b> Download newest version : </h2>
+<h2>Download newest version : </h2>
 <ul>
   <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.3.1/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
   <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.3.1/CoderHPMS.app.zip">here</a></li>
    <li>Download it for Windows application <b><i>.exe</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.exe">here</a></li>
-  <li>New add user window (as admin)</li>
-  <li>New change rooms properties window (as admin)</li>
-  <li><del>No need to create schema just import the <code>.sql</code> file to your database server.</del></li>
-  <li>Fixed all reservation errors, added new security codes.</li>
-  <li>Added generating report at update reservation window also.</li>
 </ul>
 
 <h2>New Features v1.2.1  <b>02/11/2017</b></h2>
