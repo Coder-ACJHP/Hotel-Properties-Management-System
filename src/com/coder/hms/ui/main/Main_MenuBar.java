@@ -46,7 +46,7 @@ import com.coder.hms.ui.external.LicenseWindow;
 import com.coder.hms.ui.external.LoginWindow;
 import com.coder.hms.ui.external.ReadLogsWindow;
 import com.coder.hms.ui.external.RoomsPropertiesWindow;
-import com.coder.hms.utils.ApplicaitonThemeChanger;
+import com.coder.hms.utils.ApplicationThemeChanger;
 import com.coder.hms.utils.ResourceControl;
 
 public class Main_MenuBar {
@@ -59,7 +59,7 @@ public class Main_MenuBar {
 	private final LocaleBean bean = LocaleBean.getInstance();
 	private final static Desktop desktop = Desktop.getDesktop();
 	private final String command = System.getProperty("os.name");
-	public final ApplicaitonThemeChanger themeChanger = new ApplicaitonThemeChanger();
+	public final ApplicationThemeChanger themeChanger = new ApplicationThemeChanger();
 	private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
 	private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
 	defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, addUser, chngPassword, aboutDeveloper,
@@ -84,10 +84,11 @@ public class Main_MenuBar {
 		menuBar.setAutoscrolls(true);
 		
 		frontDesk = new JMenu("Front Desk");
-		frontDesk.setFont(new Font("Dialog", Font.BOLD, 13));
+		frontDesk.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		menuBar.add(frontDesk);
 		
 		hoteProps = new JMenuItem("Hotel Properties");
+		hoteProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
 		hoteProps.addActionListener(ActionListener ->{
 
@@ -106,6 +107,7 @@ public class Main_MenuBar {
 		frontDesk.add(hoteProps);
 		
 		roomProps = new JMenuItem("Rooms Properties");
+		roomProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		roomProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_room.png")));
 		roomProps.addActionListener(ActionListener ->{
 
@@ -124,6 +126,7 @@ public class Main_MenuBar {
 		frontDesk.add(roomProps);
 		
 		restart = new JMenuItem("Restart");
+		restart.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
 		restart.addActionListener(ActionListener ->{
 			
@@ -144,6 +147,7 @@ public class Main_MenuBar {
 		frontDesk.add(restart);
 		
 		menuInnerItemExit = new JMenuItem("Exit");
+		menuInnerItemExit.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
 		//add shortcut keys
 		menuInnerItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,(InputEvent.SHIFT_MASK |
@@ -168,11 +172,12 @@ public class Main_MenuBar {
 		
 		
 		mnTools = new JMenu("Tools");
-		mnTools.setFont(new Font("Dialog", Font.BOLD, 13));
+		mnTools.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		menuBar.add(mnTools);
 		
 		//add calculator application section to menubar
 		calculator = new JMenuItem("Calculator");
+		calculator.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		calculator.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_calc.png")));
 		calculator.addActionListener(ActionListener ->{
 
@@ -204,6 +209,7 @@ public class Main_MenuBar {
 		
 		//add send mail  section to menubar
 		sendMail = new JMenuItem("Send email");
+		sendMail.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		sendMail.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_sendMail.png")));
 		sendMail.addActionListener(ActionListener ->{
 			
@@ -230,6 +236,7 @@ public class Main_MenuBar {
 		mnTools.add(sendMail);
 		
 		exchange = new JMenuItem("Exchange");
+		exchange.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		exchange.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_exchange.png")));
 		exchange.addActionListener(ActionListener ->{
 			SwingUtilities.invokeLater(new Runnable() {
@@ -244,6 +251,7 @@ public class Main_MenuBar {
 		mnTools.add(exchange);
 		
 		systemLogs = new JMenuItem("System logs");
+		systemLogs.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		systemLogs.setIcon(new ImageIcon(Main_MenuBar.class.getResource("/com/coder/hms/icons/logging.png")));
 		systemLogs.addActionListener(ActionListener ->{
 			SwingUtilities.invokeLater(new Runnable() {
@@ -259,27 +267,32 @@ public class Main_MenuBar {
 		
 		/*Add new menu into Tools menu*/	
 		themes = new JMenu("Themes");
-		themes.setFont(new Font("Dialog", Font.BOLD, 13));
+		themes.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		menuBar.add(themes);
 		
 		/*Add all themes into themes section */		
 		defaultTheme = new JMenuItem("Nimbus");
+		defaultTheme.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		defaultTheme.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("Nimbus");
 		});
 		mnitmAero = new JMenuItem("Aero");
+		mnitmAero.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		mnitmAero.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("Aero");
 		});
 		mnitmBernstain = new JMenuItem("Bernstein");
+		mnitmBernstain.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		mnitmBernstain.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("bernstein");
 		});
 		mnitmMint = new JMenuItem("Mint");
+		mnitmMint.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		mnitmMint.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("Mint");
 		});
 		mnitmMcwin = new JMenuItem("McWin");
+		mnitmMcwin.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		mnitmMcwin.addActionListener(ActionListener ->{
 			themeChanger.ChangeTheme("McWin");
 		});
@@ -291,10 +304,11 @@ public class Main_MenuBar {
 		themes.add(mnitmMcwin);
 		
 		usersMenu = new JMenu("Users");
-		usersMenu.setFont(new Font("Dialog", Font.BOLD, 13));
+		usersMenu.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		menuBar.add(usersMenu);
 		
 		changeUser = new JMenuItem("Change user");
+		changeUser.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		changeUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_user.png")));
 		changeUser.addActionListener(ActionListener ->{
 		
@@ -311,6 +325,7 @@ public class Main_MenuBar {
 		usersMenu.add(changeUser);
 		
 		addUser = new JMenuItem("Add user");
+		addUser.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		addUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_user.png")));
 		addUser.addActionListener(ActionListener ->{
 
@@ -329,6 +344,7 @@ public class Main_MenuBar {
 		usersMenu.add(addUser);
 		
 		chngPassword = new JMenuItem("Change password");
+		chngPassword.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		chngPassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
 		chngPassword.addActionListener(ActionListener ->{
 		
@@ -345,11 +361,12 @@ public class Main_MenuBar {
 		usersMenu.add(chngPassword);
 				
 		mnAbout = new JMenu("Others");
-		mnAbout.setFont(new Font("Dialog", Font.BOLD, 13));
+		mnAbout.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		menuBar.add(mnAbout);
 		
 		//add about developer section to menubar
 		aboutDeveloper = new JMenuItem("About developer");
+		aboutDeveloper.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		aboutDeveloper.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_developer.png")));
 		aboutDeveloper.addActionListener(ActionListener ->{
 			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -367,6 +384,7 @@ public class Main_MenuBar {
 		
 		//add source code section to menubar
 		sourceCode = new JMenuItem("Source code");
+		sourceCode.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		sourceCode.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_source_code.png")));
 		sourceCode.addActionListener(ActionListener ->{
 			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -384,6 +402,7 @@ public class Main_MenuBar {
 		
 		//add feedback section to menubar
 		shareYourOpinion = new JMenuItem("Feedback");
+		shareYourOpinion.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		shareYourOpinion.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_feedback.png")));
 		shareYourOpinion.addActionListener(ActionListener ->{
 			
@@ -401,6 +420,7 @@ public class Main_MenuBar {
 		mnAbout.add(shareYourOpinion);
 		
 		license = new JMenuItem("App License");
+		license.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
 		license.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_license.png")));
 		license.addActionListener(ActionListener ->{
 			SwingUtilities.invokeLater(new Runnable() {
@@ -431,18 +451,27 @@ public class Main_MenuBar {
 		boolean isUser = false;
 		SessionBean sessionBean = SessionBean.getSESSION_BEAN();
 		
-		UserDaoImpl userDaoImpl = new UserDaoImpl();
-		User currentUser = userDaoImpl.getUserByName(sessionBean.getNickName());
-		
-		if(currentUser.getRole().equals("USER")) {
+		if(sessionBean.getNickName().equalsIgnoreCase("System")) {
+			isUser = false;
+		} else {
 			
-			Toolkit.getDefaultToolkit().beep();
-			final InformationFrame INFORMATION_FRAME = new InformationFrame();
-			INFORMATION_FRAME.setMessage("Access denied! You don't have permission to access!");
-			INFORMATION_FRAME.setVisible(true);
+			final UserDaoImpl userDaoImpl = new UserDaoImpl();
+			User currentUser = userDaoImpl.getUserByName(sessionBean.getNickName());
+			
+			if(currentUser.getRole().equals("USER")) {
+				
+				Toolkit.getDefaultToolkit().beep();
+				final InformationFrame INFORMATION_FRAME = new InformationFrame();
+				INFORMATION_FRAME.setMessage("Access denied! You don't have permission to access!");
+				INFORMATION_FRAME.setVisible(true);
 
-			isUser = true;
+				isUser = true;
+			}
+			
 		}
+		
+		
+		
 		return isUser;
 	}
 	

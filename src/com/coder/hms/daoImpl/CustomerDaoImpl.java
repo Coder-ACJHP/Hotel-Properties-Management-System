@@ -33,23 +33,25 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 	
 	@Override
 	public Customer findCustomerByName(String name, String lastName) {
-		Customer customer = null;
+
 		try {
-			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			
+			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<Customer> query = session.createQuery("from Customer where FirstName=:name and LastName=:lastName", Customer.class);
 			query.setParameter("name", name);
 			query.setParameter("lastName", lastName);
 			
-			customer = query.getSingleResult();
+			return query.getSingleResult();
 			
 		} catch (NoResultException e) {
 			final InformationFrame frame = new InformationFrame();
 			frame.setMessage("Customers not found!");
 			frame.setVisible(true);
+			return null;
+		} finally {
+			session.close();
 		}
-		session.close();
-		return customer;
 	}
 
 	@Override
@@ -60,99 +62,116 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 
 	@Override
 	public List<Customer> getAllCustomers() {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Customer> query = session.createQuery("from Customer", Customer.class);
-		List<Customer> customerList = query.getResultList();
-		session.close();
-		
-		return customerList;
+	
+		try {
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			Query<Customer> query = session.createQuery("from Customer", Customer.class);
+			return query.getResultList();
+			
+		} catch (NoResultException e) {
+			return null;
+		} finally {
+			session.close();
+		}
+
 	}
 
 	@Override
 	public boolean save(Customer theCustomer) {
-		 boolean success = false;
+
 		try {
-			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			
+			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			session.save(theCustomer);
 			session.getTransaction().commit();
 		
-			success = true;
+			 return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
-			success = false;
+			return false;
+		} finally {
+			session.close();
 		}
-		session.close();
-		return success;
 	}
 
 	@Override
 	public boolean update(Customer theCustomer) {
-		 boolean success = false;
+
 		try {
-			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			session.update(theCustomer);
 			session.getTransaction().commit();
-			session.close();
 			
-			success = true;
+			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
-			success = false;
+			return false;
+		} finally {
+			session.close();
 		}
-		return success;
 	}
 	
 	public List<Customer> getCustomerByReservId(long id) {
-		List<Customer> customerList = null;
+		
 		try {
-			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<Customer> query = session.createQuery("from Customer where ReservationId=:id", Customer.class);
 			query.setParameter("id", id);
-			customerList = query.getResultList();
+			return query.getResultList();
 			
 		} catch (NoResultException e) {
 			final InformationFrame frame = new InformationFrame();
 			frame.setMessage("Customers not found!");
 			frame.setVisible(true);
+			return null;
+		} finally {
+			session.close();
 		}
-		session.close();
-		return customerList;
 	}
 	
 	@Override
 	@SuppressWarnings("rawtypes")
 	public void deleteCustomerByReservationId(long id) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query query = session.createQuery("delete from Customers where ReservationId=:id");
-		query.setParameter("id", id);
-		session.getTransaction().commit();
-		session.close();
+		
+		try {
+			
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			Query query = session.createQuery("delete from Customers where ReservationId=:id");
+			query.setParameter("id", id);
+			session.getTransaction().commit();
+			
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
 		
 	}
 	
 	@Override
 	public Customer getSinlgeCustomerByReservId(long id) {
-		Customer customer = null;
+		
 		try {
-			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<Customer> query = session.createQuery("from Customer where ReservationId=:theId", Customer.class);
 			query.setParameter("theId", id);
 			
-			customer = query.getSingleResult();
+			return query.getSingleResult();
 			
 		} catch (NoResultException e) {
 			final InformationFrame frame = new InformationFrame();
 			frame.setMessage("Customers not found!");
 			frame.setVisible(true);
+			return null;
+		} finally {
+			session.close();
 		}
-		session.close();
-		return customer;
 	}
 	
 	@Override

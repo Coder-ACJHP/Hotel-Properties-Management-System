@@ -24,7 +24,6 @@ import javax.swing.WindowConstants;
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
-import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 import com.coder.hms.utils.LoggingEngine;
@@ -43,9 +42,8 @@ public class MainFrame extends JFrame {
 	private Main_MenuBar customMenuBar;
 	private static LoggingEngine logging;
 	private static SessionBean sessionBean;
+	private GetLiveCurrencyRates currency = null;
 	private static final long serialVersionUID = 1L;
-	private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
-	private final GetLiveCurrencyRates currency = new GetLiveCurrencyRates();
 	
 	/*get the external toolbar and initialize it*/
 	private final Main_UpperToolbar customToolbar;
@@ -88,15 +86,17 @@ public class MainFrame extends JFrame {
 		customMenuBar.themeChanger.setFrame(this);
 		/*add it to our frame*/
 		this.setJMenuBar(customMenuBar.getMenuBar());
+			
+		currency = new GetLiveCurrencyRates();
 		
 		//get user name from login frame and add it to main frame
-		customBottomToolbar.setUserLabelText(sessionBean.getNickName().toUpperCase());
+		customBottomToolbar.setUserLabelText(sessionBean.getNickName());
 		
 		customBottomToolbar.setUsdLabelText(currency.getUSDToTRYLiveCurrency());
 		customBottomToolbar.setEuroLabelText(currency.getEURToTRYLiveCurrency());
 		customBottomToolbar.setPoundLabelText(currency.getGBPToTRYLiveCurrency());
 		customBottomToolbar.setDateLabelText("");
-		customBottomToolbar.sethotelNameLabelText(hotelDaoImpl.getHotel().getName());
+		customBottomToolbar.sethotelNameLabelText(sessionBean.getHotelName());
 		
 		/*add it to our frame*/
 		getContentPane().add(customToolbar.getJPanel(), BorderLayout.NORTH);

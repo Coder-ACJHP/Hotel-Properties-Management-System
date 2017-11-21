@@ -25,6 +25,7 @@ public class SessionBean implements Serializable {
 	private static String surname;
 	private static String nickName;
 	private static String password;
+	private static String hotelName;
 	private static String Date;
 	private static int roomCount;
 	private static Object[] tableRowCol;
@@ -68,6 +69,14 @@ public class SessionBean implements Serializable {
 		SessionBean.password = password;
 	}
 
+	public String getHotelName() {
+		return hotelName;
+	}
+	
+	public void setHotelName(String hotelName) {
+		SessionBean.hotelName = hotelName;
+	}
+	
 	public String getDate() {
 		return Date;
 	}
@@ -75,7 +84,7 @@ public class SessionBean implements Serializable {
 	public static void setDate(String date) {
 		Date = date;
 	}
-
+	
 	public static int getRoomCount() {
 		return roomCount;
 	}

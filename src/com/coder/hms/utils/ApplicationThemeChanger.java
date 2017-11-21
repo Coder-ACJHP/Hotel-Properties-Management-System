@@ -11,7 +11,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 
-public class ApplicaitonThemeChanger {
+public class ApplicationThemeChanger {
 
 	private JFrame frame;
 	
@@ -23,7 +23,7 @@ public class ApplicaitonThemeChanger {
 		this.frame = frame;
 	}
 	
-	public ApplicaitonThemeChanger() {
+	public ApplicationThemeChanger() {
 		
 	}
 	

@@ -28,7 +28,11 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,6 +42,7 @@ import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
@@ -50,7 +55,9 @@ import javax.swing.text.MaskFormatter;
 import org.apache.commons.codec.binary.Base64;
 
 import com.coder.hms.beans.SessionBean;
+import com.coder.hms.connection.DatabaseServerPreparingInitializer;
 import com.coder.hms.daoImpl.HotelDaoImpl;
+import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.entities.Hotel;
 import com.coder.hms.utils.LoggingEngine;
 
@@ -61,8 +68,10 @@ public class HotelPropertiesWindow extends JDialog {
 	 */
 	private Hotel theHotel;
 	private JLabel stars = null;
+	private JMenuBar upperMenuBar;
 	private BufferedImage newImage;
 	private String roomTypeVal = "";
+	private JFrame modalFrame = null;
 	private JTextPane fullAdressField;
 	int starValue, typeValue, capacityVal;
 	private JLabel hotelNameTitle, pictlabel;
@@ -96,14 +105,27 @@ public class HotelPropertiesWindow extends JDialog {
 		
 		loggingEngine = LoggingEngine.getInstance();
 		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
-		
+
 		setResizable(false);
-		setBounds(100, 100, 637, 684);
+		setBounds(100, 50, 637, 694);
 		getContentPane().setBackground(Color.decode("#066d95"));
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.setTitle("Coder HMS - [Hotel Properties]");
+
 		
+		upperMenuBar = new JMenuBar();
+		final JMenu properties = new JMenu("Utils");
+		properties.setFont(new Font("Dialog", Font.BOLD, 13));
+		
+		final JMenuItem databaseProps = new JMenuItem("Auto built database");
+		databaseProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_database.png")));
+		databaseProps.addActionListener(importDatabaseAction());
+		properties.add(databaseProps);
+		
+		upperMenuBar.add(properties);
+		setJMenuBar(upperMenuBar);
 		
 		upperPanel = new JPanel();
 		upperPanel.setBorder(null);
@@ -157,7 +179,7 @@ public class HotelPropertiesWindow extends JDialog {
 		addPictureBtn.setFont(new Font("Verdana", Font.BOLD, 13));
 		addPictureBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		
-		JLabel lblInfoFit = new JLabel("Recommended size is (556 * 218) px");
+		JLabel lblInfoFit = new JLabel("Recommended size is (586 * 218) px");
 		lblInfoFit.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblInfoFit.setForeground(new Color(255, 255, 153));
 		lblInfoFit.setBounds(35, 294, 277, 16);
@@ -372,7 +394,54 @@ public class HotelPropertiesWindow extends JDialog {
 		setType();
 		populateMainWindow();
 		
+		modalFrame = new JFrame();
+		modalFrame.setAlwaysOnTop(true);
+		
 		setVisible(true);
+	}
+
+	private ActionListener importDatabaseAction() {
+		final ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//here creating schema and mporting tables.
+				
+				final DialogFrame frame = new DialogFrame();
+				frame.setMessage("Attention !!\nYour database will be restructured in the next step!");
+				frame.btnYes.addActionListener(ActionListener->{
+					frame.dispose();
+	
+					final String response = JOptionPane.showInputDialog(modalFrame, "Enter your Password", "Authentication",JOptionPane.QUESTION_MESSAGE);
+					final UserDaoImpl userDaoImpl = new UserDaoImpl();
+					
+					if(userDaoImpl.authentication(sessionBean.getName(), response)) {
+						
+						DatabaseServerPreparingInitializer dbspi =  new DatabaseServerPreparingInitializer();
+						dbspi.runScriptFile();
+						
+						if(dbspi.getStatus()) {
+							SwingUtilities.invokeLater(new Runnable() {
+								
+								@Override
+								public void run() {
+									new LicenseWindow(DatabaseServerPreparingInitializer.getLogFile());	
+								}
+							});
+						}
+					} else {
+						JOptionPane.showMessageDialog(modalFrame, "Sorry your password is incorrect!", "Warning!",JOptionPane.ERROR_MESSAGE);
+					}
+				});
+				
+				frame.btnNo.addActionListener(ActionListener->{
+					frame.dispose();
+				});
+				frame.setVisible(true);
+			}
+				
+		};
+		return listener;
 	}
 
 	private void populateMainWindow() {
@@ -490,7 +559,7 @@ public class HotelPropertiesWindow extends JDialog {
 					hotelNameTitle.repaint();
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Hotel name maximum 18 charachter allowed!",
+					JOptionPane.showMessageDialog(modalFrame, "Hotel name maximum 18 charachter allowed!",
 	            		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 				}
 				super.keyTyped(e);
@@ -515,14 +584,14 @@ public class HotelPropertiesWindow extends JDialog {
 		            	
 		            	newImage = ImageIO.read(sec.getSelectedFile());
 		            	
-		            	 int w = pictlabel.getWidth();  
-		            	 int h = pictlabel.getHeight();  
+		            	  final int pictureWidth = 586;
+		            	  final int pictureHeight = 218; 
 		            	 
-		            		BufferedImage hotelPicture = new BufferedImage(w, h, newImage.getType());  
+		            		BufferedImage hotelPicture = new BufferedImage(pictureWidth, pictureHeight, newImage.getType());  
 		            	    Graphics2D g = hotelPicture.createGraphics();  
 		            	    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 		            	    RenderingHints.VALUE_INTERPOLATION_BILINEAR);  
-		            	    g.drawImage(newImage, 0, 0, w, h, null);  
+		            	    g.drawImage(newImage, 0, 0, pictureHeight, pictureHeight, null);  
 		            	    g.dispose();  
 		            	  
 		            	    pictlabel.setIcon(new ImageIcon(hotelPicture));
@@ -530,7 +599,7 @@ public class HotelPropertiesWindow extends JDialog {
 		            	    pictlabel.repaint();
 
 		            } catch (IOException e1) {
-		               JOptionPane.showMessageDialog(null, "Image cannot be null !",
+		               JOptionPane.showMessageDialog(modalFrame, "Image cannot be null !",
 		            		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 		            }
 		        }
@@ -555,12 +624,12 @@ public class HotelPropertiesWindow extends JDialog {
 				return base64encoded;
 				
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, "Image conversation error!\nPlease reopen this window.",
+				JOptionPane.showMessageDialog(modalFrame, "Image conversation error!\nPlease reopen this window.",
 	        		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 			}
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "Image cannot be null!",
+			JOptionPane.showMessageDialog(modalFrame, "Image cannot be null!",
         		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 		}
 
@@ -579,7 +648,7 @@ public class HotelPropertiesWindow extends JDialog {
 				
 				return bImageFromConvert;
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, "Image conversation error!\nPlease reopen this window.",
+				JOptionPane.showMessageDialog(modalFrame, "Image conversation error!\nPlease reopen this window.",
 	        		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -635,12 +704,12 @@ public class HotelPropertiesWindow extends JDialog {
 			
 
 			hotelDaoImpl.saveHotel(theHotel);
-			JOptionPane.showMessageDialog(null, "Well done.\nYour hotel informations saved successfully!",
+			JOptionPane.showMessageDialog(modalFrame, "Well done.\nYour hotel informations saved successfully!",
         		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
 			loggingEngine.setMessage("Hotel detail is after changing : " + theHotel.toString());
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "Please fill all the blanks as well!",
+			JOptionPane.showMessageDialog(modalFrame, "Please fill all the blanks as well!",
         		   	JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
 			return;
 		}

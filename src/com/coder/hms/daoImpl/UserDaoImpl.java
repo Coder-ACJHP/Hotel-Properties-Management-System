@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -31,37 +32,55 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
 	
 	@Override
 	public User getUserByName(String theName) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
-		query.setParameter("theName", theName);
-		User user = query.getSingleResult();
-		session.close();
+		
+		try {
+			
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
+			query.setParameter("theName", theName);
+			return query.getSingleResult();
 
-		return user;
+		}catch (NoResultException e) {
+			session.getTransaction().rollback();
+			return null;
+		} finally {
+			session.close();
+		}
+		
 	}
 
 	@Override
 	public void saveUser(User user) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		session.saveOrUpdate(user);
-		session.getTransaction().commit();
-		session.close();
 		
+		try {
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			session.saveOrUpdate(user);
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		}
+		session.close();
 	}
 
 	@Override
 	public void changePasswordOfUser(String nickName, String newPassword) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<User> query = session.createQuery("from User where NickName=:nickName", User.class);
-		query.setParameter("nickName", nickName);
-		User theUser = query.getSingleResult();
 		
-		theUser.setPassword(newPassword);
-		session.saveOrUpdate(theUser);
-		session.getTransaction().commit();
+		try {
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			Query<User> query = session.createQuery("from User where NickName=:nickName", User.class);
+			query.setParameter("nickName", nickName);
+			User theUser = query.getSingleResult();
+			
+			theUser.setPassword(newPassword);
+			session.saveOrUpdate(theUser);
+			session.getTransaction().commit();
+			
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		}
 		session.close();
 		
 	}
@@ -75,35 +94,38 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
 	public boolean authentication(String userName, String userPswrd) {
 
 		try {
-			
-			session = dataSourceFactory.getSessionFactory().getCurrentSession();
+			//here we cannot close the session because session is opening here
+			//if login failed it will resume on same session.
+			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<User> query = session.createQuery("from User where NickName=:userName and Password=:userPswrd", User.class);
 			query.setParameter("userName", userName);
 			query.setParameter("userPswrd", userPswrd);
 			query.getSingleResult();
-			session.close();
 			
 			return true;
 		} catch (NoResultException e) {
 			return false;
+		} finally {
+			session.close();
 		}
-				
+			
 	}
 
 	public User getUserByEmail(String theEmail) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<User> query = session.createQuery("from User where Email=:theEmail", User.class);
-		query.setParameter("theEmail", theEmail);
-		User user = query.getSingleResult();
 		
-		if(user != null) {
-			return user;
+		try {
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			Query<User> query = session.createQuery("from User where Email=:theEmail", User.class);
+			query.setParameter("theEmail", theEmail);
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		} finally {
+			session.close();
 		}
 		
-		session.close();
-		return null;
 	}
 	
 	@Override

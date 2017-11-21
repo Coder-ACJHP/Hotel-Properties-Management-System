@@ -5,6 +5,9 @@
  */
 package com.coder.hms.daoImpl;
 
+import javax.persistence.NoResultException;
+
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -27,23 +30,36 @@ public class HotelDaoImpl implements HotelDAO, TransactionManagement {
 	
 	@Override
 	public void saveHotel(Hotel hotel) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		session.saveOrUpdate(hotel);
-		session.getTransaction().commit();
-		session.close();
+		
+		try {
+			
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			session.saveOrUpdate(hotel);
+			session.getTransaction().commit();
+			
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
 		
 	}
 
 	@Override
 	public Hotel getHotel() {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
-		Hotel hotel = query.getSingleResult();
-		session.close();
-				
-		return hotel;
+		
+		try {
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
+			return query.getSingleResult();
+			
+		} catch (NoResultException e) {
+			return null;
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override

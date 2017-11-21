@@ -5,7 +5,6 @@
  */
 package com.coder.hms.start;
 
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -24,14 +23,7 @@ public class StartApplication {
 			e.printStackTrace();
 		}
 
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new LoginWindow();
-
-			}
-		});
+		new LoginWindow();
 
 	}
 

@@ -1,5 +1,8 @@
 package com.coder.hms.daoImpl;
 
+import javax.persistence.NoResultException;
+
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -20,22 +23,36 @@ public class HotelSystemStatusImpl implements HotelSystemStatusDAO {
 	
 	@Override
 	public HotelSystemStatus getSystemStatus() {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		Query<HotelSystemStatus> query = session.createQuery("from HotelSystemStatus where id=1", HotelSystemStatus.class);
-		HotelSystemStatus status = query.getSingleResult();
 		
-		session.close();
-		return status;
+		try {
+			
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			Query<HotelSystemStatus> query = session.createQuery("from HotelSystemStatus where id=1", HotelSystemStatus.class);
+			return query.getSingleResult();
+			
+		} catch (NoResultException e) {
+			return null;
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	public void updateSystemStatus(HotelSystemStatus hotelSystemStatus) {
-		session = dataSourceFactory.getSessionFactory().getCurrentSession();
-		beginTransactionIfAllowed(session);
-		session.saveOrUpdate(hotelSystemStatus);
-		session.getTransaction().commit();
-		session.close();
+	
+		try {
+			
+			session = dataSourceFactory.getSessionFactory().openSession();
+			beginTransactionIfAllowed(session);
+			session.saveOrUpdate(hotelSystemStatus);
+			session.getTransaction().commit();
+			
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
 
 	}
 

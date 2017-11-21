@@ -47,12 +47,12 @@ import com.apple.eawt.Application;
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
-import com.coder.hms.connection.DatabaseServerPreparingInitializer;
+import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.ui.inner.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
-import com.coder.hms.utils.FirstRunChecker;
 import com.coder.hms.utils.LoggingEngine;
+import com.coder.hms.utils.PropertiesReader;
 import com.coder.hms.utils.ResourceControl;
 
 /**
@@ -73,7 +73,7 @@ public class LoginWindow extends JDialog {
 	private static LoggingEngine logging;
 	private LanguageCmbBox languagesCmbBox;
 	private static SessionBean sessionBean;
-	private JButton btnClear, btnLogin, databaseBtn;
+	private JButton btnClear, btnLogin;
 	private JButton setPasswordVisible, capslockBtn;
 	private static final long serialVersionUID = 1L;
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -92,34 +92,7 @@ public class LoginWindow extends JDialog {
 		bean = LocaleBean.getInstance();
 		bean.setLocale(getLocale());
 		sessionBean = SessionBean.getSESSION_BEAN();
-		
-		if(FirstRunChecker.checkIsFirstRun()) {
-			final DialogFrame frame = new DialogFrame();
-			frame.setMessage("Hi dear user, it's seems like this is your first run to this application."
-					+ "If you already installed MySQL server let me prepare your database and tables.");
-			frame.btnYes.addActionListener(ActionListener->{
-				frame.dispose();
-
-				DatabaseServerPreparingInitializer dbspi =  new DatabaseServerPreparingInitializer();
-				dbspi.runScriptFile();
 				
-				if(dbspi.getStatus()) {
-					SwingUtilities.invokeLater(new Runnable() {
-						
-						@Override
-						public void run() {
-							new LicenseWindow(DatabaseServerPreparingInitializer.getLogFile());	
-						}
-					});
-				}
-			});
-			
-			frame.btnNo.addActionListener(ActionListener->{
-				frame.dispose();
-			});
-			frame.setVisible(true);
-		}
-		
 		//set upper icon for dialog frame
 		String opSystem = System.getProperty("os.name").toLowerCase();
 
@@ -327,18 +300,6 @@ public class LoginWindow extends JDialog {
 		iconLabel.setBounds(370, 13, 39, 24);
 		getContentPane().add(iconLabel);
 		
-		databaseBtn = new JButton("DB");
-		databaseBtn.setBackground(new Color(255, 215, 0));
-		databaseBtn.setToolTipText("<html>Prepare my application database and tables.<br>\n"
-				+ "<b><i>Atention! Don't forget it should run once, If you already<br>\n"
-				+ "created your databse don't use this again because it <br>\n"
-				+ "will erase all your datas and will create from scratch </i></b></html>");
-		databaseBtn.setOpaque(true);
-		databaseBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		databaseBtn.setIcon(new ImageIcon(LoginWindow.class.getResource("/com/coder/hms/icons/login_database.png")));
-		databaseBtn.setBounds(29, 172, 46, 29);
-		actionListenerForButtons(databaseBtn);
-		getContentPane().add(databaseBtn);
 		
 		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(new CustomKeyDispatcher());
@@ -492,31 +453,47 @@ public class LoginWindow extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 							
-				String userName = userNameField.getText().toLowerCase();
-				String userPswrd = String.valueOf(passwordField.getPassword());
+				final String userName = userNameField.getText().toLowerCase();
+				final String userPswrd = String.valueOf(passwordField.getPassword());
 								
 				if (e.getSource() == btnLogin) {
 					
 					if(userName.trim().length() > 0 && userPswrd.trim().length() > 0) {
 						
-						final UserDaoImpl userDaoImpl = new UserDaoImpl();
-							boolean check = userDaoImpl.authentication(userName, userPswrd);
+						boolean check = false;
+
+						if(userName.equalsIgnoreCase("System")) {
+
+							final PropertiesReader checker = new PropertiesReader();
+							check = checker.checkIsAdministrator(userName, userPswrd);
+							sessionBean.setHotelName(checker.getHotelName());
 							
-							if(check == true) {
-								//store informations in bean to use it in another frames.
-								sessionBean.setNickName(userName);
-								sessionBean.setPassword(userPswrd);
-								
-								logging.setMessage("User is : " + sessionBean.getNickName());
-								//close this frame
-								dispose();
-								//open main application frame
-								new MainFrame();
-								
-							}else {
-								infoLabel.setForeground(new Color(220, 20, 60));
-								infoLabel.setText("INFO :Username and password doesn't match !!");
-							}
+						} else {
+							
+							final UserDaoImpl userDaoImpl = new UserDaoImpl();
+							check = userDaoImpl.authentication(userName, userPswrd);
+
+						}
+						
+						if(check == true) {
+							//store informations in bean to use it in another frames.
+							sessionBean.setNickName(userName);
+							sessionBean.setPassword(userPswrd);
+							
+							final HotelDaoImpl daoImpl = new HotelDaoImpl();
+							sessionBean.setHotelName(daoImpl.getHotel().getName());
+							
+							logging.setMessage("User is : " + sessionBean.getNickName());
+							//close this frame
+							dispose();
+							//open main application frame
+							new MainFrame();
+							
+						}else {
+							infoLabel.setForeground(new Color(220, 20, 60));
+							infoLabel.setText("INFO :Username and password doesn't match !!");
+						}
+
 					}else {
 						//change label font color and warn the user.						
 						infoLabel.setForeground(new Color(220, 20, 60));
@@ -530,36 +507,6 @@ public class LoginWindow extends JDialog {
 					passwordField.setText(null);
 					infoLabel.setForeground(Color.decode("#059046"));
 					infoLabel.setText("INFO : All fields cleared.");
-
-				} else if (e.getSource() == databaseBtn) {
-					
-					final DialogFrame frame = new DialogFrame();
-					frame.setMessage("Before running please be sure your MySQL server is running, than let me prepare your database and tables.");
-					frame.btnYes.addActionListener(ActionListener->{
-						frame.dispose();
-
-						DatabaseServerPreparingInitializer dbspi =  new DatabaseServerPreparingInitializer();
-						dbspi.runScriptFile();
-						
-						if(dbspi.getStatus()) {
-							SwingUtilities.invokeLater(new Runnable() {
-								
-								@Override
-								public void run() {
-									new LicenseWindow(DatabaseServerPreparingInitializer.getLogFile());	
-									infoLabel.setForeground(Color.decode("#059046"));
-									infoLabel.setText("INFO : Everything is perfect.");
-								}
-							});
-						}
-					});
-					
-					frame.btnNo.addActionListener(ActionListener->{
-						infoLabel.setForeground(new Color(220, 20, 60));
-						infoLabel.setText("INFO : Database operation is cancelled!");
-						frame.dispose();
-					});
-					frame.setVisible(true);
 
 				}
 

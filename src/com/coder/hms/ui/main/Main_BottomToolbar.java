@@ -8,10 +8,13 @@ package com.coder.hms.ui.main;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -27,7 +30,7 @@ public class Main_BottomToolbar {
 	currencyUsdLabel, weatherLabel, currencyEuroIcon, currencyEuroLabel, currencyPoundIcon,
 	currencyPoundLabel, hotelIconLabel, hotelNameLabel, weatherIconLabel;
 	final GetLiveWeather liveWeather = new GetLiveWeather();
-	final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
+	private JCheckBox checkBox;
 	
 	public Main_BottomToolbar() {
 		
@@ -45,7 +48,7 @@ public class Main_BottomToolbar {
 		
 		userLabel = new JLabel();
 		userLabel.setMaximumSize(new Dimension(160, 19));
-		userLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		userLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		userLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		userLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		toolBar.add(userLabel);
@@ -58,7 +61,7 @@ public class Main_BottomToolbar {
 		dateLabel.setMaximumSize(new Dimension(160, 19));
 		dateLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		dateLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		dateLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		dateLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		toolBar.add(dateLabel);
 		toolBar.addSeparator();
 		
@@ -69,7 +72,7 @@ public class Main_BottomToolbar {
 		currencyUsdLabel.setMaximumSize(new Dimension(160, 19));
 		currencyUsdLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		currencyUsdLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		currencyUsdLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		currencyUsdLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		toolBar.add(currencyUsdLabel);
 		toolBar.addSeparator();		
 		
@@ -80,7 +83,7 @@ public class Main_BottomToolbar {
 		currencyEuroLabel.setMaximumSize(new Dimension(160, 19));
 		currencyEuroLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		currencyEuroLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		currencyEuroLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		currencyEuroLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		toolBar.add(currencyEuroLabel);
 		toolBar.addSeparator();	
 		
@@ -91,7 +94,7 @@ public class Main_BottomToolbar {
 		currencyPoundLabel.setMaximumSize(new Dimension(160, 19));
 		currencyPoundLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		currencyPoundLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		currencyPoundLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		currencyPoundLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		toolBar.add(currencyPoundLabel);
 		toolBar.addSeparator();
 		
@@ -102,24 +105,54 @@ public class Main_BottomToolbar {
 		hotelNameLabel.setMaximumSize(new Dimension(160, 19));
 		hotelNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		hotelNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		hotelNameLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		hotelNameLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
 		toolBar.add(hotelNameLabel);
 		toolBar.addSeparator();
+		
+		checkBox = new JCheckBox("");
+		checkBox.setToolTipText("Enable local weather");
+		checkBox.addItemListener(showWeather());
+		toolBar.add(checkBox);
 		
 		weatherIconLabel = new JLabel(new ImageIcon(getClass().getResource("/com/coder/hms/icons/toolbar_weather.png")));
 		toolBar.add(weatherIconLabel);
 		
-		final Hotel hotel = hotelDaoImpl.getHotel();
-		final String city = liveWeather.getCurrentLocationWeather(hotel.getCity());
-		weatherLabel = new JLabel(city);
+		
+		weatherLabel = new JLabel("");
 		weatherLabel.setPreferredSize(new Dimension(160, 19));
 		weatherLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		weatherLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		weatherLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		weatherLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+		weatherLabel.setEnabled(false);
 		toolBar.add(weatherLabel);
 
 	}
 	
+	private ItemListener showWeather() {
+		final ItemListener listener = new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(checkBox.isSelected() == true) {
+					
+					final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
+					final Hotel hotel = hotelDaoImpl.getHotel();
+					final String city = liveWeather.getCurrentLocationWeather(hotel.getCity());
+					weatherLabel.setEnabled(true);
+					weatherLabel.setText(city);
+					
+				} else {
+					weatherLabel.setEnabled(false);
+					weatherLabel.setText("");
+				}
+				
+			}
+		};
+		
+			
+		return listener;
+	}
+
 	protected JToolBar getToolBar() {
 		return toolBar;
 	}
