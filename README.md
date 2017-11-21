@@ -91,8 +91,8 @@ Add this line in your database to create event : <code>create event dailyAudit o
 
 <h2>Download newest version : </h2>
 <ul>
-  <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.3.1/HotelManagementSystem-0.0.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
-  <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.3.1/CoderHPMS.app.zip">here</a></li>
+  <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/releases/download/1.3.1/HotelManagementSystem-1.3.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
+  <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.app.zip">here</a></li>
    <li>Download it for Windows application <b><i>.exe</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.exe">here</a></li>
 </ul>
 
