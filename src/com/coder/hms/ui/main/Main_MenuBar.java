@@ -69,7 +69,8 @@ public class Main_MenuBar {
     private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout, utils;
     private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, 
             sendMail, exchange, systemLogs, defaultTheme, mnitmAero, mnitmBernstain, 
-            mnitmMint, mnitmMcwin, changeUser, addUser, chngPassword, aboutDeveloper,
+            mnitmMint, mnitmMcwin, mnitmAcryl, mnitmNoire, mnitmLuna, changeUser, 
+            addUser, chngPassword, aboutDeveloper, mnitmTexture,
             sourceCode, shareYourOpinion, license, databaseProps;
 
     //getter method for getting the modified menubar from another class
@@ -99,7 +100,7 @@ public class Main_MenuBar {
         menuBar.add(frontDesk);
         
         restart = new JMenuItem("Restart");
-        restart.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        restart.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
         restart.addActionListener(ActionListener -> {
 
@@ -120,7 +121,7 @@ public class Main_MenuBar {
         frontDesk.add(restart);
 
         menuInnerItemExit = new JMenuItem("Exit");
-        menuInnerItemExit.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        menuInnerItemExit.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
         //add shortcut keys
         menuInnerItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, (InputEvent.SHIFT_MASK
@@ -258,10 +259,25 @@ public class Main_MenuBar {
         mnitmAero.addActionListener(ActionListener -> {
             themeChanger.ChangeTheme("Aero");
         });
+        mnitmAcryl = new JMenuItem("Acryl");
+        mnitmAcryl.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmAcryl.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("Acryl");
+        });
+        mnitmLuna = new JMenuItem("Luna");
+        mnitmLuna.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmLuna.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("Luna");
+        });
         mnitmBernstain = new JMenuItem("Bernstein");
         mnitmBernstain.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         mnitmBernstain.addActionListener(ActionListener -> {
             themeChanger.ChangeTheme("bernstein");
+        });
+        mnitmNoire = new JMenuItem("Noire");
+        mnitmNoire.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmNoire.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("Noire");
         });
         mnitmMint = new JMenuItem("Mint");
         mnitmMint.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
@@ -273,12 +289,22 @@ public class Main_MenuBar {
         mnitmMcwin.addActionListener(ActionListener -> {
             themeChanger.ChangeTheme("McWin");
         });
-
-        themes.add(defaultTheme);
+        mnitmTexture = new JMenuItem("Texture");
+        mnitmTexture.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmTexture.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("Texture");
+        });
+        
+        
         themes.add(mnitmAero);
+        themes.add(mnitmAcryl);
         themes.add(mnitmBernstain);
+        themes.add(mnitmLuna);
         themes.add(mnitmMint);
         themes.add(mnitmMcwin);
+        themes.add(defaultTheme);
+        themes.add(mnitmNoire);
+        themes.add(mnitmTexture);
 
         usersMenu = new JMenu("Users");
         usersMenu.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
@@ -418,13 +444,14 @@ public class Main_MenuBar {
         utils.setToolTipText("Creator permission required!");
 
         databaseProps = new JMenuItem("Auto built database");
+        databaseProps.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         databaseProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_database.png")));
         databaseProps.addActionListener(importDatabaseAction());
         utils.add(databaseProps);
         utils.setEnabled(false);
                 
         hoteProps = new JMenuItem("Hotel Properties");
-        hoteProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        hoteProps.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
         hoteProps.addActionListener(ActionListener -> {
 
@@ -443,7 +470,7 @@ public class Main_MenuBar {
         utils.add(hoteProps);
 
         roomProps = new JMenuItem("Rooms Properties");
-        roomProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        roomProps.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         roomProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_room.png")));
         roomProps.addActionListener(ActionListener -> {
 

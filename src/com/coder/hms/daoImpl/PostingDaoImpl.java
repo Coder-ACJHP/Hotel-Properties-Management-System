@@ -12,204 +12,229 @@ import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.PostingDAO;
 import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.entities.Posting;
+import com.coder.hms.utils.LoggingEngine;
 
 public class PostingDaoImpl implements PostingDAO, TransactionManagement {
-	
-	private Session session;
-	private DataSourceFactory dataSourceFactory;
 
-	public PostingDaoImpl() {
-		
-		dataSourceFactory = new DataSourceFactory();
-		DataSourceFactory.createConnection();
-	}
-	
-	@Override
-	public void savePosting(Posting posting) {
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			session.saveOrUpdate(posting);
-			session.getTransaction().commit();
-			
-		} catch (HibernateException e) {
-			session.getTransaction().rollback();
-		} finally {
-			session.close();
-		}
+    private Session session;
+    private LoggingEngine logging;
+    private DataSourceFactory dataSourceFactory;
 
-	}
+    public PostingDaoImpl() {
 
-	@Override
-	public boolean deletePosting(long theId) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<?> query = session.createQuery("delete Posting where id = :theId");
-			query.setParameter("theId", theId);
-			query.executeUpdate();
-			return true;
-			
-		} catch (HibernateException e) {
-			session.getTransaction().rollback();
-			return false;
-		} finally {
-			session.close();
-		}
-	}
+        dataSourceFactory = new DataSourceFactory();
+        DataSourceFactory.createConnection();
+        logging = LoggingEngine.getInstance();
+    }
 
-	@Override
-	public Posting getPostingById(long Id) {
-		try {
-			
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			return session.get(Posting.class, Id);
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-		
-	}
+    @Override
+    public void savePosting(Posting posting) {
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            session.saveOrUpdate(posting);
+            session.getTransaction().commit();
+            logging.setMessage("PostingDaoImpl -> payment saved successfully.");
 
-	@Override
-	public List<Posting> getAllPostingsByRoomNumber(String theRoomNumber, String string) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<Posting> query = session.createQuery("from Posting where"
-					+ " roomNumber = :theRoomNumber and dateTime >= :localDate", Posting.class);
-			query.setParameter("theRoomNumber", theRoomNumber);
-			query.setParameter("localDate", string);
-			return query.getResultList();
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
+        } catch (HibernateException e) {
+            session.getTransaction().rollback();
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+    }
 
-	}
+    @Override
+    public boolean deletePosting(long theId) {
 
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<?> query = session.createQuery("delete Posting where id = :theId");
+            query.setParameter("theId", theId);
+            query.executeUpdate();
 
-	public List<Posting> getAllPostingsForToday(String today) {
+            logging.setMessage("PostingDaoImpl -> posting deleted successfully.");
+            return true;
 
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<Posting> query = session.createQuery("from Posting where dateTime >= :today", Posting.class);
-			query.setParameter("today", today);
-			return query.getResultList();
+        } catch (HibernateException e) {
+            session.getTransaction().rollback();
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return false;
+    }
 
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-	}
+    @Override
+    public Posting getPostingById(long Id) {
+        Posting thePosting = null;
+        try {
 
-	@Override
-	public String getTotalCashLiraPostingsForOneDay(String today) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'TURKISH LIRA' and dateTime >= :today", String.class);
-			query.setParameter("today", today);
-			return query.getSingleResult();
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            thePosting = session.get(Posting.class, Id);
+            logging.setMessage("PostingDaoImpl -> fetching posting...");
 
-	}
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return thePosting;
+    }
 
-	@Override
-	public String getTotalCashDollarPostingsForOneDay(String today) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<String> query = session.createQuery(
-					"select sum(price) from Posting where currency = 'DOLLAR' and dateTime >= :today", String.class);
-			query.setParameter("today", today);
-			return query.getSingleResult();
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-	}
+    @Override
+    public List<Posting> getAllPostingsByRoomNumber(String theRoomNumber, String string) {
+        List<Posting> postingsList = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<Posting> query = session.createQuery("from Posting where"
+                    + " roomNumber = :theRoomNumber and dateTime >= :localDate", Posting.class);
+            query.setParameter("theRoomNumber", theRoomNumber);
+            query.setParameter("localDate", string);
+            postingsList = query.getResultList();
 
-	@Override
-	public String getTotalCashEuroPostingsForOneDay(String today) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'EURO' and dateTime >= :today", String.class);
-			query.setParameter("today", today);
-			return query.getSingleResult();
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-	}
+            logging.setMessage("PostingDaoImpl -> fetching all postings by room number...");
 
-	@Override
-	public String getTotalCashPoundPostingsForOneDay(String today) {
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return postingsList;
+    }
 
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<String> query = session.createQuery(
-					"select sum(price) from Posting where currency = 'POUND' and dateTime >= :today", String.class);
-			query.setParameter("today", today);
-			return query.getSingleResult();
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-	}
+    public List<Posting> getAllPostingsForToday(String today) {
+        List<Posting> postingsList = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<Posting> query = session.createQuery("from Posting where dateTime >= :today", Posting.class);
+            query.setParameter("today", today);
+            postingsList = query.getResultList();
 
+            logging.setMessage("PostingDaoImpl -> fetching all postings for today...");
 
-	@Override
-	public String getTotalCreditPostingsForOneDay(String date) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<String> query = session.createQuery("select sum(price) from Posting where "
-					+ "currency = 'CREDIT CARD' and dateTime >= :date", String.class);
-			query.setParameter("date", date);
-			return query.getSingleResult();
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-	}
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return postingsList;
+    }
 
-	@Override
-	public void beginTransactionIfAllowed(Session theSession) {
-		if(!theSession.getTransaction().isActive()) {
-			theSession.beginTransaction();	
-		}else {
-			theSession.getTransaction().rollback();
-			theSession.beginTransaction();
-		}
-		
-	}
+    @Override
+    public String getTotalCashLiraPostingsForOneDay(String today) {
+        String totalCash = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'TURKISH LIRA' and dateTime >= :today", String.class);
+            query.setParameter("today", today);
+            totalCash = query.getSingleResult();
+
+            logging.setMessage("PostingDaoImpl -> fetching total cash lira posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCash;
+    }
+
+    @Override
+    public String getTotalCashDollarPostingsForOneDay(String today) {
+        String totalCash = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery(
+                    "select sum(price) from Posting where currency = 'DOLLAR' and dateTime >= :today", String.class);
+            query.setParameter("today", today);
+            totalCash = query.getSingleResult();
+
+            logging.setMessage("PostingDaoImpl -> fetching total cash dollar posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCash;
+    }
+
+    @Override
+    public String getTotalCashEuroPostingsForOneDay(String today) {
+        String totalCash = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'EURO' and dateTime >= :today", String.class);
+            query.setParameter("today", today);
+            totalCash = query.getSingleResult();
+
+            logging.setMessage("PostingDaoImpl -> fetching total cash dollar posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCash;
+    }
+
+    @Override
+    public String getTotalCashPoundPostingsForOneDay(String today) {
+        String totalCash = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery(
+                    "select sum(price) from Posting where currency = 'POUND' and dateTime >= :today", String.class);
+            query.setParameter("today", today);
+            totalCash = query.getSingleResult();
+            logging.setMessage("PostingDaoImpl -> fetching total cash dollar posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCash;
+    }
+
+    @Override
+    public String getTotalCreditPostingsForOneDay(String date) {
+        String totalCash = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery("select sum(price) from Posting where "
+                    + "currency = 'CREDIT CARD' and dateTime >= :date", String.class);
+            query.setParameter("date", date);
+            totalCash = query.getSingleResult();
+
+            logging.setMessage("PostingDaoImpl -> fetching total cash dollar posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCash;
+    }
+
+    @Override
+    public void beginTransactionIfAllowed(Session theSession) {
+        if (!theSession.getTransaction().isActive()) {
+            theSession.beginTransaction();
+        } else {
+            theSession.getTransaction().rollback();
+            theSession.beginTransaction();
+        }
+
+    }
 }

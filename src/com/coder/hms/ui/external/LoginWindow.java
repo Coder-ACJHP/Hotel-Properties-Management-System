@@ -278,7 +278,7 @@ public class LoginWindow extends JDialog {
         });
 
         lblResetYourPassword.setHorizontalAlignment(SwingConstants.CENTER);
-        lblResetYourPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+        lblResetYourPassword.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 11));
         lblResetYourPassword.setBounds(241, 151, 134, 9);
         getContentPane().add(lblResetYourPassword);
 

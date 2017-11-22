@@ -18,59 +18,60 @@ import com.coder.hms.entities.Hotel;
 
 public class HotelDaoImpl implements HotelDAO, TransactionManagement {
 
-	private Session session;
-	private DataSourceFactory dataSourceFactory;
-	
-	public HotelDaoImpl() {
-		
-		dataSourceFactory = new DataSourceFactory();
-		DataSourceFactory.createConnection();
+    private Session session;
+    private DataSourceFactory dataSourceFactory;
 
-	}
-	
-	@Override
-	public void saveHotel(Hotel hotel) {
-		
-		try {
-			
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			session.saveOrUpdate(hotel);
-			session.getTransaction().commit();
-			
-		} catch (HibernateException e) {
-			session.getTransaction().rollback();
-		} finally {
-			session.close();
-		}
-		
-	}
+    public HotelDaoImpl() {
 
-	@Override
-	public Hotel getHotel() {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
-			return query.getSingleResult();
-			
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-	}
+        dataSourceFactory = new DataSourceFactory();
+        DataSourceFactory.createConnection();
 
-	@Override
-	public void beginTransactionIfAllowed(Session theSession) {
-		if(!theSession.getTransaction().isActive()) {
-			theSession.beginTransaction();	
-		}else {
-			theSession.getTransaction().rollback();
-			theSession.beginTransaction();
-		}
-		
-	}
+    }
+
+    @Override
+    public void saveHotel(Hotel hotel) {
+
+        try {
+
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            session.saveOrUpdate(hotel);
+            session.getTransaction().commit();
+
+        } catch (HibernateException e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+
+    }
+
+    @Override
+    public Hotel getHotel() {
+        Hotel hotel = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
+            hotel = query.getSingleResult();
+
+        } catch (NoResultException e) {
+            e.getLocalizedMessage();
+        } finally {
+            session.close();
+        }
+        return hotel;
+    }
+
+    @Override
+    public void beginTransactionIfAllowed(Session theSession) {
+        if (!theSession.getTransaction().isActive()) {
+            theSession.beginTransaction();
+        } else {
+            theSession.getTransaction().rollback();
+            theSession.beginTransaction();
+        }
+
+    }
 
 }

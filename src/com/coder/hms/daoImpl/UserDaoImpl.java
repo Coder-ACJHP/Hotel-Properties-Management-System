@@ -37,24 +37,24 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
 
     @Override
     public User getUserByName(String theName) {
-
+        User user = null;
         try {
 
             session = dataSourceFactory.getSessionFactory().openSession();
             beginTransactionIfAllowed(session);
             Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
             query.setParameter("theName", theName);
-            return query.getSingleResult();
-
+            user = query.getSingleResult();
+            
+            logging.setMessage("UserDaoImpl -> user "+user.getNickName()+" saved successfully.");
+            
         } catch (NoResultException e) {
             session.getTransaction().rollback();
-            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
-            return null;
-            
+            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());            
         } finally {
             session.close();
         }
-
+        return user;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
             
         } catch (HibernateException e) {
             session.getTransaction().rollback();
-            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
+            logging.setMessage("UserDaoImpl Error : " + e.getLocalizedMessage());
         }
         session.close();
 
@@ -123,7 +123,7 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
             return passwordEncrypter.passwordIsMatch(userPswrd, theUser.getPassword());
             
         } catch (NoResultException e) {
-            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
+            logging.setMessage("UserDaoImpl Error : " + e.getLocalizedMessage());
             return false;
         } finally {
             session.close();
@@ -132,22 +132,22 @@ public class UserDaoImpl implements UserDAO, TransactionManagement {
     }
 
     public User getUserByEmail(String theEmail) {
-
+        User theUser = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
             beginTransactionIfAllowed(session);
             Query<User> query = session.createQuery("from User where Email=:theEmail", User.class);
             query.setParameter("theEmail", theEmail);
-            logging.setMessage("UserDaoImpl : seeking for owner of "+theEmail);
             
-            return query.getSingleResult();
+            theUser =  query.getSingleResult();
+            logging.setMessage("UserDaoImpl : fetching user who owner of "+theEmail);
+            
         } catch (NoResultException e) {
-            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
-            return null;
+            logging.setMessage("UserDaoImpl Error : " + e.getLocalizedMessage());
         } finally {
             session.close();
         }
-
+        return theUser;
     }
 
     @Override

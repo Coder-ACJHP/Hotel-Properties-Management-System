@@ -36,9 +36,9 @@ public class DataSourceFactory {
 			Toolkit.getDefaultToolkit().beep();
 			final InformationFrame dialog = new InformationFrame();
 			dialog.setMessage("Sorry we can't connect to database right now, without "
-					+ "connection the application will not work properly.\n"+e.getLocalizedMessage());
+					+ "connection the application will not work properly.");
 			dialog.okBtn.addActionListener(ActionListener->{
-				System.exit(1);
+				return;
 			});
 			dialog.setVisible(true);
 		}

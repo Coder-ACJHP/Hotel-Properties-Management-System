@@ -25,12 +25,12 @@ import com.coder.hms.utils.GetLiveWeather;
 
 public class Main_BottomToolbar {
 
-    private JToolBar toolBar;
-    private JLabel userIconLabel, userLabel, dateIconLabel, dateLabel, currencyUsdIcon,
+    private final JToolBar toolBar;
+    private final JLabel userIconLabel, userLabel, dateIconLabel, dateLabel, currencyUsdIcon,
             currencyUsdLabel, weatherLabel, currencyEuroIcon, currencyEuroLabel, currencyPoundIcon,
             currencyPoundLabel, hotelIconLabel, hotelNameLabel, weatherIconLabel;
-    final GetLiveWeather liveWeather = new GetLiveWeather();
-    private JCheckBox checkBox;
+    private final GetLiveWeather liveWeather;
+    private final JCheckBox checkBox;
 
     public Main_BottomToolbar() {
 
@@ -46,9 +46,12 @@ public class Main_BottomToolbar {
         userIconLabel = new JLabel(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_user.png")));
         toolBar.add(userIconLabel);
 
+        //initialize weather api for use.
+        liveWeather = new GetLiveWeather();
+        
         userLabel = new JLabel();
         userLabel.setMaximumSize(new Dimension(160, 19));
-        userLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        userLabel.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         userLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         userLabel.setHorizontalAlignment(SwingConstants.LEFT);
         toolBar.add(userLabel);
@@ -61,7 +64,7 @@ public class Main_BottomToolbar {
         dateLabel.setMaximumSize(new Dimension(160, 19));
         dateLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         dateLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        dateLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        dateLabel.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         toolBar.add(dateLabel);
         toolBar.addSeparator();
 
@@ -72,7 +75,7 @@ public class Main_BottomToolbar {
         currencyUsdLabel.setMaximumSize(new Dimension(160, 19));
         currencyUsdLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         currencyUsdLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        currencyUsdLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        currencyUsdLabel.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         toolBar.add(currencyUsdLabel);
         toolBar.addSeparator();
 
@@ -83,7 +86,7 @@ public class Main_BottomToolbar {
         currencyEuroLabel.setMaximumSize(new Dimension(160, 19));
         currencyEuroLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         currencyEuroLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        currencyEuroLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        currencyEuroLabel.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         toolBar.add(currencyEuroLabel);
         toolBar.addSeparator();
 
@@ -94,7 +97,7 @@ public class Main_BottomToolbar {
         currencyPoundLabel.setMaximumSize(new Dimension(160, 19));
         currencyPoundLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         currencyPoundLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        currencyPoundLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        currencyPoundLabel.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         toolBar.add(currencyPoundLabel);
         toolBar.addSeparator();
 
@@ -105,7 +108,7 @@ public class Main_BottomToolbar {
         hotelNameLabel.setMaximumSize(new Dimension(160, 19));
         hotelNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         hotelNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        hotelNameLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        hotelNameLabel.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         toolBar.add(hotelNameLabel);
         toolBar.addSeparator();
 
@@ -121,7 +124,7 @@ public class Main_BottomToolbar {
         weatherLabel.setPreferredSize(new Dimension(160, 19));
         weatherLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         weatherLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        weatherLabel.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        weatherLabel.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
         weatherLabel.setEnabled(false);
         toolBar.add(weatherLabel);
 

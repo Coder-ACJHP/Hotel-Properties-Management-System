@@ -18,22 +18,25 @@ import com.coder.hms.dao.CustomerDAO;
 import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.ui.external.InformationFrame;
+import com.coder.hms.utils.LoggingEngine;
 
 public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 
 	private Session session;
+        private static LoggingEngine logging;
 	private DataSourceFactory dataSourceFactory;
 	
 	public CustomerDaoImpl() {
 		
 		dataSourceFactory = new DataSourceFactory();
 		DataSourceFactory.createConnection();
+                logging = LoggingEngine.getInstance();
 
 	}
 	
 	@Override
 	public Customer findCustomerByName(String name, String lastName) {
-
+                Customer customer = null;
 		try {
 			
 			session = dataSourceFactory.getSessionFactory().openSession();
@@ -42,16 +45,16 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 			query.setParameter("name", name);
 			query.setParameter("lastName", lastName);
 			
-			return query.getSingleResult();
-			
+			customer = query.getSingleResult();
+			logging.setMessage("CustomerDaoImpl -> fetching customer with name :" + name);
 		} catch (NoResultException e) {
 			final InformationFrame frame = new InformationFrame();
-			frame.setMessage("Customers not found!");
+			frame.setMessage("Customers not found! :" +e.getLocalizedMessage());
 			frame.setVisible(true);
-			return null;
 		} finally {
 			session.close();
 		}
+                return customer;
 	}
 
 	@Override
@@ -62,39 +65,42 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 
 	@Override
 	public List<Customer> getAllCustomers() {
-	
+                List<Customer> customerList = null;
 		try {
 			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<Customer> query = session.createQuery("from Customer", Customer.class);
-			return query.getResultList();
-			
+			customerList =  query.getResultList();
+                        
+			logging.setMessage("CustomerDaoImpl -> fetching all customers");
 		} catch (NoResultException e) {
-			return null;
+			logging.setMessage("CustomerDaoImpl NoResultException -> :"+e.getLocalizedMessage());
 		} finally {
 			session.close();
 		}
-
+                   return customerList;
 	}
 
-	@Override
-	public boolean save(Customer theCustomer) {
+    @Override
+    public boolean save(Customer theCustomer) {
 
-		try {
-			
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			session.save(theCustomer);
-			session.getTransaction().commit();
-		
-			 return true;
-		} catch (HibernateException e) {
-			session.getTransaction().rollback();
-			return false;
-		} finally {
-			session.close();
-		}
-	}
+        try {
+
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            session.save(theCustomer);
+            session.getTransaction().commit();
+            
+            logging.setMessage("CustomerDaoImpl -> customer saved successfully : "+theCustomer.getFirstName());
+            return true;
+        } catch (HibernateException e) {
+            session.getTransaction().rollback();
+            logging.setMessage("CustomerDaoImpl -> save customer error -> "+e.getLocalizedMessage());
+            return false;
+        } finally {
+            session.close();
+        }
+    }
 
 	@Override
 	public boolean update(Customer theCustomer) {
@@ -105,9 +111,11 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 			session.update(theCustomer);
 			session.getTransaction().commit();
 			
+                        logging.setMessage("CustomerDaoImpl -> customer updated successfully : "+theCustomer.toString());
 			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
+                        logging.setMessage("CustomerDaoImpl -> update customer error -> "+e.getLocalizedMessage());
 			return false;
 		} finally {
 			session.close();
@@ -115,22 +123,23 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 	}
 	
 	public List<Customer> getCustomerByReservId(long id) {
-		
+		List<Customer> customersList = null;
 		try {
 			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<Customer> query = session.createQuery("from Customer where ReservationId=:id", Customer.class);
 			query.setParameter("id", id);
-			return query.getResultList();
+			customersList = query.getResultList();
 			
+                        logging.setMessage("CustomerDaoImpl -> customer updated successfully : "+customersList.toString());
 		} catch (NoResultException e) {
 			final InformationFrame frame = new InformationFrame();
 			frame.setMessage("Customers not found!");
 			frame.setVisible(true);
-			return null;
 		} finally {
 			session.close();
 		}
+                return customersList;
 	}
 	
 	@Override
@@ -144,9 +153,10 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 			Query query = session.createQuery("delete from Customers where ReservationId=:id");
 			query.setParameter("id", id);
 			session.getTransaction().commit();
-			
+			logging.setMessage("CustomerDaoImpl -> customer deleted successfully");
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
+                        logging.setMessage("CustomerDaoImpl -> delete customer error -> "+e.getLocalizedMessage());
 		} finally {
 			session.close();
 		}
@@ -155,23 +165,24 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 	
 	@Override
 	public Customer getSinlgeCustomerByReservId(long id) {
-		
+		Customer theCustomer = null;
 		try {
 			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<Customer> query = session.createQuery("from Customer where ReservationId=:theId", Customer.class);
 			query.setParameter("theId", id);
 			
-			return query.getSingleResult();
-			
+			theCustomer = query.getSingleResult();
+			logging.setMessage("CustomerDaoImpl -> fetched customer successfully :"+theCustomer.toString());
+                        
 		} catch (NoResultException e) {
 			final InformationFrame frame = new InformationFrame();
 			frame.setMessage("Customers not found!");
 			frame.setVisible(true);
-			return null;
 		} finally {
 			session.close();
 		}
+                return theCustomer;
 	}
 	
 	@Override

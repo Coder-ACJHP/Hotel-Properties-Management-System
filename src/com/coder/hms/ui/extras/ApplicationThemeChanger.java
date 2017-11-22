@@ -45,7 +45,24 @@ public class ApplicationThemeChanger {
 				} else if (themeName.equalsIgnoreCase("Aero")) {
 					UIManager.setLookAndFeel("com.jtattoo.plaf.aero.AeroLookAndFeel");
 					SwingUtilities.updateComponentTreeUI(frame);
-				} else if (themeName.equalsIgnoreCase("Nimbus")) {
+                                        
+				} else if(themeName.equalsIgnoreCase("Noire")) {
+                                        UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
+                                        SwingUtilities.updateComponentTreeUI(frame);
+                                        
+                                } else if(themeName.equalsIgnoreCase("Acryl")) {
+                                        UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+                                        SwingUtilities.updateComponentTreeUI(frame);
+                                        
+                                } else if(themeName.equalsIgnoreCase("Luna")) {
+                                        UIManager.setLookAndFeel("com.jtattoo.plaf.luna.LunaLookAndFeel");
+                                        SwingUtilities.updateComponentTreeUI(frame);
+                                        
+                                } else if (themeName.equalsIgnoreCase("Texture")) {
+                                        UIManager.setLookAndFeel("com.jtattoo.plaf.texture.TextureLookAndFeel");
+                                        SwingUtilities.updateComponentTreeUI(frame);
+                                        
+                                } else if (themeName.equalsIgnoreCase("Nimbus")) {
 					for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 						if ("Nimbus".equals(info.getName())) {
 							UIManager.setLookAndFeel(info.getClassName());

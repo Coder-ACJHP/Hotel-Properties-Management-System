@@ -69,7 +69,7 @@ public class Main_UpperToolbar {
         roomsBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_room.png")));
         roomsBtn.setBounds(10, 7, 137, 40);
         roomsBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        roomsBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 14));
+        roomsBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         roomsBtn.setPreferredSize(new Dimension(200, 40));
         roomsBtn.addActionListener(UpperToolbarActionListener(mainPanel));
         panel.add(roomsBtn);
@@ -80,7 +80,7 @@ public class Main_UpperToolbar {
         guestsBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_guests.png")));
         guestsBtn.setBounds(157, 7, 137, 40);
         guestsBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        guestsBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 14));
+        guestsBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         guestsBtn.setPreferredSize(new Dimension(200, 40));
         guestsBtn.addActionListener(UpperToolbarActionListener(mainPanel));
         panel.add(guestsBtn);
@@ -91,7 +91,7 @@ public class Main_UpperToolbar {
         rezervationBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_rezerv.png")));
         rezervationBtn.setBounds(304, 7, 137, 40);
         rezervationBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        rezervationBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 14));
+        rezervationBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         rezervationBtn.setPreferredSize(new Dimension(200, 40));
         rezervationBtn.addActionListener(UpperToolbarActionListener(mainPanel));
         panel.add(rezervationBtn);
@@ -102,7 +102,7 @@ public class Main_UpperToolbar {
         blockadeBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_blockade.png")));
         blockadeBtn.setBounds(451, 7, 137, 40);
         blockadeBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        blockadeBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 14));
+        blockadeBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         blockadeBtn.setPreferredSize(new Dimension(200, 40));
         blockadeBtn.addActionListener(UpperToolbarActionListener(mainPanel));
         panel.add(blockadeBtn);
@@ -113,7 +113,7 @@ public class Main_UpperToolbar {
         roomCleaningBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/login_clear.png")));
         roomCleaningBtn.setBounds(599, 7, 137, 40);
         roomCleaningBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        roomCleaningBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 14));
+        roomCleaningBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         roomCleaningBtn.setPreferredSize(new Dimension(200, 40));
         roomCleaningBtn.addActionListener(UpperToolbarActionListener(mainPanel));
         panel.add(roomCleaningBtn);
@@ -124,7 +124,7 @@ public class Main_UpperToolbar {
         cashBtn.setIcon(new ImageIcon(MainFrame.class.getResource("/com/coder/hms/icons/main_cash.png")));
         cashBtn.setBounds(746, 7, 137, 40);
         cashBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        cashBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 14));
+        cashBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         cashBtn.setPreferredSize(new Dimension(200, 40));
         cashBtn.addActionListener(UpperToolbarActionListener(mainPanel));
         panel.add(cashBtn);
@@ -143,7 +143,7 @@ public class Main_UpperToolbar {
         auditBtn.setIcon(new ImageIcon(Main_UpperToolbar.class.getResource("/com/coder/hms/icons/main_audit.png")));
         auditBtn.setPreferredSize(new Dimension(200, 40));
         auditBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-        auditBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 14));
+        auditBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         auditBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
         auditBtn.setBounds(906, 7, 137, 40);
         auditBtn.addActionListener(UpperToolbarActionListener(mainPanel));
