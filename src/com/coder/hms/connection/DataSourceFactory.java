@@ -36,7 +36,7 @@ public class DataSourceFactory {
 			Toolkit.getDefaultToolkit().beep();
 			final InformationFrame dialog = new InformationFrame();
 			dialog.setMessage("Sorry we can't connect to database right now, without "
-					+ "connection the application will not work properly.");
+					+ "connection the application will not work properly.\n"+e.getLocalizedMessage());
 			dialog.okBtn.addActionListener(ActionListener->{
 				System.exit(1);
 			});
@@ -48,6 +48,7 @@ public class DataSourceFactory {
 		return sessionFactory;
 	}
 
+        //replacement connection for old types like java.sql.Connection.
 	public Connection getSqlConnection() {
 		Connection connection = null;
 		try {
@@ -56,7 +57,7 @@ public class DataSourceFactory {
 					getService(ConnectionProvider.class).getConnection();
 		} catch (SQLException e) {
 			final InformationFrame INFORMATION_FRAME = new InformationFrame();
-			INFORMATION_FRAME.setMessage("Connection converting error!");
+			INFORMATION_FRAME.setMessage("Connection converting error!\n" +e.getLocalizedMessage());
 			INFORMATION_FRAME.setVisible(true);
 		}
 		return connection;
@@ -68,6 +69,6 @@ public class DataSourceFactory {
 	
 	public void shutDown() {
 		if(sessionFactory != null && sessionFactory.isOpen())
-				sessionFactory.close();
+                        sessionFactory.close();
 	}
 }

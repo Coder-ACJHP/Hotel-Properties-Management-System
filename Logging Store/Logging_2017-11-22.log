@@ -216,3 +216,127 @@ INFO:RoomDaoImpl -> fetching all rooms...
 INFO:RoomDaoImpl -> fetching all rooms...
 04:12:15 22/11/2017
 INFO:RoomDaoImpl -> fetching all rooms...
+04:44:51 22/11/2017
+INFO:UserDaoImpl : checking credentials...
+04:44:51 22/11/2017
+INFO:User is : admin
+04:44:52 22/11/2017
+INFO:MainFrame created successfully.
+04:45:23 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+04:45:23 22/11/2017
+INFO:User is : system
+04:45:23 22/11/2017
+INFO:MainFrame created successfully.
+04:45:51 22/11/2017
+INFO:UserDaoImpl : No entity found for query
+04:45:58 22/11/2017
+INFO:User is : system
+04:45:58 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+04:46:09 22/11/2017
+INFO:User is : system
+05:05:49 22/11/2017
+INFO:Language changed.
+05:05:59 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+05:05:59 22/11/2017
+INFO:User is : system
+05:06:00 22/11/2017
+INFO:MainFrame created successfully.
+05:06:11 22/11/2017
+INFO:UserDaoImpl : No entity found for query
+05:06:25 22/11/2017
+INFO:User is : system
+05:06:31 22/11/2017
+INFO:User is : system
+05:06:31 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:07:12 22/11/2017
+INFO:Language changed.
+05:07:13 22/11/2017
+INFO:UserDaoImpl : checking credentials...
+05:07:13 22/11/2017
+INFO:User is : admin
+05:07:14 22/11/2017
+INFO:MainFrame created successfully.
+05:08:14 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:23 22/11/2017
+INFO:RoomDaoImpl -> All rooms status updated to clean successfully.
+05:08:23 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:28 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:32 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:36 22/11/2017
+INFO:RoomDaoImpl -> room number :2002 status updated to dnd successfully.
+05:08:36 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:38 22/11/2017
+INFO:RoomDaoImpl -> room number :5002 status updated to dnd successfully.
+05:08:38 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:41 22/11/2017
+INFO:RoomDaoImpl -> room number :4003 status updated to dirty successfully.
+05:08:41 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:43 22/11/2017
+INFO:RoomDaoImpl -> room number :7001 status updated to dirty successfully.
+05:08:43 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:08:59 22/11/2017
+INFO:Money Transaction started.
+05:08:59 22/11/2017
+INFO:User is : admin
+05:09:05 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:19:41 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+05:19:41 22/11/2017
+INFO:User is : system
+05:19:41 22/11/2017
+INFO:MainFrame created successfully.
+05:19:52 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:19:57 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:19:57 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:20:00 22/11/2017
+INFO:Money Transaction started.
+05:20:00 22/11/2017
+INFO:User is : system
+05:20:04 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+05:20:12 22/11/2017
+INFO:User is : system
+05:43:37 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+05:43:37 22/11/2017
+INFO:User is : system
+05:43:37 22/11/2017
+INFO:MainFrame created successfully.
+05:46:13 22/11/2017
+INFO:Can't find bundle for base name com/coder/hms/languageFiles/LocalizationBundle, locale en_US
+05:46:20 22/11/2017
+INFO:Can't find bundle for base name com/coder/hms/languageFiles/LocalizationBundle, locale ar_IQ
+05:46:20 22/11/2017
+INFO:Language changed.
+05:46:32 22/11/2017
+INFO:Can't find bundle for base name com/coder/hms/languageFiles/LocalizationBundle, locale en_US
+05:48:15 22/11/2017
+INFO:Language changed.
+05:48:18 22/11/2017
+INFO:Language changed.
+05:48:19 22/11/2017
+INFO:Language changed.
+05:48:22 22/11/2017
+INFO:Language changed.
+05:48:36 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+05:48:36 22/11/2017
+INFO:User is : system
+05:48:37 22/11/2017
+INFO:MainFrame created successfully.

@@ -13,7 +13,6 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,10 +34,12 @@ import javax.swing.border.LineBorder;
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
+import com.coder.hms.connection.DatabaseServerPreparingInitializer;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.entities.User;
 import com.coder.hms.ui.external.AddUserWindow;
 import com.coder.hms.ui.external.ChangePasswordWindow;
+import com.coder.hms.ui.external.DialogFrame;
 import com.coder.hms.ui.external.ExchangeWindow;
 import com.coder.hms.ui.external.HotelPropertiesWindow;
 import com.coder.hms.ui.external.InformationFrame;
@@ -49,6 +50,8 @@ import com.coder.hms.ui.external.RoomsPropertiesWindow;
 import com.coder.hms.ui.extras.ApplicationThemeChanger;
 import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.ResourceControl;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Main_MenuBar {
 
@@ -58,14 +61,16 @@ public class Main_MenuBar {
     private String titleMessage = "";
     private final Runtime run = Runtime.getRuntime();
     private final LocaleBean bean = LocaleBean.getInstance();
+    private static SessionBean SESSION_BEAN;
     private ChangeComponentOrientation componentOrientation;
     private final static Desktop desktop = Desktop.getDesktop();
     private final String command = System.getProperty("os.name");
     public final ApplicationThemeChanger themeChanger = new ApplicationThemeChanger();
-    private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
-    private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
-            defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, addUser, chngPassword, aboutDeveloper,
-            sourceCode, shareYourOpinion, license;
+    private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout, utils;
+    private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, 
+            sendMail, exchange, systemLogs, defaultTheme, mnitmAero, mnitmBernstain, 
+            mnitmMint, mnitmMcwin, changeUser, addUser, chngPassword, aboutDeveloper,
+            sourceCode, shareYourOpinion, license, databaseProps;
 
     //getter method for getting the modified menubar from another class
     public JMenuBar getMenuBar() {
@@ -85,51 +90,14 @@ public class Main_MenuBar {
         menuBar.setBorder(new LineBorder(new Color(128, 128, 128)));
         menuBar.setAutoscrolls(true);
         
+        SESSION_BEAN = SessionBean.getSESSION_BEAN();
         componentOrientation = new ChangeComponentOrientation();
         componentOrientation.setTheMenuBar(menuBar);
         
         frontDesk = new JMenu("Front Desk");
         frontDesk.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
         menuBar.add(frontDesk);
-
-        hoteProps = new JMenuItem("Hotel Properties");
-        hoteProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-        hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
-        hoteProps.addActionListener(ActionListener -> {
-
-            boolean control = checkRole();
-            if (!control) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new HotelPropertiesWindow();
-
-                    }
-                });
-            }
-        });
-        frontDesk.add(hoteProps);
-
-        roomProps = new JMenuItem("Rooms Properties");
-        roomProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-        roomProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_room.png")));
-        roomProps.addActionListener(ActionListener -> {
-
-            boolean control = checkRole();
-            if (!control) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new RoomsPropertiesWindow();
-
-                    }
-                });
-            }
-        });
-        frontDesk.add(roomProps);
-
+        
         restart = new JMenuItem("Restart");
         restart.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
         restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
@@ -439,12 +407,67 @@ public class Main_MenuBar {
         license.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_license.png")));
         license.addActionListener(ActionListener -> {
             SwingUtilities.invokeLater(() -> {
-                new LicenseWindow(new File("LICENSE"));
+                new LicenseWindow("/com/coder/hms/languageFiles/LICENSE");
             });
         });
 
         mnAbout.add(license);
 
+        utils = new JMenu("Utils");
+        utils.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        utils.setToolTipText("Creator permission required!");
+
+        databaseProps = new JMenuItem("Auto built database");
+        databaseProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_database.png")));
+        databaseProps.addActionListener(importDatabaseAction());
+        utils.add(databaseProps);
+        utils.setEnabled(false);
+                
+        hoteProps = new JMenuItem("Hotel Properties");
+        hoteProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
+        hoteProps.addActionListener(ActionListener -> {
+
+            boolean control = checkRole();
+            if (!control) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        new HotelPropertiesWindow();
+
+                    }
+                });
+            }
+        });
+        utils.add(hoteProps);
+
+        roomProps = new JMenuItem("Rooms Properties");
+        roomProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        roomProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_room.png")));
+        roomProps.addActionListener(ActionListener -> {
+
+            boolean control = checkRole();
+            if (!control) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        new RoomsPropertiesWindow();
+
+                    }
+                });
+            }
+        });
+        utils.add(roomProps);
+        menuBar.add(utils);
+        
+        if(SESSION_BEAN.getNickName().equalsIgnoreCase("System")) {
+            utils.setEnabled(true);
+            utils.revalidate();
+            utils.repaint();
+        }
+        
         changeLanguage(bean.getLocale());
         
         //change component orientation with locale.
@@ -456,6 +479,8 @@ public class Main_MenuBar {
 
     }
 
+    //before doing important operations with this method
+    //we will be sure the current user role is System not others
     private boolean checkRole() {
         boolean isUser = false;
         SessionBean sessionBean = SessionBean.getSESSION_BEAN();
@@ -510,6 +535,51 @@ public class Main_MenuBar {
         addUser.setText(bundle.getString("AddUser"));
         menuBar.revalidate();
         menuBar.repaint();
+    }
+    
+    private ActionListener importDatabaseAction() {
+        final ActionListener listener = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                //here creating schema and importing tables.
+                final DialogFrame frame = new DialogFrame();
+                frame.setMessage("Attention !!\nYour database will be restructured in the next step!");
+                frame.btnYes.addActionListener(ActionListener -> {
+                    frame.dispose();
+
+                    //for security we will warn the user and ask for password again.
+                    final String response = JOptionPane.showInputDialog(mainFrame, "Enter your Password", "Authentication", JOptionPane.QUESTION_MESSAGE);
+                    final UserDaoImpl userDaoImpl = new UserDaoImpl();
+
+                    if (userDaoImpl.authentication(SESSION_BEAN.getName(), response)) {
+
+                        final DatabaseServerPreparingInitializer dbspi = new DatabaseServerPreparingInitializer();
+                        dbspi.runScriptFile();
+
+                        if (dbspi.getStatus()) {
+                            SwingUtilities.invokeLater(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    new LicenseWindow(DatabaseServerPreparingInitializer.getLogFile().getAbsolutePath());
+                                }
+                            });
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(mainFrame, "Sorry your password is incorrect!", "Warning!", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+
+                frame.btnNo.addActionListener(ActionListener -> {
+                    frame.dispose();
+                });
+                frame.setVisible(true);
+            }
+
+        };
+        return listener;
     }
 
 }

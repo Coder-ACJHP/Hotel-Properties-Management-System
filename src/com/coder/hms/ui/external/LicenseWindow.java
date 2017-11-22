@@ -6,8 +6,6 @@ import java.awt.ComponentOrientation;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,7 +36,7 @@ public class LicenseWindow extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public LicenseWindow(final File file) {
+	public LicenseWindow(final String path) {
 		
 		setTitle("Coder HPMSA - [License]");
 		setBounds(100, 100, 550, 550);
@@ -66,14 +64,14 @@ public class LicenseWindow extends JDialog {
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		doc.setParagraphAttributes(0, doc.getLength()-1, center, false);
 		
-		fillEditorPane(file);
+		fillEditorPane(path);
 		setVisible(true);
 	}
 
-	private void fillEditorPane(final File file) {
+	private void fillEditorPane(final String path) {
 		
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path),"UTF-8"));
 			editorPane.read(br, Charset.forName("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), JOptionPane.MESSAGE_PROPERTY, JOptionPane.ERROR_MESSAGE);
