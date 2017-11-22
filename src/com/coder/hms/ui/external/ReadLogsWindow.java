@@ -36,7 +36,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.coder.hms.utils.LogRecordsListRenderer;
+import com.coder.hms.ui.extras.LogRecordsListRenderer;
 
 public class ReadLogsWindow extends JDialog {
 

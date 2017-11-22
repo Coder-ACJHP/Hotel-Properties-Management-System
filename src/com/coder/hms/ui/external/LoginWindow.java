@@ -51,10 +51,10 @@ import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.ui.inner.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
+import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.PropertiesReader;
 import com.coder.hms.utils.ResourceControl;
-import java.time.ZoneId;
 import java.time.format.FormatStyle;
 
 /**
@@ -77,9 +77,8 @@ public class LoginWindow extends JDialog {
     private static LoggingEngine logging;
     private final LanguageCmbBox languagesCmbBox;
     private static SessionBean sessionBean;
-    private final JButton btnClear;
-    private final JButton btnLogin;
-    private final JButton setPasswordVisible, capslockBtn;
+    private ChangeComponentOrientation orientationChanger;
+    private final JButton btnClear, btnLogin, setPasswordVisible, capslockBtn;
     private static final long serialVersionUID = 1L;
     private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
     private final JLabel infoLabel, userNameLabel, passwordLabel, jumbotronLabel, lblResetYourPassword;
@@ -87,6 +86,10 @@ public class LoginWindow extends JDialog {
     // Set some basic properties
     public LoginWindow() {
 
+        //inject main dialog to custom dialog.
+        orientationChanger = new ChangeComponentOrientation();
+        orientationChanger.setTheDialog(this);
+        
         logging = LoggingEngine.getInstance();
         logging.setReady(DataSourceFactory.class.getName());
         logging.changeLoggingLevel(Level.FINE);
@@ -357,21 +360,25 @@ public class LoginWindow extends JDialog {
                     currentLocale = new Locale("en", "US");
                     bean.setLocale(currentLocale);
                     setLocale(currentLocale);
+                    orientationChanger.changeOrientationOfJDialogToLeft();
                     break;
                 case 1:
                     currentLocale = new Locale("ar", "IQ");
                     bean.setLocale(currentLocale);
                     setLocale(currentLocale);
+                    orientationChanger.changeOrientationOfJDialogToRight();
                     break;
                 case 2:
                     currentLocale = new Locale("es", "ES");
                     bean.setLocale(currentLocale);
                     setLocale(currentLocale);
+                    orientationChanger.changeOrientationOfJDialogToLeft();
                     break;
                 case 3:
                     currentLocale = new Locale("tr", "TR");
                     bean.setLocale(currentLocale);
                     setLocale(currentLocale);
+                    orientationChanger.changeOrientationOfJDialogToLeft();
                     break;
                     
                 default:

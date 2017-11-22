@@ -1,4 +1,4 @@
-package com.coder.hms.utils;
+package com.coder.hms.ui.extras;
 
 import java.awt.Color;
 import java.awt.Component;

@@ -1,0 +1,218 @@
+01:26:33 22/11/2017
+INFO:Can't find bundle for base name com/coder/hms/languageFiles/LocalizationBundle, locale en_US
+01:26:53 22/11/2017
+INFO:UserDaoImpl : checking credentials...
+01:28:56 22/11/2017
+INFO:Can't find bundle for base name com/coder/hms/languageFiles/LocalizationBundle, locale en_US
+01:31:46 22/11/2017
+INFO:Language changed.
+01:31:50 22/11/2017
+INFO:Language changed.
+01:32:02 22/11/2017
+INFO:User is : system
+01:32:03 22/11/2017
+INFO:MainFrame created successfully.
+01:32:20 22/11/2017
+INFO:Change password window is started....
+01:32:20 22/11/2017
+INFO:User is : system
+01:33:35 22/11/2017
+INFO:UserDaoImpl -> user Master saved successfully.
+01:33:57 22/11/2017
+INFO:UserDaoImpl : checking credentials...
+01:34:05 22/11/2017
+INFO:UserDaoImpl : checking credentials...
+01:34:05 22/11/2017
+INFO:User is : master
+01:34:06 22/11/2017
+INFO:MainFrame created successfully.
+01:35:46 22/11/2017
+INFO:UserDaoImpl -> user System saved successfully.
+01:36:05 22/11/2017
+INFO:User is : system
+01:36:06 22/11/2017
+INFO:MainFrame created successfully.
+01:39:08 22/11/2017
+INFO:UserDaoImpl -> user Admin saved successfully.
+01:50:57 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+01:50:58 22/11/2017
+INFO:User is : system
+01:50:58 22/11/2017
+INFO:MainFrame created successfully.
+02:18:51 22/11/2017
+INFO:Language changed.
+02:19:02 22/11/2017
+INFO:Language changed.
+02:19:07 22/11/2017
+INFO:Language changed.
+02:19:11 22/11/2017
+INFO:Language changed.
+02:19:23 22/11/2017
+INFO:Language changed.
+02:20:30 22/11/2017
+INFO:Language changed.
+02:21:27 22/11/2017
+INFO:Language changed.
+02:23:24 22/11/2017
+INFO:Language changed.
+02:24:41 22/11/2017
+INFO:Language changed.
+02:25:38 22/11/2017
+INFO:Language changed.
+02:26:09 22/11/2017
+INFO:Language changed.
+02:26:44 22/11/2017
+INFO:Language changed.
+02:27:15 22/11/2017
+INFO:Language changed.
+02:33:22 22/11/2017
+INFO:Language changed.
+02:33:30 22/11/2017
+INFO:Language changed.
+02:36:56 22/11/2017
+INFO:Language changed.
+02:37:00 22/11/2017
+INFO:Language changed.
+02:38:23 22/11/2017
+INFO:Language changed.
+02:38:27 22/11/2017
+INFO:Language changed.
+02:38:38 22/11/2017
+INFO:Language changed.
+02:38:43 22/11/2017
+INFO:Language changed.
+02:38:47 22/11/2017
+INFO:Language changed.
+02:38:52 22/11/2017
+INFO:Language changed.
+02:41:25 22/11/2017
+INFO:Language changed.
+02:41:32 22/11/2017
+INFO:Language changed.
+03:02:52 22/11/2017
+INFO:Language changed.
+03:02:55 22/11/2017
+INFO:Language changed.
+03:05:29 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:05:29 22/11/2017
+INFO:User is : system
+03:07:32 22/11/2017
+INFO:Language changed.
+03:07:34 22/11/2017
+INFO:Language changed.
+03:07:39 22/11/2017
+INFO:Language changed.
+03:07:44 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:07:44 22/11/2017
+INFO:User is : system
+03:07:45 22/11/2017
+INFO:MainFrame created successfully.
+03:07:55 22/11/2017
+INFO:Language changed.
+03:08:03 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:08:03 22/11/2017
+INFO:User is : system
+03:08:03 22/11/2017
+INFO:MainFrame created successfully.
+03:11:38 22/11/2017
+INFO:Language changed.
+03:11:44 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:11:44 22/11/2017
+INFO:User is : system
+03:11:45 22/11/2017
+INFO:MainFrame created successfully.
+03:12:37 22/11/2017
+INFO:Language changed.
+03:12:43 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:12:43 22/11/2017
+INFO:User is : system
+03:12:44 22/11/2017
+INFO:MainFrame created successfully.
+03:40:24 22/11/2017
+INFO:Language changed.
+03:40:31 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:40:31 22/11/2017
+INFO:User is : system
+03:46:42 22/11/2017
+INFO:Language changed.
+03:46:42 22/11/2017
+INFO:Language changed.
+03:46:43 22/11/2017
+INFO:Language changed.
+03:46:55 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:46:55 22/11/2017
+INFO:User is : system
+03:54:07 22/11/2017
+INFO:Language changed.
+03:54:16 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:54:16 22/11/2017
+INFO:User is : system
+03:54:16 22/11/2017
+INFO:MainFrame created successfully.
+03:55:09 22/11/2017
+INFO:User is : system
+03:57:20 22/11/2017
+INFO:Language changed.
+03:57:26 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+03:57:26 22/11/2017
+INFO:User is : system
+03:57:26 22/11/2017
+INFO:MainFrame created successfully.
+04:02:47 22/11/2017
+INFO:Language changed.
+04:02:53 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+04:02:53 22/11/2017
+INFO:User is : system
+04:02:54 22/11/2017
+INFO:MainFrame created successfully.
+04:05:19 22/11/2017
+INFO:Language changed.
+04:05:26 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+04:05:26 22/11/2017
+INFO:User is : system
+04:09:00 22/11/2017
+INFO:Language changed.
+04:09:09 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+04:09:09 22/11/2017
+INFO:User is : system
+04:10:38 22/11/2017
+INFO:Language changed.
+04:10:45 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+04:10:45 22/11/2017
+INFO:User is : system
+04:10:45 22/11/2017
+INFO:MainFrame created successfully.
+04:10:54 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+04:11:09 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+04:11:12 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+04:11:25 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+04:12:01 22/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+04:12:01 22/11/2017
+INFO:User is : system
+04:12:02 22/11/2017
+INFO:MainFrame created successfully.
+04:12:03 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+04:12:13 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...
+04:12:15 22/11/2017
+INFO:RoomDaoImpl -> fetching all rooms...

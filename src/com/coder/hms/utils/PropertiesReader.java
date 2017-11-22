@@ -4,8 +4,6 @@ import com.coder.hms.ui.external.InformationFrame;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PropertiesReader {
 
@@ -13,18 +11,26 @@ public class PropertiesReader {
     private String password;
     private String hotelName;
     final InputStream inputStream;
+    private static LoggingEngine logging;
+    private final EncryptPassword passwordEncrypter;
     final static String FILE_PATH = "/com/coder/hms/languageFiles/Credentials.properties";
 
     public PropertiesReader() {
-
+        
+        logging = LoggingEngine.getInstance();
+        passwordEncrypter = new EncryptPassword();
         final Properties properties = new Properties();
 
         inputStream = PropertiesReader.class.getResourceAsStream(FILE_PATH);
         try {
+            
             properties.load(inputStream);
+            
         } catch (IOException ex) {
+            
+            logging.setMessage("PropertiesReader : "+ ex.getLocalizedMessage());
             final InformationFrame frame = new InformationFrame();
-            frame.setMessage("Cannot access to system file!");
+            frame.setMessage(ex.getLocalizedMessage());
             frame.setVisible(true);
         }
         
@@ -34,8 +40,8 @@ public class PropertiesReader {
     }
 
     public boolean checkIsAdministrator(String inputName, String inputPwd) {
-
-        return inputName.equals(userName) || inputPwd.equals(password);
+        logging.setMessage("PropertiesReader -> checking System moderator credentials...");
+        return inputName.equals(userName) || passwordEncrypter.passwordIsMatch(inputPwd, password);
     }
 
     public String getHotelName() {

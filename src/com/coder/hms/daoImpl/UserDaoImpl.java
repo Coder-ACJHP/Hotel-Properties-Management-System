@@ -17,127 +17,148 @@ import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.dao.UserDAO;
 import com.coder.hms.entities.User;
+import com.coder.hms.utils.EncryptPassword;
+import com.coder.hms.utils.LoggingEngine;
 
 public class UserDaoImpl implements UserDAO, TransactionManagement {
 
-	private Session session;
-	private DataSourceFactory dataSourceFactory;
-	
-	public UserDaoImpl() {
-		
-		dataSourceFactory = new DataSourceFactory();
-		DataSourceFactory.createConnection();
-		
-	}
-	
-	@Override
-	public User getUserByName(String theName) {
-		
-		try {
-			
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
-			query.setParameter("theName", theName);
-			return query.getSingleResult();
+    private Session session;
+    private static LoggingEngine logging;
+    private final DataSourceFactory dataSourceFactory;
+    private final EncryptPassword passwordEncrypter;
 
-		}catch (NoResultException e) {
-			session.getTransaction().rollback();
-			return null;
-		} finally {
-			session.close();
-		}
-		
-	}
+    public UserDaoImpl() {
 
-	@Override
-	public void saveUser(User user) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			session.saveOrUpdate(user);
-			session.getTransaction().commit();
-		} catch (HibernateException e) {
-			session.getTransaction().rollback();
-		}
-		session.close();
-	}
+        dataSourceFactory = new DataSourceFactory();
+        DataSourceFactory.createConnection();
+        passwordEncrypter = new EncryptPassword();
+        logging = LoggingEngine.getInstance();
+    }
 
-	@Override
-	public void changePasswordOfUser(String nickName, String newPassword) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<User> query = session.createQuery("from User where NickName=:nickName", User.class);
-			query.setParameter("nickName", nickName);
-			User theUser = query.getSingleResult();
-			
-			theUser.setPassword(newPassword);
-			session.saveOrUpdate(theUser);
-			session.getTransaction().commit();
-			
-		} catch (HibernateException e) {
-			session.getTransaction().rollback();
-		}
-		session.close();
-		
-	}
+    @Override
+    public User getUserByName(String theName) {
 
-	@Override
-	public List<User> getAllusers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        try {
 
-	public boolean authentication(String userName, String userPswrd) {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<User> query = session.createQuery("from User where NickName=:theName", User.class);
+            query.setParameter("theName", theName);
+            return query.getSingleResult();
 
-		try {
-			//here we cannot close the session because session is opening here
-			//if login failed it will resume on same session.
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<User> query = session.createQuery("from User where NickName=:userName and Password=:userPswrd", User.class);
-			query.setParameter("userName", userName);
-			query.setParameter("userPswrd", userPswrd);
-			query.getSingleResult();
-			
-			return true;
-		} catch (NoResultException e) {
-			return false;
-		} finally {
-			session.close();
-		}
-			
-	}
+        } catch (NoResultException e) {
+            session.getTransaction().rollback();
+            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
+            return null;
+            
+        } finally {
+            session.close();
+        }
 
-	public User getUserByEmail(String theEmail) {
-		
-		try {
-			session = dataSourceFactory.getSessionFactory().openSession();
-			beginTransactionIfAllowed(session);
-			Query<User> query = session.createQuery("from User where Email=:theEmail", User.class);
-			query.setParameter("theEmail", theEmail);
-			return query.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		} finally {
-			session.close();
-		}
-		
-	}
-	
-	@Override
-	public void beginTransactionIfAllowed(Session theSession) {
-		if(!theSession.getTransaction().isActive()) {
-			theSession.beginTransaction();	
-		}else {
-			theSession.getTransaction().rollback();
-			theSession.beginTransaction();
-		}
-		
-	}
+    }
 
+    @Override
+    public void saveUser(User user) {
+
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            
+            //encrypt password before saving.
+            user.setPassword(passwordEncrypter.encryptPassword(user.getPassword()));
+            
+            session.saveOrUpdate(user);
+            session.getTransaction().commit();
+            logging.setMessage("UserDaoImpl -> user "+user.getNickName()+" saved successfully.");
+            
+        } catch (HibernateException e) {
+            session.getTransaction().rollback();
+            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
+        }
+        session.close();
+    }
+
+    @Override
+    public void changePasswordOfUser(String nickName, String newPassword) {
+
+        try {
+            
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<User> query = session.createQuery("from User where NickName=:nickName", User.class);
+            query.setParameter("nickName", nickName);
+            User theUser = query.getSingleResult();
+
+            theUser.setPassword(passwordEncrypter.encryptPassword(newPassword));
+            session.saveOrUpdate(theUser);
+            session.getTransaction().commit();
+            logging.setMessage("UserDaoImpl -> user "+nickName+" password updated successfully");
+            
+        } catch (HibernateException e) {
+            session.getTransaction().rollback();
+            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
+        }
+        session.close();
+
+    }
+
+    @Override
+    public List<User> getAllusers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public boolean authentication(String userName, String userPswrd) {
+
+        try {
+            //here we cannot close the session because session is opening here
+            //if login failed it will resume on same session.
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<User> query = session.createQuery("from User where NickName=:userName", User.class);
+            query.setParameter("userName", userName);
+            final User theUser = query.getSingleResult();
+            
+            logging.setMessage("UserDaoImpl : checking credentials...");
+            return passwordEncrypter.passwordIsMatch(userPswrd, theUser.getPassword());
+            
+        } catch (NoResultException e) {
+            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
+            return false;
+        } finally {
+            session.close();
+        }
+
+    }
+
+    public User getUserByEmail(String theEmail) {
+
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<User> query = session.createQuery("from User where Email=:theEmail", User.class);
+            query.setParameter("theEmail", theEmail);
+            logging.setMessage("UserDaoImpl : seeking for owner of "+theEmail);
+            
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            logging.setMessage("UserDaoImpl : " + e.getLocalizedMessage());
+            return null;
+        } finally {
+            session.close();
+        }
+
+    }
+
+    @Override
+    public void beginTransactionIfAllowed(Session theSession) {
+        if (!theSession.getTransaction().isActive()) {
+            theSession.beginTransaction();
+        } else {
+            theSession.getTransaction().rollback();
+            theSession.beginTransaction();
+        }
+
+    }
 
 }

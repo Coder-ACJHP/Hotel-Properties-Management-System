@@ -5,6 +5,7 @@
  */
 package com.coder.hms.ui.main;
 
+import com.coder.hms.beans.LocaleBean;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,137 +37,150 @@ import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
 import com.coder.hms.ui.extras.CustomersTableRenderer;
-
-
+import com.coder.hms.utils.ChangeComponentOrientation;
 
 public class Main_CustomersFrame extends JPanel {
-	
-	/**
-	 * 
-	 */
-	private JTable customerTable;
-	private JLabel lblTableFilter;
-	private JScrollPane scrollPane;
-	private JTextField searchFilterField;
-	private JPanel searchPanel = new JPanel();
-	private static final long serialVersionUID = 1L;
-	private final String[] colsName = {"ROOM", "REZERVATION ", "NAME ", "LASTNAME", 
-					"AGENCY", "GROUP", "CHECK/IN DATE", "CHECK/OUT DATE", "COUNTRY"};
-	private DefaultTableModel model = new DefaultTableModel(colsName, 0);
-	private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
-	private final CustomersTableRenderer renderer = new CustomersTableRenderer();
 
-	public Main_CustomersFrame() {
-		
-		this.setAutoscrolls(true);
-		this.setMinimumSize(new Dimension(800, 600));
-		/*make it default size of frame maximized */
-		this.setMaximumSize(new Dimension(1000, 900));
-		this.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		setLayout(new BorderLayout(0, 0));
-		searchPanel.setDoubleBuffered(false);
-		searchPanel.setAutoscrolls(true);
-		add(searchPanel, BorderLayout.NORTH);
-		searchPanel.setPreferredSize(new Dimension(10, 30));
-		
-		lblTableFilter = new JLabel("Type to search : ");
-		lblTableFilter.setForeground(new Color(178, 34, 34));
-		lblTableFilter.setSize(new Dimension(130, 25));
-		lblTableFilter.setPreferredSize(new Dimension(130, 22));
-		lblTableFilter.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblTableFilter.setAutoscrolls(true);
-		lblTableFilter.setHorizontalAlignment(SwingConstants.LEFT);
-		lblTableFilter.setFont(new Font("Dialog", Font.BOLD, 15));
-		
-		searchFilterField = new JTextField();
-		searchFilterField.setDragEnabled(true);
-		searchFilterField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(0, 191, 255), null, null, null));
-		searchFilterField.setPreferredSize(new Dimension(200, 22));
-		searchFilterField.setIgnoreRepaint(true);
-		searchFilterField.setColumns(10);
-		searchFilterField.setFont(new Font("Dialog", Font.BOLD, 13));
-		searchFilterField.setHorizontalAlignment(SwingConstants.LEFT);
-		GroupLayout gl_searchPanel = new GroupLayout(searchPanel);
-		gl_searchPanel.setHorizontalGroup(
-			gl_searchPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_searchPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblTableFilter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(searchFilterField, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-					.addGap(118))
-		);
-		gl_searchPanel.setVerticalGroup(
-			gl_searchPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_searchPanel.createSequentialGroup()
-					.addGap(5)
-					.addGroup(gl_searchPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblTableFilter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(searchFilterField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
-		);
-		searchPanel.setLayout(gl_searchPanel);
-		
-		searchFilterField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				
-				final String searchedWord = searchFilterField.getText();
-				filter(searchedWord);
+    /**
+     *
+     */
+    private JTable customerTable;
+    private final LocaleBean bean;
+    private JLabel lblTableFilter;
+    private JScrollPane scrollPane;
+    private JTextField searchFilterField;
+    private JPanel searchPanel = new JPanel();
+    private static final long serialVersionUID = 1L;
+    private ChangeComponentOrientation componentOrientation;
+    private final String[] colsName = {"ROOM", "REZERVATION ", "NAME ", "LASTNAME",
+        "AGENCY", "GROUP", "CHECK/IN DATE", "CHECK/OUT DATE", "COUNTRY"};
+    private DefaultTableModel model = new DefaultTableModel(colsName, 0);
+    private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
+    private final CustomersTableRenderer renderer = new CustomersTableRenderer();
 
-			}
-		});
-		
-		scrollPane = new JScrollPane();
-		add(scrollPane);
-		
-		//populate main table model with custom method
-		populateMainTable(model);
-		
-		customerTable = new JTable(model);
-		customerTable.setFillsViewportHeight(true);
-		customerTable.setRowSelectionAllowed(true);
-		
-		THR.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		customerTable.setDefaultRenderer(Object.class, renderer);
-		customerTable.getTableHeader().setDefaultRenderer(THR);
-		customerTable.setFont(new Font("Dialog", Font.PLAIN, 14));
-		customerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		customerTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		customerTable.setBackground(new Color(245, 245, 245));
-		scrollPane.setViewportView(customerTable);
-		
-		this.setVisible(true);
-	}
+    public Main_CustomersFrame() {
 
-	private void filter(String query) {
-		String modifiedQuery = "(?i)" + query;
-		TableRowSorter<TableModel> tr = new TableRowSorter<TableModel>(model);
-		customerTable.setRowSorter(tr);
-		tr.setRowFilter(RowFilter.regexFilter(modifiedQuery));
-	}
-	
-	private void populateMainTable(DefaultTableModel model) {
+        this.setAutoscrolls(true);
+        this.setMinimumSize(new Dimension(800, 600));
+        /*make it default size of frame maximized */
+        this.setMaximumSize(new Dimension(1000, 900));
+        this.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+        setLayout(new BorderLayout(0, 0));
 
-		final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
-		final List<Customer> customerList = customerDaoImpl.getAllCustomers();
-	
-		final ReservationDaoImpl reservationDaoImpl =  new ReservationDaoImpl();
-		
-		for(Customer cust: customerList) {
-			
-			final Reservation reservation = reservationDaoImpl.findReservationById(cust.getReservationId());
-			
-			if(reservation == null)
-				return;
-			
-			final Object[] customerObject = new Object[] {reservation.getTheNumber(), reservation.getId(), 
-					cust.getFirstName(), cust.getLastName(), reservation.getAgency(), reservation.getGroupName(),
-					reservation.getCheckinDate(), reservation.getCheckoutDate(), cust.getCountry()};
-			model.addRow(customerObject);
-		}
-		
-		
-	}
+        bean = LocaleBean.getInstance();
+        componentOrientation = new ChangeComponentOrientation();
+        componentOrientation.setThePanel(this);
+
+        searchPanel.setDoubleBuffered(false);
+        searchPanel.setAutoscrolls(true);
+        add(searchPanel, BorderLayout.NORTH);
+        searchPanel.setPreferredSize(new Dimension(10, 30));
+
+        lblTableFilter = new JLabel("Type to search : ");
+        lblTableFilter.setForeground(new Color(178, 34, 34));
+        lblTableFilter.setSize(new Dimension(130, 25));
+        lblTableFilter.setPreferredSize(new Dimension(130, 22));
+        lblTableFilter.setHorizontalTextPosition(SwingConstants.CENTER);
+        lblTableFilter.setAutoscrolls(true);
+        lblTableFilter.setHorizontalAlignment(SwingConstants.LEFT);
+        lblTableFilter.setFont(new Font("Dialog", Font.BOLD, 15));
+
+        searchFilterField = new JTextField();
+        searchFilterField.setDragEnabled(true);
+        searchFilterField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(0, 191, 255), null, null, null));
+        searchFilterField.setPreferredSize(new Dimension(200, 22));
+        searchFilterField.setIgnoreRepaint(true);
+        searchFilterField.setColumns(10);
+        searchFilterField.setFont(new Font("Dialog", Font.BOLD, 13));
+        searchFilterField.setHorizontalAlignment(SwingConstants.LEFT);
+        GroupLayout gl_searchPanel = new GroupLayout(searchPanel);
+        gl_searchPanel.setHorizontalGroup(
+                gl_searchPanel.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_searchPanel.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblTableFilter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(searchFilterField, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                                .addGap(118))
+        );
+        gl_searchPanel.setVerticalGroup(
+                gl_searchPanel.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_searchPanel.createSequentialGroup()
+                                .addGap(5)
+                                .addGroup(gl_searchPanel.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblTableFilter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(searchFilterField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())
+        );
+        searchPanel.setLayout(gl_searchPanel);
+
+        searchFilterField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                final String searchedWord = searchFilterField.getText();
+                filter(searchedWord);
+
+            }
+        });
+
+        scrollPane = new JScrollPane();
+        add(scrollPane);
+
+        //populate main table model with custom method
+        populateMainTable(model);
+
+        customerTable = new JTable(model);
+        customerTable.setFillsViewportHeight(true);
+        customerTable.setRowSelectionAllowed(true);
+
+        THR.setHorizontalAlignment(SwingConstants.CENTER);
+
+        customerTable.setDefaultRenderer(Object.class, renderer);
+        customerTable.getTableHeader().setDefaultRenderer(THR);
+        customerTable.setFont(new Font("Dialog", Font.PLAIN, 14));
+        customerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        customerTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        customerTable.setBackground(new Color(245, 245, 245));
+        scrollPane.setViewportView(customerTable);
+
+        //change component orientation with locale.
+        if (bean.getLocale().toString().equals("ar_IQ")) {
+            componentOrientation.changeOrientationOfJPanelToRight();
+        } else {
+            componentOrientation.changeOrientationOfJPanelToLeft();
+        }
+
+        this.setVisible(true);
+    }
+
+    private void filter(String query) {
+        String modifiedQuery = "(?i)" + query;
+        TableRowSorter<TableModel> tr = new TableRowSorter<TableModel>(model);
+        customerTable.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter(modifiedQuery));
+    }
+
+    private void populateMainTable(DefaultTableModel model) {
+
+        final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+        final List<Customer> customerList = customerDaoImpl.getAllCustomers();
+
+        final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
+
+        for (Customer cust : customerList) {
+
+            final Reservation reservation = reservationDaoImpl.findReservationById(cust.getReservationId());
+
+            if (reservation == null) {
+                return;
+            }
+
+            final Object[] customerObject = new Object[]{reservation.getTheNumber(), reservation.getId(),
+                cust.getFirstName(), cust.getLastName(), reservation.getAgency(), reservation.getGroupName(),
+                reservation.getCheckinDate(), reservation.getCheckoutDate(), cust.getCountry()};
+            model.addRow(customerObject);
+        }
+
+    }
 }

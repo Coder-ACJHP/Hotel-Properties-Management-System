@@ -47,89 +47,94 @@ import com.coder.hms.ui.external.LoginWindow;
 import com.coder.hms.ui.external.ReadLogsWindow;
 import com.coder.hms.ui.external.RoomsPropertiesWindow;
 import com.coder.hms.ui.extras.ApplicationThemeChanger;
+import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.ResourceControl;
 
 public class Main_MenuBar {
 
-	private JMenuBar menuBar;
-	private JFrame mainFrame;
-	private String exitMessage = "";
-	private String titleMessage = "";
-	private final Runtime run = Runtime.getRuntime();
-	private final LocaleBean bean = LocaleBean.getInstance();
-	private final static Desktop desktop = Desktop.getDesktop();
-	private final String command = System.getProperty("os.name");
-	public final ApplicationThemeChanger themeChanger = new ApplicationThemeChanger();
-	private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
-	private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
-	defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, addUser, chngPassword, aboutDeveloper,
-	sourceCode, shareYourOpinion, license;
-	
-	//getter method for getting the modified menubar from another class
-	public JMenuBar getMenuBar() {
-		return this.menuBar;
-	}
-	
-	public void setJFrame(JFrame frame) {
-		this.mainFrame = frame;
-	}
-	
-	public Main_MenuBar() {
-		
-		menuBar = new JMenuBar();
-		menuBar.setPreferredSize(new Dimension(0, 30));
-		menuBar.setFont(new Font("Dialog", Font.BOLD, 14));
-		menuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		menuBar.setBorder(new LineBorder(new Color(128, 128, 128)));
-		menuBar.setAutoscrolls(true);
-		
-		frontDesk = new JMenu("Front Desk");
-		frontDesk.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		menuBar.add(frontDesk);
-		
-		hoteProps = new JMenuItem("Hotel Properties");
-		hoteProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
-		hoteProps.addActionListener(ActionListener ->{
+    private JMenuBar menuBar;
+    private JFrame mainFrame;
+    private String exitMessage = "";
+    private String titleMessage = "";
+    private final Runtime run = Runtime.getRuntime();
+    private final LocaleBean bean = LocaleBean.getInstance();
+    private ChangeComponentOrientation componentOrientation;
+    private final static Desktop desktop = Desktop.getDesktop();
+    private final String command = System.getProperty("os.name");
+    public final ApplicationThemeChanger themeChanger = new ApplicationThemeChanger();
+    private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout;
+    private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, sendMail, exchange, systemLogs,
+            defaultTheme, mnitmAero, mnitmBernstain, mnitmMint, mnitmMcwin, changeUser, addUser, chngPassword, aboutDeveloper,
+            sourceCode, shareYourOpinion, license;
 
-			boolean control = checkRole();
-			if(! control) {
-				SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						new HotelPropertiesWindow();
-						
-					}
-				});
-			}
-		});
-		frontDesk.add(hoteProps);
-		
-		roomProps = new JMenuItem("Rooms Properties");
-		roomProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		roomProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_room.png")));
-		roomProps.addActionListener(ActionListener ->{
+    //getter method for getting the modified menubar from another class
+    public JMenuBar getMenuBar() {
+        return this.menuBar;
+    }
 
-			boolean control = checkRole();
-			if(! control) {
-				SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						new RoomsPropertiesWindow();
-						
-					}
-				});
-			}
-		});
-		frontDesk.add(roomProps);
-		
-		restart = new JMenuItem("Restart");
-		restart.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
-		restart.addActionListener(ActionListener ->{
-			
+    public void setJFrame(JFrame frame) {
+        this.mainFrame = frame;
+    }
+
+    public Main_MenuBar() {
+
+        menuBar = new JMenuBar();
+        menuBar.setPreferredSize(new Dimension(0, 30));
+        menuBar.setFont(new Font("Dialog", Font.BOLD, 14));
+        menuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        menuBar.setBorder(new LineBorder(new Color(128, 128, 128)));
+        menuBar.setAutoscrolls(true);
+        
+        componentOrientation = new ChangeComponentOrientation();
+        componentOrientation.setTheMenuBar(menuBar);
+        
+        frontDesk = new JMenu("Front Desk");
+        frontDesk.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        menuBar.add(frontDesk);
+
+        hoteProps = new JMenuItem("Hotel Properties");
+        hoteProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        hoteProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/login_hotel.png")));
+        hoteProps.addActionListener(ActionListener -> {
+
+            boolean control = checkRole();
+            if (!control) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        new HotelPropertiesWindow();
+
+                    }
+                });
+            }
+        });
+        frontDesk.add(hoteProps);
+
+        roomProps = new JMenuItem("Rooms Properties");
+        roomProps.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        roomProps.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_room.png")));
+        roomProps.addActionListener(ActionListener -> {
+
+            boolean control = checkRole();
+            if (!control) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        new RoomsPropertiesWindow();
+
+                    }
+                });
+            }
+        });
+        frontDesk.add(roomProps);
+
+        restart = new JMenuItem("Restart");
+        restart.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
+        restart.addActionListener(ActionListener -> {
+
 //			ScheduledExecutorService schedulerExecutor = Executors.newScheduledThreadPool(2);
 //			Callable<Process> callable = new Callable<Process>() {
 //
@@ -143,362 +148,368 @@ public class Main_MenuBar {
 //			schedulerExecutor.submit(futureTask);           
 //
 //			System.exit(0);
-		});
-		frontDesk.add(restart);
-		
-		menuInnerItemExit = new JMenuItem("Exit");
-		menuInnerItemExit.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
-		//add shortcut keys
-		menuInnerItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,(InputEvent.SHIFT_MASK |
-												Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
-		menuInnerItemExit.setMnemonic(KeyEvent.VK_Q + KeyEvent.VK_CONTROL);
-		//add listener for exiting when CTRL+SHIFT+Q pressed
-		menuInnerItemExit.addActionListener(ActionEvent -> {
+        });
+        frontDesk.add(restart);
 
-			final int decision =JOptionPane.showConfirmDialog(null, exitMessage, 
-					titleMessage, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			
-			if(decision == JOptionPane.YES_OPTION) {
-				new DataSourceFactory().shutDown();
-				System.exit(0);
-			}
-			else {
-				mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			}
+        menuInnerItemExit = new JMenuItem("Exit");
+        menuInnerItemExit.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        menuInnerItemExit.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_exit.png")));
+        //add shortcut keys
+        menuInnerItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, (InputEvent.SHIFT_MASK
+                | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+        menuInnerItemExit.setMnemonic(KeyEvent.VK_Q + KeyEvent.VK_CONTROL);
+        //add listener for exiting when CTRL+SHIFT+Q pressed
+        menuInnerItemExit.addActionListener(ActionEvent -> {
 
-		});
-		frontDesk.add(menuInnerItemExit);
-		
-		
-		mnTools = new JMenu("Tools");
-		mnTools.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		menuBar.add(mnTools);
-		
-		//add calculator application section to menubar
-		calculator = new JMenuItem("Calculator");
-		calculator.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		calculator.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_calc.png")));
-		calculator.addActionListener(ActionListener ->{
+            final int decision = JOptionPane.showConfirmDialog(null, exitMessage,
+                    titleMessage, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-			Thread openLocalApps = new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					if(command.contains("Windows")) {
-						try {
-							run.exec("C:/Windows/System32/calc.exe");
-							
-						} catch (IOException e) {e.printStackTrace();}
+            if (decision == JOptionPane.YES_OPTION) {
+                new DataSourceFactory().shutDown();
+                System.exit(0);
+            } else {
+                mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            }
 
-					}else {
-						
-						try {
-							run.exec("/usr/bin/open -a Calculator");
-							
-						} catch (IOException e) {e.printStackTrace();}
-					}
-					
-				}
-			});
-			
-			openLocalApps.start();
-		});
-		
-		mnTools.add(calculator);
-		
-		//add send mail  section to menubar
-		sendMail = new JMenuItem("Send email");
-		sendMail.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		sendMail.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_sendMail.png")));
-		sendMail.addActionListener(ActionListener ->{
-			
-			Thread openMailApp = new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
-						
-						try {
-							
-							URI uriMailTo = new URI("mailto:companyn@example.com?subject=About%20Peyment");
-							desktop.mail(uriMailTo);
-							 
-						} catch (URISyntaxException | IOException e) { e.printStackTrace();}
-					}
-					
-				}
-			});
-			
-			openMailApp.start();
-		});
-		
-		mnTools.add(sendMail);
-		
-		exchange = new JMenuItem("Exchange");
-		exchange.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		exchange.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_exchange.png")));
-		exchange.addActionListener(ActionListener ->{
-			SwingUtilities.invokeLater(new Runnable() {
+        });
+        frontDesk.add(menuInnerItemExit);
 
-				@Override
-				public void run() {
-					new ExchangeWindow();
-				}
-				
-			});
-		});
-		mnTools.add(exchange);
-		
-		systemLogs = new JMenuItem("System logs");
-		systemLogs.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		systemLogs.setIcon(new ImageIcon(Main_MenuBar.class.getResource("/com/coder/hms/icons/logging.png")));
-		systemLogs.addActionListener(ActionListener ->{
-			SwingUtilities.invokeLater(new Runnable() {
+        mnTools = new JMenu("Tools");
+        mnTools.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        menuBar.add(mnTools);
 
-				@Override
-				public void run() {
-					new ReadLogsWindow();
-				}
-				
-			});
-		});
-		mnTools.add(systemLogs);
-		
-		/*Add new menu into Tools menu*/	
-		themes = new JMenu("Themes");
-		themes.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		menuBar.add(themes);
-		
-		/*Add all themes into themes section */		
-		defaultTheme = new JMenuItem("Nimbus");
-		defaultTheme.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		defaultTheme.addActionListener(ActionListener ->{
-			themeChanger.ChangeTheme("Nimbus");
-		});
-		mnitmAero = new JMenuItem("Aero");
-		mnitmAero.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		mnitmAero.addActionListener(ActionListener ->{
-			themeChanger.ChangeTheme("Aero");
-		});
-		mnitmBernstain = new JMenuItem("Bernstein");
-		mnitmBernstain.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		mnitmBernstain.addActionListener(ActionListener ->{
-			themeChanger.ChangeTheme("bernstein");
-		});
-		mnitmMint = new JMenuItem("Mint");
-		mnitmMint.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		mnitmMint.addActionListener(ActionListener ->{
-			themeChanger.ChangeTheme("Mint");
-		});
-		mnitmMcwin = new JMenuItem("McWin");
-		mnitmMcwin.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		mnitmMcwin.addActionListener(ActionListener ->{
-			themeChanger.ChangeTheme("McWin");
-		});
-		
-		themes.add(defaultTheme);
-		themes.add(mnitmAero);
-		themes.add(mnitmBernstain);
-		themes.add(mnitmMint);
-		themes.add(mnitmMcwin);
-		
-		usersMenu = new JMenu("Users");
-		usersMenu.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		menuBar.add(usersMenu);
-		
-		changeUser = new JMenuItem("Change user");
-		changeUser.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		changeUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_user.png")));
-		changeUser.addActionListener(ActionListener ->{
-		
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					
-					mainFrame.dispose();
-					new LoginWindow();					
-				}
-			});
-		});
-		usersMenu.add(changeUser);
-		
-		addUser = new JMenuItem("Add user");
-		addUser.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		addUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_user.png")));
-		addUser.addActionListener(ActionListener ->{
+        //add calculator application section to menubar
+        calculator = new JMenuItem("Calculator");
+        calculator.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        calculator.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_calc.png")));
+        calculator.addActionListener(ActionListener -> {
 
-			boolean control = checkRole();
-			if(! control) {
-				SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						new AddUserWindow();
-						
-					}
-				});
-			}
-		});
-		usersMenu.add(addUser);
-		
-		chngPassword = new JMenuItem("Change password");
-		chngPassword.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		chngPassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
-		chngPassword.addActionListener(ActionListener ->{
-		
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					new ChangePasswordWindow();
-					
-				}
-			});
-		});
-		
-		usersMenu.add(chngPassword);
-				
-		mnAbout = new JMenu("Others");
-		mnAbout.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
-		menuBar.add(mnAbout);
-		
-		//add about developer section to menubar
-		aboutDeveloper = new JMenuItem("About developer");
-		aboutDeveloper.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		aboutDeveloper.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_developer.png")));
-		aboutDeveloper.addActionListener(ActionListener ->{
-			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+            Thread openLocalApps = new Thread(new Runnable() {
 
-				try {
-					
-					URI uri = new URI("https://www.linkedin.com/in/onur-bilal-i%C5%9F%C4%B1k-70663212b/");
-					desktop.browse(uri);
-					
-				} catch (URISyntaxException | IOException e) {e.printStackTrace();} 
-				
-			}
-		});
-		mnAbout.add(aboutDeveloper);
-		
-		//add source code section to menubar
-		sourceCode = new JMenuItem("Source code");
-		sourceCode.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		sourceCode.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_source_code.png")));
-		sourceCode.addActionListener(ActionListener ->{
-			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+                @Override
+                public void run() {
+                    if (command.contains("Windows")) {
+                        try {
+                            run.exec("C:/Windows/System32/calc.exe");
 
-				try {
-					
-					URI uri = new URI("https://github.com/Coder-ACJHP/Hotel-Management-System");
-					desktop.browse(uri);
-					
-				} catch (URISyntaxException | IOException e) {e.printStackTrace();} 
-				
-			}
-		});
-		mnAbout.add(sourceCode);
-		
-		//add feedback section to menubar
-		shareYourOpinion = new JMenuItem("Feedback");
-		shareYourOpinion.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		shareYourOpinion.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_feedback.png")));
-		shareYourOpinion.addActionListener(ActionListener ->{
-			
-			if(Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
-				
-				try {
-					
-					URI uriMailTo = new URI("mailto:hexa.octabin@gmail.com?subject=About%20Coder%20Hotel%20Management%20System");
-					desktop.mail(uriMailTo);
-					 
-				} catch (URISyntaxException | IOException e) { e.printStackTrace();}
-			}
-		});
-		
-		mnAbout.add(shareYourOpinion);
-		
-		license = new JMenuItem("App License");
-		license.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
-		license.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_license.png")));
-		license.addActionListener(ActionListener ->{
-			SwingUtilities.invokeLater(() -> {
-                            new LicenseWindow(new File("LICENSE"));
-                        });
-		});
-		
-		mnAbout.add(license);
-		
-		try {
-			
-			changeLanguage(bean.getLocale());
-			
-		}catch(MissingResourceException ex) {
-			
-			changeLanguage(bean.getLocale());
-			final InformationFrame dialog = new InformationFrame();
-			dialog.setMessage("Cannot find translation files, application will continue with default language.");
-			dialog.setVisible(true);
-		}
-	}
-	
-	private boolean checkRole() {
-		boolean isUser = false;
-		SessionBean sessionBean = SessionBean.getSESSION_BEAN();
-		
-		if(sessionBean.getNickName().equalsIgnoreCase("System")) {
-			isUser = false;
-		} else {
-			
-			final UserDaoImpl userDaoImpl = new UserDaoImpl();
-			User currentUser = userDaoImpl.getUserByName(sessionBean.getNickName());
-			
-			if(currentUser.getRole().equals("USER")) {
-				
-				Toolkit.getDefaultToolkit().beep();
-				final InformationFrame INFORMATION_FRAME = new InformationFrame();
-				INFORMATION_FRAME.setMessage("Access denied! You don't have permission to access!");
-				INFORMATION_FRAME.setVisible(true);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-				isUser = true;
-			}
-			
-		}
-		
-		
-		
-		return isUser;
-	}
-	
-	private void changeLanguage(Locale locale) throws MissingResourceException {
+                    } else {
 
-		final ResourceBundle bundle = ResourceBundle
-				.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
+                        try {
+                            run.exec("/usr/bin/open -a Calculator");
 
-		frontDesk.setText(bundle.getString("FrontDesk"));
-		hoteProps.setText(bundle.getString("HotelProperties"));
-		restart.setText(bundle.getString("Restart"));
-		menuInnerItemExit.setText(bundle.getString("Exit"));
-		mnTools.setText(bundle.getString("Tools"));
-		calculator.setText(bundle.getString("Calculator"));
-		sendMail.setText(bundle.getString("SendEmail"));
-		exchange.setText(bundle.getString("Exchange"));
-		themes.setText(bundle.getString("Themes"));
-		usersMenu.setText(bundle.getString("Users"));
-		changeUser.setText(bundle.getString("ChangeUser"));
-		chngPassword.setText(bundle.getString("ChangePwd"));
-		mnAbout.setText(bundle.getString("Others"));
-		aboutDeveloper.setText(bundle.getString("AboutDev"));
-		sourceCode.setText(bundle.getString("SourceCode"));
-		shareYourOpinion.setText(bundle.getString("Feedback"));
-		license.setText(bundle.getString("License"));
-		exitMessage = bundle.getString("ExitMessage");
-		titleMessage = bundle.getString("Confirmation");
-		roomProps.setText(bundle.getString("RoomsProperty"));
-                addUser.setText(bundle.getString("AddUser"));
-		menuBar.revalidate();
-		menuBar.repaint();
-	}
-	
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            });
+
+            openLocalApps.start();
+        });
+
+        mnTools.add(calculator);
+
+        //add send mail  section to menubar
+        sendMail = new JMenuItem("Send email");
+        sendMail.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        sendMail.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_sendMail.png")));
+        sendMail.addActionListener(ActionListener -> {
+
+            Thread openMailApp = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
+
+                        try {
+
+                            URI uriMailTo = new URI("mailto:companyn@example.com?subject=About%20Peyment");
+                            desktop.mail(uriMailTo);
+
+                        } catch (URISyntaxException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            });
+
+            openMailApp.start();
+        });
+
+        mnTools.add(sendMail);
+
+        exchange = new JMenuItem("Exchange");
+        exchange.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        exchange.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_exchange.png")));
+        exchange.addActionListener(ActionListener -> {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    new ExchangeWindow();
+                }
+
+            });
+        });
+        mnTools.add(exchange);
+
+        systemLogs = new JMenuItem("System logs");
+        systemLogs.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        systemLogs.setIcon(new ImageIcon(Main_MenuBar.class.getResource("/com/coder/hms/icons/logging.png")));
+        systemLogs.addActionListener(ActionListener -> {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    new ReadLogsWindow();
+                }
+
+            });
+        });
+        mnTools.add(systemLogs);
+
+        /*Add new menu into Tools menu*/
+        themes = new JMenu("Themes");
+        themes.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        menuBar.add(themes);
+
+        /*Add all themes into themes section */
+        defaultTheme = new JMenuItem("Nimbus");
+        defaultTheme.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        defaultTheme.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("Nimbus");
+        });
+        mnitmAero = new JMenuItem("Aero");
+        mnitmAero.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmAero.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("Aero");
+        });
+        mnitmBernstain = new JMenuItem("Bernstein");
+        mnitmBernstain.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmBernstain.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("bernstein");
+        });
+        mnitmMint = new JMenuItem("Mint");
+        mnitmMint.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmMint.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("Mint");
+        });
+        mnitmMcwin = new JMenuItem("McWin");
+        mnitmMcwin.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        mnitmMcwin.addActionListener(ActionListener -> {
+            themeChanger.ChangeTheme("McWin");
+        });
+
+        themes.add(defaultTheme);
+        themes.add(mnitmAero);
+        themes.add(mnitmBernstain);
+        themes.add(mnitmMint);
+        themes.add(mnitmMcwin);
+
+        usersMenu = new JMenu("Users");
+        usersMenu.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        menuBar.add(usersMenu);
+
+        changeUser = new JMenuItem("Change user");
+        changeUser.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        changeUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_user.png")));
+        changeUser.addActionListener(ActionListener -> {
+
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    mainFrame.dispose();
+                    new LoginWindow();
+                }
+            });
+        });
+        usersMenu.add(changeUser);
+
+        addUser = new JMenuItem("Add user");
+        addUser.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        addUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/main_user.png")));
+        addUser.addActionListener(ActionListener -> {
+
+            boolean control = checkRole();
+            if (!control) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        new AddUserWindow();
+
+                    }
+                });
+            }
+        });
+        usersMenu.add(addUser);
+
+        chngPassword = new JMenuItem("Change password");
+        chngPassword.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        chngPassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
+        chngPassword.addActionListener(ActionListener -> {
+
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    new ChangePasswordWindow();
+
+                }
+            });
+        });
+
+        usersMenu.add(chngPassword);
+
+        mnAbout = new JMenu("Others");
+        mnAbout.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
+        menuBar.add(mnAbout);
+
+        //add about developer section to menubar
+        aboutDeveloper = new JMenuItem("About developer");
+        aboutDeveloper.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        aboutDeveloper.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_developer.png")));
+        aboutDeveloper.addActionListener(ActionListener -> {
+            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+
+                try {
+
+                    URI uri = new URI("https://www.linkedin.com/in/onur-bilal-i%C5%9F%C4%B1k-70663212b/");
+                    desktop.browse(uri);
+
+                } catch (URISyntaxException | IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        mnAbout.add(aboutDeveloper);
+
+        //add source code section to menubar
+        sourceCode = new JMenuItem("Source code");
+        sourceCode.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        sourceCode.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_source_code.png")));
+        sourceCode.addActionListener(ActionListener -> {
+            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+
+                try {
+
+                    URI uri = new URI("https://github.com/Coder-ACJHP/Hotel-Management-System");
+                    desktop.browse(uri);
+
+                } catch (URISyntaxException | IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        mnAbout.add(sourceCode);
+
+        //add feedback section to menubar
+        shareYourOpinion = new JMenuItem("Feedback");
+        shareYourOpinion.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        shareYourOpinion.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_feedback.png")));
+        shareYourOpinion.addActionListener(ActionListener -> {
+
+            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
+
+                try {
+
+                    URI uriMailTo = new URI("mailto:hexa.octabin@gmail.com?subject=About%20Coder%20Hotel%20Management%20System");
+                    desktop.mail(uriMailTo);
+
+                } catch (URISyntaxException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mnAbout.add(shareYourOpinion);
+
+        license = new JMenuItem("App License");
+        license.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
+        license.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_license.png")));
+        license.addActionListener(ActionListener -> {
+            SwingUtilities.invokeLater(() -> {
+                new LicenseWindow(new File("LICENSE"));
+            });
+        });
+
+        mnAbout.add(license);
+
+        changeLanguage(bean.getLocale());
+        
+        //change component orientation with locale.
+        if (bean.getLocale().toString().equals("ar_IQ")) {
+            componentOrientation.changeOrientationOfJMenubarToRight();
+        } else {
+            componentOrientation.changeOrientationOfJMenubarToLeft();
+        }
+
+    }
+
+    private boolean checkRole() {
+        boolean isUser = false;
+        SessionBean sessionBean = SessionBean.getSESSION_BEAN();
+
+        if (sessionBean.getNickName().equalsIgnoreCase("System")) {
+            isUser = false;
+        } else {
+
+            final UserDaoImpl userDaoImpl = new UserDaoImpl();
+            User currentUser = userDaoImpl.getUserByName(sessionBean.getNickName());
+
+            if (currentUser.getRole().equals("USER")) {
+
+                Toolkit.getDefaultToolkit().beep();
+                final InformationFrame INFORMATION_FRAME = new InformationFrame();
+                INFORMATION_FRAME.setMessage("Access denied! You don't have permission to access!");
+                INFORMATION_FRAME.setVisible(true);
+
+                isUser = true;
+            }
+
+        }
+
+        return isUser;
+    }
+
+    private void changeLanguage(Locale locale) throws MissingResourceException {
+
+        final ResourceBundle bundle = ResourceBundle
+                .getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
+
+        frontDesk.setText(bundle.getString("FrontDesk"));
+        hoteProps.setText(bundle.getString("HotelProperties"));
+        restart.setText(bundle.getString("Restart"));
+        menuInnerItemExit.setText(bundle.getString("Exit"));
+        mnTools.setText(bundle.getString("Tools"));
+        calculator.setText(bundle.getString("Calculator"));
+        sendMail.setText(bundle.getString("SendEmail"));
+        exchange.setText(bundle.getString("Exchange"));
+        themes.setText(bundle.getString("Themes"));
+        usersMenu.setText(bundle.getString("Users"));
+        changeUser.setText(bundle.getString("ChangeUser"));
+        chngPassword.setText(bundle.getString("ChangePwd"));
+        mnAbout.setText(bundle.getString("Others"));
+        aboutDeveloper.setText(bundle.getString("AboutDev"));
+        sourceCode.setText(bundle.getString("SourceCode"));
+        shareYourOpinion.setText(bundle.getString("Feedback"));
+        license.setText(bundle.getString("License"));
+        exitMessage = bundle.getString("ExitMessage");
+        titleMessage = bundle.getString("Confirmation");
+        roomProps.setText(bundle.getString("RoomsProperty"));
+        addUser.setText(bundle.getString("AddUser"));
+        menuBar.revalidate();
+        menuBar.repaint();
+    }
+
 }
