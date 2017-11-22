@@ -4,7 +4,7 @@
   <h4>This project is designed and developed by Coder ACJHP.</h4>
 </div>                                                                                                                
 
-Coder HPMS is hotels properties managing system application, operates independently of the operating system (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b>) Easy to use simple user interface, understandable text with icons and every object colored.
+Coder HPMS is hotels properties managing system application, operates independently of the operating system (Made by <b>Java</b> & <b>Maven</b> & <b>Hibernate</b> & <b>Mysql</b> & <b>Jaspy Security</b>) Easy to use, secure, simple user interface, understandable text with icons and every object colored.
 For now it's support 4 different languages ENGLISH, العربية, ESPANOL, TÜRKÇE and it composed from seven main and many side windows : <br>
 <h4>1- Main window </h4> All windows will open on this scene, check your current user, date, €, $, £ exchange and weather as live from status bar, manage your application from menu bar exit, change user, update password, send email, open calculator, exchange, change user interface theme and etc..
 
@@ -76,7 +76,9 @@ and more...
 <ul>
   <li> Clone or download the project and open it in any IDE or download as Execuatble .jar(All os) & .app(for Mac) & .exe(for Windows)</li>
   <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..) if you don't have.</li>
-  <li><del> Get dump file that located under <code>com.coder.hms.connection</code> with name <code>'hotel_management_system.sql'</code> and import it to your database server.</del><i> It will do it automatically for you.</i></li> 
+  <li>Don't worry about database and schemas <i> It will do it automatically for you.</i></li> 
+  <li>Default user name = Admin --|-- default password = Admin958</li>
+  <li>For accessing full features user name = System --|-- default password = System958 -> This will unlock Utils menu and you can truncate and create your database and tables, you can change hotel & room properties</li>
   <li> Congrats enjoy with your day :)</li> 
 </ul>
 
@@ -91,7 +93,7 @@ Add this line in your database to create event : <code>create event dailyAudit o
 
 <h2>Download newest version : </h2>
 <ul>
-  <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/releases/download/1.3.1/HotelManagementSystem-1.3.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
+  <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/releases/download/1.3.1/HotelPropertiesManagementSystem-1.3.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
   <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.app.zip">here</a></li>
    <li>Download it for Windows application <b><i>.exe</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.exe">here</a></li>
 </ul>
@@ -107,8 +109,9 @@ Add this line in your database to create event : <code>create event dailyAudit o
 <h2>New Features v1.3.1  <b>21/11/2017</b></h2>
 <ul>
   <li>New release platform independed and MacOS v1.3.1</li>
+  <li>Added password encryption for security</li>
   <li>Hotel properties window renewed and fixed issues</li> 
-  <li>Prepare database button moved to menubar</li>
+  <li>Prepare database button moved to new menubar section (utils)</li>
   <li>Fixed Hibernate transaction & session errors</li>
 </ul>
 <h2>Another questions ?</h2> 
