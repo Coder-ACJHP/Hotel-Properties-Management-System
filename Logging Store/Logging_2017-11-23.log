@@ -1776,3 +1776,37 @@ INFO:HotelSystemStatusImpl -> fetching system status...
 INFO:RoomDaoImpl -> fetching all rooms...
 07:21:41 23/11/2017
 INFO:ReservationDaoImpl -> fetching reservation by Id...
+19:36:46 23/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+19:36:48 23/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+19:36:54 23/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+19:36:54 23/11/2017
+INFO:User is : system
+19:38:19 23/11/2017
+INFO:Language changed.
+19:38:24 23/11/2017
+INFO:Language changed.
+19:38:33 23/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+19:38:33 23/11/2017
+INFO:User is : system
+19:40:50 23/11/2017
+INFO:Language changed.
+19:40:51 23/11/2017
+INFO:Language changed.
+19:40:54 23/11/2017
+INFO:Language changed.
+19:41:00 23/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+19:41:00 23/11/2017
+INFO:User is : system
+19:41:01 23/11/2017
+INFO:MainFrame created successfully.
+19:56:08 23/11/2017
+INFO:PropertiesReader -> checking System moderator credentials...
+19:56:08 23/11/2017
+INFO:User is : system
+19:56:08 23/11/2017
+INFO:MainFrame created successfully.

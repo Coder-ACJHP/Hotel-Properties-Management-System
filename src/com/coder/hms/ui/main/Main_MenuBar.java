@@ -55,19 +55,19 @@ import java.awt.event.ActionListener;
 
 public class Main_MenuBar {
 
-    private JMenuBar menuBar;
+    private final JMenuBar menuBar;
     private JFrame mainFrame;
     private String exitMessage = "";
     private String titleMessage = "";
     private final Runtime run = Runtime.getRuntime();
     private final LocaleBean bean = LocaleBean.getInstance();
     private static SessionBean SESSION_BEAN;
-    private ChangeComponentOrientation componentOrientation;
-    private final static Desktop desktop = Desktop.getDesktop();
+    private final ChangeComponentOrientation componentOrientation;
+    private final static Desktop DESKTOP = Desktop.getDesktop();
     private final String command = System.getProperty("os.name");
     public final ApplicationThemeChanger themeChanger = new ApplicationThemeChanger();
-    private JMenu frontDesk, mnTools, themes, usersMenu, mnAbout, utils;
-    private JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, 
+    private final JMenu frontDesk, mnTools, themes, usersMenu, mnAbout, utils;
+    private final JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, 
             sendMail, exchange, systemLogs, defaultTheme, mnitmAero, mnitmBernstain, 
             mnitmMint, mnitmMcwin, mnitmAcryl, mnitmNoire, mnitmLuna, changeUser, 
             addUser, chngPassword, aboutDeveloper, mnitmTexture,
@@ -153,28 +153,23 @@ public class Main_MenuBar {
         calculator.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_calc.png")));
         calculator.addActionListener(ActionListener -> {
 
-            Thread openLocalApps = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (command.contains("Windows")) {
-                        try {
-                            run.exec("C:/Windows/System32/calc.exe");
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else {
-
-                        try {
-                            run.exec("/usr/bin/open -a Calculator");
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+            Thread openLocalApps = new Thread(() -> {
+                if (command.contains("Windows")) {
+                    try {
+                        run.exec("C:/Windows/System32/calc.exe");
+                        
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
+                } else {
+                    
+                    try {
+                        run.exec("/usr/bin/open -a Calculator");
+                        
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -189,22 +184,17 @@ public class Main_MenuBar {
         sendMail.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_sendMail.png")));
         sendMail.addActionListener(ActionListener -> {
 
-            Thread openMailApp = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
-
-                        try {
-
-                            URI uriMailTo = new URI("mailto:companyn@example.com?subject=About%20Peyment");
-                            desktop.mail(uriMailTo);
-
-                        } catch (URISyntaxException | IOException e) {
-                            e.printStackTrace();
-                        }
+            Thread openMailApp = new Thread(() -> {
+                if (Desktop.isDesktopSupported() && DESKTOP.isSupported(Desktop.Action.MAIL)) {
+                    
+                    try {
+                        
+                        URI uriMailTo = new URI("mailto:companyn@example.com?subject=About%20Peyment");
+                        DESKTOP.mail(uriMailTo);
+                        
+                    } catch (URISyntaxException | IOException e) {
+                        e.printStackTrace();
                     }
-
                 }
             });
 
@@ -217,14 +207,7 @@ public class Main_MenuBar {
         exchange.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         exchange.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_exchange.png")));
         exchange.addActionListener(ActionListener -> {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    new ExchangeWindow();
-                }
-
-            });
+            SwingUtilities.invokeLater(ExchangeWindow::new);
         });
         mnTools.add(exchange);
 
@@ -232,14 +215,7 @@ public class Main_MenuBar {
         systemLogs.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         systemLogs.setIcon(new ImageIcon(Main_MenuBar.class.getResource("/com/coder/hms/icons/logging.png")));
         systemLogs.addActionListener(ActionListener -> {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    new ReadLogsWindow();
-                }
-
-            });
+            SwingUtilities.invokeLater(ReadLogsWindow::new);
         });
         mnTools.add(systemLogs);
 
@@ -315,14 +291,9 @@ public class Main_MenuBar {
         changeUser.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_user.png")));
         changeUser.addActionListener(ActionListener -> {
 
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    mainFrame.dispose();
-                    new LoginWindow();
-                }
+            SwingUtilities.invokeLater(() -> {
+                mainFrame.dispose();
+                new LoginWindow();
             });
         });
         usersMenu.add(changeUser);
@@ -334,14 +305,7 @@ public class Main_MenuBar {
 
             boolean control = checkRole();
             if (!control) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new AddUserWindow();
-
-                    }
-                });
+                SwingUtilities.invokeLater(AddUserWindow::new);
             }
         });
         usersMenu.add(addUser);
@@ -351,14 +315,7 @@ public class Main_MenuBar {
         chngPassword.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_change_pwd.png")));
         chngPassword.addActionListener(ActionListener -> {
 
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    new ChangePasswordWindow();
-
-                }
-            });
+            SwingUtilities.invokeLater(ChangePasswordWindow::new);
         });
 
         usersMenu.add(chngPassword);
@@ -372,12 +329,12 @@ public class Main_MenuBar {
         aboutDeveloper.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         aboutDeveloper.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_developer.png")));
         aboutDeveloper.addActionListener(ActionListener -> {
-            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+            if (Desktop.isDesktopSupported() && DESKTOP.isSupported(Desktop.Action.BROWSE)) {
 
                 try {
 
                     URI uri = new URI("https://www.linkedin.com/in/onur-bilal-i%C5%9F%C4%B1k-70663212b/");
-                    desktop.browse(uri);
+                    DESKTOP.browse(uri);
 
                 } catch (URISyntaxException | IOException e) {
                     e.printStackTrace();
@@ -392,12 +349,12 @@ public class Main_MenuBar {
         sourceCode.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 14));
         sourceCode.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menubar_source_code.png")));
         sourceCode.addActionListener(ActionListener -> {
-            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+            if (Desktop.isDesktopSupported() && DESKTOP.isSupported(Desktop.Action.BROWSE)) {
 
                 try {
 
                     URI uri = new URI("https://github.com/Coder-ACJHP/Hotel-Management-System");
-                    desktop.browse(uri);
+                    DESKTOP.browse(uri);
 
                 } catch (URISyntaxException | IOException e) {
                     e.printStackTrace();
@@ -413,12 +370,12 @@ public class Main_MenuBar {
         shareYourOpinion.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/manubar_feedback.png")));
         shareYourOpinion.addActionListener(ActionListener -> {
 
-            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
+            if (Desktop.isDesktopSupported() && DESKTOP.isSupported(Desktop.Action.MAIL)) {
 
                 try {
 
                     URI uriMailTo = new URI("mailto:hexa.octabin@gmail.com?subject=About%20Coder%20Hotel%20Management%20System");
-                    desktop.mail(uriMailTo);
+                    DESKTOP.mail(uriMailTo);
 
                 } catch (URISyntaxException | IOException e) {
                     e.printStackTrace();
@@ -457,14 +414,7 @@ public class Main_MenuBar {
 
             boolean control = checkRole();
             if (!control) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new HotelPropertiesWindow();
-
-                    }
-                });
+                SwingUtilities.invokeLater(HotelPropertiesWindow::new);
             }
         });
         utils.add(hoteProps);
@@ -476,14 +426,7 @@ public class Main_MenuBar {
 
             boolean control = checkRole();
             if (!control) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        new RoomsPropertiesWindow();
-
-                    }
-                });
+                SwingUtilities.invokeLater(RoomsPropertiesWindow::new);
             }
         });
         utils.add(roomProps);

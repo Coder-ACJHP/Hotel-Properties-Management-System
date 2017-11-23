@@ -25,13 +25,24 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 		final Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			
 		String colrowVal = String.valueOf(value);
-                 
-		if(colrowVal.equals(null) || colrowVal.length() <= 0) {
+                String value3 = (String) table.getValueAt(row, 3);
+                String value4 = (String) table.getValueAt(row, 4);  
+                String value5 = (String) table.getValueAt(row, 5);
+                String value6 = (String) table.getValueAt(row, 6);
+                String value7 = (String) table.getValueAt(row, 7);
+                String value8 = (String) table.getValueAt(row, 8);
+                String value9 = (String) table.getValueAt(row, 9);
+                
+		if(colrowVal == null || colrowVal.length() <= 0) {
 			
 			cellComponent.setForeground(Color.BLACK);
 			cellComponent.setBackground(Color.decode("#e3f6fb"));
 			
-		}else {
+		} else if(!value3.equalsIgnoreCase(value4) && !value4.equalsIgnoreCase(value5)
+                        && !value5.equalsIgnoreCase(value6) && !value6.equalsIgnoreCase(value7)
+                        && !value7.equalsIgnoreCase(value8) && !value8.equalsIgnoreCase(value9)) {
+                        cellComponent.setBackground(Color.decode("#d6ff00"));
+                }else {
 			
 			if(column == 0) {
 				cellComponent.setBackground(table.getBackground());
@@ -69,7 +80,7 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 				cellComponent.setBackground(Color.decode("#d28efb"));
 			}
 			
-			else if(column == 7 && !colrowVal.equals(" ")) {
+			else if(column == 7 && !colrowVal.isEmpty()) {
 				cellComponent.setBackground(Color.decode("#b683f9"));
 			}
 			
@@ -80,8 +91,10 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 			else if(column == 9 && !colrowVal.isEmpty()) {
 				cellComponent.setBackground(Color.decode("#944af4"));
 			}
+                        
+                        
 		}
-		
+
 		if(hasFocus) {
 			cellComponent.setBackground(Color.YELLOW.darker());
 		}
