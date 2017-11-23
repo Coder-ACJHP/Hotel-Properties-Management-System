@@ -25,7 +25,7 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 		final Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			
 		String colrowVal = String.valueOf(value);
-		
+                 
 		if(colrowVal.equals(null) || colrowVal.length() <= 0) {
 			
 			cellComponent.setForeground(Color.BLACK);
@@ -83,9 +83,9 @@ public class BlockadeTableCellRenderer extends DefaultTableCellRenderer {
 		}
 		
 		if(hasFocus) {
-			cellComponent.setBackground(Color.decode("#10d6d1"));
+			cellComponent.setBackground(Color.YELLOW.darker());
 		}
-
+    
 		return cellComponent;
 	}
 

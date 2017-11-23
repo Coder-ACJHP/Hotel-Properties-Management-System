@@ -34,7 +34,7 @@ public class MainFrame extends JFrame {
     /**
      *
      */
-    private JPanel mainPanel;
+    private final JPanel mainPanel;
     private static LocaleBean bean;
     private String exitMessage = "";
     private String titleMessage = "";
@@ -45,7 +45,7 @@ public class MainFrame extends JFrame {
     private static final long serialVersionUID = 1L;
     private ChangeComponentOrientation componentOrientation;
     /*get the external toolbar and initialize it*/
-    private final Main_UpperToolbar customToolbar;
+    private final Main_UpperToolbar customUperToolbar;
     private final Main_BottomToolbar customBottomToolbar;
 
     private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
@@ -57,6 +57,7 @@ public class MainFrame extends JFrame {
         componentOrientation = new ChangeComponentOrientation();
         componentOrientation.setTheFrame(this);
         
+        
         bean = LocaleBean.getInstance();
         sessionBean = SessionBean.getSESSION_BEAN();
 
@@ -64,14 +65,9 @@ public class MainFrame extends JFrame {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBackground(Color.decode("#066d95"));
-
-        this.getContentPane().add(mainPanel, BorderLayout.CENTER);
-
+        
         this.setIconImage(Toolkit.getDefaultToolkit().
                 getImage(getClass().getResource(LOGOPATH)));
-
-        customToolbar = new Main_UpperToolbar(mainPanel);
-        customBottomToolbar = new Main_BottomToolbar();
 
         this.setTitle("Coder HPMSA - [Main]");
 
@@ -87,7 +83,11 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(customMenuBar.getMenuBar());
 
         currency = new GetLiveCurrencyRates();
-
+        customUperToolbar = new Main_UpperToolbar(mainPanel);        
+        this.getContentPane().add(mainPanel, BorderLayout.CENTER);//add it this frame after injection
+        
+        customBottomToolbar = new Main_BottomToolbar();
+        
         //get user name from login frame and add it to main frame
         customBottomToolbar.setUserLabelText(sessionBean.getNickName());
 
@@ -98,8 +98,7 @@ public class MainFrame extends JFrame {
         customBottomToolbar.sethotelNameLabelText(sessionBean.getHotelName());
 
         /*add it to our frame*/
-        getContentPane().add(customToolbar.getJPanel(), BorderLayout.NORTH);
-
+        getContentPane().add(customUperToolbar, BorderLayout.NORTH);
         getContentPane().add(customBottomToolbar.getToolBar(), BorderLayout.SOUTH);
         
         //change language as locale.
@@ -111,7 +110,7 @@ public class MainFrame extends JFrame {
         } else {
             componentOrientation.changeOrientationOfJFrameToLeft();
         }
-        
+
         /*set exiting from the application when clicking on X button*/
         this.addWindowListener(new WindowAdapter() {
 

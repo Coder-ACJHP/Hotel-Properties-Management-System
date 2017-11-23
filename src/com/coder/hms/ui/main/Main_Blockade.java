@@ -444,7 +444,9 @@ public class Main_Blockade extends JPanel implements ActionListener {
         model.setRowCount(0);
         /*Simple object POJO class (entity)*/
         Blockade blockade = null;
-
+        final  Calendar c = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
         for (int colindex = 0; colindex < roomList.size(); colindex++) {
             /////////////////////////////////////////////////////////////////
             //here we created new 'Blockade' object special for this table //
@@ -466,13 +468,31 @@ public class Main_Blockade extends JPanel implements ActionListener {
             for (int listIndex = 0; listIndex < resList.size(); listIndex++) {
 
                 if (blockade.getNumber().equals(resList.get(listIndex).getTheNumber())) {
-                    for (int rowIndex = 0; rowIndex < weekDates.length; rowIndex++) {
 
-                        if (resList.get(listIndex).getCheckinDate().equals(weekDates[rowIndex])) {
+                    
+                    for (int rowIndex = 3; rowIndex < weekDates.length; rowIndex++) {
 
-                            //populating table and sorting as dates
-                            model.setValueAt(resList.get(listIndex).getGroupName(), colindex, rowIndex);
-                        }
+                            
+                            try {
+                                //convert all String type dates to real date type,
+                                //we have to extract one day from checkout date because,
+                                //it get dates that between checkin and checkout dates included
+                                Date today = sdf.parse(weekDates[rowIndex]);
+                                Date checkinDate = sdf.parse(resList.get(listIndex).getCheckinDate());
+                                Date checkouDate = sdf.parse(resList.get(listIndex).getCheckoutDate());
+                                c.setTime(checkouDate);
+                                c.add(Calendar.DATE, -1);
+                                
+                                 if (checkinDate.compareTo(today) * today.compareTo(c.getTime()) >= 0) {
+                                     //populating table and sorting as dates
+                                     model.setValueAt(resList.get(listIndex).getGroupName(), colindex, rowIndex);
+                                 }
+                                 
+                            } catch (Exception e) {
+                                System.err.println("Holaaa"+e.getLocalizedMessage());
+                            }
+                        
+ 
                     }
                 }
             }

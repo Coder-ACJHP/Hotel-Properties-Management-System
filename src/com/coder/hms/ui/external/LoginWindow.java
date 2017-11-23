@@ -140,7 +140,6 @@ public class LoginWindow extends JDialog {
         getContentPane().add(userNameLabel);
 
         userNameField = new JTextField();
-
         userNameField.setToolTipText("Enter your user name");
         userNameField.setLocation(143, 74);
         userNameField.setBackground(new Color(255, 255, 255));

@@ -439,7 +439,7 @@ public class Main_MenuBar {
 
         mnAbout.add(license);
 
-        utils = new JMenu("Utils");
+        utils = new JMenu("Utilities");
         utils.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
         utils.setToolTipText("Creator permission required!");
 
@@ -560,6 +560,10 @@ public class Main_MenuBar {
         titleMessage = bundle.getString("Confirmation");
         roomProps.setText(bundle.getString("RoomsProperty"));
         addUser.setText(bundle.getString("AddUser"));
+        utils.setText(bundle.getString("Utilities"));
+        databaseProps.setText(bundle.getString("DatabaseProps"));
+        hoteProps.setText(bundle.getString("HotelProps"));
+        roomProps.setText(bundle.getString("RoomsProps"));
         menuBar.revalidate();
         menuBar.repaint();
     }

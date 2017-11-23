@@ -5,7 +5,9 @@
  */
 package com.coder.hms.utils;
 
+import java.awt.Component;
 import java.awt.ComponentOrientation;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -85,26 +87,49 @@ public class ChangeComponentOrientation {
     }
     
     public void changeOrientationOfJPanelToRight() {
+        
         thePanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        for (int i = 0; i < thePanel.getComponentCount(); i++) {
-            if (thePanel.getComponent(i).getComponentOrientation().isLeftToRight()) {
-                thePanel.getComponent(i).setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                thePanel.revalidate();
-                thePanel.repaint();
+        Component panelComponents[] = thePanel.getComponents();
+        
+        for (int i = 0; i < panelComponents.length; i++) {
+            
+            if(panelComponents[i] instanceof JPanel) {
+                JPanel panel = (JPanel) panelComponents[i];
+                if(panel.getComponentOrientation().isLeftToRight()) {
+                    panel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                }
+            }
+            
+            if(panelComponents[i] instanceof JButton) {
+                JButton button = (JButton) panelComponents[i];
+                if(button.getComponentOrientation().isLeftToRight()) {
+                    button.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                }
             }
         }
     }
 
     public void changeOrientationOfJPanelToLeft() {
+        
         thePanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        for (int i = 0; i < thePanel.getComponentCount(); i++) {
-            if (!thePanel.getComponent(i).getComponentOrientation().isLeftToRight()) {
-                thePanel.getComponent(i).setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-                thePanel.revalidate();
-                thePanel.repaint();
+        Component panelComponents[] = thePanel.getComponents();
+        
+        for (int i = 0; i < panelComponents.length; i++) {
+            
+            if(panelComponents[i] instanceof JPanel) {
+                JPanel panel = (JPanel) panelComponents[i];
+                if(!panel.getComponentOrientation().isLeftToRight()) {
+                    panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+                }
+            }
+            
+            if(panelComponents[i] instanceof JButton) {
+                JButton button = (JButton) panelComponents[i];
+                if(!button.getComponentOrientation().isLeftToRight()) {
+                    button.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+                }
             }
         }
-
     }
     
       public void changeOrientationOfJMenubarToRight() {
