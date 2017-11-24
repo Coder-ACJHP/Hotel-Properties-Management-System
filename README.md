@@ -95,7 +95,7 @@ Add this line in your database to create event : <code>create event dailyAudit o
 <ul>
   <li>Download it for cross platform as <b><i>.jar</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/releases/download/1.3.1/HotelPropertiesManagementSystem-1.3.1-SNAPSHOT-jar-with-dependencies.jar">here</a></li>
   <li>Download it for MacOs application <b><i>.app</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/releases/download/1.3.1/CoderHPMSA.app.zip">here</a></li>
-   <li>Download it for Windows application <b><i>.exe</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Management-System/releases/download/1.2.1/CoderHPMS.exe">here</a></li>
+   <li>Download it for Windows application <b><i>.exe</i></b> from <a href="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/releases/download/1.3.1/CoderHPMSA.exe">here</a></li>
 </ul>
 
 <h2>New Features v1.2.1  <b>02/11/2017</b></h2>
