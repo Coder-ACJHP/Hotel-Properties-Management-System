@@ -73,7 +73,6 @@ import com.coder.hms.ui.extras.BlockadeTableCellRenderer;
 import com.coder.hms.ui.extras.BlockadeTableHeaderRenderer;
 import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
 import com.coder.hms.utils.ChangeComponentOrientation;
-
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
@@ -518,10 +517,10 @@ public class Main_Blockade extends JPanel implements ActionListener {
                 reservation.setCheckinDate(resList.get(i).getCheckinDate());
                 reservation.setCheckoutDate(resList.get(i).getCheckoutDate());
 
-                blokajModel.addRow(new Object[]{reservation.getId(), reservation.getGroupName(),
-                    reservation.getAgency(), reservation.getCheckinDate(), reservation.getCheckoutDate(),
-                    reservation.getPaymentStatus()});
-                rezervationIdList.add(resList.get(i).getId());
+                blokajModel.addRow(new Object[]{
+                	reservation.getId(), reservation.getGroupName(), reservation.getAgency(),
+                	reservation.getCheckinDate(), reservation.getCheckoutDate(), reservation.getPaymentStatus()});
+                	rezervationIdList.add(resList.get(i).getId());
             }
 
         }

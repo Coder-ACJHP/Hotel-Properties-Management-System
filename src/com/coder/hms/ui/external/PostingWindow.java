@@ -132,9 +132,7 @@ public class PostingWindow extends JDialog {
 		lblPrice.setBounds(56, 116, 100, 20);
 		getContentPane().add(lblPrice);
 		
-		formatter = NumberFormat.getCurrencyInstance();
-		formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
-		priceField = new JFormattedTextField(formatter);
+		priceField = new JFormattedTextField();
 		priceField.setValue(new Double(value));
 		priceField.setBounds(203, 114, 155, 20);
 		getContentPane().add(priceField);

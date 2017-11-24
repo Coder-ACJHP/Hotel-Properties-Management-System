@@ -169,9 +169,20 @@ public class RoomWindow extends JDialog {
 		this.getContentPane().setBackground(Color.decode("#066d95"));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
-		formatter = NumberFormat.getCurrencyInstance();
-		formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
-
+                formatter = NumberFormat.getCurrencyInstance();
+                
+                //set currency locale
+                final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
+                if(theRoom.getCurrency().equalsIgnoreCase("TURKISH LIRA")) {
+                    formatter.setCurrency(Currency.getInstance(new Locale("tr","TR")));
+                } else if(theRoom.getCurrency().equalsIgnoreCase("EURO")) {
+                    formatter.setCurrency(Currency.getInstance(new Locale("it","IT")));
+                } else if(theRoom.getCurrency().equalsIgnoreCase("DOLLAR")) {
+                    formatter.setCurrency(Currency.getInstance(new Locale("en","US")));
+                } else if(theRoom.getCurrency().equalsIgnoreCase("POUND")) {
+                    formatter.setCurrency(Currency.getInstance(new Locale("en","GB")));
+                } 
+                
 		upperPanel = new JPanel();
 		upperPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		upperPanel.setAutoscrolls(true);

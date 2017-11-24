@@ -28,6 +28,7 @@ public class CustomTableHeaderRenderer extends JLabel implements TableCellRender
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 			int row, int column) {
 		
+		
 		setText(value.toString());
 		return this;
 	}

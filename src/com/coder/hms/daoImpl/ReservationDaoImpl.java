@@ -288,6 +288,30 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         }
     }
 
+    public List<Reservation> getReservationBetweenTwoDates(String checkinDate, String checkoutDate) {
+    	List<Reservation> reservationsList = null;
+    	
+    	try {
+    		
+    		session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<Reservation> query = session.createQuery("from Reservation AS r WHERE r.checkinDate BETWEEN :checkinDate AND :checkoutDate", Reservation.class);
+            query.setParameter("checkinDate", checkinDate);
+            query.setParameter("checkoutDate", checkoutDate);
+            reservationsList = query.getResultList();
+            
+            if(reservationsList == null)
+            	 reservationsList = session.createQuery("from Reservation", Reservation.class).getResultList();
+
+            logging.setMessage("ReservationDaoImpl -> fetching reservation that between two dates...");
+            
+		} catch (NoResultException e) {
+			 logging.setMessage("ReservationDaoImpl Error -> " + e.getLocalizedMessage());
+		}
+    	
+    	return reservationsList;
+    }
+    
     @Override
     public void beginTransactionIfAllowed(Session theSession) {
         if (!theSession.getTransaction().isActive()) {
@@ -298,4 +322,5 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         }
 
     }
+
 }

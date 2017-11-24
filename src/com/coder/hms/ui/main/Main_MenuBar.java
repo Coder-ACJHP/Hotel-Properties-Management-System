@@ -11,6 +11,8 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -38,6 +40,7 @@ import com.coder.hms.connection.DatabaseServerPreparingInitializer;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.entities.User;
 import com.coder.hms.ui.external.AddUserWindow;
+import com.coder.hms.ui.external.AllReservationsWindow;
 import com.coder.hms.ui.external.ChangePasswordWindow;
 import com.coder.hms.ui.external.DialogFrame;
 import com.coder.hms.ui.external.ExchangeWindow;
@@ -50,8 +53,6 @@ import com.coder.hms.ui.external.RoomsPropertiesWindow;
 import com.coder.hms.ui.extras.ApplicationThemeChanger;
 import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.ResourceControl;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Main_MenuBar {
 
@@ -70,7 +71,7 @@ public class Main_MenuBar {
     private final JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, 
             sendMail, exchange, systemLogs, defaultTheme, mnitmAero, mnitmBernstain, 
             mnitmMint, mnitmMcwin, mnitmAcryl, mnitmNoire, mnitmLuna, changeUser, 
-            addUser, chngPassword, aboutDeveloper, mnitmTexture,
+            addUser, chngPassword, aboutDeveloper, mnitmTexture, allReservs,
             sourceCode, shareYourOpinion, license, databaseProps;
 
     //getter method for getting the modified menubar from another class
@@ -98,6 +99,17 @@ public class Main_MenuBar {
         frontDesk = new JMenu("Front Desk");
         frontDesk.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
         menuBar.add(frontDesk);
+        
+        allReservs = new JMenuItem("All reservations");
+        allReservs.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
+        allReservs.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/reservation_allreservs.png")));
+        allReservs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5 , (InputEvent.SHIFT_MASK
+                | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+        allReservs.setMnemonic(KeyEvent.VK_F5 + KeyEvent.VK_CONTROL);
+        allReservs.addActionListener(ActionListener->{
+        	SwingUtilities.invokeLater(AllReservationsWindow::new);
+        });
+        frontDesk.add(allReservs);
         
         restart = new JMenuItem("Restart");
         restart.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
@@ -142,7 +154,7 @@ public class Main_MenuBar {
 
         });
         frontDesk.add(menuInnerItemExit);
-
+        
         mnTools = new JMenu("Tools");
         mnTools.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 13));
         menuBar.add(mnTools);
@@ -507,6 +519,7 @@ public class Main_MenuBar {
         databaseProps.setText(bundle.getString("DatabaseProps"));
         hoteProps.setText(bundle.getString("HotelProps"));
         roomProps.setText(bundle.getString("RoomsProps"));
+        allReservs.setText(bundle.getString("AllReservations"));
         menuBar.revalidate();
         menuBar.repaint();
     }

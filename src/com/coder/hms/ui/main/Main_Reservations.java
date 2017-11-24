@@ -48,6 +48,7 @@ import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
+import com.coder.hms.ui.external.AllReservationsWindow;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.NewReservationWindow;
 import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
@@ -73,7 +74,6 @@ public class Main_Reservations extends JPanel {
     private RoomDaoImpl roomDaoImpl;
     private DefaultTableModel model;
     private JTextField agencyRefField;
-    private JButton newRezBtn, findBtn;
     private HotelDaoImpl hotelDoaImpl;
     private static LoggingEngine logging;
     private PaymentDaoImpl paymentDaoImpl;
@@ -81,14 +81,15 @@ public class Main_Reservations extends JPanel {
     private NewReservationWindow newReservationEx;
     private ReservationDaoImpl reservationDaoImpl;
     private final HotelSystemStatus systemStatus;
-    private final HotelSystemStatusImpl statusImpl = new HotelSystemStatusImpl();
     private static final long serialVersionUID = 1L;
-    private ChangeComponentOrientation componentOrientation;
+    private JButton newRezBtn, findBtn, showAllReservs;
     private JDateChooser startDatePicker, endDatePicker;
+    private ChangeComponentOrientation componentOrientation;
     private JLabel startdateLbl, endDateLbl, referansNoLbl, agencyRefLbl;
+    private final HotelSystemStatusImpl statusImpl = new HotelSystemStatusImpl();
     private final String[] rezColsName = {"DATE", "CAPASITE ", "FULL ", "EMPTY", "GARANTED", "WAITING"};
-    private final ReservationTableRenderer customTCR = new ReservationTableRenderer();
     private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
+    private final ReservationTableRenderer customTCR = new ReservationTableRenderer();
 
     public Main_Reservations() {
 
@@ -189,6 +190,18 @@ public class Main_Reservations extends JPanel {
         agencyRefField.setFont(new Font("Arial", Font.BOLD, 13));
         agencyRefField.setColumns(10);
         buttonPanel.add(agencyRefField);
+        
+        showAllReservs = new JButton("Show All");
+        showAllReservs.addActionListener(ActionListener -> {
+        	SwingUtilities.invokeLater(AllReservationsWindow::new);
+        });
+        showAllReservs.setIcon(new ImageIcon(Main_Reservations.class.getResource("/com/coder/hms/icons/reservation_allreservs.png")));
+        showAllReservs.setPreferredSize(new Dimension(150, 33));
+        showAllReservs.setHorizontalTextPosition(SwingConstants.RIGHT);
+        showAllReservs.setFont(new Font("Arial", Font.BOLD, 12));
+        showAllReservs.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+        showAllReservs.setBounds(827, 8, 155, 45);
+        buttonPanel.add(showAllReservs);
 
         model = new DefaultTableModel(rezColsName, 0);
 
@@ -224,6 +237,7 @@ public class Main_Reservations extends JPanel {
         bundle = ResourceBundle.getBundle("com/coder/hms/languageFiles/LocalizationBundle", locale, new ResourceControl());
 
         this.newRezBtn.setText(bundle.getString("NewReservation"));
+        this.showAllReservs.setText(bundle.getString("AllReservations"));
         this.findBtn.setText(bundle.getString("Search"));
         this.revalidate();
         this.repaint();
