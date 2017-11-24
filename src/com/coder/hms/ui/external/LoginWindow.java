@@ -55,7 +55,11 @@ import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.PropertiesReader;
 import com.coder.hms.utils.ResourceControl;
+import java.io.File;
+import java.net.URISyntaxException;
 import java.time.format.FormatStyle;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * @author Coder ACJHP
@@ -98,7 +102,7 @@ public class LoginWindow extends JDialog {
         bean = LocaleBean.getInstance();
         bean.setLocale(getLocale());
         sessionBean = SessionBean.getSESSION_BEAN();
-
+        
         //set upper icon for dialog frame
         String opSystem = System.getProperty("os.name").toLowerCase();
 

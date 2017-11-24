@@ -39,6 +39,7 @@ import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.connection.DatabaseServerPreparingInitializer;
 import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.entities.User;
+import com.coder.hms.start.StartApplication;
 import com.coder.hms.ui.external.AddUserWindow;
 import com.coder.hms.ui.external.AllReservationsWindow;
 import com.coder.hms.ui.external.ChangePasswordWindow;
@@ -52,7 +53,11 @@ import com.coder.hms.ui.external.ReadLogsWindow;
 import com.coder.hms.ui.external.RoomsPropertiesWindow;
 import com.coder.hms.ui.extras.ApplicationThemeChanger;
 import com.coder.hms.utils.ChangeComponentOrientation;
+import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
+import java.io.File;
+import java.util.ArrayList;
+
 
 public class Main_MenuBar {
 
@@ -60,6 +65,7 @@ public class Main_MenuBar {
     private JFrame mainFrame;
     private String exitMessage = "";
     private String titleMessage = "";
+    private static LoggingEngine logging;
     private final Runtime run = Runtime.getRuntime();
     private final LocaleBean bean = LocaleBean.getInstance();
     private static SessionBean SESSION_BEAN;
@@ -86,6 +92,7 @@ public class Main_MenuBar {
     public Main_MenuBar() {
 
         menuBar = new JMenuBar();
+        logging = LoggingEngine.getInstance();
         menuBar.setPreferredSize(new Dimension(0, 30));
         menuBar.setFont(new Font("Dialog", Font.BOLD, 14));
         menuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -116,19 +123,7 @@ public class Main_MenuBar {
         restart.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menuBar_restart.png")));
         restart.addActionListener(ActionListener -> {
 
-//			ScheduledExecutorService schedulerExecutor = Executors.newScheduledThreadPool(2);
-//			Callable<Process> callable = new Callable<Process>() {
-//
-//			    @Override
-//			    public Process call() throws Exception {
-//			        Process p = Runtime.getRuntime().exec("cmd /c start /b java -jar D:\\MovieLibrary.jar");
-//			        return p;
-//			    }
-//			};
-//			FutureTask<Process> futureTask = new FutureTask<Process>(callable);
-//			schedulerExecutor.submit(futureTask);           
-//
-//			System.exit(0);
+             restart();
         });
         frontDesk.add(restart);
 
@@ -349,7 +344,7 @@ public class Main_MenuBar {
                     DESKTOP.browse(uri);
 
                 } catch (URISyntaxException | IOException e) {
-                    e.printStackTrace();
+                    logging.setMessage("Send to about developer command Error -> "+e.getLocalizedMessage()+"\n");
                 }
 
             }
@@ -369,7 +364,7 @@ public class Main_MenuBar {
                     DESKTOP.browse(uri);
 
                 } catch (URISyntaxException | IOException e) {
-                    e.printStackTrace();
+                    logging.setMessage("Send to source code command Error -> "+e.getLocalizedMessage()+"\n");
                 }
 
             }
@@ -390,7 +385,7 @@ public class Main_MenuBar {
                     DESKTOP.mail(uriMailTo);
 
                 } catch (URISyntaxException | IOException e) {
-                    e.printStackTrace();
+                    logging.setMessage("Send email Error -> "+e.getLocalizedMessage()+"\n");
                 }
             }
         });
@@ -525,48 +520,65 @@ public class Main_MenuBar {
     }
     
     private ActionListener importDatabaseAction() {
-        final ActionListener listener = new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        final ActionListener listener = (ActionEvent e) -> {
+            //here creating schema and importing tables.
+            final DialogFrame frame = new DialogFrame();
+            frame.setMessage("Attention !!\nYour database will be restructured in the next step!");
+            frame.btnYes.addActionListener(ActionListener -> {
+                frame.dispose();
                 
-                //here creating schema and importing tables.
-                final DialogFrame frame = new DialogFrame();
-                frame.setMessage("Attention !!\nYour database will be restructured in the next step!");
-                frame.btnYes.addActionListener(ActionListener -> {
-                    frame.dispose();
-
-                    //for security we will warn the user and ask for password again.
-                    final String response = JOptionPane.showInputDialog(mainFrame, "Enter your Password", "Authentication", JOptionPane.QUESTION_MESSAGE);
-                    final UserDaoImpl userDaoImpl = new UserDaoImpl();
-
-                    if (userDaoImpl.authentication(SESSION_BEAN.getName(), response)) {
-
-                        final DatabaseServerPreparingInitializer dbspi = new DatabaseServerPreparingInitializer();
-                        dbspi.runScriptFile();
-
-                        if (dbspi.getStatus()) {
-                            SwingUtilities.invokeLater(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    new LicenseWindow(DatabaseServerPreparingInitializer.getLogFile().getAbsolutePath());
-                                }
-                            });
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(mainFrame, "Sorry your password is incorrect!", "Warning!", JOptionPane.ERROR_MESSAGE);
+                //for security we will warn the user and ask for password again.
+                final String response = JOptionPane.showInputDialog(mainFrame, "Enter your Password", "Authentication", JOptionPane.QUESTION_MESSAGE);
+                final UserDaoImpl userDaoImpl = new UserDaoImpl();
+                
+                if (userDaoImpl.authentication(SESSION_BEAN.getName(), response)) {
+                    
+                    final DatabaseServerPreparingInitializer dbspi = new DatabaseServerPreparingInitializer();
+                    dbspi.runScriptFile();
+                    
+                    if (dbspi.getStatus()) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            
+                            @Override
+                            public void run() {
+                                new LicenseWindow(DatabaseServerPreparingInitializer.getLogFile().getAbsolutePath());
+                            }
+                        });
                     }
-                });
-
-                frame.btnNo.addActionListener(ActionListener -> {
-                    frame.dispose();
-                });
-                frame.setVisible(true);
-            }
-
+                } else {
+                    JOptionPane.showMessageDialog(mainFrame, "Sorry your password is incorrect!", "Warning!", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+            
+            frame.btnNo.addActionListener(ActionListener -> {
+                frame.dispose();
+            });
+            frame.setVisible(true);
         };
         return listener;
     }
 
+    private void restart() {
+        try {
+            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            final File currentJar = new File(StartApplication.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+
+            //check the path is realy for *.jar file?
+            if(!currentJar.getName().endsWith(".jar"))
+              return;
+
+            /* Build command: java -jar application.jar */
+            final ArrayList<String> commandList = new ArrayList<>();
+            commandList.add(javaBin);
+            commandList.add("-jar");
+            commandList.add(currentJar.getPath());
+
+            final ProcessBuilder builder = new ProcessBuilder(commandList);
+            builder.start();
+            System.exit(0);
+            
+        } catch (IOException | URISyntaxException ex) {
+           logging.setMessage("Restart Error -> "+ex.getLocalizedMessage()+"\n");
+        }
+    }
 }

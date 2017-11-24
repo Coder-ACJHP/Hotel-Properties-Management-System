@@ -237,7 +237,7 @@ public class AllReservationsWindow extends JFrame {
         reservationTable.getTableHeader().setDefaultRenderer(THR);
         reservationTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         mainPanelScroller.setViewportView(reservationTable);
-        tableRowSorter = new TableRowSorter<DefaultTableModel>(model);
+        tableRowSorter = new TableRowSorter<>(model);
         reservationTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (reservationTable.getColumnModel().getColumnCount() > 0) {
             reservationTable.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -313,7 +313,7 @@ public class AllReservationsWindow extends JFrame {
  				 if (selectedIndex < 0) {
  					reservationTable.revalidate();
  					reservationTable.repaint();
-                 }
+                                }
  				 
  				 selectedReservationId = Long.parseLong(String.valueOf(reservationTable.getValueAt(selectedIndex, 0)));
  				 
