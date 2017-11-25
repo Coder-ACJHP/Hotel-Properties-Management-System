@@ -76,6 +76,7 @@ import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
+import java.text.ParseException;
 
 public final class Main_Blockade extends JPanel implements ActionListener {
 
@@ -488,7 +489,7 @@ public final class Main_Blockade extends JPanel implements ActionListener {
                                      model.setValueAt(resList.get(listIndex).getGroupName(), colindex, rowIndex);
                                  }
                                  
-                            } catch (Exception e) {
+                            } catch (ParseException e) {
                                 System.err.println("Holaaa"+e.getLocalizedMessage());
                             }
                         
