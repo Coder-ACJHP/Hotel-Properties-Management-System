@@ -72,7 +72,7 @@ import com.coder.hms.utils.ShowReport;
 import com.coder.hms.utils.RoomNumberMaker;
 import com.toedter.calendar.JDateChooser;
 
-public class UpdateReservationWindow extends JDialog {
+public final class UpdateReservationWindow extends JDialog {
 
 	/**
 	 * 
@@ -237,7 +237,7 @@ public class UpdateReservationWindow extends JDialog {
 		agencyLbl.setBounds(394, 11, 90, 23);
 		getContentPane().add(agencyLbl);
 		
-		agencyCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(AGENCY_LIST));
+		agencyCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(AGENCY_LIST));
 		agencyCmbBox.setBounds(549, 11, 209, 20);
 		getContentPane().add(agencyCmbBox);
 		
@@ -247,7 +247,7 @@ public class UpdateReservationWindow extends JDialog {
 		hostTypeLbl.setBounds(394, 44, 90, 23);
 		getContentPane().add(hostTypeLbl);
 		
-		hostCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(HOST_TYPES));
+		hostCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(HOST_TYPES));
 		hostCmbBox.setSelectedIndex(0);
 		hostCmbBox.setBounds(549, 42, 209, 20);
 		getContentPane().add(hostCmbBox);
@@ -258,7 +258,7 @@ public class UpdateReservationWindow extends JDialog {
 		creditTypeLbl.setBounds(394, 73, 90, 23);
 		getContentPane().add(creditTypeLbl);
 		
-		creaditTypeCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(CREDIT_TYPES));
+		creaditTypeCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(CREDIT_TYPES));
 		creaditTypeCmbBox.setSelectedIndex(2);
 		creaditTypeCmbBox.setBounds(549, 73, 209, 20);
 		getContentPane().add(creaditTypeCmbBox);
@@ -283,7 +283,7 @@ public class UpdateReservationWindow extends JDialog {
 		reservationStatusLbl.setBounds(394, 106, 146, 23);
 		getContentPane().add(reservationStatusLbl);
 		
-		rezervStatusCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(RESERV_STS));
+		rezervStatusCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(RESERV_STS));
 		rezervStatusCmbBox.setSelectedIndex(0);
 		rezervStatusCmbBox.setBounds(550, 107, 209, 20);
 		getContentPane().add(rezervStatusCmbBox);
@@ -294,7 +294,7 @@ public class UpdateReservationWindow extends JDialog {
 		customerCountryLbl.setBounds(394, 136, 146, 23);
 		getContentPane().add(customerCountryLbl);
 		
-		customerCountryCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(COUNTRY_LIST));
+		customerCountryCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(COUNTRY_LIST));
 		customerCountryCmbBox.setBounds(549, 137, 209, 20);
 		customerCountryCmbBox.setSelectedIndex(0);
 		getContentPane().add(customerCountryCmbBox);
@@ -307,14 +307,11 @@ public class UpdateReservationWindow extends JDialog {
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		chancelBtn = new JButton("CANCEL");
-		chancelBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-				setCompletionStatus(false);
-				logging.setMessage("New reservation creating cancelled.");
-			}
-		});
+		chancelBtn.addActionListener((ActionEvent arg0) -> {
+                    dispose();
+                    setCompletionStatus(false);
+                    logging.setMessage("New reservation creating cancelled.");
+                });
 		chancelBtn.setIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/login_clear.png")));
 		chancelBtn.setForeground(new Color(220, 20, 60));
 		chancelBtn.setOpaque(true);
@@ -345,7 +342,7 @@ public class UpdateReservationWindow extends JDialog {
 		SaveBtn.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		SaveBtn.setPreferredSize(new Dimension(130, 40));
 		SaveBtn.setFont(new Font("Verdana", Font.BOLD, 15));
-		SaveBtn.addActionListener(newReservAction());
+		SaveBtn.addActionListener(updateReservAction());
 		buttonsPanel.add(SaveBtn);
 		
 		final JPanel panel = new JPanel();
@@ -375,8 +372,8 @@ public class UpdateReservationWindow extends JDialog {
 		final JScrollPane roomCountPanelContainer = new JScrollPane();
 		roomCountPanelContainer.setPreferredSize(new Dimension(720, 75));
 		roomCountTable = new JTable(roomCountModel);
-        roomCountTable.setCellSelectionEnabled(false);
-        roomCountTable.setRowSelectionAllowed(true);
+                roomCountTable.setCellSelectionEnabled(false);
+                roomCountTable.setRowSelectionAllowed(true);
 		roomCountPanelContainer.setViewportView(roomCountTable);
 		roomPanel.add(roomCountPanelContainer);
 		
@@ -400,7 +397,7 @@ public class UpdateReservationWindow extends JDialog {
 		final Hotel hotel = hotelDaoImpl.getHotel();
 		ROOM_TYPES = hotel.getRoomTypes().split(" ");
 		
-		roomTypeCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(ROOM_TYPES));
+		roomTypeCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(ROOM_TYPES));
 		roomTypeCmbBox.setBounds(154, 35, 140, 20);
 		roomTypeCmbBox.addActionListener(roomTypeActionListener());
 		roomTypePanel.add(roomTypeCmbBox);
@@ -410,7 +407,7 @@ public class UpdateReservationWindow extends JDialog {
 		personCountSpinner.setBounds(327, 35, 40, 20);
 		roomTypePanel.add(personCountSpinner);
 		
-		currencyCmbBox = new JComboBox<String>(new DefaultComboBoxModel<>(cmbList));
+		currencyCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(cmbList));
 		currencyCmbBox.setBounds(490, 35, 140, 20);
 		currencyCmbBox.addItemListener(currencyActionListener());
 		roomTypePanel.add(currencyCmbBox);
@@ -424,7 +421,7 @@ public class UpdateReservationWindow extends JDialog {
 		formatter.setMinimumFractionDigits(2);
 		
 		priceField = new JFormattedTextField(formatter);
-		priceField.setValue(new Double(priceValue));
+		priceField.setValue(priceValue);
 		priceField.setColumns(10);
 		priceField.setBounds(401, 35, 65, 20);
 		roomTypePanel.add(priceField);
@@ -443,7 +440,7 @@ public class UpdateReservationWindow extends JDialog {
 		ROOM_NUMS = new String[]{};
 		ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
 		
-		roomNumCmbBox = new JComboBox<Object>(new DefaultComboBoxModel<>(ROOM_NUMS));
+		roomNumCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(ROOM_NUMS));
 		roomNumCmbBox.setBounds(34, 35, 86, 20);
 		roomNumCmbBox.addActionListener(privateItemListener());
 		roomTypePanel.add(roomNumCmbBox);
@@ -467,24 +464,16 @@ public class UpdateReservationWindow extends JDialog {
 		earlyPanel.setLayout(null);
 		
 		JButton btnNewButton = new JButton("Add new Payment");
-		btnNewButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						payWin.setReadyPaymentWindow(roomNumCmbBox.getSelectedItem().toString());
-						if(payWin.getPaymentStatus()) {
-							earlyPaymetModel.addRow(payWin.rowCol);
-						}						
-						
-						logging.setMessage("Adding payment in reservation.");
-						
-					}
-				}); 
-			}
-		});
+		btnNewButton.addActionListener((ActionEvent arg0) -> {
+                    SwingUtilities.invokeLater(() -> {
+                        payWin.setReadyPaymentWindow(roomNumCmbBox.getSelectedItem().toString());
+                        if(payWin.getPaymentStatus()) {
+                            earlyPaymetModel.addRow(payWin.rowCol);
+                        }
+                        
+                        logging.setMessage("Adding payment in reservation.");
+                    });
+                });
 		btnNewButton.setIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
 		btnNewButton.setSelectedIcon(new ImageIcon(UpdateReservationWindow.class.getResource("/com/coder/hms/icons/newReserv_payment.png")));
 		btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -540,265 +529,229 @@ public class UpdateReservationWindow extends JDialog {
 				}
 				// main reason
 				else {
-					SwingUtilities.invokeLater(new Runnable() {
-
-						@Override
-						public void run() {
-							boolean showed = false;
-							 startDate = checkinDate.getDate();
-							 endDate = checkoutDate.getDate();
-
-							if (startDate != null && endDate != null) {
-								// add to calendar to be able get day of date
-								// and compare
-								Calendar cs = Calendar.getInstance();
-								cs.setTime(startDate);
-								Calendar ce = Calendar.getInstance();
-								ce.setTime(endDate);
-
-								// compare if start date greater than end date
-								if (cs.after(ce) && !showed) {
-									JOptionPane.showMessageDialog(null, "Start date is after end date!",
-											JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-									showed = true;
-								}
-								// or both is same date
-								else if (cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
-									JOptionPane.showMessageDialog(null,
-											"Start date equals end date!\nPlease be sure you're choose right date.",
-											JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-									showed = true;
-								}
-								// other odds
-								else {
-									value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
-									totalDaysField.setText(Math.abs(value) + "");
-									repaint();
-								}
-							}
-
-						}
-					});
+					SwingUtilities.invokeLater(() -> {
+                                            boolean showed = false;
+                                            startDate = checkinDate.getDate();
+                                            endDate = checkoutDate.getDate();
+                                            
+                                            if (startDate != null && endDate != null) {
+                                                // add to calendar to be able get day of date
+                                                // and compare
+                                                Calendar cs = Calendar.getInstance();
+                                                cs.setTime(startDate);
+                                                Calendar ce = Calendar.getInstance();
+                                                ce.setTime(endDate);
+                                                
+                                                // compare if start date greater than end date
+                                                if (cs.after(ce) && !showed) {
+                                                    JOptionPane.showMessageDialog(null, "Start date is after end date!",
+                                                            JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+                                                    showed = true;
+                                                }
+                                                // or both is same date
+                                                else if (cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
+                                                    JOptionPane.showMessageDialog(null,
+                                                            "Start date equals end date!\nPlease be sure you're choose right date.",
+                                                            JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+                                                    showed = true;
+                                                }
+                                                // other odds
+                                                else {
+                                                    value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
+                                                    totalDaysField.setText(Math.abs(value) + "");
+                                                    repaint();
+                                                }
+                                            }
+                                        });
 				}
 			}
 		};
 		return listener;
 	}
 	
-	private ActionListener newReservAction() {
-		final ActionListener theListener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final Reservation reservation = rImpl.findReservationById(Long.valueOf(rezIdField.getText()));
-				
-				reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
-				reservation.setGroupName(nameSurnameField.getText());
-				reservation.setCheckinDate(sdf.format(startDate));
-				reservation.setCheckoutDate(sdf.format(endDate));
-				reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
-				reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
-				reservation.setHostType(hostCmbBox.getSelectedItem().toString());
-				reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
-				reservation.setNote(noteTextArea.getText());
-				reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
-				reservation.setAgencyRefNo(agencyRefField.getText());
-				reservation.setReferanceNo(referanceNoField.getText());
-				reservation.setIsCheckedIn("NO");				
-				
-				final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
-				theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
-				theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
-				theRoom.setPersonCount((int)personCountSpinner.getValue());
-				theRoom.setPrice(Double.valueOf(priceField.getValue().toString()));
-				theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
-				theRoom.setCustomerGrupName(nameSurnameField.getText());
-				theRoom.setUsageStatus("BLOCKED");
-				
-				double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
-				theRoom.setTotalPrice(String.valueOf(lastPrice));
-				
-				lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
-				theRoom.setRemainingDebt(lastPrice);
-								
-				if(reservation.getPaymentStatus()) {
-					Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(theRoom.getNumber());
-					earlyPaymetModel.addRow(new Object[]{payment.getTitle(), payment.getPaymentType(), payment.getPrice(),
-							payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
-				}
-				
-				if(rezervStatusCmbBox.getSelectedItem().toString().equals("GUARANTEE") || 
-						rezervStatusCmbBox.getSelectedItem().toString().equals("WAITLIST")) {
-					
-					logging.setMessage("Reservation room details : " + theRoom.toString());
-					logging.setMessage("Reservation details : " + reservation.toString());
-					
-					rImpl.updateReservation(reservation);
-					
-					roomDaoImpl.updateRoom(theRoom);
-					
-					for(int i=0; i < model.getRowCount(); i++) {
-						Customer customer = customerDaoImpl.getSinlgeCustomerByReservId(reservation.getId());
-						customer.setFirstName(model.getValueAt(i, 2).toString());
-						customer.setLastName(model.getValueAt(i, 3).toString());
-						customerDaoImpl.update(customer);
-					}
-					
-				}else if(rezervStatusCmbBox.getSelectedItem().toString().equals("CANCEL")){
-					rImpl.deleteReservation(reservation.getId());
-					roomDaoImpl.setRoomAsDefaultByRoomNumber(reservation.getTheNumber());
-					customerDaoImpl.deleteCustomerByReservationId(reservation.getId());
-					
-				}			
-				
-			
-				dispose();
-			}
-		};
+	private ActionListener updateReservAction() {
+		final ActionListener theListener = (ActionEvent e) -> {
+                    final Reservation reservation = rImpl.findReservationById(Long.valueOf(rezIdField.getText()));
+                    
+                    reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
+                    reservation.setGroupName(nameSurnameField.getText());
+                    reservation.setCheckinDate(sdf.format(startDate));
+                    reservation.setCheckoutDate(sdf.format(endDate));
+                    reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
+                    reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
+                    reservation.setHostType(hostCmbBox.getSelectedItem().toString());
+                    reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
+                    reservation.setNote(noteTextArea.getText());
+                    reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
+                    reservation.setAgencyRefNo(agencyRefField.getText());
+                    reservation.setReferanceNo(referanceNoField.getText());
+                    reservation.setIsCheckedIn("NO");
+                    
+                    final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
+                    theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
+                    theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+                    theRoom.setPersonCount((int)personCountSpinner.getValue());
+                    theRoom.setPrice(Double.valueOf(priceField.getValue().toString()));
+                    theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
+                    theRoom.setCustomerGrupName(nameSurnameField.getText());
+                    theRoom.setUsageStatus("BLOCKED");
+                    
+                    double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
+                    theRoom.setTotalPrice(String.valueOf(lastPrice));
+                    
+                    lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
+                    theRoom.setRemainingDebt(lastPrice);
+                    
+                    if(reservation.getPaymentStatus()) {
+                        Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(theRoom.getNumber());
+                        earlyPaymetModel.addRow(new Object[]{payment.getTitle(), payment.getPaymentType(), payment.getPrice(),
+                            payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
+                    }
+                    
+                    if(rezervStatusCmbBox.getSelectedItem().toString().equals("GUARANTEE") ||
+                            rezervStatusCmbBox.getSelectedItem().toString().equals("WAITLIST")) {
+                        
+                        logging.setMessage("Reservation room details : " + theRoom.toString());
+                        logging.setMessage("Reservation details : " + reservation.toString());
+                        
+                        rImpl.updateReservation(reservation);
+                        
+                        roomDaoImpl.updateRoom(theRoom);
+                        
+                        for(int i=0; i < model.getRowCount(); i++) {
+                            Customer customer = customerDaoImpl.getSinlgeCustomerByReservId(reservation.getId());
+                            customer.setFirstName(model.getValueAt(i, 2).toString());
+                            customer.setLastName(model.getValueAt(i, 3).toString());
+                            customerDaoImpl.update(customer);
+                        }
+                        
+                    }else if(rezervStatusCmbBox.getSelectedItem().toString().equals("CANCEL")){
+                        reservation.setBookStatus("CANCEL");
+                        rImpl.updateReservation(reservation);
+                        roomDaoImpl.setRoomAsDefaultByRoomNumber(reservation.getTheNumber());
+                    }
+                    
+                    
+                    dispose();
+                };
 		return theListener;
 	}
 	
 	public ItemListener currencyActionListener() {
-		ItemListener ac = new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent event) {
-
-				final String choosed = currencyCmbBox.getSelectedItem().toString();
-				NumberFormatter nf = null;
-				DefaultFormatterFactory dfc = null;
-				priceField.removeAll();
-				
-					switch (choosed) {
-					case "TURKISH LIRA":
-						
-						formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "DOLLAR":
-						formatter.setCurrency(Currency.getInstance(Locale.US));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "EURO":
-						formatter.setCurrency(Currency.getInstance(Locale.FRANCE));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "POUND":
-						formatter.setCurrency(Currency.getInstance(Locale.UK));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					default:
-						break;
-					}
-					repaint();
-			}
-
-		};
+		ItemListener ac = (ItemEvent event) -> {
+                    final String choosed = currencyCmbBox.getSelectedItem().toString();
+                    NumberFormatter nf = null;
+                    DefaultFormatterFactory dfc = null;
+                    priceField.removeAll();
+                    
+                    switch (choosed) {
+                        case "TURKISH LIRA":
+                            
+                            formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
+                            nf = new NumberFormatter(formatter);
+                            dfc = new DefaultFormatterFactory(nf);
+                            priceField.setFormatterFactory(dfc);
+                            priceField.revalidate();
+                            priceField.repaint();
+                            break;
+                        case "DOLLAR":
+                            formatter.setCurrency(Currency.getInstance(Locale.US));
+                            nf = new NumberFormatter(formatter);
+                            dfc = new DefaultFormatterFactory(nf);
+                            priceField.setFormatterFactory(dfc);
+                            priceField.revalidate();
+                            priceField.repaint();
+                            break;
+                        case "EURO":
+                            formatter.setCurrency(Currency.getInstance(Locale.FRANCE));
+                            nf = new NumberFormatter(formatter);
+                            dfc = new DefaultFormatterFactory(nf);
+                            priceField.setFormatterFactory(dfc);
+                            priceField.revalidate();
+                            priceField.repaint();
+                            break;
+                        case "POUND":
+                            formatter.setCurrency(Currency.getInstance(Locale.UK));
+                            nf = new NumberFormatter(formatter);
+                            dfc = new DefaultFormatterFactory(nf);
+                            priceField.setFormatterFactory(dfc);
+                            priceField.revalidate();
+                            priceField.repaint();
+                            break;
+                        default:
+                            break;
+                    }
+                    repaint();
+                };
 		return ac;
 	}
 	
 	public ActionListener roomTypeActionListener() {
-		ActionListener rta = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final String TYPE = roomTypeCmbBox.getSelectedItem().toString();
-				
-				switch (TYPE) {
-				case "SINGLE":
-					personCountSpinner.setValue(1);
-					break;
-				case "DOUBLE":
-					personCountSpinner.setValue(2);
-					break;
-				case "TWIN":
-					personCountSpinner.setValue(2);
-					break;
-				case "TRIPLE":
-					personCountSpinner.setValue(3);
-					break;
-				default:
-					break;
-				}
-				repaint();
-			}
-		};
+		ActionListener rta = (ActionEvent e) -> {
+                    final String TYPE = roomTypeCmbBox.getSelectedItem().toString();
+                    
+                    switch (TYPE) {
+                        case "SINGLE":
+                            personCountSpinner.setValue(1);
+                            break;
+                        case "DOUBLE":
+                            personCountSpinner.setValue(2);
+                            break;
+                        case "TWIN":
+                            personCountSpinner.setValue(2);
+                            break;
+                        case "TRIPLE":
+                            personCountSpinner.setValue(3);
+                            break;
+                        default:
+                            break;
+                    }
+                    repaint();
+                };
 		return rta;
 	}
 	
 	public ActionListener addRoomActionListener(){
-		ActionListener acl = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
-				final String roomType = roomTypeCmbBox.getSelectedItem().toString();
-				final String currency = currencyCmbBox.getSelectedItem().toString();
-				final int personCount = (int)personCountSpinner.getValue();
-				final String val = priceField.getValue().toString();
-				priceValue = Double.valueOf(val);
-
-				Object[] row = new Object[]{roomNumber, roomType, personCount, val, currency};
-				roomCountModel.addRow(row);
-				
-				for(int i=0; i < personCount; i++) {
-					model.addRow(new Object[]{roomNumber, roomType});
-				}
-			}
-		};
+		ActionListener acl = (ActionEvent e) -> {
+                    final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
+                    final String roomType = roomTypeCmbBox.getSelectedItem().toString();
+                    final String currency = currencyCmbBox.getSelectedItem().toString();
+                    final int personCount = (int)personCountSpinner.getValue();
+                    final String val = priceField.getValue().toString();
+                    priceValue = Double.valueOf(val);
+                    
+                    Object[] row = new Object[]{roomNumber, roomType, personCount, val, currency};
+                    roomCountModel.addRow(row);
+                    
+                    for(int i=0; i < personCount; i++) {
+                        model.addRow(new Object[]{roomNumber, roomType});
+                    }
+                };
 		return acl;
 	}
 	
 	private ActionListener privateItemListener() {
-		ActionListener listener = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//again populate the list with not blocked rooms
-				ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
-				final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
-				if(!roomNumber.isEmpty()) {
-					Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
-					roomTypeCmbBox.setSelectedItem(theRoom.getType());
-				}
-				repaint();
-				
-			}
-		};
+		ActionListener listener = (ActionEvent e) -> {
+                    //again populate the list with not blocked rooms
+                    ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
+                    final String roomNumber = roomNumCmbBox.getSelectedItem().toString();
+                    if(!roomNumber.isEmpty()) {
+                        Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
+                        roomTypeCmbBox.setSelectedItem(theRoom.getType());
+                    }
+                    repaint();
+                };
 		return listener;
 	}
 	
 	private ActionListener prepareReportListener() {
-		final ActionListener listener = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				final ShowReport report = new ShowReport();
-	
-				report.loadReport("ReservationForm", getReportBean());
-				report.showReport();
-				logging.setMessage("Reservation is reporting.");
-
-			}
-		};
+		final ActionListener listener = (ActionEvent e) -> {
+                    final ShowReport report = new ShowReport();
+                    
+                    report.loadReport("ReservationForm", getReportBean());
+                    report.showReport();
+                    logging.setMessage("Reservation is reporting.");
+                };
 		return listener;
 	}
 	

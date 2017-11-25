@@ -244,17 +244,27 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
         session.close();
     }
 
-    @SuppressWarnings("rawtypes")
     public void setRoomAsDefaultByRoomNumber(String theNumber) {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
             beginTransactionIfAllowed(session);
 
-            Query query = session
-                    .createQuery("update room set price=0, totalPrice=0, balance=0, cleaningStatus='CLEAN',"
-                            + " usageStatus='EMPTY', personCount=0, customerGroupName=' ', ReservationId=0, currency=' ', remainingDebt=0 "
-                            + "where number=:theNumber");
+            Query query = session .createQuery("UPDATE Room SET price = :price, totalPrice = :total,"
+                    + " balance = :balance, cleaningStatus = :clnSts, usageStatus = :usgSts, "
+                    + "personCount = :prsnCnt, customerGroupName = :groupName, ReservationId = :reservId, "
+                    + "currency = :currency, remainingDebt = :debt WHERE number = :theNumber");
+            
+            query.setParameter("price", 0);
+            query.setParameter("total", "0");
+            query.setParameter("balance", "0");
+            query.setParameter("clnSts", "CLEAN");
+            query.setParameter("usgSts", "EMPTY");
+            query.setParameter("prsnCnt", 0);
+            query.setParameter("groupName", "");
+            query.setParameter("reservId", 0);
+            query.setParameter("currency", "TURKISH LIRA");
+            query.setParameter("debt", 0);
             query.setParameter("theNumber", theNumber);
             query.executeUpdate();
             session.getTransaction().commit();

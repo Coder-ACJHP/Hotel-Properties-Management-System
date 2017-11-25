@@ -84,7 +84,7 @@ public class AllReservationsWindow extends JFrame {
     private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
 	final String [] columnNames = {"ID", "GROUP NAME", "CHECKIN ", "CHECKOUT", "AGENCY", 
 			"AGENCY REF NO", "ROOM NUMBER", "TOTAL DAYS", "HOST TYPE", "PAYMENT STATUS", "BOOK STATUS"};
-	private DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+	private final DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 	private JButton btnFetch;
 	/**
      * Creates new form AllReservationsWindow
@@ -232,12 +232,14 @@ public class AllReservationsWindow extends JFrame {
         reservationTable.setColumnSelectionAllowed(false);
         reservationTable.setCellSelectionEnabled(false);
         reservationTable.setRowSelectionAllowed(true);
+        
         reservationTable.setDefaultRenderer(Object.class, CTR);
         reservationTable.addMouseListener(rowSelectorListener());
         reservationTable.getTableHeader().setDefaultRenderer(THR);
         reservationTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         mainPanelScroller.setViewportView(reservationTable);
         tableRowSorter = new TableRowSorter<>(model);
+        reservationTable.setRowSorter(tableRowSorter);
         reservationTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (reservationTable.getColumnModel().getColumnCount() > 0) {
             reservationTable.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -262,7 +264,7 @@ public class AllReservationsWindow extends JFrame {
         searchField.addKeyListener(new KeyAdapter() {
 		
             @Override
-			public void keyTyped(KeyEvent evt) {
+	    public void keyTyped(KeyEvent evt) {
                 searchFieldKeyTyped(evt);
             }
         });

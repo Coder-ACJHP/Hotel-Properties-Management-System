@@ -77,7 +77,7 @@ import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
 
-public class Main_Blockade extends JPanel implements ActionListener {
+public final class Main_Blockade extends JPanel implements ActionListener {
 
     /**
      *
@@ -116,21 +116,22 @@ public class Main_Blockade extends JPanel implements ActionListener {
     private static final SessionBean S_BEAN = SessionBean.getSESSION_BEAN();
 
     final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    private JTable table, blokajTable, blokajRoomsTable, blokajCustomerTable;
-    private JSplitPane mainVerticalSplitter, leftCenterSplitter, centerRightSplitter;
-    private JScrollPane generalScrollPane, blokajScrollPane, roomScrollPane, customerScrollPane;
+    private final JTable blokajTable, blokajRoomsTable, blokajCustomerTable, table;
+    private final JSplitPane mainVerticalSplitter;
+    private final JSplitPane leftCenterSplitter, centerRightSplitter;
+    private final JScrollPane blokajScrollPane, roomScrollPane, customerScrollPane, generalScrollPane;
 
     private final String[] bottomTableHeader = new String[10];
-    private DefaultTableModel model = new DefaultTableModel(bottomTableHeader, 0);
+    private final DefaultTableModel model = new DefaultTableModel(bottomTableHeader, 0);
 
     private final String[] blokajColsName = {"REZERV. NO", "GROUP", "AGENCY", "CHECK/IN", "CHECK/OUT", "EARLY PAY"};
-    private DefaultTableModel blokajModel = new DefaultTableModel(blokajColsName, 0);
+    private final DefaultTableModel blokajModel = new DefaultTableModel(blokajColsName, 0);
 
     private final String[] blokajRoomsColsName = {"ROOM", "TYPE", "PERSON COUNT"};
-    private DefaultTableModel blokajRoomsModel = new DefaultTableModel(blokajRoomsColsName, 0);
+    private final DefaultTableModel blokajRoomsModel = new DefaultTableModel(blokajRoomsColsName, 0);
 
     private final String[] blokajCustomerColsName = {"FIRSTNAME", "LASTNAME"};
-    private DefaultTableModel blokajCustomerModel = new DefaultTableModel(blokajCustomerColsName, 0);
+    private final DefaultTableModel blokajCustomerModel = new DefaultTableModel(blokajCustomerColsName, 0);
 
     private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
     private final BlockadeTableHeaderRenderer THRC = new BlockadeTableHeaderRenderer();
@@ -240,7 +241,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 
         cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         THR.setHorizontalAlignment(SwingConstants.CENTER);
-        tableRowShorter = new TableRowSorter<DefaultTableModel>(model);
+        tableRowShorter = new TableRowSorter<>(model);
 
         table = new JTable(model);
         table.getTableHeader().setDefaultRenderer(THR);
@@ -402,7 +403,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
 
     public void populateTableHeaders() {
 
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         final Calendar c = Calendar.getInstance();
         c.setTime(masterDate.getTime());
 
@@ -424,7 +425,7 @@ public class Main_Blockade extends JPanel implements ActionListener {
         //populated up and the loop on 10 to get one week 
         for (int i = 3; i < 10; i++) {
             c.add(Calendar.DATE, 1);
-            today = sdf.format(c.getTime());
+            today = simpleDateFormat.format(c.getTime());
             tableColumn = tableColumnModel.getColumn(i);
             tableColumn.setHeaderValue(today);
 
@@ -698,12 +699,8 @@ public class Main_Blockade extends JPanel implements ActionListener {
                 nex.setVisible(true);
 
             } catch (RuntimeException ex) {
-
-                final InformationFrame INFORMATION_FRAME = new InformationFrame();
-                INFORMATION_FRAME.setMessage("Encountered a problem!" + ex.getMessage());
-                INFORMATION_FRAME.setVisible(true);
+                loggingEngine.setMessage("Encountered problem with updating reservation!");
                 new DataSourceFactory().getTransaction().rollback();
-                return;
             }
 
         }
@@ -721,17 +718,12 @@ public class Main_Blockade extends JPanel implements ActionListener {
 
     //this listener for changing table headers when date chosen from date component.
     private PropertyChangeListener customPropListener() {
-        final PropertyChangeListener propListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("date".equals(evt.getPropertyName())) {
-                    masterDate.setTime((Date) evt.getNewValue());
-                    populateTableHeaders();
-                    populateBlokajTable(blokajModel);
-                    populateMainTable(model);
-                }
-
+        final PropertyChangeListener propListener = (PropertyChangeEvent evt) -> {
+            if ("date".equals(evt.getPropertyName())) {
+                masterDate.setTime((Date) evt.getNewValue());
+                populateTableHeaders();
+                populateBlokajTable(blokajModel);
+                populateMainTable(model);
             }
         };
         return propListener;

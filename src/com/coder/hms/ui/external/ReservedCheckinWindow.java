@@ -283,8 +283,8 @@ public class ReservedCheckinWindow extends JDialog implements ActionListener {
 				customerList.get(1).setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
 				customerList.get(1).setReservationId(foundedReserv.getId());
 				
-				customerDaoImpl.save(customerList.get(0));
-				customerDaoImpl.save(customerList.get(1));
+				customerDaoImpl.update(customerList.get(0));
+				customerDaoImpl.update(customerList.get(1));
 				
 				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(0).toString());
 				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(1).toString());
@@ -325,8 +325,8 @@ public class ReservedCheckinWindow extends JDialog implements ActionListener {
 				customerList.get(2).setReservationId(foundedReserv.getId());
 				
 				customerDaoImpl.update(customerList.get(0));
-				customerDaoImpl.save(customerList.get(1));
-				customerDaoImpl.save(customerList.get(2));
+				customerDaoImpl.update(customerList.get(1));
+				customerDaoImpl.update(customerList.get(2));
 				
 				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(0).toString());
 				loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(1).toString());
