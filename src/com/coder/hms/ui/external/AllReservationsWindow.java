@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -318,7 +319,7 @@ public class AllReservationsWindow extends JFrame {
                                 }
  				 
  				 selectedReservationId = Long.parseLong(String.valueOf(reservationTable.getValueAt(selectedIndex, 0)));
- 				 
+ 				 System.out.println(selectedReservationId);
  				super.mouseClicked(e);
  			}
  			
@@ -343,57 +344,59 @@ public class AllReservationsWindow extends JFrame {
         String customerCountry = "";
         final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
         final List<Room> roomList = roomDaoImpl.getAllRooms();
-        final  PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
+        final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
         final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
         final List<Customer> customerList = customerDaoImpl.getAllCustomers();
 
         
             final ReportObject reportBean = new ReportObject();
-            Reservation foundRes = theReservation;
 
-            loggingEngine.setMessage("[Blockade window] Required reservation found : " + foundRes.toString());
+            loggingEngine.setMessage("[Blockade window] Required reservation found : " + theReservation.toString());
             final UpdateReservationWindow nex = new UpdateReservationWindow();
 
             for (Room searchedRoom : roomList) {
-                if (searchedRoom.getReservationId() == foundRes.getId()) {
+                if (searchedRoom.getReservationId() == theReservation.getId()) {
                     room = searchedRoom;
+                    System.out.println(room.toString());
                 }
             }
-
+            
+            List<Object[]> objList = new ArrayList<>();
             for (Customer cst : customerList) {
-                if (cst.getReservationId() == foundRes.getId()) {
+                if (cst.getReservationId() == theReservation.getId()) {
                     customerCountry = cst.getCountry();
-                    nex.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(), cst.getFirstName(),
-                        cst.getLastName()});
+                    objList.add(new Object[]{room.getNumber(), room.getType(), cst.getFirstName(), cst.getLastName()});
+                    nex.setRoomInfoTableRows(objList);
                 }
             }
+            
             reportBean.setUserName(S_BEAN.getNickName());
 
-            nex.setRezIdField(foundRes.getId());
-            reportBean.setId(foundRes.getId());
+            nex.setRezIdField(theReservation.getId());
+            reportBean.setId(theReservation.getId());
 
-            nex.setNameSurnameField(foundRes.getGroupName());
-            reportBean.setGroupName(foundRes.getGroupName());
+            nex.setNameSurnameField(theReservation.getGroupName());
+            reportBean.setGroupName(theReservation.getGroupName());
 
-            nex.setCheckinDate(foundRes.getCheckinDate());
-            reportBean.setCheckinDate(foundRes.getCheckinDate());
+            nex.setCheckinDate(theReservation.getCheckinDate());
+            reportBean.setCheckinDate(theReservation.getCheckinDate());
 
-            nex.setCheckoutDate(foundRes.getCheckoutDate());
-            reportBean.setCheckoutDate(foundRes.getCheckoutDate());
+            nex.setCheckoutDate(theReservation.getCheckoutDate());
+            reportBean.setCheckoutDate(theReservation.getCheckoutDate());
 
-            nex.setTotalDaysField(foundRes.getTotalDays());
-            reportBean.setTotalDays(foundRes.getTotalDays());
+            nex.setTotalDaysField(theReservation.getTotalDays());
+            reportBean.setTotalDays(theReservation.getTotalDays());
 
-            nex.setReservNote(foundRes.getNote());
+            nex.setReservNote(theReservation.getNote());
 
-            nex.setAgency(foundRes.getAgency());
-            reportBean.setAgency(foundRes.getAgency());
+            nex.setAgency(theReservation.getAgency());
+            reportBean.setAgency(theReservation.getAgency());
 
-            nex.setHostType(foundRes.getHostType());
-            reportBean.setHostType(foundRes.getHostType());
+            nex.setHostType(theReservation.getHostType());
+            reportBean.setHostType(theReservation.getHostType());
 
-            nex.setCreditType(foundRes.getCreditType());
-            nex.setReservStatus(foundRes.getBookStatus());
+            nex.setCreditType(theReservation.getCreditType());
+            nex.setReservStatus(theReservation.getBookStatus());
 
             nex.setRoomNumber(room.getNumber());
             reportBean.setTheNumber(room.getNumber());
@@ -409,16 +412,16 @@ public class AllReservationsWindow extends JFrame {
             nex.setCurrency(room.getCurrency());
             reportBean.setType(room.getCurrency());
 
-            nex.setAgencyRefNo(foundRes.getAgencyRefNo());
-            reportBean.setAgencyRefNo(foundRes.getAgencyRefNo());
+            nex.setAgencyRefNo(theReservation.getAgencyRefNo());
+            reportBean.setAgencyRefNo(theReservation.getAgencyRefNo());
 
-            nex.setReferanceNo(foundRes.getReferanceNo());
+            nex.setReferanceNo(theReservation.getReferanceNo());
             nex.setCustomerCountry(customerCountry);
 
             nex.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(), room.getPersonCount(),
                 room.getPrice(), room.getCurrency()});
 
-            if (foundRes.getPaymentStatus()) {
+            if (theReservation.getPaymentStatus()) {
 
                 payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
                 nex.setEarlyPaymetTableRows(

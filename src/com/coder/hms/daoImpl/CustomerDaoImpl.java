@@ -164,13 +164,15 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 	}
 	
 	@Override
-	public Customer getSinlgeCustomerByReservId(long id) {
+	public Customer getSinlgeCustomerByReservId(long id, String name) {
 		Customer theCustomer = null;
 		try {
 			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
-			Query<Customer> query = session.createQuery("from Customer where ReservationId=:theId", Customer.class);
+			Query<Customer> query = session.createQuery("from Customer where ReservationId=:theId and FirstName=:name", Customer.class);
 			query.setParameter("theId", id);
+			query.setParameter("name", name);
+			query.setMaxResults(1);
 			
 			theCustomer = query.getSingleResult();
 			logging.setMessage("CustomerDaoImpl -> fetched customer successfully :"+theCustomer.toString());
@@ -182,7 +184,7 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 		} finally {
 			session.close();
 		}
-                return theCustomer;
+           return theCustomer;
 	}
 	
 	@Override

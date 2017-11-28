@@ -23,5 +23,5 @@ public interface CustomerDAO {
 	
 	public void deleteCustomerByReservationId(long id);
 	
-	public Customer getSinlgeCustomerByReservId(long id);
+	public Customer getSinlgeCustomerByReservId(long id, String name);
 }

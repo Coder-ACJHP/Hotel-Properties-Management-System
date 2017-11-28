@@ -5,7 +5,6 @@
  */
 package com.coder.hms.ui.main;
 
-import com.coder.hms.beans.LocaleBean;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -38,6 +37,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.text.DefaultEditorKit;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.HotelSystemStatusImpl;
@@ -179,7 +179,7 @@ public class Main_AllRooms {
 
                         if (ROOM_STATUS.equals("FULL")) {
 
-                            if (checkoutDate.equals(defaultDate) || checkoutDate.before(defaultDate)) {
+                            if (checkoutDate.equals(defaultDate) && checkoutDate.after(defaultDate)) {
                                 roomBtn.setBackground(Color.decode("#990033"));
                             } else {
                                 roomBtn.setForeground(Color.WHITE);

@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -76,7 +77,6 @@ import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
 import com.toedter.calendar.JDateChooser;
-import java.text.ParseException;
 
 public final class Main_Blockade extends JPanel implements ActionListener {
 
@@ -615,11 +615,13 @@ public final class Main_Blockade extends JPanel implements ActionListener {
                     }
                 }
 
+                List<Object[]> objList = new ArrayList<>();
                 for (Customer cst : customerList) {
                     if (cst.getReservationId() == foundRes.getId()) {
                         customerCountry = cst.getCountry();
-                        nex.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(), cst.getFirstName(),
-                            cst.getLastName()});
+                        objList.add(new Object[]{room.getNumber(), room.getType(), cst.getFirstName(),
+                                cst.getLastName()});
+                        nex.setRoomInfoTableRows(objList);
                     }
                 }
                 reportBean.setUserName(S_BEAN.getNickName());

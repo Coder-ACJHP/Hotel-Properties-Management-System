@@ -24,6 +24,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -42,7 +43,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import com.coder.hms.utils.CustomKeyDispatcher;
 import com.apple.eawt.Application;
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.beans.SessionBean;
@@ -52,14 +52,10 @@ import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.ui.inner.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
 import com.coder.hms.utils.ChangeComponentOrientation;
+import com.coder.hms.utils.CustomKeyDispatcher;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.PropertiesReader;
 import com.coder.hms.utils.ResourceControl;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.time.format.FormatStyle;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  * @author Coder ACJHP

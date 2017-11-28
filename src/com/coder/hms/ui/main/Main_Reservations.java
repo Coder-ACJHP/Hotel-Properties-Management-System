@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +52,7 @@ import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.AllReservationsWindow;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.ui.external.NewReservationWindow;
+import com.coder.hms.ui.external.UpdateReservationWindow;
 import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
 import com.coder.hms.ui.extras.ReservationTableRenderer;
 import com.coder.hms.utils.ChangeComponentOrientation;
@@ -286,215 +288,108 @@ public class Main_Reservations extends JPanel {
 
     }
 
-    public ActionListener findRezervation() {
+	public ActionListener findRezervation() {
 
-        final ActionListener listener = new ActionListener() {
+		final ActionListener listener = new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-                final NewReservationWindow reservationPane = new NewReservationWindow();
+				final UpdateReservationWindow reservationPane = new UpdateReservationWindow();
 
-                String customerCountry = "";
-                String customerName = "";
-                String customerSurName = "";
+				String customerCountry = "";
+				Reservation theReservation = null;
 
-                if (agencyRefField.getText().length() > 0) {
+				if (agencyRefField.getText().length() > 0) {
 
-                    logging.setMessage("Searching reservation with AGENCY REFERANCE NUMBER : " + agencyRefField.getText());
+					logging.setMessage(
+							"Searching reservation with AGENCY REFERANCE NUMBER : " + agencyRefField.getText());
 
-                    Reservation theReservation = reservationDaoImpl.findReservationByAgencyRefNo(agencyRefField.getText());
+					theReservation = reservationDaoImpl.findReservationByAgencyRefNo(agencyRefField.getText());
 
-                    if (theReservation != null) {
+				} else if (refNoField.getText().length() > 0) {
 
-                        logging.setMessage("Reservation found : " + theReservation.toString());
+					logging.setMessage("Searching reservation by REFERANCE NO : " + refNoField.getText());
 
-                        List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReservation.getId());
+					theReservation = reservationDaoImpl.findReservationByRefNo(refNoField.getText());
 
-                        Room room = roomDaoImpl.getRoomByReservId(theReservation.getId());
+				} else {
 
-                        for (Customer cst : customerList) {
-                            customerCountry = cst.getCountry();
-                            customerName = cst.getFirstName();
-                            customerSurName = cst.getLastName();
-                        }
+					// get dates from date pickers
+					final LocalDate startDate = startDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					final LocalDate endDate = endDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-                        reservationPane.setRezIdField(theReservation.getId());
-                        reservationPane.setNameSurnameField(theReservation.getGroupName());
-                        reservationPane.setCheckinDate(theReservation.getCheckinDate());
-                        reservationPane.setCheckoutDate(theReservation.getCheckoutDate());
-                        reservationPane.setTotalDaysField(theReservation.getTotalDays());
-                        reservationPane.setReservNote(theReservation.getNote());
-                        reservationPane.setAgency(theReservation.getAgency());
-                        reservationPane.setHostType(theReservation.getHostType());
-                        reservationPane.setCreditType(theReservation.getCreditType());
-                        reservationPane.setReservStatus(theReservation.getBookStatus());
-                        reservationPane.setReferanceNo(theReservation.getReferanceNo());
-                        reservationPane.setAgencyRefNo(theReservation.getAgencyRefNo());
-                        reservationPane.setRoomNumber(room.getNumber());
-                        reservationPane.setRoomType(room.getType());
-                        reservationPane.setPersonCountSpinner(room.getPersonCount());
-                        reservationPane.setPriceOfRoom(room.getPrice());
-                        reservationPane.setCurrency(room.getCurrency());
-                        reservationPane.setCustomerCountry(customerCountry);
+					logging.setMessage("Searching reservation by DATE : " + startDate + ":" + endDate);
 
-                        reservationPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
-                            room.getPersonCount(), room.getPrice(), room.getCurrency()});
+					// compare if start date greater than end date
+					if (startDate.isAfter(endDate)) {
+						JOptionPane.showMessageDialog(null, "Start date is after end date!",
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					} // or both is same date
+					else if (startDate.equals(endDate)) {
+						JOptionPane.showMessageDialog(null,
+								"Start date equals end date!\nPlease be sure you're choose right date.",
+								JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+					} 
+					else {
 
-                        reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
-                            customerName, customerSurName});
+						theReservation = reservationDaoImpl.findSingleReservByThisDate(startDate.toString());
+						logging.setMessage("Reservation found : " + theReservation.toString());
+					}
+				}
 
-                        if (theReservation.getPaymentStatus()) {
+				if (theReservation != null) {
 
-                            Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
-                            reservationPane.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
-                                payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
-                            final InformationFrame infoFrame = new InformationFrame();
-                            infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
-                            infoFrame.setVisible(true);
-                        }
+					final List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReservation.getId());
+					final Room room = roomDaoImpl.getRoomByReservId(theReservation.getId());
 
-                        reservationPane.setVisible(true);
+					reservationPane.setRezIdField(theReservation.getId());
+					reservationPane.setNameSurnameField(theReservation.getGroupName());
+					reservationPane.setCheckinDate(theReservation.getCheckinDate());
+					reservationPane.setCheckoutDate(theReservation.getCheckoutDate());
+					reservationPane.setTotalDaysField(theReservation.getTotalDays());
+					reservationPane.setReservNote(theReservation.getNote());
+					reservationPane.setAgency(theReservation.getAgency());
+					reservationPane.setHostType(theReservation.getHostType());
+					reservationPane.setCreditType(theReservation.getCreditType());
+					reservationPane.setReservStatus(theReservation.getBookStatus());
+					reservationPane.setReferanceNo(theReservation.getReferanceNo());
+					reservationPane.setAgencyRefNo(theReservation.getAgencyRefNo());
+					reservationPane.setRoomNumber(room.getNumber());
+					reservationPane.setRoomType(room.getType());
+					reservationPane.setPersonCountSpinner(room.getPersonCount());
+					reservationPane.setPriceOfRoom(room.getPrice());
+					reservationPane.setCurrency(room.getCurrency());
+					reservationPane.setCustomerCountry(customerCountry);
 
-                    } else {
-                        logging.setMessage("Reservation not found!");
-                        return;
-                    }
-                } else if (refNoField.getText().length() > 0) {
+					reservationPane.setRoomCountTableRows(new Object[] { room.getNumber(), room.getType(),
+							room.getPersonCount(), room.getPrice(), room.getCurrency() });
 
-                    logging.setMessage("Searching reservation by REFERANCE NO : " + refNoField.getText());
+					List<Object[]> objList = new ArrayList<>();
+					for (Customer cst : customerList) {
+						if (cst.getReservationId() == theReservation.getId()) {
+							customerCountry = cst.getCountry();
+							objList.add(
+									new Object[] { room.getNumber(), room.getType(), cst.getFirstName(), cst.getLastName() });
+							reservationPane.setRoomInfoTableRows(objList);
+						}
+					}
 
-                    Reservation theReserv = reservationDaoImpl.findReservationByRefNo(refNoField.getText());
+					if (theReservation.getPaymentStatus()) {
 
-                    if (theReserv != null) {
+						Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
+						reservationPane.setEarlyPaymetTableRows(
+								new Object[] { payment.getTitle(), payment.getPaymentType(), payment.getPrice(),
+										payment.getCurrency(), payment.getExplanation(), payment.getDateTime() });
+						final InformationFrame infoFrame = new InformationFrame();
+						infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
+						infoFrame.setVisible(true);
+					}
 
-                        logging.setMessage("Reservation found : " + theReserv.toString());
-
-                        List<Customer> customerList = customerDaoImpl.getCustomerByReservId(theReserv.getId());
-
-                        Room room = roomDaoImpl.getRoomByReservId(theReserv.getId());
-
-                        for (Customer cst : customerList) {
-                            customerCountry = cst.getCountry();
-                            customerName = cst.getFirstName();
-                            customerSurName = cst.getLastName();
-                        }
-
-                        reservationPane.setRezIdField(theReserv.getId());
-                        reservationPane.setNameSurnameField(theReserv.getGroupName());
-                        reservationPane.setCheckinDate(theReserv.getCheckinDate());
-                        reservationPane.setCheckoutDate(theReserv.getCheckoutDate());
-                        reservationPane.setTotalDaysField(theReserv.getTotalDays());
-                        reservationPane.setReservNote(theReserv.getNote());
-                        reservationPane.setAgency(theReserv.getAgency());
-                        reservationPane.setHostType(theReserv.getHostType());
-                        reservationPane.setCreditType(theReserv.getCreditType());
-                        reservationPane.setReservStatus(theReserv.getBookStatus());
-                        reservationPane.setReferanceNo(theReserv.getReferanceNo());
-                        reservationPane.setAgencyRefNo(theReserv.getAgencyRefNo());
-                        reservationPane.setRoomNumber(room.getNumber());
-                        reservationPane.setRoomType(room.getType());
-                        reservationPane.setPersonCountSpinner(room.getPersonCount());
-                        reservationPane.setPriceOfRoom(room.getPrice());
-                        reservationPane.setCurrency(room.getCurrency());
-                        reservationPane.setCustomerCountry(customerCountry);
-
-                        reservationPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
-                            room.getPersonCount(), room.getPrice(), room.getCurrency()});
-
-                        reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
-                            customerName, customerSurName});
-
-                        if (theReserv.getPaymentStatus()) {
-
-                            Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
-                            reservationPane.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
-                                payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
-                            final InformationFrame infoFrame = new InformationFrame();
-                            infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
-                            infoFrame.setVisible(true);
-                        }
-
-                        reservationPane.setVisible(true);
-                    } else {
-                        logging.setMessage("Reservation not found!");
-                        return;
-                    }
-
-                } else {
-
-                    //get dates from date pickers
-                    final LocalDate startDate = startDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    final LocalDate endDate = endDatePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-                    logging.setMessage("Searching reservation by DATE : " + startDate + ":" + endDate);
-
-                    //compare if start date greater than end date
-                    if (startDate.isAfter(endDate)) {
-                        JOptionPane.showMessageDialog(null, "Start date is after end date!",
-                                JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-                    } //or both is same date
-                    else if (startDate.equals(endDate)) {
-                        JOptionPane.showMessageDialog(null, "Start date equals end date!\nPlease be sure you're choose right date.",
-                                JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-                    } //other odds
-                    else {
-
-                        Reservation reservation = reservationDaoImpl.findSingleReservByThisDate(startDate.toString());
-
-                        List<Customer> customerList = customerDaoImpl.getCustomerByReservId(reservation.getId());
-
-                        Room room = roomDaoImpl.getRoomByReservId(reservation.getId());
-
-                        for (Customer cst : customerList) {
-                            customerCountry = cst.getCountry();
-                            customerName = cst.getFirstName();
-                            customerSurName = cst.getLastName();
-                        }
-
-                        reservationPane.setRezIdField(reservation.getId());
-                        reservationPane.setNameSurnameField(reservation.getGroupName());
-                        reservationPane.setCheckinDate(reservation.getCheckinDate());
-                        reservationPane.setCheckoutDate(reservation.getCheckoutDate());
-                        reservationPane.setTotalDaysField(reservation.getTotalDays());
-                        reservationPane.setReservNote(reservation.getNote());
-                        reservationPane.setAgency(reservation.getAgency());
-                        reservationPane.setHostType(reservation.getHostType());
-                        reservationPane.setCreditType(reservation.getCreditType());
-                        reservationPane.setReservStatus(reservation.getBookStatus());
-                        reservationPane.setReferanceNo(reservation.getReferanceNo());
-                        reservationPane.setAgencyRefNo(reservation.getAgencyRefNo());
-                        reservationPane.setRoomNumber(room.getNumber());
-                        reservationPane.setRoomType(room.getType());
-                        reservationPane.setPersonCountSpinner(room.getPersonCount());
-                        reservationPane.setPriceOfRoom(room.getPrice());
-                        reservationPane.setCurrency(room.getCurrency());
-                        reservationPane.setCustomerCountry(customerCountry);
-
-                        reservationPane.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(),
-                            room.getPersonCount(), room.getPrice(), room.getCurrency()});
-
-                        reservationPane.setRoomInfoTableRows(new Object[]{room.getNumber(), room.getType(),
-                            customerName, customerSurName});
-
-                        if (reservation.getPaymentStatus()) {
-
-                            Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
-                            reservationPane.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
-                                payment.getPrice(), payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
-                            final InformationFrame infoFrame = new InformationFrame();
-                            infoFrame.setMessage("Early payment : " + payment.getPrice() + payment.getCurrency());
-                            infoFrame.setVisible(true);
-                        }
-
-                        reservationPane.setVisible(true);
-
-                        logging.setMessage("Reservation found : " + reservation.toString());
-                    }
-                }
-
-            }
-        };
-        return listener;
-    }
+					reservationPane.setVisible(true);
+				}
+			}
+		};
+		return listener;
+	}
 }

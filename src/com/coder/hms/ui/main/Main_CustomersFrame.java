@@ -5,7 +5,6 @@
  */
 package com.coder.hms.ui.main;
 
-import com.coder.hms.beans.LocaleBean;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -31,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.entities.Customer;
@@ -173,7 +173,7 @@ public class Main_CustomersFrame extends JPanel {
             final Reservation reservation = reservationDaoImpl.findReservationById(cust.getReservationId());
 
             if (reservation == null) {
-                return;
+                continue;
             }
 
             final Object[] customerObject = new Object[]{reservation.getTheNumber(), reservation.getId(),

@@ -250,7 +250,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
             session = dataSourceFactory.getSessionFactory().openSession();
             beginTransactionIfAllowed(session);
 
-            Query query = session .createQuery("UPDATE Room SET price = :price, totalPrice = :total,"
+            Query<?> query = session .createQuery("UPDATE Room SET price = :price, totalPrice = :total,"
                     + " balance = :balance, cleaningStatus = :clnSts, usageStatus = :usgSts, "
                     + "personCount = :prsnCnt, customerGroupName = :groupName, ReservationId = :reservId, "
                     + "currency = :currency, remainingDebt = :debt WHERE number = :theNumber");

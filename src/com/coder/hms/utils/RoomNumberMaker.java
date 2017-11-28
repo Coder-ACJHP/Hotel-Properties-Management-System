@@ -49,7 +49,7 @@ public class RoomNumberMaker {
 		return roomNumbers;
 	}
 	
-	public Object[] getNotReservedRooms(final String date) {
+public Object[] getNotReservedRooms(final String date) {
 		
 		//get All reserved room numbers
 		final ReservationDaoImpl rImpl = new ReservationDaoImpl();

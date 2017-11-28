@@ -68,8 +68,8 @@ import com.coder.hms.entities.ReportObject;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
 import com.coder.hms.utils.LoggingEngine;
-import com.coder.hms.utils.ShowReport;
 import com.coder.hms.utils.RoomNumberMaker;
+import com.coder.hms.utils.ShowReport;
 import com.toedter.calendar.JDateChooser;
 
 public class NewReservationWindow extends JDialog {
