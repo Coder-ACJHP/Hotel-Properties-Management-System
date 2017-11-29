@@ -67,9 +67,11 @@ search your reservation with date, referance number or agency referange number, 
 <h2>System log interior window : </h2>
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/systemLog.png">
 <hr>
+<h2>All reservations window</h2>
+<img src="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/blob/master/src/Screenshots/allReservations.png">
+<hr>
 <h2>Reporting Section</h2>
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/Screenshots/reportWindow.png">
-<hr>
 and more...
 
 <h1>How to use?</h1>
@@ -115,6 +117,14 @@ Add this line in your database to create event : <code>create event dailyAudit o
   <li>Hotel properties window renewed and fixed issues</li> 
   <li>Prepare database button moved to new menubar section (utils)</li>
   <li>Fixed Hibernate transaction & session errors</li>
+</ul>
+<h2>New Features v1.3.2  <b>29/11/2017</b></h2>
+<ul>
+  <li>New release platform independed and MacOS v1.3.2</li>
+  <li>Added show and edit property to all reservation window</li>
+  <li>Added show and edit property to all customers window</li>
+  <li>Credit card payment added to new transaction window & cash desk</li>
+  <li>A lot of code lines & algorithms refactored</li>
 </ul>
 <h2>Another questions ?</h2> 
 For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
