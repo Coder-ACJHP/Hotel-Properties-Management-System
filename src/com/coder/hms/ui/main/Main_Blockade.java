@@ -468,7 +468,7 @@ public final class Main_Blockade extends JPanel implements ActionListener {
             //header date and finally populate the table.                     //
             for (int listIndex = 0; listIndex < resList.size(); listIndex++) {
 
-                if (blockade.getNumber().equals(resList.get(listIndex).getTheNumber())) {
+                if (blockade.getNumber().equals(resList.get(listIndex).getRentedRoomNum())) {
 
                     
                     for (int rowIndex = 3; rowIndex < weekDates.length; rowIndex++) {

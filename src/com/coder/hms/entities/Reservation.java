@@ -6,6 +6,7 @@
 package com.coder.hms.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,315 +16,354 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Reservation")
-public class Reservation implements Serializable{
+@Table(name = "Reservation")
+public class Reservation implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="Id")
-	private long Id;
-	
-	@Column(name="groupName")
-	private String groupName;
-	
-	@Column(name="checkinDate")
-	private String checkinDate;
-	
-	@Column(name="checkoutDate")
-	private String checkoutDate;
-	
-	@Column(name="totalDays")
-	private int totalDays;
-	
-	@Column(name="agency")
-	private String agency;
-	
-	@Column(name="hostType")
-	private String hostType;
-	
-	@Column(name="creditType")
-	private String creditType;
-	
-	@Column(name="bookStatus")
-	private String bookStatus;
-	
-	@Column(name="note")
-	private String note;
-	
-	@Column(name="paymentStatus")
-	private boolean paymentStatus;
-	
-	//room id for hiring new room
-	@Column(name="theNumber")
-	private String theNumber;
-	
-	@Column(name="isCheckedIn")
-	private String isCheckedIn;
-	
-	@Column(name="agencyRefNo")
-	private String agencyRefNo;
-	
-	@Column(name="referanceNo")
-	private String referanceNo;
-	
-	public Reservation() {
-		// TODO Auto-generated constructor stub
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
+    private long Id;
 
-	public long getId() {
-		return Id;
-	}
+    @Column(name = "groupName")
+    private String groupName;
 
-	public void setId(long id) {
-		Id = id;
-	}
+    @Column(name = "checkinDate")
+    private String checkinDate;
 
-	public String getGroupName() {
-		return groupName;
-	}
+    @Column(name = "checkoutDate")
+    private String checkoutDate;
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
+    @Column(name = "totalDays")
+    private int totalDays;
 
-	public String getCheckinDate() {
-		return checkinDate;
-	}
+    @Column(name = "agency")
+    private String agency;
 
-	public void setCheckinDate(String checkinDate) {
-		this.checkinDate = checkinDate;
-	}
+    @Column(name = "hostType")
+    private String hostType;
 
-	public String getCheckoutDate() {
-		return checkoutDate;
-	}
+    @Column(name = "creditType")
+    private String creditType;
 
-	public void setCheckoutDate(String checkoutDate) {
-		this.checkoutDate = checkoutDate;
-	}
+    @Column(name = "bookStatus")
+    private String bookStatus;
 
-	public int getTotalDays() {
-		return totalDays;
-	}
+    @Column(name = "note")
+    private String note;
 
-	public void setTotalDays(int totalDays) {
-		this.totalDays = totalDays;
-	}
+    @Column(name = "paymentStatus")
+    private boolean paymentStatus;
 
-	public String getAgency() {
-		return agency;
-	}
+    //we need to hiring room details because when the room
+    //putting at default after checkout still we need reservation
+    //details and that window included some room details.
+    @Column(name = "rentedRoomNum")
+    private String rentedRoomNum;
 
-	public void setAgency(String agency) {
-		this.agency = agency;
-	}
+    @Column(name = "rentedRoomType")
+    private String rentedRoomType;
 
-	public String getHostType() {
-		return hostType;
-	}
+    @Column(name = "personCount")
+    private String personCount;
 
-	public void setHostType(String hostType) {
-		this.hostType = hostType;
-	}
+    @Column(name = "rentedRoomPrice")
+    private String rentedRoomPrice;
 
-	public String getCreditType() {
-		return creditType;
-	}
+    @Column(name = "rentedRoomCurrency")
+    private String rentedRoomCurrency;
 
-	public void setCreditType(String creditType) {
-		this.creditType = creditType;
-	}
+    @Column(name = "isCheckedIn")
+    private String isCheckedIn;
 
-	public String getBookStatus() {
-		return bookStatus;
-	}
+    @Column(name = "agencyRefNo")
+    private String agencyRefNo;
 
-	public void setBookStatus(String bookStatus) {
-		this.bookStatus = bookStatus;
-	}
+    @Column(name = "referanceNo")
+    private String referanceNo;
 
-	public String getNote() {
-		return note;
-	}
+    public Reservation() {
+        // TODO Auto-generated constructor stub
+    }
 
-	public void setNote(String note) {
-		this.note = note;
-	}
+    public long getId() {
+        return Id;
+    }
 
-	public boolean getPaymentStatus() {
-		return paymentStatus;
-	}
+    public void setId(long Id) {
+        this.Id = Id;
+    }
 
-	public void setPaymentStatus(boolean paymentStatus) {
-		this.paymentStatus = paymentStatus;
-	}
+    public String getGroupName() {
+        return groupName;
+    }
 
-	public String getTheNumber() {
-		return theNumber;
-	}
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
-	public void setTheNumber(String theNumber) {
-		this.theNumber = theNumber;
-	}
+    public String getCheckinDate() {
+        return checkinDate;
+    }
 
-	public String getIsCheckedIn() {
-		return isCheckedIn;
-	}
+    public void setCheckinDate(String checkinDate) {
+        this.checkinDate = checkinDate;
+    }
 
-	public void setIsCheckedIn(String isCheckedIn) {
-		this.isCheckedIn = isCheckedIn;
-	}
+    public String getCheckoutDate() {
+        return checkoutDate;
+    }
 
-	public String getAgencyRefNo() {
-		return agencyRefNo;
-	}
+    public void setCheckoutDate(String checkoutDate) {
+        this.checkoutDate = checkoutDate;
+    }
 
-	public void setAgencyRefNo(String agencyRefNo) {
-		this.agencyRefNo = agencyRefNo;
-	}
+    public int getTotalDays() {
+        return totalDays;
+    }
 
-	public String getReferanceNo() {
-		return referanceNo;
-	}
+    public void setTotalDays(int totalDays) {
+        this.totalDays = totalDays;
+    }
 
-	public void setReferanceNo(String referanceNo) {
-		this.referanceNo = referanceNo;
-	}
+    public String getAgency() {
+        return agency;
+    }
 
-	public Reservation(long id, String groupName, String checkinDate, String checkoutDate, int totalDays, String agency,
-			String hostType, String creditType, String bookStatus, String note, boolean paymentStatus, String theNumber,
-			String isCheckedIn, String agencyRefNo, String referanceNo) {
-		super();
-		Id = id;
-		this.groupName = groupName;
-		this.checkinDate = checkinDate;
-		this.checkoutDate = checkoutDate;
-		this.totalDays = totalDays;
-		this.agency = agency;
-		this.hostType = hostType;
-		this.creditType = creditType;
-		this.bookStatus = bookStatus;
-		this.note = note;
-		this.paymentStatus = paymentStatus;
-		this.theNumber = theNumber;
-		this.isCheckedIn = isCheckedIn;
-		this.agencyRefNo = agencyRefNo;
-		this.referanceNo = referanceNo;
-	}
+    public void setAgency(String agency) {
+        this.agency = agency;
+    }
 
-	@Override
-	public String toString() {
-		return "Reservation [Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate="
-				+ checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType
-				+ ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus="
-				+ paymentStatus + ", theNumber=" + theNumber + ", isCheckedIn=" + isCheckedIn + ", agencyRefNo="
-				+ agencyRefNo + ", referanceNo=" + referanceNo + "]";
-	}
+    public String getHostType() {
+        return hostType;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (Id ^ (Id >>> 32));
-		result = prime * result + ((agency == null) ? 0 : agency.hashCode());
-		result = prime * result + ((agencyRefNo == null) ? 0 : agencyRefNo.hashCode());
-		result = prime * result + ((bookStatus == null) ? 0 : bookStatus.hashCode());
-		result = prime * result + ((checkinDate == null) ? 0 : checkinDate.hashCode());
-		result = prime * result + ((checkoutDate == null) ? 0 : checkoutDate.hashCode());
-		result = prime * result + ((creditType == null) ? 0 : creditType.hashCode());
-		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
-		result = prime * result + ((hostType == null) ? 0 : hostType.hashCode());
-		result = prime * result + ((isCheckedIn == null) ? 0 : isCheckedIn.hashCode());
-		result = prime * result + ((note == null) ? 0 : note.hashCode());
-		result = prime * result + (paymentStatus ? 1231 : 1237);
-		result = prime * result + ((referanceNo == null) ? 0 : referanceNo.hashCode());
-		result = prime * result + ((theNumber == null) ? 0 : theNumber.hashCode());
-		result = prime * result + totalDays;
-		return result;
-	}
+    public void setHostType(String hostType) {
+        this.hostType = hostType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Reservation other = (Reservation) obj;
-		if (Id != other.Id)
-			return false;
-		if (agency == null) {
-			if (other.agency != null)
-				return false;
-		} else if (!agency.equals(other.agency))
-			return false;
-		if (agencyRefNo == null) {
-			if (other.agencyRefNo != null)
-				return false;
-		} else if (!agencyRefNo.equals(other.agencyRefNo))
-			return false;
-		if (bookStatus == null) {
-			if (other.bookStatus != null)
-				return false;
-		} else if (!bookStatus.equals(other.bookStatus))
-			return false;
-		if (checkinDate == null) {
-			if (other.checkinDate != null)
-				return false;
-		} else if (!checkinDate.equals(other.checkinDate))
-			return false;
-		if (checkoutDate == null) {
-			if (other.checkoutDate != null)
-				return false;
-		} else if (!checkoutDate.equals(other.checkoutDate))
-			return false;
-		if (creditType == null) {
-			if (other.creditType != null)
-				return false;
-		} else if (!creditType.equals(other.creditType))
-			return false;
-		if (groupName == null) {
-			if (other.groupName != null)
-				return false;
-		} else if (!groupName.equals(other.groupName))
-			return false;
-		if (hostType == null) {
-			if (other.hostType != null)
-				return false;
-		} else if (!hostType.equals(other.hostType))
-			return false;
-		if (isCheckedIn == null) {
-			if (other.isCheckedIn != null)
-				return false;
-		} else if (!isCheckedIn.equals(other.isCheckedIn))
-			return false;
-		if (note == null) {
-			if (other.note != null)
-				return false;
-		} else if (!note.equals(other.note))
-			return false;
-		if (paymentStatus != other.paymentStatus)
-			return false;
-		if (referanceNo == null) {
-			if (other.referanceNo != null)
-				return false;
-		} else if (!referanceNo.equals(other.referanceNo))
-			return false;
-		if (theNumber == null) {
-			if (other.theNumber != null)
-				return false;
-		} else if (!theNumber.equals(other.theNumber))
-			return false;
-		if (totalDays != other.totalDays)
-			return false;
-		return true;
-	}
+    public String getCreditType() {
+        return creditType;
+    }
 
-	
+    public void setCreditType(String creditType) {
+        this.creditType = creditType;
+    }
+
+    public String getBookStatus() {
+        return bookStatus;
+    }
+
+    public void setBookStatus(String bookStatus) {
+        this.bookStatus = bookStatus;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public boolean getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(boolean paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getRentedRoomNum() {
+        return rentedRoomNum;
+    }
+
+    public void setRentedRoomNum(String rentedRoomNum) {
+        this.rentedRoomNum = rentedRoomNum;
+    }
+
+    public String getRentedRoomType() {
+        return rentedRoomType;
+    }
+
+    public void setRentedRoomType(String rentedRoomType) {
+        this.rentedRoomType = rentedRoomType;
+    }
+
+    public String getPersonCount() {
+        return personCount;
+    }
+
+    public void setPersonCount(String personCount) {
+        this.personCount = personCount;
+    }
+
+    public String getRentedRoomPrice() {
+        return rentedRoomPrice;
+    }
+
+    public void setRentedRoomPrice(String rentedRoomPrice) {
+        this.rentedRoomPrice = rentedRoomPrice;
+    }
+
+    public String getRentedRoomCurrency() {
+        return rentedRoomCurrency;
+    }
+
+    public void setRentedRoomCurrency(String rentedRoomCurrency) {
+        this.rentedRoomCurrency = rentedRoomCurrency;
+    }
+
+    public String getIsCheckedIn() {
+        return isCheckedIn;
+    }
+
+    public void setIsCheckedIn(String isCheckedIn) {
+        this.isCheckedIn = isCheckedIn;
+    }
+
+    public String getAgencyRefNo() {
+        return agencyRefNo;
+    }
+
+    public void setAgencyRefNo(String agencyRefNo) {
+        this.agencyRefNo = agencyRefNo;
+    }
+
+    public String getReferanceNo() {
+        return referanceNo;
+    }
+
+    public void setReferanceNo(String referanceNo) {
+        this.referanceNo = referanceNo;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + (int) (this.Id ^ (this.Id >>> 32));
+        hash = 23 * hash + Objects.hashCode(this.groupName);
+        hash = 23 * hash + Objects.hashCode(this.checkinDate);
+        hash = 23 * hash + Objects.hashCode(this.checkoutDate);
+        hash = 23 * hash + this.totalDays;
+        hash = 23 * hash + Objects.hashCode(this.agency);
+        hash = 23 * hash + Objects.hashCode(this.hostType);
+        hash = 23 * hash + Objects.hashCode(this.creditType);
+        hash = 23 * hash + Objects.hashCode(this.bookStatus);
+        hash = 23 * hash + Objects.hashCode(this.note);
+        hash = 23 * hash + (this.paymentStatus ? 1 : 0);
+        hash = 23 * hash + Objects.hashCode(this.rentedRoomNum);
+        hash = 23 * hash + Objects.hashCode(this.rentedRoomType);
+        hash = 23 * hash + Objects.hashCode(this.personCount);
+        hash = 23 * hash + Objects.hashCode(this.rentedRoomPrice);
+        hash = 23 * hash + Objects.hashCode(this.rentedRoomCurrency);
+        hash = 23 * hash + Objects.hashCode(this.isCheckedIn);
+        hash = 23 * hash + Objects.hashCode(this.agencyRefNo);
+        hash = 23 * hash + Objects.hashCode(this.referanceNo);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Reservation other = (Reservation) obj;
+        if (this.Id != other.Id) {
+            return false;
+        }
+        if (this.totalDays != other.totalDays) {
+            return false;
+        }
+        if (this.paymentStatus != other.paymentStatus) {
+            return false;
+        }
+        if (!Objects.equals(this.groupName, other.groupName)) {
+            return false;
+        }
+        if (!Objects.equals(this.checkinDate, other.checkinDate)) {
+            return false;
+        }
+        if (!Objects.equals(this.checkoutDate, other.checkoutDate)) {
+            return false;
+        }
+        if (!Objects.equals(this.agency, other.agency)) {
+            return false;
+        }
+        if (!Objects.equals(this.hostType, other.hostType)) {
+            return false;
+        }
+        if (!Objects.equals(this.creditType, other.creditType)) {
+            return false;
+        }
+        if (!Objects.equals(this.bookStatus, other.bookStatus)) {
+            return false;
+        }
+        if (!Objects.equals(this.note, other.note)) {
+            return false;
+        }
+        if (!Objects.equals(this.rentedRoomNum, other.rentedRoomNum)) {
+            return false;
+        }
+        if (!Objects.equals(this.rentedRoomType, other.rentedRoomType)) {
+            return false;
+        }
+        if (!Objects.equals(this.personCount, other.personCount)) {
+            return false;
+        }
+        if (!Objects.equals(this.rentedRoomPrice, other.rentedRoomPrice)) {
+            return false;
+        }
+        if (!Objects.equals(this.rentedRoomCurrency, other.rentedRoomCurrency)) {
+            return false;
+        }
+        if (!Objects.equals(this.isCheckedIn, other.isCheckedIn)) {
+            return false;
+        }
+        if (!Objects.equals(this.agencyRefNo, other.agencyRefNo)) {
+            return false;
+        }
+        if (!Objects.equals(this.referanceNo, other.referanceNo)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" + "Id=" + Id + ", groupName=" + groupName + ", checkinDate=" + checkinDate + ", checkoutDate=" + checkoutDate + ", totalDays=" + totalDays + ", agency=" + agency + ", hostType=" + hostType + ", creditType=" + creditType + ", bookStatus=" + bookStatus + ", note=" + note + ", paymentStatus=" + paymentStatus + ", rentedRoomNum=" + rentedRoomNum + ", rentedRoomType=" + rentedRoomType + ", personCount=" + personCount + ", rentedRoomPrice=" + rentedRoomPrice + ", rentedRoomCurrency=" + rentedRoomCurrency + ", isCheckedIn=" + isCheckedIn + ", agencyRefNo=" + agencyRefNo + ", referanceNo=" + referanceNo + '}';
+    }
+
+    public Reservation(long Id, String groupName, String checkinDate, String checkoutDate, int totalDays, String agency, String hostType, String creditType, String bookStatus, String note, boolean paymentStatus, String rentedRoomNum, String rentedRoomType, String personCount, String rentedRoomPrice, String rentedRoomCurrency, String isCheckedIn, String agencyRefNo, String referanceNo) {
+        this.Id = Id;
+        this.groupName = groupName;
+        this.checkinDate = checkinDate;
+        this.checkoutDate = checkoutDate;
+        this.totalDays = totalDays;
+        this.agency = agency;
+        this.hostType = hostType;
+        this.creditType = creditType;
+        this.bookStatus = bookStatus;
+        this.note = note;
+        this.paymentStatus = paymentStatus;
+        this.rentedRoomNum = rentedRoomNum;
+        this.rentedRoomType = rentedRoomType;
+        this.personCount = personCount;
+        this.rentedRoomPrice = rentedRoomPrice;
+        this.rentedRoomCurrency = rentedRoomCurrency;
+        this.isCheckedIn = isCheckedIn;
+        this.agencyRefNo = agencyRefNo;
+        this.referanceNo = referanceNo;
+    }
+
 }

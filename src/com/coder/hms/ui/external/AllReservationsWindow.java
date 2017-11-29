@@ -45,12 +45,10 @@ import com.coder.hms.beans.SessionBean;
 import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
-import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.ReportObject;
 import com.coder.hms.entities.Reservation;
-import com.coder.hms.entities.Room;
 import com.coder.hms.ui.extras.AllreservationRenderer;
 import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
 import com.coder.hms.utils.LoggingEngine;
@@ -172,7 +170,7 @@ public class AllReservationsWindow extends JFrame {
 					model.addRow(new Object[] { reservationsList.get(i).getId(), reservationsList.get(i).getGroupName(),
 							reservationsList.get(i).getCheckinDate(), reservationsList.get(i).getCheckoutDate(),
 							reservationsList.get(i).getAgency(), reservationsList.get(i).getAgencyRefNo(),
-							reservationsList.get(i).getTheNumber(), reservationsList.get(i).getTotalDays(),
+							reservationsList.get(i).getRentedRoomNum(), reservationsList.get(i).getTotalDays(),
 							reservationsList.get(i).getHostType(), reservationsList.get(i).getPaymentStatus(),
 							reservationsList.get(i).getBookStatus() });
 				}
@@ -298,7 +296,7 @@ public class AllReservationsWindow extends JFrame {
     				reservationsList.get(i).getId(), reservationsList.get(i).getGroupName(),
     				reservationsList.get(i).getCheckinDate(), reservationsList.get(i).getCheckoutDate(),
     				reservationsList.get(i).getAgency(), reservationsList.get(i).getAgencyRefNo(),
-    				reservationsList.get(i).getTheNumber(), reservationsList.get(i).getTotalDays(),
+    				reservationsList.get(i).getRentedRoomNum(), reservationsList.get(i).getTotalDays(),
     				reservationsList.get(i).getHostType(), reservationsList.get(i).getPaymentStatus(),
     				reservationsList.get(i).getBookStatus()
     				});
@@ -339,11 +337,8 @@ public class AllReservationsWindow extends JFrame {
     
     private void showUpdateReservationWin(Reservation theReservation) {
     	
-    	Room room = null;
         Payment payment = null;
         String customerCountry = "";
-        final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
-        final List<Room> roomList = roomDaoImpl.getAllRooms();
         final PaymentDaoImpl paymentDaoImpl = new PaymentDaoImpl();
         final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
         final List<Customer> customerList = customerDaoImpl.getAllCustomers();
@@ -354,18 +349,12 @@ public class AllReservationsWindow extends JFrame {
             loggingEngine.setMessage("[Blockade window] Required reservation found : " + theReservation.toString());
             final UpdateReservationWindow nex = new UpdateReservationWindow();
 
-            for (Room searchedRoom : roomList) {
-                if (searchedRoom.getReservationId() == theReservation.getId()) {
-                    room = searchedRoom;
-                    System.out.println(room.toString());
-                }
-            }
             
             List<Object[]> objList = new ArrayList<>();
             for (Customer cst : customerList) {
                 if (cst.getReservationId() == theReservation.getId()) {
                     customerCountry = cst.getCountry();
-                    objList.add(new Object[]{room.getNumber(), room.getType(), cst.getFirstName(), cst.getLastName()});
+                    objList.add(new Object[]{theReservation.getRentedRoomNum(), theReservation.getRentedRoomType(), cst.getFirstName(), cst.getLastName()});
                     nex.setRoomInfoTableRows(objList);
                 }
             }
@@ -398,19 +387,19 @@ public class AllReservationsWindow extends JFrame {
             nex.setCreditType(theReservation.getCreditType());
             nex.setReservStatus(theReservation.getBookStatus());
 
-            nex.setRoomNumber(room.getNumber());
-            reportBean.setTheNumber(room.getNumber());
+            nex.setRoomNumber(theReservation.getRentedRoomNum());
+            reportBean.setTheNumber(theReservation.getRentedRoomNum());
 
-            nex.setRoomType(room.getType());
-            reportBean.setRoomType(room.getType());
+            nex.setRoomType(theReservation.getRentedRoomType());
+            reportBean.setRoomType(theReservation.getRentedRoomType());
 
-            nex.setPersonCountSpinner(room.getPersonCount());
+            nex.setPersonCountSpinner(Integer.parseInt(theReservation.getPersonCount()));
 
-            nex.setPriceOfRoom(room.getPrice());
-            reportBean.setPrice(room.getPrice());
+            nex.setPriceOfRoom(Double.parseDouble(theReservation.getRentedRoomPrice()));
+            reportBean.setPrice(Double.parseDouble(theReservation.getRentedRoomPrice()));
 
-            nex.setCurrency(room.getCurrency());
-            reportBean.setType(room.getCurrency());
+            nex.setCurrency(theReservation.getRentedRoomCurrency());
+            reportBean.setType(theReservation.getRentedRoomCurrency());
 
             nex.setAgencyRefNo(theReservation.getAgencyRefNo());
             reportBean.setAgencyRefNo(theReservation.getAgencyRefNo());
@@ -418,12 +407,12 @@ public class AllReservationsWindow extends JFrame {
             nex.setReferanceNo(theReservation.getReferanceNo());
             nex.setCustomerCountry(customerCountry);
 
-            nex.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(), room.getPersonCount(),
-                room.getPrice(), room.getCurrency()});
+            nex.setRoomCountTableRows(new Object[]{theReservation.getRentedRoomNum(), theReservation.getRentedRoomType(), theReservation.getPersonCount(),
+                theReservation.getRentedRoomPrice(), theReservation.getRentedRoomCurrency()});
 
             if (theReservation.getPaymentStatus()) {
 
-                payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
+                payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(theReservation.getRentedRoomNum());
                 nex.setEarlyPaymetTableRows(
                         new Object[]{payment.getTitle(), payment.getPaymentType(), payment.getPrice(),
                             payment.getCurrency(), payment.getExplanation(), payment.getDateTime()});
@@ -440,7 +429,7 @@ public class AllReservationsWindow extends JFrame {
                 reportBean.setPaymentStatus(false);
                 reportBean.setPaymentType("No payment");
                 reportBean.setBalance("0");
-                reportBean.setCurrency(room.getCurrency());
+                reportBean.setCurrency(theReservation.getRentedRoomCurrency());
             }
 
             loggingEngine.setMessage("Reservation window is populated successfully.");

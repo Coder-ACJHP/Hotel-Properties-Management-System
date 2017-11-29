@@ -22,7 +22,13 @@ public interface PaymentDAO {
 	
 	public String getTotalCashPoundPaymentsForOneDay(String date);
 	
-	public String getTotalCreditPaymentsForOneDay(String date);
+	public String getTotalCreditLiraPaymentsForOneDay(String date);
+        
+        public String getTotalCreditDollarPaymentsForOneDay(String date);
+        
+        public String getTotalCreditEuroPaymentsForOneDay(String date);
+        
+        public String getTotalCreditPoundPaymentsForOneDay(String date);
 	
 	public Payment getEarlyPaymentByRoomNumber(String number);
 	

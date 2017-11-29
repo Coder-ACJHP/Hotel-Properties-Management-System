@@ -61,7 +61,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	private Date startDate;
 	private Date endDate;
 	private JPanel upperPanel;
-	private String ownRoomNumber;
+        private Room injectedOwnRoom;
 	private NumberFormat formatter;
 	private double priceValue = 0.0;
 	private JSpinner personCountSpinner;
@@ -75,6 +75,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	public final CustomerForm customerFormOne = new CustomerForm();
 	public final CustomerForm customerFormTwo = new CustomerForm();
 	public final CustomerForm customerFormThree = new CustomerForm();
+        public CustomerForm[] formsArray;
 	private static SessionBean sessionBean = SessionBean.getSESSION_BEAN();
 	private JComboBox<String> agencyCmbBox, customerCnrtyCmbBox, creditTypeCmbBox, hostTypeCmbBox, currencyCmbBox;
 	private final String[] AGENCY_LIST = {"WALKIN"};
@@ -95,10 +96,10 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 	/**
 	 * Create the dialog.
 	 */
-	public Walkin_CheckinWindow(String roomNumber) {
-
-		this.ownRoomNumber = roomNumber;
+	public Walkin_CheckinWindow(Room injectedRoom) {
 		
+                this.injectedOwnRoom =  injectedRoom;
+                
 		loggingEngine = LoggingEngine.getInstance();
 		loggingEngine.setMessage("User is : " + sessionBean.getNickName());
 		
@@ -151,7 +152,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		personCountSpinner.addChangeListener(customerCounterListener());
 		upperPanel.add(personCountSpinner);
 		
-		JLabel groupNameLbl = new JLabel("Group Name  :");
+		final JLabel groupNameLbl = new JLabel("Group Name  :");
 		groupNameLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		groupNameLbl.setForeground(Color.BLACK);
 		groupNameLbl.setBounds(10, 11, 110, 20);
@@ -162,7 +163,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		upperPanel.add(groupNameField);
 		groupNameField.setColumns(10);
 		
-		JLabel lblCheckinDate = new JLabel("Checkin date : ");
+		final JLabel lblCheckinDate = new JLabel("Checkin date : ");
 		lblCheckinDate.setFont(new Font("Arial", Font.BOLD, 13));
 		lblCheckinDate.setForeground(Color.BLACK);
 		lblCheckinDate.setBounds(10, 37, 110, 20);
@@ -181,13 +182,13 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		checkoutDateChooser.addPropertyChangeListener(chechkDates());
 		upperPanel.add(checkoutDateChooser);
 		
-		JLabel lblCheckoutDate = new JLabel("Checkout date : ");
+		final JLabel lblCheckoutDate = new JLabel("Checkout date : ");
 		lblCheckoutDate.setFont(new Font("Arial", Font.BOLD, 13));
 		lblCheckoutDate.setForeground(Color.BLACK);
 		lblCheckoutDate.setBounds(10, 63, 110, 20);
 		upperPanel.add(lblCheckoutDate);
 		
-		JLabel totalDaysLbl = new JLabel("Total days : ");
+		final JLabel totalDaysLbl = new JLabel("Total days : ");
 		totalDaysLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		totalDaysLbl.setForeground(Color.BLACK);
 		totalDaysLbl.setBounds(10, 88, 110, 20);
@@ -201,7 +202,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		totalDaysField.setText(value + "");
 		upperPanel.add(totalDaysField);
 		
-		JLabel customerCountryLbl = new JLabel("Customer Country : ");
+		final JLabel customerCountryLbl = new JLabel("Customer Country : ");
 		customerCountryLbl.setForeground(Color.BLACK);
 		customerCountryLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		customerCountryLbl.setBounds(356, 88, 139, 20);
@@ -212,13 +213,13 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		customerCnrtyCmbBox.setBounds(511, 88, 209, 20);
 		upperPanel.add(customerCnrtyCmbBox);
 		
-		JLabel creditTypeLbl = new JLabel("Credit type : ");
+		final JLabel creditTypeLbl = new JLabel("Credit type : ");
 		creditTypeLbl.setForeground(Color.BLACK);
 		creditTypeLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		creditTypeLbl.setBounds(356, 63, 139, 20);
 		upperPanel.add(creditTypeLbl);
 		
-		JLabel agencyLbl = new JLabel("Agency : ");
+		final JLabel agencyLbl = new JLabel("Agency : ");
 		agencyLbl.setForeground(Color.BLACK);
 		agencyLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		agencyLbl.setBounds(356, 11, 139, 20);
@@ -229,7 +230,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		creditTypeCmbBox.setBounds(511, 63, 209, 20);
 		upperPanel.add(creditTypeCmbBox);
 		
-		JLabel hostTypeLbl = new JLabel("Host type : ");
+		final JLabel hostTypeLbl = new JLabel("Host type : ");
 		hostTypeLbl.setForeground(Color.BLACK);
 		hostTypeLbl.setFont(new Font("Arial", Font.BOLD, 13));
 		hostTypeLbl.setBounds(356, 37, 139, 20);
@@ -240,7 +241,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		hostTypeCmbBox.setBounds(511, 37, 209, 20);
 		upperPanel.add(hostTypeCmbBox);
 		
-		formatter = NumberFormat.getCurrencyInstance();
+		formatter = NumberFormat.getInstance();
 		formatter.setMinimumFractionDigits(2);
 		
 		priceField = new JFormattedTextField(formatter);
@@ -287,12 +288,13 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		lblRoom.setBounds(330, 8, 68, 33);
 		buttonPanel.add(lblRoom);
 
-		JLabel roomNumberLbl = new JLabel(ownRoomNumber);
+		JLabel roomNumberLbl = new JLabel(injectedOwnRoom.getNumber());
 		roomNumberLbl.setForeground(new Color(220, 20, 60));
 		roomNumberLbl.setFont(new Font("Verdana", Font.BOLD, 17));
 		roomNumberLbl.setBounds(406, 8, 103, 33);
 		buttonPanel.add(roomNumberLbl);
 		
+                formsArray = new CustomerForm[]{customerFormOne};
 		contentPanel.add(customerFormOne.setCustomerDetailPanel(), BorderLayout.WEST);
 
 	}
@@ -308,6 +310,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 					contentPanel.removeAll();
 					contentPanel.add(upperPanel, BorderLayout.NORTH);
 					contentPanel.add(customerFormOne.setCustomerDetailPanel(), BorderLayout.WEST);
+                                        formsArray = new CustomerForm[]{customerFormOne};
 					contentPanel.revalidate();
 					contentPanel.repaint();
 				case 2:
@@ -315,6 +318,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 					contentPanel.add(upperPanel, BorderLayout.NORTH);
 					contentPanel.add(customerFormOne.setCustomerDetailPanel(), BorderLayout.WEST);
 					contentPanel.add(customerFormTwo.setCustomerDetailPanel(), BorderLayout.EAST);
+                                        formsArray = new CustomerForm[]{customerFormOne, customerFormTwo};
 					contentPanel.revalidate();
 					contentPanel.repaint();
 					break;
@@ -324,6 +328,7 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 					contentPanel.add(customerFormOne.setCustomerDetailPanel(), BorderLayout.WEST);
 					contentPanel.add(customerFormTwo.setCustomerDetailPanel(), BorderLayout.EAST);
 					contentPanel.add(customerFormThree.setCustomerDetailPanel(), BorderLayout.CENTER);
+                                        formsArray = new CustomerForm[]{customerFormOne, customerFormTwo, customerFormThree};
 					contentPanel.revalidate();
 					contentPanel.repaint();
 					break;
@@ -459,34 +464,40 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		
 		
 		//1- Find the room number who that clicked for walkin checkin.
-		final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(ownRoomNumber);
+		final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(injectedOwnRoom.getNumber());
 		
 		//2- Create new reservation for walkin and populate it from from fields.	
-		Reservation newReservation = new Reservation();
+		final Reservation newReservation = new Reservation();
 		newReservation.setAgency(agencyCmbBox.getSelectedItem().toString());
 		newReservation.setCheckinDate(sdf.format(checkinDateChooser.getDate()));
 		newReservation.setCheckoutDate(sdf.format(checkoutDateChooser.getDate()));
-		newReservation.setTheNumber(checkingRoom.getNumber());
+		newReservation.setRentedRoomNum(checkingRoom.getNumber());
 		newReservation.setCreditType(creditTypeCmbBox.getSelectedItem().toString());
 		newReservation.setGroupName(groupNameField.getText().trim());
 		newReservation.setHostType(hostTypeCmbBox.getSelectedItem().toString());
 		newReservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
 		newReservation.setBookStatus("GUARANTEE");
 		newReservation.setIsCheckedIn("YES");
-		reservDaoImpl.saveReservation(newReservation);
+		
 		
 		loggingEngine.setMessage("New walkin reservation detail : " + newReservation.toString());
 				
 		//3- Get last saved reservation, because we need it Id for customers.
-		Reservation lastReservation = reservDaoImpl.getLastReservation();
+		final Reservation lastReservation = reservDaoImpl.getLastReservation();
 		
 		//4- Create new room(it will update) and fill it with customers and reservation infos.
-
-		checkingRoom.setNumber(ownRoomNumber);
+                int loopCounter = 0;
+		checkingRoom.setNumber(injectedOwnRoom.getNumber());
+                newReservation.setRentedRoomNum(injectedOwnRoom.getNumber());
+                
 		final String val = priceField.getValue().toString();
 		priceValue = Double.valueOf(val);
-		checkingRoom.setPrice(priceValue);	
+		checkingRoom.setPrice(priceValue);
+                newReservation.setRentedRoomPrice(val);
+                
 		checkingRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+                newReservation.setRentedRoomCurrency(currencyCmbBox.getSelectedItem().toString());
+                
 		checkingRoom.setCustomerGrupName(groupNameField.getText().trim());
 		checkingRoom.setReservationId(lastReservation.getId());
 		checkingRoom.setUsageStatus("FULL");
@@ -494,129 +505,54 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
 		final double lastPrice = checkingRoom.getPrice() * newReservation.getTotalDays();
 		checkingRoom.setTotalPrice(lastPrice + "");
 		checkingRoom.setRemainingDebt(lastPrice);
-		
-		 Customer customerOne;
-		 Customer customerTwo;
-		
-			if((int)personCountSpinner.getValue() == 0 || (int)personCountSpinner.getValue() == 1) {
-				
-				//Set room person count here
-				checkingRoom.setPersonCount((int)personCountSpinner.getValue());
-				
-				customerOne = new Customer();
-				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
-				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
-				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
-				customerOne.setDocumentNo(customerFormOne.getDocNoFieldValue());
-				customerOne.setFirstName(customerFormOne.getFirstNameFieldValue());
-				customerOne.setLastName(customerFormOne.getLastNameFieldValue());
-				customerOne.setGender(customerFormOne.getGenderComboxValue());
-				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
-				customerOne.setReservationId(lastReservation.getId());
-				
-				customerDaoImpl.save(customerOne);
-				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
-			}
+                
+                newReservation.setRentedRoomType(checkingRoom.getType());
+                		
+                        if((int)personCountSpinner.getValue() == 0 || (int)personCountSpinner.getValue() == 1) {
+                            loopCounter = 1;
+                        }
 			
 			else if((int)personCountSpinner.getValue() == 2) {
-				
-				checkingRoom.setPersonCount((int)personCountSpinner.getValue());
-				
-				customerOne = new Customer();
-				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
-				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
-				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
-				customerOne.setDocumentNo(customerFormOne.getDocNoFieldValue());
-				customerOne.setFirstName(customerFormOne.getFirstNameFieldValue());
-				customerOne.setLastName(customerFormOne.getLastNameFieldValue());
-				customerOne.setGender(customerFormOne.getGenderComboxValue());
-				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
-				customerOne.setReservationId(lastReservation.getId());
-				
-				customerDaoImpl.save(customerOne);
-				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
-
-				customerTwo = new Customer();
-				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
-				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
-				customerTwo.setDocument(customerFormTwo.getDocumentTypeCmbxValue());
-				customerTwo.setDocumentNo(customerFormTwo.getDocNoFieldValue());
-				customerTwo.setFirstName(customerFormTwo.getFirstNameFieldValue());
-				customerTwo.setLastName(customerFormTwo.getLastNameFieldValue());
-				customerTwo.setGender(customerFormTwo.getGenderComboxValue());
-				customerTwo.setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
-				customerTwo.setReservationId(lastReservation.getId());
-				
-				customerDaoImpl.save(customerOne);
-				customerDaoImpl.save(customerTwo);
-				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
-				loggingEngine.setMessage("Check in for customer(s) : " + customerTwo.toString());
-
-
+                            loopCounter = 2;
 			}
 			
 			else if((int)personCountSpinner.getValue() == 3) {
+                            loopCounter = 3;
+			}
+			
+                        Customer theCustomer = null;
+                        checkingRoom.setPersonCount(loopCounter);
+                        newReservation.setPersonCount(String.valueOf(loopCounter));
 				
-				checkingRoom.setPersonCount((int)personCountSpinner.getValue());
-				
-				customerOne = new Customer();
-				customerOne.setCountry(customerFormOne.getCustomerCountryCmbBoxValue());
-				customerOne.setDateOfBirth(customerFormOne.getDateOfBirthChooserValue());
-				customerOne.setDocument(customerFormOne.getDocumentTypeCmbxValue());
-				customerOne.setDocumentNo(customerFormOne.getDocNoFieldValue());
-				customerOne.setFirstName(customerFormOne.getFirstNameFieldValue());
-				customerOne.setLastName(customerFormOne.getLastNameFieldValue());
-				customerOne.setGender(customerFormOne.getGenderComboxValue());
-				customerOne.setMaritalStatus(customerFormOne.getMarriageComboBoxValue());
-				customerOne.setReservationId(lastReservation.getId());
-								
-				customerTwo = new Customer();
-				customerTwo.setCountry(customerFormTwo.getCustomerCountryCmbBoxValue());
-				customerTwo.setDateOfBirth(customerFormTwo.getDateOfBirthChooserValue());
-				customerTwo.setDocument(customerFormTwo.getDocumentTypeCmbxValue());
-				customerTwo.setDocumentNo(customerFormTwo.getDocNoFieldValue());
-				customerTwo.setFirstName(customerFormTwo.getFirstNameFieldValue());
-				customerTwo.setLastName(customerFormTwo.getLastNameFieldValue());
-				customerTwo.setGender(customerFormTwo.getGenderComboxValue());
-				customerTwo.setMaritalStatus(customerFormTwo.getMarriageComboBoxValue());
-				customerTwo.setReservationId(lastReservation.getId());
-				
-				
-				final Customer customerThree = new Customer();
-				customerThree.setCountry(customerFormThree.getCustomerCountryCmbBoxValue());
-				customerThree.setDateOfBirth(customerFormThree.getDateOfBirthChooserValue());
-				customerThree.setDocument(customerFormThree.getDocumentTypeCmbxValue());
-				customerThree.setDocumentNo(customerFormThree.getDocNoFieldValue());
-				customerThree.setFirstName(customerFormThree.getFirstNameFieldValue());
-				customerThree.setLastName(customerFormThree.getLastNameFieldValue());
-				customerThree.setGender(customerFormThree.getGenderComboxValue());
-				customerThree.setMaritalStatus(customerFormThree.getMarriageComboBoxValue());
-				customerThree.setReservationId(lastReservation.getId());
-				
-				customerDaoImpl.save(customerOne);
-				customerDaoImpl.save(customerTwo);
-				customerDaoImpl.save(customerThree);
-				
-				loggingEngine.setMessage("Check in for customer(s) : " + customerOne.toString());
-				loggingEngine.setMessage("Check in for customer(s) : " + customerTwo.toString());
-				loggingEngine.setMessage("Check in for customer(s) : " + customerThree.toString());
-		
-		}
+                            for (int i = 0; i < loopCounter; i++) {
+                                
+                                theCustomer = new Customer();
+                                theCustomer.setCountry(formsArray[i].getCustomerCountryCmbBoxValue());
+                                theCustomer.setDateOfBirth(formsArray[i].getDateOfBirthChooserValue());
+                                theCustomer.setDocument(formsArray[i].getDocumentTypeCmbxValue());
+                                theCustomer.setDocumentNo(formsArray[i].getDocNoFieldValue());
+                                theCustomer.setFirstName(formsArray[i].getFirstNameFieldValue());
+                                theCustomer.setLastName(formsArray[i].getLastNameFieldValue());
+                                theCustomer.setGender(formsArray[i].getGenderComboxValue());
+                                theCustomer.setMaritalStatus(formsArray[i].getMarriageComboBoxValue());
+                                theCustomer.setReservationId(lastReservation.getId());
+                                customerDaoImpl.save(theCustomer);
+                                
+                                loggingEngine.setMessage("Check in for customer(s) : " + theCustomer.toString());
+
+                            }
+                            
+		 
+                        reservDaoImpl.saveReservation(newReservation);    
 			//All thing id OK and all fields populated, just save it.
 			roomDaoImpl.updateRoom(checkingRoom);
 			loggingEngine.setMessage("Check in for room : " + checkingRoom.toString());
 			
 			this.dispose();
 			
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					
-					new RoomWindow(ownRoomNumber);
-					
-				}
-			});
+			SwingUtilities.invokeLater(() -> {
+                            new RoomWindow(injectedOwnRoom.getNumber());
+                        });
 			
 	}
 }

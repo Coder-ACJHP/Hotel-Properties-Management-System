@@ -321,7 +321,7 @@ public class Main_Audit extends JPanel implements ActionListener {
             for (Reservation foundRes : foundReservationlist) {
                 for (Room room : theRoomList) {
 
-                    if (foundRes.getId() == rowId && foundRes.getTheNumber().equals(room.getNumber())) {
+                    if (foundRes.getId() == rowId && foundRes.getRentedRoomNum().equals(room.getNumber())) {
 
                         List<Customer> customerList = customerDaoImpl.getCustomerByReservId(foundRes.getId());
 

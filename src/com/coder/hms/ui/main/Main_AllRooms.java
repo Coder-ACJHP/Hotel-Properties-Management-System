@@ -49,8 +49,10 @@ import com.coder.hms.entities.HotelSystemStatus;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.roomsControl.RoomsControllAction;
 import com.coder.hms.ui.external.NewReservationWindow;
+import com.coder.hms.ui.external.ReservedCheckinWindow;
+import com.coder.hms.ui.external.RoomWindow;
+import com.coder.hms.ui.external.Walkin_CheckinWindow;
 import com.coder.hms.utils.ChangeComponentOrientation;
 
 public class Main_AllRooms {
@@ -62,10 +64,9 @@ public class Main_AllRooms {
     private List<Room> roomList;
     private String currentRoomNumber;
     private static LocaleBean bean;
-    private HotelSystemStatus systemStatus;
-    private JPanel contentPanel = new JPanel();
-    private ChangeComponentOrientation componentOrientation;
-    private final RoomsControllAction theAction = new RoomsControllAction();
+    private final HotelSystemStatus systemStatus;
+    private final JPanel contentPanel = new JPanel();
+    private final ChangeComponentOrientation componentOrientation;
     private final RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
     private final HotelDaoImpl hotelDaoImpl = new HotelDaoImpl();
     private final ReservationDaoImpl rImpl = new ReservationDaoImpl();
@@ -211,7 +212,6 @@ public class Main_AllRooms {
             roomBtn.setVerticalAlignment(SwingConstants.BOTTOM);
             roomBtn.setPreferredSize(new Dimension(100, 65));
             roomBtn.setMaximumSize(new Dimension(100, 65));
-            roomBtn.addMouseListener(theAction.getActionListener());
             contentPanel.add(roomBtn);
 
         }
@@ -231,6 +231,81 @@ public class Main_AllRooms {
                     currentRoomNumber = trimmingText.substring(textLength - 25, textLength - 21);
 
                 }
+
+                // set the button when click one time just focus on
+                if (e.getClickCount() == 1) {
+
+                    JButton comp = (JButton) e.getComponent();
+                    comp.setFocusPainted(true);
+                } // in double click do some thing other
+                else if (e.getClickCount() == 2) {
+
+                    int counter = 100;
+                    int lastNum = 0;
+                    String roomText = "";
+
+                    // get the button text
+                    String command = e.getSource().toString();
+
+                    // get new date as String
+                    String innerDate = systemStatus.getDateTime().toString();
+
+                    // start loop to get all rooms as room capacity
+                    for (int i = 1; i <= hotelDaoImpl.getHotel().getRoomCapacity(); i++) {
+                        ++lastNum;
+
+                        // create the button text with same algorithm like in
+                        // 'AllRooms.class'
+                        roomText = counter + "" + lastNum;
+
+                        if (i % 6 == 0) {
+                            counter += 100;
+                            lastNum = 0;
+                        }
+
+                        ///////////////////////////////////////////////
+                        // check the clicked button if contains same //
+                        // looping button text work with that button //
+                        ///////////////////////////////////////////////
+                        // NOTE: Don't forget to add 'break' command when you
+                        // finished
+                        // your job to quit from the loop.
+                        if (command.contains(roomText)) {
+
+                            final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
+                            final Reservation foundedReserv = rImpl.findReservationById(theRoom.getReservationId());
+
+                            if (theRoom.getUsageStatus().equals("FULL")) {
+                                SwingUtilities.invokeLater(() -> {
+                                    new RoomWindow(theRoom.getNumber());
+                                    cookRooms(contentPanel);
+                                    refresh();
+                                });
+                                break;
+                            } else if (theRoom.getUsageStatus().equals("BLOCKED")
+                                    && innerDate.equals(foundedReserv.getCheckinDate())) {
+
+                                SwingUtilities.invokeLater(() -> {
+                                    new ReservedCheckinWindow(theRoom).setVisible(true);
+                                    cookRooms(contentPanel);
+                                    refresh();
+                                });
+                                break;
+                            } else if (theRoom.getUsageStatus().equals("EMPTY")) {
+
+                                SwingUtilities.invokeLater(() -> {
+                                    new Walkin_CheckinWindow(theRoom).setVisible(true);
+                                    cookRooms(contentPanel);
+                                    refresh();
+                                });
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+                super.mouseClicked(e);
+                refresh();
             }
 
             @Override
@@ -296,8 +371,7 @@ public class Main_AllRooms {
             } else {
                 roomDaoImpl.setSingleRoomAsCleanByRoomNumber(currentRoomNumber);
                 cookRooms(contentPanel);
-                roomBtn.revalidate();
-                roomBtn.repaint();
+                refresh();
             }
         });
         changeCleaning.add(clean);
@@ -316,8 +390,7 @@ public class Main_AllRooms {
             } else {
                 roomDaoImpl.setSingleRoomAsDirtyByRoomNumber(currentRoomNumber);
                 cookRooms(contentPanel);
-                roomBtn.revalidate();
-                roomBtn.repaint();
+                refresh();
             }
         });
         changeCleaning.add(dirty);
@@ -336,8 +409,7 @@ public class Main_AllRooms {
             } else {
                 roomDaoImpl.setSingleRoomAsDNDByRoomNumber(currentRoomNumber);
                 cookRooms(contentPanel);
-                roomBtn.revalidate();
-                roomBtn.repaint();
+                refresh();
             }
         });
         changeCleaning.add(dnd);
@@ -357,8 +429,8 @@ public class Main_AllRooms {
 
                     roomDaoImpl.setRoomCheckedOut(currentRoomNumber);
                     cookRooms(contentPanel);
-                    roomBtn.revalidate();
-                    roomBtn.repaint();
+                    refresh();
+                    
                 } else {
                     JOptionPane.showMessageDialog(null, "All room balances need to be zero!", JOptionPane.MESSAGE_PROPERTY,
                             JOptionPane.ERROR_MESSAGE);
@@ -384,64 +456,59 @@ public class Main_AllRooms {
 
             if (rr != null) {
 
-                SwingUtilities.invokeLater(new Runnable() {
+                SwingUtilities.invokeLater(() -> {
+                    final CustomerDaoImpl cImpl = new CustomerDaoImpl();
+                    final List<Customer> customerList = cImpl.getCustomerByReservId(rr.getId());
 
-                    @Override
-                    public void run() {
+                    Payment payment = null;
+                    String customerCountry = "";
+                    String customerName = "";
+                    String customerSurName = "";
 
-                        final CustomerDaoImpl cImpl = new CustomerDaoImpl();
-                        final List<Customer> customerList = cImpl.getCustomerByReservId(rr.getId());
+                    for (Customer cst : customerList) {
+                        customerCountry = cst.getCountry();
+                        customerName = cst.getFirstName();
+                        customerSurName = cst.getLastName();
+                    }
 
-                        Payment payment = null;
-                        String customerCountry = "";
-                        String customerName = "";
-                        String customerSurName = "";
+                    final NewReservationWindow nex = new NewReservationWindow();
+                    nex.setRezIdField(rr.getId());
+                    nex.setAgency(rr.getAgency());
+                    nex.setRoomNumber(checkingRoom.getNumber());
+                    nex.setRoomType(checkingRoom.getType());
+                    nex.setCustomerCountry(customerCountry);
+                    nex.setNameSurnameField(rr.getGroupName());
+                    nex.setCheckinDate(rr.getCheckinDate());
+                    nex.setCheckoutDate(rr.getCheckoutDate());
+                    nex.setTotalDaysField(rr.getTotalDays());
+                    nex.setHostType(rr.getHostType());
+                    nex.setCreditType(rr.getCreditType());
+                    nex.setReservStatus(rr.getBookStatus());
+                    nex.setReservNote(rr.getNote());
+                    nex.setCurrency(checkingRoom.getCurrency());
+                    nex.setPriceOfRoom(checkingRoom.getPrice());
+                    nex.setAgencyRefNo(rr.getAgencyRefNo());
+                    nex.setReferanceNo(rr.getReferanceNo());
+                    nex.setPersonCountSpinner(checkingRoom.getPersonCount());
 
-                        for (Customer cst : customerList) {
-                            customerCountry = cst.getCountry();
-                            customerName = cst.getFirstName();
-                            customerSurName = cst.getLastName();
-                        }
+                    nex.setRoomCountTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
+                        checkingRoom.getPersonCount(), checkingRoom.getPrice(), checkingRoom.getCurrency()});
 
-                        final NewReservationWindow nex = new NewReservationWindow();
-                        nex.setRezIdField(rr.getId());
-                        nex.setAgency(rr.getAgency());
-                        nex.setRoomNumber(checkingRoom.getNumber());
-                        nex.setRoomType(checkingRoom.getType());
-                        nex.setCustomerCountry(customerCountry);
-                        nex.setNameSurnameField(rr.getGroupName());
-                        nex.setCheckinDate(rr.getCheckinDate());
-                        nex.setCheckoutDate(rr.getCheckoutDate());
-                        nex.setTotalDaysField(rr.getTotalDays());
-                        nex.setHostType(rr.getHostType());
-                        nex.setCreditType(rr.getCreditType());
-                        nex.setReservStatus(rr.getBookStatus());
-                        nex.setReservNote(rr.getNote());
-                        nex.setCurrency(checkingRoom.getCurrency());
-                        nex.setPriceOfRoom(checkingRoom.getPrice());
-                        nex.setAgencyRefNo(rr.getAgencyRefNo());
-                        nex.setReferanceNo(rr.getReferanceNo());
-                        nex.setPersonCountSpinner(checkingRoom.getPersonCount());
+                    nex.setRoomInfoTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
+                        customerName, customerSurName});
 
-                        nex.setRoomCountTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
-                            checkingRoom.getPersonCount(), checkingRoom.getPrice(), checkingRoom.getCurrency()});
+                    if (rr.getPaymentStatus()) {
 
-                        nex.setRoomInfoTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
-                            customerName, customerSurName});
+                        payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(checkingRoom.getNumber());
+                        nex.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
+                            payment.getPrice(), payment.getCurrency(), payment.getExplanation()});
+                    }
 
-                        if (rr.getPaymentStatus()) {
+                    nex.setVisible(true);
 
-                            payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(checkingRoom.getNumber());
-                            nex.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
-                                payment.getPrice(), payment.getCurrency(), payment.getExplanation()});
-                        }
-
-                        nex.setVisible(true);
-
-                        if (rr.getPaymentStatus()) {
-                            JOptionPane.showMessageDialog(new JFrame(), "Early payment " + payment.getPrice() + payment.getCurrency(),
-                                    JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
-                        }
+                    if (rr.getPaymentStatus()) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Early payment " + payment.getPrice() + payment.getCurrency(),
+                                JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
             } else {
@@ -458,5 +525,12 @@ public class Main_AllRooms {
 
     public JPanel getWindow() {
         return this.contentPanel;
+    }
+    
+    private void refresh() {
+        contentPanel.revalidate();
+        contentPanel.repaint();
+        roomBtn.revalidate();
+        roomBtn.repaint();
     }
 }

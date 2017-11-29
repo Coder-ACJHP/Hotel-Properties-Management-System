@@ -19,7 +19,7 @@ public class AllreservationRenderer extends DefaultTableCellRenderer {
 		// TODO Auto-generated method stub
 		final Component cellComponent =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		
-		String rowColVal = value == null ? null : String.valueOf(value);
+		String rowColVal = (String) table.getValueAt(row, 10);
 		
 		if(isSelected || hasFocus) {
 			

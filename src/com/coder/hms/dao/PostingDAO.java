@@ -22,5 +22,11 @@ public interface PostingDAO {
 	
 	public String getTotalCashPoundPostingsForOneDay(String date);
 	
-	public String getTotalCreditPostingsForOneDay(String date);
+	public String getTotalCreditLiraPostingsForOneDay(String date);
+        
+        public String getTotalCreditDollarPostingsForOneDay(String date);
+        
+        public String getTotalCreditEuroPostingsForOneDay(String date);
+        
+        public String getTotalCreditPoundPostingsForOneDay(String date);
 }

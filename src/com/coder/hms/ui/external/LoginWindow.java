@@ -49,7 +49,7 @@ import com.coder.hms.beans.SessionBean;
 import com.coder.hms.connection.DataSourceFactory;
 import com.coder.hms.daoImpl.HotelDaoImpl;
 import com.coder.hms.daoImpl.UserDaoImpl;
-import com.coder.hms.ui.inner.LanguageCmbBox;
+import com.coder.hms.ui.extras.LanguageCmbBox;
 import com.coder.hms.ui.main.MainFrame;
 import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.CustomKeyDispatcher;

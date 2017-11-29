@@ -44,7 +44,8 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 			Query<Customer> query = session.createQuery("from Customer where FirstName=:name and LastName=:lastName", Customer.class);
 			query.setParameter("name", name);
 			query.setParameter("lastName", lastName);
-			
+			query.setMaxResults(1);
+                        
 			customer = query.getSingleResult();
 			logging.setMessage("CustomerDaoImpl -> fetching customer with name :" + name);
 		} catch (NoResultException e) {

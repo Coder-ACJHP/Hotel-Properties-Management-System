@@ -374,8 +374,8 @@ public class NewReservationWindow extends JDialog {
 		final JScrollPane roomCountPanelContainer = new JScrollPane();
 		roomCountPanelContainer.setPreferredSize(new Dimension(720, 75));
 		roomCountTable = new JTable(roomCountModel);
-        roomCountTable.setCellSelectionEnabled(false);
-        roomCountTable.setRowSelectionAllowed(true);
+                roomCountTable.setCellSelectionEnabled(false);
+                roomCountTable.setRowSelectionAllowed(true);
 		roomCountPanelContainer.setViewportView(roomCountTable);
 		roomPanel.add(roomCountPanelContainer);
 		
@@ -543,45 +543,40 @@ public class NewReservationWindow extends JDialog {
 				}
 				// main reason
 				else {
-					SwingUtilities.invokeLater(new Runnable() {
-
-						@Override
-						public void run() {
-							boolean showed = false;
-							 startDate = checkinDate.getDate();
-							 endDate = checkoutDate.getDate();
-
-							if (startDate != null && endDate != null) {
-								// add to calendar to be able get day of date
-								// and compare
-								Calendar cs = Calendar.getInstance();
-								cs.setTime(startDate);
-								Calendar ce = Calendar.getInstance();
-								ce.setTime(endDate);
-
-								// compare if start date greater than end date
-								if (cs.after(ce) && !showed) {
-									JOptionPane.showMessageDialog(null, "Start date is after end date!",
-											JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-									showed = true;
-								}
-								// or both is same date
-								else if (cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
-									JOptionPane.showMessageDialog(null,
-											"Start date equals end date!\nPlease be sure you're choose right date.",
-											JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
-									showed = true;
-								}
-								// other odds
-								else {
-									value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
-									totalDaysField.setText(Math.abs(value) + "");
-									repaint();
-								}
-							}
-
-						}
-					});
+					SwingUtilities.invokeLater(() -> {
+                                            boolean showed = false;
+                                            startDate = checkinDate.getDate();
+                                            endDate = checkoutDate.getDate();
+                                            
+                                            if (startDate != null && endDate != null) {
+                                                // add to calendar to be able get day of date
+                                                // and compare
+                                                Calendar cs = Calendar.getInstance();
+                                                cs.setTime(startDate);
+                                                Calendar ce = Calendar.getInstance();
+                                                ce.setTime(endDate);
+                                                
+                                                // compare if start date greater than end date
+                                                if (cs.after(ce) && !showed) {
+                                                    JOptionPane.showMessageDialog(null, "Start date is after end date!",
+                                                            JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+                                                    showed = true;
+                                                }
+                                                // or both is same date
+                                                else if (cs.get(Calendar.DAY_OF_YEAR) == ce.get(Calendar.DAY_OF_YEAR) && !showed) {
+                                                    JOptionPane.showMessageDialog(null,
+                                                            "Start date equals end date!\nPlease be sure you're choose right date.",
+                                                            JOptionPane.MESSAGE_PROPERTY, JOptionPane.WARNING_MESSAGE);
+                                                    showed = true;
+                                                }
+                                                // other odds
+                                                else {
+                                                    value = (int) ((startDate.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24));
+                                                    totalDaysField.setText(Math.abs(value) + "");
+                                                    repaint();
+                                                }
+                                            }
+                                        });
 				}
 			}
 		};
@@ -598,7 +593,7 @@ public class NewReservationWindow extends JDialog {
 				
 				try {
 					
-					reservation.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
+					reservation.setRentedRoomNum(roomNumCmbBox.getSelectedItem().toString());
 					reportBean.setTheNumber(roomNumCmbBox.getSelectedItem().toString());
 					
 					reservation.setGroupName(nameSurnameField.getText());
@@ -636,23 +631,29 @@ public class NewReservationWindow extends JDialog {
 						isPayed = true;
 					}
 					
-					logging.setMessage("Reservation details : " + reservation.toString());
-					rImpl.saveReservation(reservation);
+					
 										
 					final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
 					theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
 					
 					theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+                                        reservation.setRentedRoomCurrency(currencyCmbBox.getSelectedItem().toString());
 					reportBean.setType(currencyCmbBox.getSelectedItem().toString());
 					
 					theRoom.setPersonCount((int)personCountSpinner.getValue());
-					
+					reservation.setPersonCount(String.valueOf(personCountSpinner.getValue()));
+                                        
 					theRoom.setPrice(priceValue);
+                                        reservation.setRentedRoomPrice(String.valueOf(priceValue));
 					reportBean.setPrice(priceValue);
 					
 					theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
+                                        reservation.setRentedRoomType(roomTypeCmbBox.getSelectedItem().toString());
 					reportBean.setRoomType(roomTypeCmbBox.getSelectedItem().toString());
 					
+                                        logging.setMessage("Reservation details : " + reservation.toString());
+					rImpl.saveReservation(reservation);
+                                        
 					theRoom.setCustomerGrupName(nameSurnameField.getText());
 					theRoom.setUsageStatus("BLOCKED");
 					

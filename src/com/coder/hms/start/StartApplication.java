@@ -28,7 +28,6 @@ public class StartApplication {
 		}
 
 		new LoginWindow();
-
 	}
 
 }

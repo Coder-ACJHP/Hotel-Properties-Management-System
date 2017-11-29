@@ -59,7 +59,7 @@ public Object[] getNotReservedRooms(final String date) {
 		final String[] roomNumbers = new String[reservList.size()];
 		for(int index=0; index < reservList.size(); index++) {
 			
-			roomNumbers[index] = reservList.get(index).getTheNumber();
+			roomNumbers[index] = reservList.get(index).getRentedRoomNum();
 
 		}
 		

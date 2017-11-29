@@ -264,7 +264,7 @@ public final class UpdateReservationWindow extends JDialog {
 		creaditTypeCmbBox.setBounds(549, 73, 209, 20);
 		getContentPane().add(creaditTypeCmbBox);
 
-		JLabel reservationNoteLbl = new JLabel("Reservation Note : ");
+		final JLabel reservationNoteLbl = new JLabel("Reservation Note : ");
 		reservationNoteLbl.setForeground(new Color(255, 255, 255));
 		reservationNoteLbl.setFont(new Font("Verdana", Font.BOLD, 12));
 		reservationNoteLbl.setBounds(50, 208, 129, 23);
@@ -430,13 +430,6 @@ public final class UpdateReservationWindow extends JDialog {
 		roomLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		roomLbl.setBounds(41, 11, 61, 16);
 		roomTypePanel.add(roomLbl);
-
-		///////////////////////////////////////////////////////////////
-		// Populate this comboBox with special method that return just//
-		// empty rooms, all 'BLOCKED' & 'FULL' rooms removed because //
-		// when we create a new reservation we will see all rooms this//
-		// is a big mistake, we have to choose rooms that not blocked //
-		// or not full //
 		ROOM_NUMS = new String[] {};
 
 		roomNumCmbBox = new JComboBox<>(new DefaultComboBoxModel<>(ROOM_NUMS));
@@ -573,7 +566,7 @@ public final class UpdateReservationWindow extends JDialog {
 		final ActionListener theListener = (ActionEvent e) -> {
 			final Reservation reservation = rImpl.findReservationById(Long.valueOf(rezIdField.getText()));
 
-			reservation.setTheNumber(reservation.getTheNumber());
+			reservation.setRentedRoomNum(reservation.getRentedRoomNum());
 			reservation.setGroupName(nameSurnameField.getText());
 			reservation.setCheckinDate(sdf.format(startDate));
 			reservation.setCheckoutDate(sdf.format(endDate));
@@ -590,9 +583,17 @@ public final class UpdateReservationWindow extends JDialog {
 			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
 			theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
 			theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
+                        reservation.setRentedRoomCurrency(currencyCmbBox.getSelectedItem().toString());
+                        
 			theRoom.setPersonCount((int) personCountSpinner.getValue());
+                        reservation.setPersonCount(String.valueOf(personCountSpinner.getValue()));
+                        
 			theRoom.setPrice(Double.valueOf(priceField.getValue().toString()));
+                        reservation.setRentedRoomPrice(priceField.getValue().toString());
+                        
 			theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
+                        reservation.setRentedRoomType(roomTypeCmbBox.getSelectedItem().toString());
+                        
 			theRoom.setCustomerGrupName(nameSurnameField.getText());
 			theRoom.setUsageStatus("BLOCKED");
 
@@ -628,7 +629,7 @@ public final class UpdateReservationWindow extends JDialog {
 			} else if (rezervStatusCmbBox.getSelectedItem().toString().equals("CANCEL")) {
 				reservation.setBookStatus("CANCEL");
 				rImpl.updateReservation(reservation);
-				roomDaoImpl.setRoomAsDefaultByRoomNumber(reservation.getTheNumber());
+				roomDaoImpl.setRoomAsDefaultByRoomNumber(reservation.getRentedRoomNum());
 			}
 
 			dispose();
@@ -731,9 +732,16 @@ public final class UpdateReservationWindow extends JDialog {
 
 	private ActionListener privateItemListener() {
 		ActionListener listener = (ActionEvent e) -> {
-			// again populate the list with not blocked rooms
+			///////////////////////////////////////////////////////////////
+                        // Populate this comboBox with special method that return just//
+                        // empty rooms, all 'BLOCKED' & 'FULL' rooms removed because //
+                        // when we create a new reservation we will see all rooms this//
+                        // is a big mistake, we have to choose rooms that not blocked //
+                        // or not full //
 			ROOM_NUMS = roomNumberMaker.getNotReservedRooms(sdf.format(new Date()));
-			roomNumCmbBox.addItem(ROOM_NUMS);
+			for(int i=0; i<ROOM_NUMS.length; i++) {
+                            roomNumCmbBox.addItem(ROOM_NUMS[i]);
+                        }
 			roomNumCmbBox.revalidate();
 			roomNumCmbBox.repaint();
 			

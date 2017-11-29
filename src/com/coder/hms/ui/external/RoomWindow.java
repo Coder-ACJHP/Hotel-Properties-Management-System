@@ -745,7 +745,7 @@ public class RoomWindow extends JDialog {
 
 		final double priceVal = Double.valueOf(priceField.getValue().toString());
 
-		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(reservation.getTheNumber());
+		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(reservation.getRentedRoomNum());
 		foundedRoom.setPrice(priceVal);
 		roomDaoImpl.updateRoom(foundedRoom);
 

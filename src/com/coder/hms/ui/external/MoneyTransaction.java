@@ -127,7 +127,7 @@ public class MoneyTransaction extends JDialog {
 		lblPrice.setBounds(56, 143, 100, 20);
 		getContentPane().add(lblPrice);
 
-		formatter = NumberFormat.getCurrencyInstance();
+		formatter = NumberFormat.getInstance();
 		formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
 		priceField = new JFormattedTextField(formatter);
 		priceField.setValue(new Double(value));

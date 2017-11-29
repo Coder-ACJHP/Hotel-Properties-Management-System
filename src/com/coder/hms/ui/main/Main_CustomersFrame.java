@@ -35,21 +35,32 @@ import com.coder.hms.daoImpl.CustomerDaoImpl;
 import com.coder.hms.daoImpl.ReservationDaoImpl;
 import com.coder.hms.entities.Customer;
 import com.coder.hms.entities.Reservation;
+import com.coder.hms.ui.external.CustomerDetailWindow;
 import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
 import com.coder.hms.ui.extras.CustomersTableRenderer;
 import com.coder.hms.utils.ChangeComponentOrientation;
+import com.coder.hms.utils.LoggingEngine;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Main_CustomersFrame extends JPanel {
 
     /**
      *
      */
+    private Customer theCustomer;
     private JTable customerTable;
     private final LocaleBean bean;
     private JLabel lblTableFilter;
     private JScrollPane scrollPane;
+    private CustomerDaoImpl customerDaoImpl;
     private JTextField searchFilterField;
+    private static LoggingEngine loggingEngine;
     private JPanel searchPanel = new JPanel();
+    final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
     private static final long serialVersionUID = 1L;
     private ChangeComponentOrientation componentOrientation;
     private final String[] colsName = {"ROOM", "REZERVATION ", "NAME ", "LASTNAME",
@@ -68,6 +79,7 @@ public class Main_CustomersFrame extends JPanel {
         setLayout(new BorderLayout(0, 0));
 
         bean = LocaleBean.getInstance();
+        loggingEngine = LoggingEngine.getInstance();
         componentOrientation = new ChangeComponentOrientation();
         componentOrientation.setThePanel(this);
 
@@ -142,6 +154,7 @@ public class Main_CustomersFrame extends JPanel {
         customerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         customerTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         customerTable.setBackground(new Color(245, 245, 245));
+        customerTable.addMouseListener(openCustomerListener());
         scrollPane.setViewportView(customerTable);
 
         //change component orientation with locale.
@@ -150,7 +163,8 @@ public class Main_CustomersFrame extends JPanel {
         } else {
             componentOrientation.changeOrientationOfJPanelToLeft();
         }
-
+        //inject action event to Customers detail window to save all changes
+        custWindow.setActionListener(saveChanges());
         this.setVisible(true);
     }
 
@@ -163,7 +177,9 @@ public class Main_CustomersFrame extends JPanel {
 
     private void populateMainTable(DefaultTableModel model) {
 
-        final CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+        model.setRowCount(0);
+        
+        customerDaoImpl = new CustomerDaoImpl();
         final List<Customer> customerList = customerDaoImpl.getAllCustomers();
 
         final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
@@ -176,11 +192,96 @@ public class Main_CustomersFrame extends JPanel {
                 continue;
             }
 
-            final Object[] customerObject = new Object[]{reservation.getTheNumber(), reservation.getId(),
+            final Object[] customerObject = new Object[]{reservation.getRentedRoomNum(), reservation.getId(),
                 cust.getFirstName(), cust.getLastName(), reservation.getAgency(), reservation.getGroupName(),
                 reservation.getCheckinDate(), reservation.getCheckoutDate(), cust.getCountry()};
             model.addRow(customerObject);
         }
 
     }
+    
+    private MouseListener openCustomerListener() {
+		final MouseAdapter adapter = new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+
+				if (e.getClickCount() == 2) {
+
+					final int rowIndex = customerTable.getSelectedRow();
+					final String name = customerTable.getValueAt(rowIndex, 2).toString();
+					final String lastname = customerTable.getValueAt(rowIndex, 3).toString();
+
+					theCustomer = customerDaoImpl.findCustomerByName(name, lastname);
+
+					custWindow.setId(theCustomer.getCustomerId() + "");
+					custWindow.setName(theCustomer.getFirstName());
+					custWindow.setSurname(theCustomer.getLastName());
+					custWindow.setDocument(theCustomer.getDocument());
+					custWindow.setDocNo(theCustomer.getDocumentNo());
+					custWindow.setCountry(theCustomer.getCountry());
+					custWindow.setDateOfBirth(theCustomer.getDateOfBirth());
+					custWindow.setEmail(theCustomer.getEmail());
+					custWindow.setFatherName(theCustomer.getFatherName());
+					custWindow.setMotherName(theCustomer.getMotherName());
+					custWindow.setGender(theCustomer.getGender());
+					custWindow.setPhone(theCustomer.getPhone());
+					custWindow.setMariaggeStaus(theCustomer.getMaritalStatus());
+					custWindow.setReservationId(theCustomer.getReservationId() + "");
+					custWindow.setInfoMessage(" ");
+					
+					custWindow.setVisible(true);
+					
+					loggingEngine.setMessage("Displaying customer...");
+					loggingEngine.setMessage("Displayed customer details : " + theCustomer.toString());
+				}
+
+				super.mousePressed(e);
+			}
+		};
+		return adapter;
+	}
+
+	// save all changed properties in customer table
+	private ActionListener saveChanges() {
+		final ActionListener listener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				theCustomer.setCountry(custWindow.getCountry());
+				theCustomer.setFirstName(custWindow.getName());
+				theCustomer.setLastName(custWindow.getSurname());
+				theCustomer.setDocument(custWindow.getDocument());
+				theCustomer.setDocumentNo(custWindow.getDocNo());
+				theCustomer.setCountry(custWindow.getCountry());
+				theCustomer.setDateOfBirth(custWindow.getDateOfBirth());
+				theCustomer.setEmail(custWindow.getEmail());
+				theCustomer.setFatherName(custWindow.getFatherName());
+				theCustomer.setMotherName(custWindow.getMotherName());
+				theCustomer.setGender(custWindow.getGender());
+				theCustomer.setPhone(custWindow.getPhone());
+				theCustomer.setMaritalStatus(custWindow.getMariageStatus());
+				theCustomer.setReservationId(Long.parseLong(custWindow.getReservationId()));
+
+				boolean success = customerDaoImpl.update(theCustomer);
+
+				if (success) {
+					
+					custWindow.setInfoMessage("<html>SUCCESSFULLY ACCOMPLISHED</html>");
+					custWindow.setInfoLabelColor(Color.decode("#00FF00"));
+					loggingEngine.setMessage("Customer details updated : " + theCustomer.toString());
+					success = false;
+				} else {
+					custWindow.setInfoMessage("<html>OPERTION IS FAILED!</html>");
+					custWindow.setInfoLabelColor(Color.decode("#cd2626"));
+				}
+				
+				theCustomer = null;
+			}
+		};
+                //refresh table to update datails.
+                populateMainTable(this.model);
+		return listener;
+	}
+
 }

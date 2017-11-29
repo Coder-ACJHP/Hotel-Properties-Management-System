@@ -207,26 +207,89 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
     }
 
     @Override
-    public String getTotalCreditPostingsForOneDay(String date) {
-        String totalCash = null;
+    public String getTotalCreditLiraPostingsForOneDay(String date) {
+        String totalCredit = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
             beginTransactionIfAllowed(session);
             Query<String> query = session.createQuery("select sum(price) from Posting where "
-                    + "currency = 'CREDIT CARD' and dateTime >= :date", String.class);
+                    + "currency = 'CREDIT CARD' and currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
             query.setParameter("date", date);
-            totalCash = query.getSingleResult();
+            totalCredit = query.getSingleResult();
 
-            logging.setMessage("PostingDaoImpl -> fetching total cash dollar posting for one day...");
+            logging.setMessage("PostingDaoImpl -> fetching total credit card lira posting for one day...");
 
         } catch (NoResultException e) {
             logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
         } finally {
             session.close();
         }
-        return totalCash;
+        return totalCredit;
     }
 
+    @Override
+    public String getTotalCreditDollarPostingsForOneDay(String date) {
+        String totalCredit = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery("select sum(price) from Posting where "
+                    + "currency = 'CREDIT CARD' and currency = 'DOLLAR' and dateTime >= :date", String.class);
+            query.setParameter("date", date);
+            totalCredit = query.getSingleResult();
+
+            logging.setMessage("PostingDaoImpl -> fetching total credit card dollar posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCredit;
+    }
+
+    @Override
+    public String getTotalCreditEuroPostingsForOneDay(String date) {
+    String totalCredit = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery("select sum(price) from Posting where "
+                    + "currency = 'CREDIT CARD' and currency = 'EURO' and dateTime >= :date", String.class);
+            query.setParameter("date", date);
+            totalCredit = query.getSingleResult();
+
+            logging.setMessage("PostingDaoImpl -> fetching total credit card euro posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCredit;
+    }
+
+    @Override
+    public String getTotalCreditPoundPostingsForOneDay(String date) {
+        String totalCredit = null;
+        try {
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransactionIfAllowed(session);
+            Query<String> query = session.createQuery("select sum(price) from Posting where "
+                    + "currency = 'CREDIT CARD' and currency = 'POUND' and dateTime >= :date", String.class);
+            query.setParameter("date", date);
+            totalCredit = query.getSingleResult();
+
+            logging.setMessage("PostingDaoImpl -> fetching total credit card pound posting for one day...");
+
+        } catch (NoResultException e) {
+            logging.setMessage("PostingDaoImpl Error -> " + e.getLocalizedMessage());
+        } finally {
+            session.close();
+        }
+        return totalCredit;
+    }
+    
     @Override
     public void beginTransactionIfAllowed(Session theSession) {
         if (!theSession.getTransaction().isActive()) {

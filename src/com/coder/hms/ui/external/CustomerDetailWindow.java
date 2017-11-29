@@ -15,7 +15,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -26,21 +25,23 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.Dialog;
+import javax.swing.JFrame;
 
-public class CustomerDetailWindow extends JDialog {
+public class CustomerDetailWindow extends JFrame {
 
 	/**
 	 * 
 	 */
-	private JButton chancelBtn, saveBtn;
-	private JDateChooser dateOfBirthChooser;
+	private final JButton chancelBtn, saveBtn;
+	private final JDateChooser dateOfBirthChooser;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel, titlePanel;
 	private final String LOGOPATH = "/com/coder/hms/icons/main_logo(128X12).png";
-	private JComboBox<String> countryCmbBox, documentCmbBox, genderCmbBox, marriageStatusCmbBox;
-	private JLabel lblName, lblSurname, lblDateOfBirth, lblCountry, lblFatherName, lblNewLabel, infoLabel,
+	private final JComboBox<String> countryCmbBox, documentCmbBox, genderCmbBox, marriageStatusCmbBox;
+	private final JLabel lblName, lblSurname, lblDateOfBirth, lblCountry, lblFatherName, lblNewLabel, infoLabel,
 	lblPhoneNumber, lblEmail, lblId, lblDocument, lblDocumentNo, lblGender, lblMarriageStatus, lblReservationId;
-	private JTextField nameField, surnameField, fatherNameField, motherNameField, phoneField, emailField, idField, 
+	private final JTextField nameField, surnameField, fatherNameField, motherNameField, phoneField, emailField, idField, 
 	docNoField, reservationIdField;
 	private final String[] GENDER = { "MAN", "WOMAN" };
 	private final String[] MARRIAGE_STATUS = { "SINGLE", "MARRIED" };
@@ -62,8 +63,7 @@ public class CustomerDetailWindow extends JDialog {
 		setBounds(100, 100, 710, 460);
 		getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setModal(true);
-		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
+		setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
 		getContentPane().setFont(new Font("Verdana", Font.BOLD, 12));
 		setTitle("Coder HPMSA - [Customer detail]");
 		this.setIconImage(Toolkit.getDefaultToolkit().
@@ -76,7 +76,7 @@ public class CustomerDetailWindow extends JDialog {
 		getContentPane().add(titlePanel, BorderLayout.NORTH);
 		titlePanel.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("CUSTOMER DETAILS");
+		final JLabel lblNewLabel_1 = new JLabel("CUSTOMER DETAILS");
 		lblNewLabel_1.setForeground(new Color(220, 20, 60));
 		lblNewLabel_1.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblNewLabel_1.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -263,6 +263,7 @@ public class CustomerDetailWindow extends JDialog {
 		saveBtn.setFont(new Font("Verdana", Font.BOLD, 15));
 		buttonsPanel.add(saveBtn);
 		
+                setAlwaysOnTop(true);
 		setLocationRelativeTo(null);
 		setResizable(false);
 	}
