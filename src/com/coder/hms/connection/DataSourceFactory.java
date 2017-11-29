@@ -64,7 +64,7 @@ public class DataSourceFactory {
 	}
 	
 	public Transaction getTransaction() {
-		return getSessionFactory().getCurrentSession().beginTransaction();
+		return getSessionFactory().openSession().beginTransaction();
 	}
 	
 	public void shutDown() {
