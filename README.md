@@ -78,7 +78,7 @@ and more...
 <ul>
   <li> Clone or download the project and open it in any IDE or download as Execuatble .jar(All os) & .app(for Mac) & .exe(for Windows)</li>
   <li> Install Mysql server(PhpMyAdmin or Mysql Workbench etc..) if you don't have.</li>
-  <li>Don't worry about database and schemas <i> It will do it automatically for you.</i></li> 
+  <li>Don't worry about database and schemas <i> It will do it automatically for you.</i>If you want to do it by yourself with dumping (importing) <a href="https://github.com/Coder-ACJHP/Hotel-Properties-Management-System/blob/master/src/com/coder/hms/connection/CoderHPMSdatabase.sql">this</a> '.sql' file to your database server (creating schema also included)</li> 
   <li>Default user name = Admin --|-- default password = Admin958</li>
   <li>For accessing full features user name = System --|-- default password = System958 -> This will unlock Utils menu and you can truncate and create your database and tables, you can change hotel & room properties</li>
   <li> Congrats enjoy with your day :)</li> 
