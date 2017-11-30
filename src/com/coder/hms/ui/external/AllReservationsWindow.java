@@ -7,9 +7,9 @@ package com.coder.hms.ui.external;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -95,6 +95,7 @@ public class AllReservationsWindow extends JFrame {
     private void initComponents() {
 
         upperPanel = new JPanel();
+        upperPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         filterLbl = new JLabel();
         editButton = new JButton();
         stopDateLbl = new JLabel();
@@ -112,7 +113,7 @@ public class AllReservationsWindow extends JFrame {
         
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Coder HPMSA - [All Reservations]");
-        setExtendedState(Frame.MAXIMIZED_BOTH);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setFont(new Font("Microsoft Sans Serif", 0, 12)); // NOI18N
         setMinimumSize(new Dimension(1100, 750));
         setPreferredSize(new Dimension(1312, 800));
@@ -126,7 +127,7 @@ public class AllReservationsWindow extends JFrame {
         editButton.setIcon(new ImageIcon(getClass().
         		getResource("/com/coder/hms/icons/main_edit.png"))); // NOI18N
         editButton.setText("Edit Reservation");
-        editButton.setFont(new Font("Arial", Font.BOLD, 12));
+        editButton.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 12));
         editButton.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
         editButton.addActionListener(ActionListener -> {
         	getEditButtonAction();
@@ -144,7 +145,7 @@ public class AllReservationsWindow extends JFrame {
         btnFetch.setIcon(new ImageIcon(AllReservationsWindow.class.getResource("/com/coder/hms/icons/menu_fetch.png")));
         btnFetch.setMinimumSize(new Dimension(110, 45));
         btnFetch.setPreferredSize(new Dimension(110, 45));
-        btnFetch.setFont(new Font("Arial", Font.BOLD, 12));
+        btnFetch.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 12));
         btnFetch.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnFetch.addActionListener(ActionListener -> {
 
@@ -185,16 +186,16 @@ public class AllReservationsWindow extends JFrame {
         			.addContainerGap()
         			.addComponent(editButton, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(startDateLbl, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+        			.addComponent(startDateLbl, GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(startDateChooser, GroupLayout.PREFERRED_SIZE, 172, GroupLayout.PREFERRED_SIZE)
         			.addGap(34)
-        			.addComponent(stopDateLbl, GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+        			.addComponent(stopDateLbl, GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(endDateChooser, GroupLayout.PREFERRED_SIZE, 172, GroupLayout.PREFERRED_SIZE)
         			.addGap(18)
-        			.addComponent(btnFetch, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-        			.addGap(498))
+        			.addComponent(btnFetch, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+        			.addGap(465))
         );
         upperPanelLayout.setVerticalGroup(
         	upperPanelLayout.createParallelGroup(Alignment.LEADING)
@@ -206,7 +207,7 @@ public class AllReservationsWindow extends JFrame {
         						.addComponent(startDateChooser, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
         						.addComponent(endDateChooser, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
         						.addComponent(stopDateLbl, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-        						.addComponent(btnFetch, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
+        						.addComponent(btnFetch, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)))
         				.addGroup(upperPanelLayout.createSequentialGroup()
         					.addGap(11)
         					.addGroup(upperPanelLayout.createParallelGroup(Alignment.BASELINE)

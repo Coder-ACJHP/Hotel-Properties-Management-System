@@ -15,9 +15,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -41,6 +43,7 @@ import com.coder.hms.daoImpl.UserDaoImpl;
 import com.coder.hms.entities.User;
 import com.coder.hms.start.StartApplication;
 import com.coder.hms.ui.external.AddUserWindow;
+import com.coder.hms.ui.external.AllCompaniesWindow;
 import com.coder.hms.ui.external.AllReservationsWindow;
 import com.coder.hms.ui.external.ChangePasswordWindow;
 import com.coder.hms.ui.external.DialogFrame;
@@ -55,8 +58,6 @@ import com.coder.hms.ui.extras.ApplicationThemeChanger;
 import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.utils.ResourceControl;
-import java.io.File;
-import java.util.ArrayList;
 
 
 public class Main_MenuBar {
@@ -74,11 +75,11 @@ public class Main_MenuBar {
     private final String command = System.getProperty("os.name");
     public final ApplicationThemeChanger themeChanger = new ApplicationThemeChanger();
     private final JMenu frontDesk, mnTools, themes, usersMenu, mnAbout, utils;
-    private final JMenuItem hoteProps, roomProps, restart, menuInnerItemExit, calculator, 
+    private final JMenuItem hoteProps, roomProps, allCompanies, restart, menuInnerItemExit, 
             sendMail, exchange, systemLogs, defaultTheme, mnitmAero, mnitmBernstain, 
             mnitmMint, mnitmMcwin, mnitmAcryl, mnitmNoire, mnitmLuna, changeUser, 
             addUser, chngPassword, aboutDeveloper, mnitmTexture, allReservs,
-            sourceCode, shareYourOpinion, license, databaseProps;
+            sourceCode, shareYourOpinion, license, databaseProps, calculator;
 
     //getter method for getting the modified menubar from another class
     public JMenuBar getMenuBar() {
@@ -117,6 +118,17 @@ public class Main_MenuBar {
         	SwingUtilities.invokeLater(AllReservationsWindow::new);
         });
         frontDesk.add(allReservs);
+        
+        allCompanies = new JMenuItem("Companies");
+        allCompanies.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));
+        allCompanies.setIcon(new ImageIcon(getClass().getResource("/com/coder/hms/icons/menu_companies.png")));
+        allCompanies.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6 , (InputEvent.SHIFT_MASK
+                | Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())));
+        allCompanies.setMnemonic(KeyEvent.VK_F6 + KeyEvent.VK_CONTROL);
+        allCompanies.addActionListener(ActionListener->{
+        	SwingUtilities.invokeLater(AllCompaniesWindow::new);
+        });
+        frontDesk.add(allCompanies);
         
         restart = new JMenuItem("Restart");
         restart.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 13));

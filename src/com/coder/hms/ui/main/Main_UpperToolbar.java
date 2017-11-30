@@ -66,6 +66,7 @@ public class Main_UpperToolbar extends JPanel {
     	setPreferredSize(new Dimension(1224, 55));
     	setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
         setBackground(SystemColor.activeCaption);
+        setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
     	
         bean = LocaleBean.getInstance();
         componentOrientation = new ChangeComponentOrientation();
@@ -82,7 +83,6 @@ public class Main_UpperToolbar extends JPanel {
         roomsBtn.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 11));
         roomsBtn.setPreferredSize(new Dimension(137, 40));
         roomsBtn.addActionListener(UpperToolbarActionListener(mainFramePanel));
-        setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         this.add(roomsBtn);
 
         guestsBtn = new JButton("Guests");

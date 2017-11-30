@@ -9,8 +9,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -40,11 +45,6 @@ import com.coder.hms.ui.extras.CustomTableHeaderRenderer;
 import com.coder.hms.ui.extras.CustomersTableRenderer;
 import com.coder.hms.utils.ChangeComponentOrientation;
 import com.coder.hms.utils.LoggingEngine;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class Main_CustomersFrame extends JPanel {
 
@@ -60,12 +60,12 @@ public class Main_CustomersFrame extends JPanel {
     private JTextField searchFilterField;
     private static LoggingEngine loggingEngine;
     private JPanel searchPanel = new JPanel();
-    final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
     private static final long serialVersionUID = 1L;
     private ChangeComponentOrientation componentOrientation;
     private final String[] colsName = {"ROOM", "REZERVATION ", "NAME ", "LASTNAME",
         "AGENCY", "GROUP", "CHECK/IN DATE", "CHECK/OUT DATE", "COUNTRY"};
     private DefaultTableModel model = new DefaultTableModel(colsName, 0);
+    final static CustomerDetailWindow custWindow = new CustomerDetailWindow();
     private final CustomTableHeaderRenderer THR = new CustomTableHeaderRenderer();
     private final CustomersTableRenderer renderer = new CustomersTableRenderer();
 
