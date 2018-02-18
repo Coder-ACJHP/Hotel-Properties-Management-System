@@ -6,12 +6,13 @@
 package com.coder.hms.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.coder.hms.entities.Reservation;
 
 public interface ReservationDAO {
 
-	public Reservation findReservationById(long Id);
+	public Optional<Reservation> findReservationById(long Id);
 	
 	public Reservation findSingleReservByThisDate(String Date);
 		

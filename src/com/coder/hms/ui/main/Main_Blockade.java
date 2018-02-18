@@ -604,20 +604,20 @@ public final class Main_Blockade extends JPanel implements ActionListener {
             Optional<String> resIdOptional = Optional.ofNullable(reservIdFromRow);
             try {
                 final ReportObject reportBean = new ReportObject();
-                Reservation foundRes = resDaoImpl.findReservationById(Long.valueOf(resIdOptional.get()));
+                final Optional<Reservation> foundRes = resDaoImpl.findReservationById(Long.valueOf(resIdOptional.get()));
 
                 loggingEngine.setMessage("[Blockade window] Required reservation found : " + foundRes.toString());
                 final UpdateReservationWindow nex = new UpdateReservationWindow();
 
                 for (Room searchedRoom : roomList) {
-                    if (searchedRoom.getReservationId() == foundRes.getId()) {
+                    if (searchedRoom.getReservationId() == foundRes.get().getId()) {
                         room = searchedRoom;
                     }
                 }
 
                 List<Object[]> objList = new ArrayList<>();
                 for (Customer cst : customerList) {
-                    if (cst.getReservationId() == foundRes.getId()) {
+                    if (cst.getReservationId() == foundRes.get().getId()) {
                         customerCountry = cst.getCountry();
                         objList.add(new Object[]{room.getNumber(), room.getType(), cst.getFirstName(),
                                 cst.getLastName()});
@@ -626,31 +626,31 @@ public final class Main_Blockade extends JPanel implements ActionListener {
                 }
                 reportBean.setUserName(S_BEAN.getNickName());
 
-                nex.setRezIdField(foundRes.getId());
-                reportBean.setId(foundRes.getId());
+                nex.setRezIdField(foundRes.get().getId());
+                reportBean.setId(foundRes.get().getId());
 
-                nex.setNameSurnameField(foundRes.getGroupName());
-                reportBean.setGroupName(foundRes.getGroupName());
+                nex.setNameSurnameField(foundRes.get().getGroupName());
+                reportBean.setGroupName(foundRes.get().getGroupName());
 
-                nex.setCheckinDate(foundRes.getCheckinDate());
-                reportBean.setCheckinDate(foundRes.getCheckinDate());
+                nex.setCheckinDate(foundRes.get().getCheckinDate());
+                reportBean.setCheckinDate(foundRes.get().getCheckinDate());
 
-                nex.setCheckoutDate(foundRes.getCheckoutDate());
-                reportBean.setCheckoutDate(foundRes.getCheckoutDate());
+                nex.setCheckoutDate(foundRes.get().getCheckoutDate());
+                reportBean.setCheckoutDate(foundRes.get().getCheckoutDate());
 
-                nex.setTotalDaysField(foundRes.getTotalDays());
-                reportBean.setTotalDays(foundRes.getTotalDays());
+                nex.setTotalDaysField(foundRes.get().getTotalDays());
+                reportBean.setTotalDays(foundRes.get().getTotalDays());
 
-                nex.setReservNote(foundRes.getNote());
+                nex.setReservNote(foundRes.get().getNote());
 
-                nex.setAgency(foundRes.getAgency());
-                reportBean.setAgency(foundRes.getAgency());
+                nex.setAgency(foundRes.get().getAgency());
+                reportBean.setAgency(foundRes.get().getAgency());
 
-                nex.setHostType(foundRes.getHostType());
-                reportBean.setHostType(foundRes.getHostType());
+                nex.setHostType(foundRes.get().getHostType());
+                reportBean.setHostType(foundRes.get().getHostType());
 
-                nex.setCreditType(foundRes.getCreditType());
-                nex.setReservStatus(foundRes.getBookStatus());
+                nex.setCreditType(foundRes.get().getCreditType());
+                nex.setReservStatus(foundRes.get().getBookStatus());
 
                 nex.setRoomNumber(room.getNumber());
                 reportBean.setTheNumber(room.getNumber());
@@ -666,16 +666,16 @@ public final class Main_Blockade extends JPanel implements ActionListener {
                 nex.setCurrency(room.getCurrency());
                 reportBean.setType(room.getCurrency());
 
-                nex.setAgencyRefNo(foundRes.getAgencyRefNo());
-                reportBean.setAgencyRefNo(foundRes.getAgencyRefNo());
+                nex.setAgencyRefNo(foundRes.get().getAgencyRefNo());
+                reportBean.setAgencyRefNo(foundRes.get().getAgencyRefNo());
 
-                nex.setReferanceNo(foundRes.getReferanceNo());
+                nex.setReferanceNo(foundRes.get().getReferanceNo());
                 nex.setCustomerCountry(customerCountry);
 
                 nex.setRoomCountTableRows(new Object[]{room.getNumber(), room.getType(), room.getPersonCount(),
                     room.getPrice(), room.getCurrency()});
 
-                if (foundRes.getPaymentStatus()) {
+                if (foundRes.get().getPaymentStatus()) {
 
                     payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(room.getNumber());
                     nex.setEarlyPaymetTableRows(

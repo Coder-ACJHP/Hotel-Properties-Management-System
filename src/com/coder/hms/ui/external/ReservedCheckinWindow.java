@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -237,14 +238,14 @@ public class ReservedCheckinWindow extends JDialog implements ActionListener {
 		/////////////////////////////////////////////////////////////////////////////////////
 		 
 		final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(ownInjectedRoom.getNumber());
-		final Reservation foundedReserv = reservDaoImpl.findReservationById(checkingRoom.getReservationId());
-		final List<Customer> customerList = customerDaoImpl.getCustomerByReservId(foundedReserv.getId());
+		final Optional<Reservation> foundedReserv = reservDaoImpl.findReservationById(checkingRoom.getReservationId());
+		final List<Customer> customerList = customerDaoImpl.getCustomerByReservId(foundedReserv.get().getId());
 		//Just for to be sure, check the reservation
 		if(foundedReserv != null) {
 			
                         int loopCounter = 0;
 			checkingRoom.setUsageStatus("FULL");
-			checkingRoom.setCustomerGrupName(foundedReserv.getGroupName());
+			checkingRoom.setCustomerGrupName(foundedReserv.get().getGroupName());
 			
 			if((int)spinner.getValue() == 0 || (int)spinner.getValue() == 1) {
                             loopCounter = 1;
@@ -269,7 +270,7 @@ public class ReservedCheckinWindow extends JDialog implements ActionListener {
                                 customerList.get(i).setLastName(formsArray[i].getLastNameFieldValue());
                                 customerList.get(i).setGender(formsArray[i].getGenderComboxValue());
                                 customerList.get(i).setMaritalStatus(formsArray[i].getMarriageComboBoxValue());
-                                customerList.get(i).setReservationId(foundedReserv.getId());
+                                customerList.get(i).setReservationId(foundedReserv.get().getId());
                                 customerDaoImpl.update(customerList.get(i));
                                 
                                 loggingEngine.setMessage("Check in for customer(s) : " + customerList.get(i).toString());
@@ -279,8 +280,8 @@ public class ReservedCheckinWindow extends JDialog implements ActionListener {
 			roomDaoImpl.updateRoom(checkingRoom);
 			loggingEngine.setMessage("Check in room is : " + checkingRoom.toString());
 			
-			foundedReserv.setIsCheckedIn("YES");
-			reservDaoImpl.updateReservation(foundedReserv);
+			foundedReserv.get().setIsCheckedIn("YES");
+			reservDaoImpl.updateReservation(foundedReserv.get());
 			
 			loggingEngine.setMessage("Check in reservation is : " + foundedReserv.toString());
 			

@@ -28,6 +28,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -564,46 +565,46 @@ public final class UpdateReservationWindow extends JDialog {
 
 	private ActionListener updateReservAction() {
 		final ActionListener theListener = (ActionEvent e) -> {
-			final Reservation reservation = rImpl.findReservationById(Long.valueOf(rezIdField.getText()));
+			Optional<Reservation> reservation = rImpl.findReservationById(Long.valueOf(rezIdField.getText()));
 
-			reservation.setRentedRoomNum(reservation.getRentedRoomNum());
-			reservation.setGroupName(nameSurnameField.getText());
-			reservation.setCheckinDate(sdf.format(startDate));
-			reservation.setCheckoutDate(sdf.format(endDate));
-			reservation.setTotalDays(Integer.parseInt(totalDaysField.getText()));
-			reservation.setAgency(agencyCmbBox.getSelectedItem().toString());
-			reservation.setHostType(hostCmbBox.getSelectedItem().toString());
-			reservation.setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
-			reservation.setNote(noteTextArea.getText());
-			reservation.setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
-			reservation.setAgencyRefNo(agencyRefField.getText());
-			reservation.setReferanceNo(referanceNoField.getText());
-			reservation.setIsCheckedIn("NO");
+			reservation.get().setRentedRoomNum(reservation.get().getRentedRoomNum());
+			reservation.get().setGroupName(nameSurnameField.getText());
+			reservation.get().setCheckinDate(sdf.format(startDate));
+			reservation.get().setCheckoutDate(sdf.format(endDate));
+			reservation.get().setTotalDays(Integer.parseInt(totalDaysField.getText()));
+			reservation.get().setAgency(agencyCmbBox.getSelectedItem().toString());
+			reservation.get().setHostType(hostCmbBox.getSelectedItem().toString());
+			reservation.get().setCreditType(creaditTypeCmbBox.getSelectedItem().toString());
+			reservation.get().setNote(noteTextArea.getText());
+			reservation.get().setBookStatus(rezervStatusCmbBox.getSelectedItem().toString());
+			reservation.get().setAgencyRefNo(agencyRefField.getText());
+			reservation.get().setReferanceNo(referanceNoField.getText());
+			reservation.get().setIsCheckedIn("NO");
 
 			final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumCmbBox.getSelectedItem().toString());
 			theRoom.setNumber(roomNumCmbBox.getSelectedItem().toString());
 			theRoom.setCurrency(currencyCmbBox.getSelectedItem().toString());
-                        reservation.setRentedRoomCurrency(currencyCmbBox.getSelectedItem().toString());
+                        reservation.get().setRentedRoomCurrency(currencyCmbBox.getSelectedItem().toString());
                         
 			theRoom.setPersonCount((int) personCountSpinner.getValue());
-                        reservation.setPersonCount(String.valueOf(personCountSpinner.getValue()));
+                        reservation.get().setPersonCount(String.valueOf(personCountSpinner.getValue()));
                         
 			theRoom.setPrice(Double.valueOf(priceField.getValue().toString()));
-                        reservation.setRentedRoomPrice(priceField.getValue().toString());
+                        reservation.get().setRentedRoomPrice(priceField.getValue().toString());
                         
 			theRoom.setType(roomTypeCmbBox.getSelectedItem().toString());
-                        reservation.setRentedRoomType(roomTypeCmbBox.getSelectedItem().toString());
+                        reservation.get().setRentedRoomType(roomTypeCmbBox.getSelectedItem().toString());
                         
 			theRoom.setCustomerGrupName(nameSurnameField.getText());
 			theRoom.setUsageStatus("BLOCKED");
 
-			double lastPrice = theRoom.getPrice() * reservation.getTotalDays();
+			double lastPrice = theRoom.getPrice() * reservation.get().getTotalDays();
 			theRoom.setTotalPrice(String.valueOf(lastPrice));
 
 			lastPrice = lastPrice - Double.valueOf(theRoom.getBalance());
 			theRoom.setRemainingDebt(lastPrice);
 
-			if (reservation.getPaymentStatus()) {
+			if (reservation.get().getPaymentStatus()) {
 				Payment payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(theRoom.getNumber());
 				earlyPaymetModel.addRow(new Object[] { payment.getTitle(), payment.getPaymentType(), payment.getPrice(),
 						payment.getCurrency(), payment.getExplanation(), payment.getDateTime() });
@@ -615,21 +616,21 @@ public final class UpdateReservationWindow extends JDialog {
 				logging.setMessage("Reservation room details : " + theRoom.toString());
 				logging.setMessage("Reservation details : " + reservation.toString());
 
-				rImpl.updateReservation(reservation);
+				rImpl.updateReservation(reservation.get());
 
 				roomDaoImpl.updateRoom(theRoom);
 
 				for (int i = 0; i < model.getRowCount(); i++) {
-					Customer customer = customerDaoImpl.getSinlgeCustomerByReservId(reservation.getId(), model.getValueAt(i, 2).toString());
+					Customer customer = customerDaoImpl.getSinlgeCustomerByReservId(reservation.get().getId(), model.getValueAt(i, 2).toString());
 					customer.setFirstName(model.getValueAt(i, 2).toString());
 					customer.setLastName(model.getValueAt(i, 3).toString());
 					customerDaoImpl.update(customer);
 				}
 
 			} else if (rezervStatusCmbBox.getSelectedItem().toString().equals("CANCEL")) {
-				reservation.setBookStatus("CANCEL");
-				rImpl.updateReservation(reservation);
-				roomDaoImpl.setRoomAsDefaultByRoomNumber(reservation.getRentedRoomNum());
+				reservation.get().setBookStatus("CANCEL");
+				rImpl.updateReservation(reservation.get());
+				roomDaoImpl.setRoomAsDefaultByRoomNumber(reservation.get().getRentedRoomNum());
 			}
 
 			dispose();

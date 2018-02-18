@@ -27,6 +27,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -63,11 +64,11 @@ import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Reservation;
 import com.coder.hms.entities.Room;
-import com.coder.hms.ui.main.Main_AllRooms;
 import com.coder.hms.ui.extras.CustomersTableRenderer;
-import com.coder.hms.utils.LoggingEngine;
 import com.coder.hms.ui.extras.PayPostTableCellRenderer;
 import com.coder.hms.ui.extras.RoomExternalTableHeaderRenderer;
+import com.coder.hms.ui.main.Main_AllRooms;
+import com.coder.hms.utils.LoggingEngine;
 import com.toedter.calendar.JDateChooser;
 
 public class RoomWindow extends JDialog {
@@ -80,7 +81,7 @@ public class RoomWindow extends JDialog {
 	private Customer theCustomer;
 	private NumberFormat formatter;
 	private static String roomNumber;
-	private Reservation reservation;
+	private Optional<Reservation> reservation;
 	private static LoggingEngine loggingEngine;
 	private JTable payPostTable, customerTable;
 	private HotelSystemStatus hotelSystemStatus;
@@ -683,11 +684,11 @@ public class RoomWindow extends JDialog {
 		final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomNumber);
 		reservation = reservationDaoImpl.findReservationById(theRoom.getReservationId());
 
-		IdField.setText(reservation.getId() + "");
+		IdField.setText(reservation.get().getId() + "");
 
-		groupNameField.setText(reservation.getGroupName());
+		groupNameField.setText(reservation.get().getGroupName());
 
-		agencyField.setText(reservation.getAgency());
+		agencyField.setText(reservation.get().getAgency());
 
 		priceField.setValue(theRoom.getPrice());
 
@@ -699,19 +700,19 @@ public class RoomWindow extends JDialog {
 			currencyField.setText(theRoom.getCurrency());
 		}
 
-		creditField.setText(reservation.getCreditType());
+		creditField.setText(reservation.get().getCreditType());
 
-		hostTypeField.setText(reservation.getHostType());
+		hostTypeField.setText(reservation.get().getHostType());
 
-		LocalDate localDate = LocalDate.parse(reservation.getCheckinDate());
+		LocalDate localDate = LocalDate.parse(reservation.get().getCheckinDate());
 		Date date = java.sql.Date.valueOf(localDate);
 		checkinDate.setDate(date);
 
-		localDate = LocalDate.parse(reservation.getCheckoutDate());
+		localDate = LocalDate.parse(reservation.get().getCheckoutDate());
 		date = java.sql.Date.valueOf(localDate);
 		checkoutDate.setDate(date);
 
-		totalDaysField.setText(reservation.getTotalDays() + "");
+		totalDaysField.setText(reservation.get().getTotalDays() + "");
 
 		final double totalPrice = Double.parseDouble(theRoom.getTotalPrice());
 		totalPriceField.setValue(totalPrice);
@@ -723,7 +724,7 @@ public class RoomWindow extends JDialog {
 		remainDebtField.setValue(totalPrice - roombalance);
 		theRoom.setRemainingDebt(Double.valueOf(decimalFormat.format(totalPrice - roombalance)));
 		
-		roomNote.setText(reservation.getNote());
+		roomNote.setText(reservation.get().getNote());
 		roomDaoImpl.updateRoom(theRoom);
 	}
 
@@ -731,28 +732,28 @@ public class RoomWindow extends JDialog {
 
 		loggingEngine.setMessage("Updating reservation...");
 		
-		LocalDate lic = LocalDate.parse(reservation.getCheckinDate());
+		LocalDate lic = LocalDate.parse(reservation.get().getCheckinDate());
 		Date oldDate = java.sql.Date.valueOf(lic);
 
-		LocalDate loc = LocalDate.parse(reservation.getCheckoutDate());
+		LocalDate loc = LocalDate.parse(reservation.get().getCheckoutDate());
 		Date updateDate = java.sql.Date.valueOf(loc);
 
 		int totalDayResult = (int) ((updateDate.getTime() - oldDate.getTime()) / (1000 * 60 * 60 * 24));
 
-		reservation.setTotalDays(Math.abs(totalDayResult));
+		reservation.get().setTotalDays(Math.abs(totalDayResult));
 		String resultDate = new SimpleDateFormat("yyyy-MM-dd").format(checkoutDate.getDate());
-		reservation.setCheckoutDate(resultDate);
+		reservation.get().setCheckoutDate(resultDate);
 
 		final double priceVal = Double.valueOf(priceField.getValue().toString());
 
-		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(reservation.getRentedRoomNum());
+		final Room foundedRoom = roomDaoImpl.getRoomByRoomNumber(reservation.get().getRentedRoomNum());
 		foundedRoom.setPrice(priceVal);
 		roomDaoImpl.updateRoom(foundedRoom);
 
 		if (!roomNote.getText().isEmpty())
-			reservation.setNote(roomNote.getText());
+			reservation.get().setNote(roomNote.getText());
 
-		reservationDaoImpl.updateReservation(reservation);
+		reservationDaoImpl.updateReservation(reservation.get());
 		
 		loggingEngine.setMessage("Updated reservation details : " + reservation.toString());
 	}

@@ -15,7 +15,15 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 
+import com.coder.hms.entities.Company;
+import com.coder.hms.entities.Customer;
+import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.HotelSystemStatus;
+import com.coder.hms.entities.Payment;
+import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Reservation;
+import com.coder.hms.entities.Room;
+import com.coder.hms.entities.User;
 import com.coder.hms.ui.external.InformationFrame;
 
 public class DataSourceFactory {
@@ -24,13 +32,20 @@ public class DataSourceFactory {
 
 	public DataSourceFactory() {}
 
-	public static synchronized void createConnection() {
+	public static void createConnection() {
 		try {
 
-			if (sessionFactory == null) {
 				sessionFactory = new Configuration().configure("com/coder/hms/connection/hibernate.cfg.xml")
-						.addAnnotatedClass(Reservation.class).buildSessionFactory();
-			}
+						.addAnnotatedClass(Reservation.class)
+						.addAnnotatedClass(Company.class)
+						.addAnnotatedClass(Customer.class)
+						.addAnnotatedClass(Hotel.class)
+						.addAnnotatedClass(HotelSystemStatus.class)
+						.addAnnotatedClass(Payment.class)
+						.addAnnotatedClass(Posting.class)
+						.addAnnotatedClass(Room.class)
+						.addAnnotatedClass(User.class)
+						.buildSessionFactory();
 
 		} catch (HibernateException e) {
 			Toolkit.getDefaultToolkit().beep();

@@ -17,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -181,21 +182,23 @@ public class Main_CustomersFrame extends JPanel {
         
         customerDaoImpl = new CustomerDaoImpl();
         final List<Customer> customerList = customerDaoImpl.getAllCustomers();
+        
+        if(!customerList.isEmpty()) {
+        	final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
 
-        final ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl();
+            for (Customer cust : customerList) {
 
-        for (Customer cust : customerList) {
+                final Optional<Reservation> reservation = reservationDaoImpl.findReservationById(cust.getReservationId());
 
-            final Reservation reservation = reservationDaoImpl.findReservationById(cust.getReservationId());
+                if (!reservation.isPresent()) {
+                    continue;
+                }
 
-            if (reservation == null) {
-                continue;
+                final Object[] customerObject = new Object[]{reservation.get().getRentedRoomNum(), reservation.get().getId(),
+                    cust.getFirstName(), cust.getLastName(), reservation.get().getAgency(), reservation.get().getGroupName(),
+                    reservation.get().getCheckinDate(), reservation.get().getCheckoutDate(), cust.getCountry()};
+                model.addRow(customerObject);
             }
-
-            final Object[] customerObject = new Object[]{reservation.getRentedRoomNum(), reservation.getId(),
-                cust.getFirstName(), cust.getLastName(), reservation.getAgency(), reservation.getGroupName(),
-                reservation.getCheckinDate(), reservation.getCheckoutDate(), cust.getCountry()};
-            model.addRow(customerObject);
         }
 
     }

@@ -66,20 +66,14 @@ public class CustomerDaoImpl implements CustomerDAO, TransactionManagement {
 
 	@Override
 	public List<Customer> getAllCustomers() {
-                List<Customer> customerList = null;
-		try {
 			session = dataSourceFactory.getSessionFactory().openSession();
 			beginTransactionIfAllowed(session);
 			Query<Customer> query = session.createQuery("from Customer", Customer.class);
-			customerList =  query.getResultList();
-                        
+			List<Customer> customerList =  query.getResultList();
+            session.close();            
 			logging.setMessage("CustomerDaoImpl -> fetching all customers");
-		} catch (NoResultException e) {
-			logging.setMessage("CustomerDaoImpl NoResultException -> :"+e.getLocalizedMessage());
-		} finally {
-			session.close();
-		}
-                   return customerList;
+			
+          return customerList;
 	}
 
     @Override

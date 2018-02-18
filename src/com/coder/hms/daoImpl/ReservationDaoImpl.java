@@ -6,6 +6,7 @@
 package com.coder.hms.daoImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.NoResultException;
 
@@ -33,28 +34,19 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         logging = LoggingEngine.getInstance();
     }
 
-    @Override
-    public Reservation findReservationById(long theId) {
-        Reservation theReservation = null;
-        try {
-            session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
-            Query<Reservation> query = session.createQuery("from Reservation where id=:theId", Reservation.class);
-            query.setParameter("theId", theId);
-            query.setMaxResults(1);
-            theReservation = query.getSingleResult();
+	@Override
+	public Optional<Reservation> findReservationById(long theId) {
+		session = dataSourceFactory.getSessionFactory().openSession();
+		beginTransactionIfAllowed(session);
+		final Query<Reservation> query = session.createQuery("from Reservation where id=:theId", Reservation.class);
+		query.setParameter("theId", theId);
+		query.setMaxResults(1);
+		Optional<Reservation> theReservation = query.uniqueResultOptional();
+		session.close();
+		logging.setMessage("ReservationDaoImpl -> fetching reservation by Id...");
 
-            logging.setMessage("ReservationDaoImpl -> fetching reservation by Id...");
-
-        } catch (NoResultException e) {
-            final InformationFrame frame = new InformationFrame();
-            frame.setMessage("No reservation found!");
-            frame.setVisible(true);
-        } finally {
-            session.close();
-        }
-        return theReservation;
-    }
+		return theReservation;
+	}
 
     @Override
     public Reservation findSingleReservByThisDate(String Date) {

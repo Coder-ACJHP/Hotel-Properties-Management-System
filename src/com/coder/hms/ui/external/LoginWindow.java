@@ -475,21 +475,7 @@ public class LoginWindow extends JDialog {
                         
                     }
                     
-                    if (check == true) {
-                        //store informations in bean to use it in another frames.
-                        sessionBean.setNickName(userName);
-                        sessionBean.setPassword(userPswrd);
-                        
-                        logging.setMessage("User is : " + sessionBean.getNickName());
-                        //close this frame
-                        dispose();
-                        //open main application frame
-                        new MainFrame();
-                        
-                    } else {
-                        infoLabel.setForeground(new Color(220, 20, 60));
-                        infoLabel.setText("INFO :Username and password doesn't match !!");
-                    }
+                    doLogin(userName, userPswrd, check);
                     
                 } else {
                     //change label font color and warn the user.
@@ -501,7 +487,7 @@ public class LoginWindow extends JDialog {
                 // clear all fields
                 userNameField.setText(null);
                 passwordField.setText(null);
-                infoLabel.setForeground(Color.decode("#059046"));
+                infoLabel.setForeground(new Color(135, 206, 235));
                 infoLabel.setText("INFO : All fields cleared.");
                 
             }
@@ -509,6 +495,24 @@ public class LoginWindow extends JDialog {
 
         jButton.addActionListener(myListner);
     }
+
+	private void doLogin(final String userName, final String userPswrd, boolean check) {
+		if (check == true) {
+		    //store informations in bean to use it in another frames.
+		    sessionBean.setNickName(userName);
+		    sessionBean.setPassword(userPswrd);
+		    
+		    logging.setMessage("User is : " + sessionBean.getNickName());
+		    //close this frame
+		    dispose();
+		    //open main application frame
+		    new MainFrame();
+		    
+		} else {
+		    infoLabel.setForeground(new Color(220, 20, 60));
+		    infoLabel.setText("INFO :Username and password doesn't match !!");
+		}
+	}
 
     private MouseListener setVisible() {
         final MouseAdapter listener = new MouseAdapter() {

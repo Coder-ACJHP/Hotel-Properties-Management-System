@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -165,16 +166,16 @@ public class Main_AllRooms {
                     final long reservId = room.getReservationId();
 
                     if (reservId != 0) {
-                        final Reservation theReservation = rImpl.findReservationById(room.getReservationId());
+                        final Optional<Reservation> theReservation = rImpl.findReservationById(room.getReservationId());
 
                         ///////////////////////////////////////////////////////////////////////////
                         //Convert check in, check out, today from String to date than compare all// 
-                        LocalDate localDate = LocalDate.parse(theReservation.getCheckoutDate()); //
+                        LocalDate localDate = LocalDate.parse(theReservation.get().getCheckoutDate()); //
                         final Date checkoutDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
                         final Date defaultDate = Date.from(systemStatus.getDateTime().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-                        localDate = LocalDate.parse(theReservation.getCheckinDate());            //
+                        localDate = LocalDate.parse(theReservation.get().getCheckinDate());            //
                         final Date checkinDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                         ///////////////////////////////////////////////////////////////////////////
 
@@ -273,7 +274,7 @@ public class Main_AllRooms {
                         if (command.contains(roomText)) {
 
                             final Room theRoom = roomDaoImpl.getRoomByRoomNumber(roomText);
-                            final Reservation foundedReserv = rImpl.findReservationById(theRoom.getReservationId());
+                            final Optional<Reservation> foundedReserv = rImpl.findReservationById(theRoom.getReservationId());
 
                             if (theRoom.getUsageStatus().equals("FULL")) {
                                 SwingUtilities.invokeLater(() -> {
@@ -283,7 +284,7 @@ public class Main_AllRooms {
                                 });
                                 break;
                             } else if (theRoom.getUsageStatus().equals("BLOCKED")
-                                    && innerDate.equals(foundedReserv.getCheckinDate())) {
+                                    && innerDate.equals(foundedReserv.get().getCheckinDate())) {
 
                                 SwingUtilities.invokeLater(() -> {
                                     new ReservedCheckinWindow(theRoom).setVisible(true);
@@ -452,13 +453,13 @@ public class Main_AllRooms {
         getReservation.setIcon(new ImageIcon(Main_AllRooms.class.getResource("/com/coder/hms/icons/main_new_rez.png")));
         getReservation.addActionListener(ActionListener -> {
             final Room checkingRoom = roomDaoImpl.getRoomByRoomNumber(currentRoomNumber);
-            final Reservation rr = rImpl.findReservationById(checkingRoom.getReservationId());
+            final Optional<Reservation> foundReserv = rImpl.findReservationById(checkingRoom.getReservationId());
 
-            if (rr != null) {
+            if (foundReserv.isPresent()) {
 
                 SwingUtilities.invokeLater(() -> {
                     final CustomerDaoImpl cImpl = new CustomerDaoImpl();
-                    final List<Customer> customerList = cImpl.getCustomerByReservId(rr.getId());
+                    final List<Customer> customerList = cImpl.getCustomerByReservId(foundReserv.get().getId());
 
                     Payment payment = null;
                     String customerCountry = "";
@@ -472,23 +473,23 @@ public class Main_AllRooms {
                     }
 
                     final NewReservationWindow nex = new NewReservationWindow();
-                    nex.setRezIdField(rr.getId());
-                    nex.setAgency(rr.getAgency());
+                    nex.setRezIdField(foundReserv.get().getId());
+                    nex.setAgency(foundReserv.get().getAgency());
                     nex.setRoomNumber(checkingRoom.getNumber());
                     nex.setRoomType(checkingRoom.getType());
                     nex.setCustomerCountry(customerCountry);
-                    nex.setNameSurnameField(rr.getGroupName());
-                    nex.setCheckinDate(rr.getCheckinDate());
-                    nex.setCheckoutDate(rr.getCheckoutDate());
-                    nex.setTotalDaysField(rr.getTotalDays());
-                    nex.setHostType(rr.getHostType());
-                    nex.setCreditType(rr.getCreditType());
-                    nex.setReservStatus(rr.getBookStatus());
-                    nex.setReservNote(rr.getNote());
+                    nex.setNameSurnameField(foundReserv.get().getGroupName());
+                    nex.setCheckinDate(foundReserv.get().getCheckinDate());
+                    nex.setCheckoutDate(foundReserv.get().getCheckoutDate());
+                    nex.setTotalDaysField(foundReserv.get().getTotalDays());
+                    nex.setHostType(foundReserv.get().getHostType());
+                    nex.setCreditType(foundReserv.get().getCreditType());
+                    nex.setReservStatus(foundReserv.get().getBookStatus());
+                    nex.setReservNote(foundReserv.get().getNote());
                     nex.setCurrency(checkingRoom.getCurrency());
                     nex.setPriceOfRoom(checkingRoom.getPrice());
-                    nex.setAgencyRefNo(rr.getAgencyRefNo());
-                    nex.setReferanceNo(rr.getReferanceNo());
+                    nex.setAgencyRefNo(foundReserv.get().getAgencyRefNo());
+                    nex.setReferanceNo(foundReserv.get().getReferanceNo());
                     nex.setPersonCountSpinner(checkingRoom.getPersonCount());
 
                     nex.setRoomCountTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
@@ -497,7 +498,7 @@ public class Main_AllRooms {
                     nex.setRoomInfoTableRows(new Object[]{checkingRoom.getNumber(), checkingRoom.getType(),
                         customerName, customerSurName});
 
-                    if (rr.getPaymentStatus()) {
+                    if (foundReserv.get().getPaymentStatus()) {
 
                         payment = paymentDaoImpl.getEarlyPaymentByRoomNumber(checkingRoom.getNumber());
                         nex.setEarlyPaymetTableRows(new Object[]{payment.getTitle(), payment.getPaymentType(),
@@ -506,7 +507,7 @@ public class Main_AllRooms {
 
                     nex.setVisible(true);
 
-                    if (rr.getPaymentStatus()) {
+                    if (foundReserv.get().getPaymentStatus()) {
                         JOptionPane.showMessageDialog(new JFrame(), "Early payment " + payment.getPrice() + payment.getCurrency(),
                                 JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
                     }

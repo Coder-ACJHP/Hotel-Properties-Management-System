@@ -111,18 +111,18 @@
 
 		<!-- https://mvnrepository.com/artifact/com.ibatis/ibatis2-common -->
 		<dependency>
-		    <groupId>com.ibatis</groupId>
-		    <artifactId>ibatis2-common</artifactId>
-		    <version>2.1.7.597</version>
+			<groupId>com.ibatis</groupId>
+			<artifactId>ibatis2-common</artifactId>
+			<version>2.1.7.597</version>
 		</dependency>
-                
-                <!-- https://mvnrepository.com/artifact/org.jasypt/jasypt -->
-                <dependency>
-                    <groupId>org.jasypt</groupId>
-                    <artifactId>jasypt</artifactId>
-                    <version>1.9.2</version>
-                </dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.jasypt/jasypt -->
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+			<version>1.9.2</version>
+		</dependency>
 
 	</dependencies>
-    <name>HotelPropertiesManagementSystem</name>
+	<name>HotelPropertiesManagementSystem</name>
 </project>
