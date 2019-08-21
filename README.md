@@ -1,3 +1,5 @@
+### This repostory is no longer updated :)
+
 <div align="center">
 <img src="https://github.com/Coder-ACJHP/Hotel-Management-System/blob/master/src/com/coder/hms/icons/main_logo(128X12).png">
   <h1>Hotel-Properties-Management-System Application </h1><br>
@@ -128,7 +130,4 @@ Add this line in your database to create event : <code>create event dailyAudit o
   <li>Credit card payment added to new transaction window & cash desk</li>
   <li>A lot of code lines & algorithms refactored</li>
 </ul>
-<h2>Another questions ?</h2> 
-For any question please email me at : <a href="mailto:hexa.octabin@gmail.com">hexa.octabin@gmail.com</a>
-<hr>
 <h2>INFO : </h2>Please read the license carefully.
