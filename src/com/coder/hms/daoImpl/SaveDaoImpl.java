@@ -5,62 +5,54 @@
  */
 package com.coder.hms.daoImpl;
 
-import javax.persistence.NoResultException;
-
+import com.coder.hms.dao.SaveDao;
+import com.coder.hms.entities.Company;
+import com.coder.hms.entities.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 
 import com.coder.hms.connection.DataSourceFactory;
-import com.coder.hms.dao.HotelDAO;
-import com.coder.hms.dao.TransactionManagement;
-import com.coder.hms.entities.Hotel;
+import com.coder.hms.entities.Customer;
+import com.coder.hms.utils.LoggingEngine;
 
-public class HotelDaoImpl implements HotelDAO {
+public class SaveDaoImpl implements SaveDao {
 
     private Session session;
+    private static LoggingEngine logging;
     private DataSourceFactory dataSourceFactory;
 
-    public HotelDaoImpl() {
+    public SaveDaoImpl() {
 
         dataSourceFactory = new DataSourceFactory();
         DataSourceFactory.createConnection();
+        logging = LoggingEngine.getInstance();
 
     }
 
     @Override
-    public void saveHotel(Hotel hotel) {
-
+    public boolean save(String type, Object object) {
         try {
+            if(type.equalsIgnoreCase("user"))
+                object = (User) object;
+            if(type.equalsIgnoreCase("customer"))
+                object = (Customer) object;
+            if(type.equalsIgnoreCase("company"))
+                object = (Company) object;
 
             session = dataSourceFactory.getSessionFactory().openSession();
             beginTransaction(session);
-            session.saveOrUpdate(hotel);
+            session.saveOrUpdate(object);
             session.getTransaction().commit();
 
+            logging.setMessage("SaveDaoImpl ->  saved successfully");
+            return true;
         } catch (HibernateException e) {
             session.getTransaction().rollback();
+            logging.setMessage("SaveDaoImpl -> save error -> "+e.getLocalizedMessage());
+            return false;
         } finally {
             session.close();
         }
-
-    }
-
-    @Override
-    public Hotel getHotel() {
-        Hotel hotel = null;
-        try {
-            session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransaction(session);
-            Query<Hotel> query = session.createQuery("from Hotel", Hotel.class);
-            hotel = query.getSingleResult();
-
-        } catch (NoResultException e) {
-            e.getLocalizedMessage();
-        } finally {
-            session.close();
-        }
-        return hotel;
     }
 
     public void beginTransaction(Session theSession)
@@ -68,5 +60,4 @@ public class HotelDaoImpl implements HotelDAO {
         SessionImpl sessionImpl = new SessionImpl();
         sessionImpl.beginTransactionIfAllowed(theSession);
     }
-
 }

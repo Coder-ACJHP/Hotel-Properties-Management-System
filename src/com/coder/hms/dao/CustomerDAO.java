@@ -12,16 +12,14 @@ import com.coder.hms.entities.Customer;
 public interface CustomerDAO {
 
 	public Customer findCustomerByName(String name, String lastName);
-	
+
 	public Customer findCustomerByDocumentId(long DocumentNo);
-	
-	public List<Customer> getAllCustomers(); 
-	
-	public boolean save(Customer customer);
+
+	public List<Customer> getAllCustomers();
 
 	public boolean update(Customer customer);
-	
+
 	public void deleteCustomerByReservationId(long id);
-	
+
 	public Customer getSinlgeCustomerByReservId(long id, String name);
 }

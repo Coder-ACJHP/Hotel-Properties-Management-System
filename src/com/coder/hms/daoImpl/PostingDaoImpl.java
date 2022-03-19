@@ -14,7 +14,7 @@ import com.coder.hms.dao.TransactionManagement;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.utils.LoggingEngine;
 
-public class PostingDaoImpl implements PostingDAO, TransactionManagement {
+public class PostingDaoImpl implements PostingDAO {
 
     private Session session;
     private LoggingEngine logging;
@@ -31,7 +31,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
     public void savePosting(Posting posting) {
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             session.saveOrUpdate(posting);
             session.getTransaction().commit();
             logging.setMessage("PostingDaoImpl -> payment saved successfully.");
@@ -49,7 +49,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<?> query = session.createQuery("delete Posting where id = :theId");
             query.setParameter("theId", theId);
             query.executeUpdate();
@@ -72,7 +72,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         try {
 
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             thePosting = session.get(Posting.class, Id);
             logging.setMessage("PostingDaoImpl -> fetching posting...");
 
@@ -89,7 +89,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         List<Posting> postingsList = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Posting> query = session.createQuery("from Posting where"
                     + " roomNumber = :theRoomNumber and dateTime >= :localDate", Posting.class);
             query.setParameter("theRoomNumber", theRoomNumber);
@@ -110,7 +110,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         List<Posting> postingsList = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Posting> query = session.createQuery("from Posting where dateTime >= :today", Posting.class);
             query.setParameter("today", today);
             postingsList = query.getResultList();
@@ -130,7 +130,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         String totalCash = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'TURKISH LIRA' and dateTime >= :today", String.class);
             query.setParameter("today", today);
             totalCash = query.getSingleResult();
@@ -150,7 +150,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         String totalCash = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery(
                     "select sum(price) from Posting where currency = 'DOLLAR' and dateTime >= :today", String.class);
             query.setParameter("today", today);
@@ -171,7 +171,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         String totalCash = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery("select sum(price) from Posting where currency = 'EURO' and dateTime >= :today", String.class);
             query.setParameter("today", today);
             totalCash = query.getSingleResult();
@@ -191,7 +191,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         String totalCash = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery(
                     "select sum(price) from Posting where currency = 'POUND' and dateTime >= :today", String.class);
             query.setParameter("today", today);
@@ -211,7 +211,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         String totalCredit = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery("select sum(price) from Posting where "
                     + "currency = 'CREDIT CARD' and currency = 'TURKISH LIRA' and dateTime >= :date", String.class);
             query.setParameter("date", date);
@@ -232,7 +232,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         String totalCredit = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery("select sum(price) from Posting where "
                     + "currency = 'CREDIT CARD' and currency = 'DOLLAR' and dateTime >= :date", String.class);
             query.setParameter("date", date);
@@ -250,10 +250,10 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
 
     @Override
     public String getTotalCreditEuroPostingsForOneDay(String date) {
-    String totalCredit = null;
+        String totalCredit = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery("select sum(price) from Posting where "
                     + "currency = 'CREDIT CARD' and currency = 'EURO' and dateTime >= :date", String.class);
             query.setParameter("date", date);
@@ -274,7 +274,7 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         String totalCredit = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<String> query = session.createQuery("select sum(price) from Posting where "
                     + "currency = 'CREDIT CARD' and currency = 'POUND' and dateTime >= :date", String.class);
             query.setParameter("date", date);
@@ -289,15 +289,10 @@ public class PostingDaoImpl implements PostingDAO, TransactionManagement {
         }
         return totalCredit;
     }
-    
-    @Override
-    public void beginTransactionIfAllowed(Session theSession) {
-        if (!theSession.getTransaction().isActive()) {
-            theSession.beginTransaction();
-        } else {
-            theSession.getTransaction().rollback();
-            theSession.beginTransaction();
-        }
 
+    public void beginTransaction(Session theSession)
+    {
+        SessionImpl sessionImpl = new SessionImpl();
+        sessionImpl.beginTransactionIfAllowed(theSession);
     }
 }

@@ -484,8 +484,9 @@ public class CompanyDetails extends JFrame {
         	theCompany.setFaceColor(panelColor.getRGB());
         	
         	final CompanyDaoImpl daoImpl = new CompanyDaoImpl();
-        	
-        	if(daoImpl.saveCompany(theCompany)) {
+
+            Object object = (Object) theCompany;
+        	if(daoImpl.save("company",object)) {
         		infoLabel.setText("<html>SUCCESSFULLY ACCOMPLISHED</html>");
         		infoLabel.setForeground(Color.decode("#00FF00"));
         		isFinished = true;

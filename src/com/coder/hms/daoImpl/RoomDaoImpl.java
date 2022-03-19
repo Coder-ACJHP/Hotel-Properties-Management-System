@@ -19,7 +19,7 @@ import com.coder.hms.entities.Room;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.utils.LoggingEngine;
 
-public class RoomDaoImpl implements RoomDAO, TransactionManagement {
+public class RoomDaoImpl implements RoomDAO {
 
     private Session session;
     private static LoggingEngine logging;
@@ -37,12 +37,12 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
     public Room getRoomByRoomNumber(String roomNumber) {
 
         try {
-            
+
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Room> query = session.createQuery("from Room where number=:roomNumber", Room.class);
             query.setParameter("roomNumber", roomNumber);
-            
+
             logging.setMessage("RoomDaoImpl -> fetching room by number "+roomNumber);
             return query.getSingleResult();
 
@@ -60,11 +60,11 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
     public void saveRoom(Room room) {
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             session.save(room);
             session.getTransaction().commit();
             logging.setMessage("RoomDaoImpl -> room saved successfully.");
-            
+
         } catch (HibernateException e) {
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
             session.getTransaction().rollback();
@@ -77,7 +77,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Room> query = session.createQuery("from Room", Room.class);
             logging.setMessage("RoomDaoImpl -> fetching all rooms...");
             return query.getResultList();
@@ -95,7 +95,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Room> query = session.createQuery("from Room where ReservationId=:id", Room.class);
             query.setParameter("id", id);
             logging.setMessage("RoomDaoImpl -> fetching room by identity :"+id);
@@ -117,13 +117,13 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus=:clean");
             query.setParameter("clean", clean);
             query.executeUpdate();
-            
+
             logging.setMessage("RoomDaoImpl -> All rooms status updated to clean successfully.");
-            
+
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
@@ -136,13 +136,13 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'CLEAN' where number=:rowData");
             query.setParameter("rowData", rowData);
             query.executeUpdate();
-            
+
             logging.setMessage("RoomDaoImpl -> room status updated to clean successfully.");
-            
+
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
@@ -154,15 +154,15 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
     public void setRoomCheckedOut(String num) {
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             final String HQL = "UPDATE Room SET usageStatus = 'EMPTY', personCount = 0, price = 0, "
                     + "totalPrice = 0, balance = '0', customerGrupName = '', currency = '', remainingDebt = 0, ReservationId = 0 where number=:num";
             Query<?> query = session.createQuery(HQL);
             query.setParameter("num", num);
             query.executeUpdate();
-            
+
             logging.setMessage("RoomDaoImpl -> room number :"+num+" checked out successfully.");
-            
+
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
@@ -176,11 +176,11 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus=:dirty");
             query.setParameter("dirty", dirty);
             query.executeUpdate();
-            
+
             logging.setMessage("RoomDaoImpl -> all rooms status updated to dirty successfully.");
         } catch (HibernateException e) {
             session.getTransaction().rollback();
@@ -193,13 +193,13 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
     public void setSingleRoomAsDirtyByRoomNumber(String roomNumber) {
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'DIRTY' where number=:roomNumber");
             query.setParameter("roomNumber", roomNumber);
             query.executeUpdate();
-            
+
             logging.setMessage("RoomDaoImpl -> room number :"+roomNumber+" status updated to dirty successfully.");
-            
+
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
@@ -212,13 +212,13 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<?> query = session.createQuery("UPDATE Room SET cleaningStatus = 'DND' where number=:roomNumber");
             query.setParameter("roomNumber", roomNumber);
             query.executeUpdate();
-            
+
             logging.setMessage("RoomDaoImpl -> room number :"+roomNumber+" status updated to dnd successfully.");
-            
+
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
@@ -231,12 +231,12 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
     public void updateRoom(Room theRoom) {
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             session.update(theRoom);
             session.getTransaction().commit();
 
             logging.setMessage("RoomDaoImpl -> room number :"+theRoom.getNumber()+" status updated successfully.");
-            
+
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
@@ -248,13 +248,13 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
 
             Query<?> query = session .createQuery("UPDATE Room SET price = :price, totalPrice = :total,"
                     + " balance = :balance, cleaningStatus = :clnSts, usageStatus = :usgSts, "
                     + "personCount = :prsnCnt, customerGroupName = :groupName, ReservationId = :reservId, "
                     + "currency = :currency, remainingDebt = :debt WHERE number = :theNumber");
-            
+
             query.setParameter("price", 0);
             query.setParameter("total", "0");
             query.setParameter("balance", "0");
@@ -270,7 +270,7 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
             session.getTransaction().commit();
 
             logging.setMessage("RoomDaoImpl -> room number :"+theNumber+" status updated to default successfully.");
-            
+
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             logging.setMessage("RoomDaoImpl -> "+e.getLocalizedMessage());
@@ -278,15 +278,9 @@ public class RoomDaoImpl implements RoomDAO, TransactionManagement {
         session.close();
     }
 
-    @Override
-    public void beginTransactionIfAllowed(Session theSession) {
-        if (!theSession.getTransaction().isActive()) {
-            theSession.beginTransaction();
-        } else {
-            theSession.getTransaction().rollback();
-            theSession.beginTransaction();
-        }
-
+    public void beginTransaction(Session theSession)
+    {
+        SessionImpl sessionImpl = new SessionImpl();
+        sessionImpl.beginTransactionIfAllowed(theSession);
     }
-
 }
