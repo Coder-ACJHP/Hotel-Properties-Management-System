@@ -20,9 +20,7 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Currency;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -48,6 +46,8 @@ import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.daoImpl.RoomDaoImpl;
 import com.coder.hms.entities.Posting;
 import com.coder.hms.entities.Room;
+import com.coder.hms.ui.currency.*;
+import com.coder.hms.ui.currency.Currency;
 import com.coder.hms.utils.GetLiveCurrencyRates;
 
 public class PostingWindow extends JDialog {
@@ -237,50 +237,21 @@ public class PostingWindow extends JDialog {
 			public void itemStateChanged(ItemEvent event) {
 
 				final String choosed = currencyCmbBox.getSelectedItem().toString();
-				NumberFormatter nf = null;
-				DefaultFormatterFactory dfc = null;
 				priceField.removeAll();
-				
-					switch (choosed) {
-					case "TURKISH LIRA":
-						
-						formatter.setCurrency(Currency.getInstance(Locale.getDefault()));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "DOLLAR":
-						formatter.setCurrency(Currency.getInstance(Locale.US));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "EURO":
-						formatter.setCurrency(Currency.getInstance(Locale.FRANCE));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					case "POUND":
-						formatter.setCurrency(Currency.getInstance(Locale.UK));
-						nf = new NumberFormatter(formatter);
-						dfc = new DefaultFormatterFactory(nf);
-						priceField.setFormatterFactory(dfc);
-						priceField.revalidate();
-						priceField.repaint();
-						break;
-					default:
-						break;
-					}
-					repaint();
-			}
 
+				Map<String, Currency> currencyMap = new HashMap<>();
+				currencyMap.put("TURKISH LIRA", new TurkishLira());
+				currencyMap.put("DOLLAR", new Dollar());
+				currencyMap.put("EURO", new Euro());
+				currencyMap.put("POUND", new Pound());
+
+				if(currencyMap.containsKey(choosed))
+				{
+					currencyMap.get(choosed).update(formatter, priceField);
+				}
+
+				repaint();
+			}
 		};
 		return ac;
 	}
