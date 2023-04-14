@@ -43,27 +43,19 @@ public class DatabaseServerPreparingInitializer extends JFrame {
 		
 		final InformationFrame dialog = new InformationFrame();
 		final String sqlFilePath = "src/com/coder/hms/connection/hotel_management_system.sql";
-		final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
-		final String DB_CONNECTION = "jdbc:mysql://localhost:3306/";
-		String DB_USER = JOptionPane.showInputDialog(this, "Enter your database user name :", "Coder HMS [Input]", JOptionPane.QUESTION_MESSAGE);
-		String DB_PASSWORD = JOptionPane.showInputDialog(this, "Enter your database password :", "Coder HMS [Input]", JOptionPane.QUESTION_MESSAGE);
-		
+
 			try {
-				
-				Class.forName(DB_DRIVER);
-				Connection connection = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
-				
-				ScriptRunner runner = new ScriptRunner(connection, false, false);
-				Reader br = new BufferedReader(new FileReader(sqlFilePath));
+				ScriptRunner runner = new ScriptRunner(getConnection(), false, false);
+				Reader bufferedReader = new BufferedReader(new FileReader(sqlFilePath));
 
 				file = new File(System.getProperty("user.dir")+ File.separator + "Logging Store/SQL_Logs.txt");
 				PrintWriter writer = new PrintWriter(file);
 				runner.setLogWriter(writer);
-				runner.runScript(br);
+				runner.runScript(bufferedReader);
 				dialog.setMessage("Your database and tables created successfully.");
 				
 				status = true;
-				
+
 			} catch (SQLException | ClassNotFoundException | IOException ex) {
 				dialog.setMessage(ex.getMessage());
 				status = false;
@@ -71,6 +63,19 @@ public class DatabaseServerPreparingInitializer extends JFrame {
 		
 		dialog.setVisible(true);
 	}
+
+	public Connection getConnection() throws ClassNotFoundException, SQLException {
+
+			final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+			final String DB_CONNECTION = "jdbc:mysql://localhost:3306/";
+			String DB_USER = JOptionPane.showInputDialog(this, "Enter your database user name :", "Coder HMS [Input]", JOptionPane.QUESTION_MESSAGE);
+			String DB_PASSWORD = JOptionPane.showInputDialog(this, "Enter your database password :", "Coder HMS [Input]", JOptionPane.QUESTION_MESSAGE);
+
+			Class.forName(DB_DRIVER);
+			Connection connection = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
+			return  connection;
+	}
+
 	
 	public static File getLogFile() {
 		if(file.exists()) {
