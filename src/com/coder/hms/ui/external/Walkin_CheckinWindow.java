@@ -536,7 +536,8 @@ public class Walkin_CheckinWindow extends JDialog implements ActionListener {
                                 theCustomer.setGender(formsArray[i].getGenderComboxValue());
                                 theCustomer.setMaritalStatus(formsArray[i].getMarriageComboBoxValue());
                                 theCustomer.setReservationId(lastReservation.getId());
-                                customerDaoImpl.save(theCustomer);
+								Object object = (Object) theCustomer;
+								customerDaoImpl.save("customer", object);
                                 
                                 loggingEngine.setMessage("Check in for customer(s) : " + theCustomer.toString());
 

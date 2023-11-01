@@ -21,7 +21,7 @@ import com.coder.hms.entities.Reservation;
 import com.coder.hms.ui.external.InformationFrame;
 import com.coder.hms.utils.LoggingEngine;
 
-public class ReservationDaoImpl implements ReservationDAO, TransactionManagement {
+public class ReservationDaoImpl implements ReservationDAO {
 
     private Session session;
     private LoggingEngine logging;
@@ -34,26 +34,26 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         logging = LoggingEngine.getInstance();
     }
 
-	@Override
-	public Optional<Reservation> findReservationById(long theId) {
-		session = dataSourceFactory.getSessionFactory().openSession();
-		beginTransactionIfAllowed(session);
-		final Query<Reservation> query = session.createQuery("from Reservation where id=:theId", Reservation.class);
-		query.setParameter("theId", theId);
-		query.setMaxResults(1);
-		Optional<Reservation> theReservation = query.uniqueResultOptional();
-		session.close();
-		logging.setMessage("ReservationDaoImpl -> fetching reservation by Id...");
+    @Override
+    public Optional<Reservation> findReservationById(long theId) {
+        session = dataSourceFactory.getSessionFactory().openSession();
+        beginTransaction(session);
+        final Query<Reservation> query = session.createQuery("from Reservation where id=:theId", Reservation.class);
+        query.setParameter("theId", theId);
+        query.setMaxResults(1);
+        Optional<Reservation> theReservation = query.uniqueResultOptional();
+        session.close();
+        logging.setMessage("ReservationDaoImpl -> fetching reservation by Id...");
 
-		return theReservation;
-	}
+        return theReservation;
+    }
 
     @Override
     public Reservation findSingleReservByThisDate(String Date) {
         Reservation theReservation = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:Date", Reservation.class);
             query.setParameter("Date", Date);
             theReservation = query.getSingleResult();
@@ -75,7 +75,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         List<Reservation> reservationsList = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation where checkinDate=:today", Reservation.class);
             query.setParameter("today", today);
             reservationsList = query.getResultList();
@@ -97,7 +97,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             session.save(reservation);
             session.getTransaction().commit();
 
@@ -116,7 +116,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         List<Reservation> reservationsList = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation", Reservation.class);
             reservationsList = query.getResultList();
 
@@ -134,7 +134,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         List<Reservation> reservationsList = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation "
                     + "where bookStatus = 'GUARANTEE' and checkinDate=:today", Reservation.class);
             query.setParameter("today", reservDate);
@@ -155,7 +155,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         List<Reservation> reservationsList = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation "
                     + "where bookStatus = 'WAITLIST' and checkinDate=:today", Reservation.class);
             query.setParameter("today", reservDate);
@@ -176,7 +176,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         Reservation lastReservation = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation order by Id DESC", Reservation.class);
             query.setMaxResults(1);
             lastReservation = query.getSingleResult();
@@ -196,7 +196,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             session.update(reservation);
             session.getTransaction().commit();
 
@@ -217,7 +217,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         Reservation reservationByRef = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation where agencyRefNo=:agencyRefNo", Reservation.class);
             query.setParameter("agencyRefNo", agencyRefNo);
             query.setMaxResults(1);
@@ -240,7 +240,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
         Reservation reservationByRef = null;
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation where referanceNo=:refNo", Reservation.class);
             query.setParameter("refNo", refNo);
             query.setMaxResults(1);
@@ -264,7 +264,7 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
 
         try {
             session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+            beginTransaction(session);
             Reservation res = session.load(Reservation.class, id);
             session.delete(res);
             session.flush();
@@ -281,38 +281,33 @@ public class ReservationDaoImpl implements ReservationDAO, TransactionManagement
     }
 
     public List<Reservation> getReservationBetweenTwoDates(String checkinDate, String checkoutDate) {
-    	List<Reservation> reservationsList = null;
-    	
-    	try {
-    		
-    		session = dataSourceFactory.getSessionFactory().openSession();
-            beginTransactionIfAllowed(session);
+        List<Reservation> reservationsList = null;
+
+        try {
+
+            session = dataSourceFactory.getSessionFactory().openSession();
+            beginTransaction(session);
             Query<Reservation> query = session.createQuery("from Reservation AS r WHERE r.checkinDate BETWEEN :checkinDate AND :checkoutDate", Reservation.class);
             query.setParameter("checkinDate", checkinDate);
             query.setParameter("checkoutDate", checkoutDate);
             reservationsList = query.getResultList();
-            
+
             if(reservationsList == null)
-            	 reservationsList = session.createQuery("from Reservation", Reservation.class).getResultList();
+                reservationsList = session.createQuery("from Reservation", Reservation.class).getResultList();
 
             logging.setMessage("ReservationDaoImpl -> fetching reservation that between two dates...");
-            
-		} catch (NoResultException e) {
-			 logging.setMessage("ReservationDaoImpl Error -> " + e.getLocalizedMessage());
-		}
-    	
-    	return reservationsList;
-    }
-    
-    @Override
-    public void beginTransactionIfAllowed(Session theSession) {
-        if (!theSession.getTransaction().isActive()) {
-            theSession.beginTransaction();
-        } else {
-            theSession.getTransaction().rollback();
-            theSession.beginTransaction();
+
+        } catch (NoResultException e) {
+            logging.setMessage("ReservationDaoImpl Error -> " + e.getLocalizedMessage());
         }
 
+        return reservationsList;
+    }
+
+    public void beginTransaction(Session theSession)
+    {
+        SessionImpl sessionImpl = new SessionImpl();
+        sessionImpl.beginTransactionIfAllowed(theSession);
     }
 
 }

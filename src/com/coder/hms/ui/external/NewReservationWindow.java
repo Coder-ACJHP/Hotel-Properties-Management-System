@@ -690,7 +690,8 @@ public class NewReservationWindow extends JDialog {
 						theCustomer.setLastName(model.getValueAt(i, 3).toString());
 						theCustomer.setCountry(customerCountryCmbBox.getSelectedItem().toString());
 						theCustomer.setReservationId(lastReserv.getId());
-						cImpl.save(theCustomer);
+						Object object = (Object) theCustomer;
+						cImpl.save("customer", object);
 						completionStatus = true;
 
 						logging.setMessage("Reservation customer(s) : " + theCustomer.toString());

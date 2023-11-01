@@ -248,7 +248,8 @@ public class AddUserWindow extends JDialog {
 						try {
 							
 							final UserDaoImpl userDaoImpl = new UserDaoImpl();
-							userDaoImpl.saveUser(user);
+							Object object = (Object) user;
+							userDaoImpl.save("user", object);
 							infoFrame.setMessage("New user saved successfully.");
 							infoFrame.setVisible(true);
 							clearFields();

@@ -39,6 +39,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.coder.hms.beans.LocaleBean;
 import com.coder.hms.daoImpl.PaymentDaoImpl;
+import com.coder.hms.daoImpl.PaymentConversionDaoImpl;
 import com.coder.hms.daoImpl.PostingDaoImpl;
 import com.coder.hms.entities.Payment;
 import com.coder.hms.entities.Posting;
@@ -59,6 +60,7 @@ public class Main_CashDesk extends JPanel {
     private JScrollPane scrollPane;
     private JButton btnNewOperation;
     private PaymentDaoImpl paymentDaoImpl;
+    private PaymentConversionDaoImpl paymentConversionDaoImpl;
     private PostingDaoImpl postingDaoImpl;
     private JPanel centerPanel, buttonPanel;
     private MoneyTransaction moneyTransaction;
@@ -423,49 +425,49 @@ public class Main_CashDesk extends JPanel {
     /*Getters and setters for access this values from another classes*/
     private void populateAllFields() {
 
-        String val = paymentDaoImpl.getTotalCashLiraPaymentsForOneDay(today);
+        String val = paymentConversionDaoImpl.getTotalCashLiraPaymentsForOneDay(today);
         String postVal = postingDaoImpl.getTotalCashLiraPostingsForOneDay(today);
         double postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         tlCashVal = val == null ? 0.0 : Double.parseDouble(val);
         tlCashField.setValue(tlCashVal - postValue);
 
-        val = paymentDaoImpl.getTotalCashDollarForOneDay(today);
+        val = paymentConversionDaoImpl.getTotalCashDollarForOneDay(today);
         postVal = postingDaoImpl.getTotalCashDollarPostingsForOneDay(today);
         postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         dlCashVal = val == null ? 0.0 : Double.parseDouble(val);
         dollarCashField.setValue(dlCashVal - postValue);
 
-        val = paymentDaoImpl.getTotalCashEuroPaymentsForOneDay(today);
+        val = paymentConversionDaoImpl.getTotalCashEuroPaymentsForOneDay(today);
         postVal = postingDaoImpl.getTotalCashEuroPostingsForOneDay(today);
         postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         euCashVal = val == null ? 0.0 : Double.parseDouble(val);
         euroCashField.setValue(euCashVal - postValue);
 
-        val = paymentDaoImpl.getTotalCashPoundPaymentsForOneDay(today);
+        val = paymentConversionDaoImpl.getTotalCashPoundPaymentsForOneDay(today);
         postVal = postingDaoImpl.getTotalCashPoundPostingsForOneDay(today);
         postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         poCashVal = val == null ? 0.0 : Double.parseDouble(val);
         poundCashField.setValue(poCashVal - postValue);
 
-        val = paymentDaoImpl.getTotalCreditLiraPaymentsForOneDay(today);
+        val = paymentConversionDaoImpl.getTotalCreditLiraPaymentsForOneDay(today);
         postVal = postingDaoImpl.getTotalCreditLiraPostingsForOneDay(today);
         postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         tlCreditVal = val == null ? 0.0 : Double.parseDouble(val);
         tlCredit.setValue(tlCreditVal - postValue);
         
-        val = paymentDaoImpl.getTotalCreditDollarPaymentsForOneDay(today);
+        val = paymentConversionDaoImpl.getTotalCreditDollarPaymentsForOneDay(today);
         postVal = postingDaoImpl.getTotalCreditDollarPostingsForOneDay(today);
         postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         dlCreditVal = val == null ? 0.0 : Double.parseDouble(val);
         dollarCredit.setValue(dlCreditVal - postValue);
         
-        val = paymentDaoImpl.getTotalCreditEuroPaymentsForOneDay(today);
+        val = paymentConversionDaoImpl.getTotalCreditEuroPaymentsForOneDay(today);
         postVal = postingDaoImpl.getTotalCreditEuroPostingsForOneDay(today);
         postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         euCreditVal = val == null ? 0.0 : Double.parseDouble(val);
         euroCredit.setValue(euCreditVal - postValue);
         
-        val = paymentDaoImpl.getTotalCreditPoundPaymentsForOneDay(today);
+        val = paymentConversionDaoImpl.getTotalCreditPoundPaymentsForOneDay(today);
         postVal = postingDaoImpl.getTotalCreditPoundPostingsForOneDay(today);
         postValue = postVal == null ? 0.0 : Double.parseDouble(postVal);
         poCreditVal = val == null ? 0.0 : Double.parseDouble(val);
